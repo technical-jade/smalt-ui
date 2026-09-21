@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, useAttrs } from 'vue'
+import { computed, useAttrs, useTemplateRef } from 'vue'
 import { type MaskaDetail, type MaskInputOptions } from 'maska'
 import { vMaska } from 'maska/vue'
 import { SIcon } from '../SIcon'
@@ -62,8 +62,12 @@ const m = useMessages()
 const floating = computed(() => props.floatingLabel && !!props.label)
 const hasLeading = computed(() => !!props.icon || !!props.prefix || !!slots.prepend)
 
+const field = useTemplateRef<HTMLInputElement>('field')
+
+// The clear button disappears with the value, and focus would go with it to body.
 const clear = () => {
   model.value = ''
+  field.value?.focus()
 }
 
 // Mask: Maska handles the caret, paste and IME; this only wires it to the model.
@@ -197,6 +201,7 @@ const maskedAttrs = computed(() =>
       class="s-input__field-box"
     >
       <input
+        ref="field"
         v-maska="maskaDirectiveOptions"
         class="s-input__field"
         type="text"
@@ -215,6 +220,7 @@ const maskedAttrs = computed(() =>
          The type is fixed to text (brackets/spaces are incompatible with number/email). -->
     <input
       v-else-if="masked"
+      ref="field"
       v-maska="maskaDirectiveOptions"
       class="s-input__field"
       type="text"
@@ -223,6 +229,7 @@ const maskedAttrs = computed(() =>
     />
     <input
       v-else
+      ref="field"
       v-model="model"
       class="s-input__field"
       :type="type"

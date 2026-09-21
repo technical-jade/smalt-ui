@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { watch } from 'vue'
 import {
   DropdownMenuContent,
   DropdownMenuItem,
@@ -10,6 +11,7 @@ import {
 } from 'reka-ui'
 import { SIcon } from '../SIcon'
 import { useDefaults, useElevationProp } from '../../composables'
+import { useMenuTabOut } from '../../internal/useMenuTabOut'
 import type { SDropdownMenuOption, SDropdownMenuProps } from './types'
 
 defineOptions({ inheritAttrs: false })
@@ -26,6 +28,10 @@ const elevationStyle = useElevationProp(p, 's-surface')
 
 /** Whether the menu is open. Two-way binding via `v-model:open`. */
 const open = defineModel<boolean>('open', { default: false })
+
+const { onOpenChange, onKeydown } = useMenuTabOut(() => p.modal)
+// Synchronously, before the menu takes focus.
+watch(open, onOpenChange, { flush: 'sync' })
 
 const emit = defineEmits<{
   /** A menu item was selected; receives the item's `value`. */
@@ -63,6 +69,7 @@ function onItemSelect(opt: SDropdownMenuOption) {
         :align="p.align"
         :side-offset="p.sideOffset"
         :aria-label="p.ariaLabel"
+        @keydown="onKeydown"
       >
         <slot>
           <template

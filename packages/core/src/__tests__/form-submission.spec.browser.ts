@@ -44,12 +44,7 @@ describe('native form submission', () => {
     ['SSlider', SSlider, { modelValue: 40 }, '40'],
     ['SSelect', SSelect, { modelValue: 'two', options }, 'two'],
     ['SSelect searchable', SSelect, { modelValue: 'two', options, searchable: true }, 'two'],
-    [
-      'SAutocomplete',
-      SAutocomplete,
-      { modelValue: 'two', selectedLabel: 'Two', options },
-      'two',
-    ],
+    ['SAutocomplete', SAutocomplete, { modelValue: 'two', selectedLabel: 'Two', options }, 'two'],
     ['SColorField', SColorField, { modelValue: '#3b82f6' }, '#3b82f6'],
     ['SNumberField', SNumberField, { modelValue: 3 }, '3'],
     ['SPinInput', SPinInput, { modelValue: ['1', '2'], length: 2 }, '12'],

@@ -73,8 +73,11 @@ const hasLeading = computed(() => !!props.icon || !!slots.prepend)
  */
 const control = ref<HTMLElement>()
 
+const trigger = ref<{ $el: HTMLElement }>()
+
 const clear = () => {
   model.value = isMultiple.value ? [] : undefined
+  trigger.value?.$el.focus()
 }
 const removeValue = (v: string) => {
   model.value = valueArray.value.filter((x) => x !== v)
@@ -123,6 +126,7 @@ const removeValue = (v: string) => {
       <SelectTrigger
         v-bind="controlAttrs"
         :id="fieldId"
+        ref="trigger"
         class="s-select__trigger"
         :reference="control"
         :aria-label="ariaLabel"

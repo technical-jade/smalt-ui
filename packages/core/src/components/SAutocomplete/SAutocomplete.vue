@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, onBeforeUnmount, onMounted, ref, watch } from 'vue'
+import { computed, onMounted, ref, watch } from 'vue'
 import {
   ComboboxAnchor,
   ComboboxContent,
@@ -15,6 +15,7 @@ import { SIcon } from '../SIcon'
 import { SSpinner } from '../SSpinner'
 import { useDefaults, useElevationProp, useMessages } from '../../composables'
 import { useFieldAttrs } from '../../internal/useFieldAttrs'
+import { useKeepCaretKeys } from '../../internal/useKeepCaretKeys'
 import type { SAutocompleteOption, SAutocompleteProps } from './types'
 
 /**
@@ -161,26 +162,16 @@ watch([model, () => p.selectedLabel, open], ([value], [prevValue, , prevOpen]) =
 
 const showClear = computed(() => p.clearable && !p.disabled && (!!model.value || !!text.value))
 
-/**
- * Home and End must move the caret, but Reka hands them to list navigation with a listener on the
- * input itself. So the keys are stopped in the capture phase on the frame. The listener is native:
- * a Vue handler stamps the event with a time, and an input listener attached in the same
- * millisecond would skip it.
- */
-function keepCaretKeys(event: KeyboardEvent) {
-  if (event.key === 'Home' || event.key === 'End') event.stopPropagation()
-}
-
 const anchor = ref<{ $el: Element }>()
-onMounted(() => anchor.value?.$el.addEventListener('keydown', keepCaretKeys as EventListener, true))
-onBeforeUnmount(() =>
-  anchor.value?.$el.removeEventListener('keydown', keepCaretKeys as EventListener, true),
-)
+useKeepCaretKeys(anchor)
+
+const input = ref<{ $el: HTMLInputElement }>()
 
 function clear() {
   model.value = undefined
   text.value = ''
   search.value = ''
+  input.value?.$el.focus()
   emit('clear')
 }
 </script>
@@ -233,6 +224,7 @@ function clear() {
 
           <ComboboxInput
             :id="fieldId"
+            ref="input"
             v-model="text"
             class="s-autocomplete__field"
             :placeholder="p.placeholder"

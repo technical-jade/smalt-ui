@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed } from 'vue'
+import { computed, ref } from 'vue'
 import {
   ComboboxAnchor,
   ComboboxContent,
@@ -16,6 +16,7 @@ import {
 import { SIcon } from '../SIcon'
 import SelectTags from './SelectTags.vue'
 import { useMessages } from '../../composables'
+import { useKeepCaretKeys } from '../../internal/useKeepCaretKeys'
 import type { SSelectOption } from './types'
 
 /**
@@ -74,8 +75,14 @@ const showClear = computed(() => props.clearable && !props.disabled && hasValue.
 
 const hasLeading = computed(() => !!props.icon || !!slots.prepend)
 
+const anchor = ref<{ $el: Element }>()
+useKeepCaretKeys(anchor)
+
+const input = ref<{ $el: HTMLInputElement }>()
+
 const clear = () => {
   model.value = isMultiple.value ? [] : undefined
+  input.value?.$el.focus()
 }
 const removeValue = (v: string) => {
   model.value = valueArray.value.filter((x) => x !== v)
@@ -89,6 +96,7 @@ const removeValue = (v: string) => {
     :disabled="disabled"
   >
     <ComboboxAnchor
+      ref="anchor"
       class="s-select__control"
       :class="{
         's-select__control--invalid': invalid,
@@ -127,6 +135,7 @@ const removeValue = (v: string) => {
       <ComboboxInput
         v-bind="controlAttrs"
         :id="fieldId"
+        ref="input"
         class="s-select__input"
         :placeholder="placeholder"
         :display-value="isMultiple ? undefined : displayValue"

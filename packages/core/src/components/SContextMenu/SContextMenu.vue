@@ -10,6 +10,7 @@ import {
 } from 'reka-ui'
 import { SIcon } from '../SIcon'
 import { useDefaults, useElevationProp } from '../../composables'
+import { useMenuTabOut } from '../../internal/useMenuTabOut'
 import type { SContextMenuOption, SContextMenuProps } from './types'
 
 defineOptions({ inheritAttrs: false })
@@ -20,6 +21,8 @@ const props = withDefaults(defineProps<SContextMenuProps>(), {
 const p = useDefaults(props, 'SContextMenu')
 
 const elevationStyle = useElevationProp(p, 's-surface')
+
+const { onOpenChange, onKeydown } = useMenuTabOut(() => p.modal)
 
 const emit = defineEmits<{
   /** A menu item was selected; receives the item's `value`. */
@@ -39,7 +42,10 @@ function onItemSelect(opt: SContextMenuOption) {
 </script>
 
 <template>
-  <ContextMenuRoot :modal="p.modal">
+  <ContextMenuRoot
+    :modal="p.modal"
+    @update:open="onOpenChange"
+  >
     <ContextMenuTrigger as-child>
       <slot />
     </ContextMenuTrigger>
@@ -51,6 +57,7 @@ function onItemSelect(opt: SContextMenuOption) {
         :class="{ 's-context-menu__content--square': p.square }"
         :style="elevationStyle"
         :aria-label="p.ariaLabel"
+        @keydown="onKeydown"
       >
         <slot name="menu">
           <template
