@@ -50,4 +50,9 @@ describe('SAspectRatio', () => {
       expect(warn).toHaveBeenCalledWith(expect.stringContaining('[SAspectRatio]'))
     },
   )
+
+  it('square removes the border radius', () => {
+    const { container } = render(SAspectRatio, { props: { square: true } })
+    expect(container.querySelector('.s-aspect-ratio')).toHaveClass('s-aspect-ratio--square')
+  })
 })

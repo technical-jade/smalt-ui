@@ -5,4 +5,6 @@ export interface SAspectRatioProps {
    * @defaultValue 1
    */
   ratio?: number
+  /** Square corners: removes the border radius (rounded by default). */
+  square?: boolean
 }

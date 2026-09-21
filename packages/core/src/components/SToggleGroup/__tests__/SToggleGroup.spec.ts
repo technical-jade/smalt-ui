@@ -51,4 +51,21 @@ describe('SToggleGroup', () => {
     expect(b).toHaveClass('s-toggle--lg')
     expect(c).toHaveClass('s-toggle--sm')
   })
+
+  it('single: a click on the active item clears the value by default', async () => {
+    const { emitted } = render(SToggleGroup, { props: { options } })
+    const center = screen.getByRole('button', { name: 'Center' })
+    await fireEvent.click(center)
+    await fireEvent.click(center)
+    expect(emitted()['update:modelValue']).toEqual([['center'], [undefined]])
+  })
+
+  it('mandatory keeps the active item selected, with or without v-model', async () => {
+    const { emitted } = render(SToggleGroup, { props: { options, mandatory: true } })
+    const center = screen.getByRole('button', { name: 'Center' })
+    await fireEvent.click(center)
+    await fireEvent.click(center)
+    expect(emitted()['update:modelValue']).toEqual([['center']])
+    expect(center).toHaveAttribute('data-state', 'on')
+  })
 })

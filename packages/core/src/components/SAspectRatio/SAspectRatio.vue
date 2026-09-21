@@ -30,7 +30,10 @@ defineSlots<{
 <template>
   <!-- Own root: Reka puts attributes on its inner absolutely positioned block, so a consumer's
        width or max-width would narrow the content while the height still follows the parent. -->
-  <div class="s-aspect-ratio">
+  <div
+    class="s-aspect-ratio"
+    :class="{ 's-aspect-ratio--square': p.square }"
+  >
     <AspectRatio
       :ratio="ratio"
       class="s-aspect-ratio__content"

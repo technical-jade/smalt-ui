@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { provide } from 'vue'
+import { computed, provide } from 'vue'
 import { ToggleGroupRoot } from 'reka-ui'
 import { SToggle } from '../SToggle'
 import { provideDefaults, useDefaults } from '../../composables'
@@ -9,6 +9,7 @@ import type { SToggleGroupProps } from './types'
 const props = withDefaults(defineProps<SToggleGroupProps>(), {
   type: 'single',
   size: 'md',
+  mandatory: false,
 })
 const p = useDefaults(props, 'SToggleGroup')
 
@@ -23,6 +24,17 @@ provideDefaults(() => ({ SToggle: { size: p.size } }))
  */
 const model = defineModel<string | string[]>()
 
+/**
+ * Reka keeps its own copy of the value while `modelValue` is undefined and would clear it before
+ * `mandatory` can refuse, so the root always gets a defined value.
+ */
+const rootValue = computed(() => model.value ?? (p.type === 'multiple' ? [] : null))
+
+function update(next: string | string[] | undefined) {
+  if (next === undefined && p.mandatory && p.type === 'single') return
+  model.value = next
+}
+
 defineSlots<{
   /** Custom set of `SToggle` (instead of the `options` prop); give each one a `value`. */
   default?: (props: Record<string, never>) => unknown
@@ -31,11 +43,12 @@ defineSlots<{
 
 <template>
   <ToggleGroupRoot
-    v-model="model"
+    :model-value="rootValue"
     class="s-toggle-group"
     :type="p.type"
     :disabled="p.disabled"
     :aria-label="p.ariaLabel"
+    @update:model-value="update($event as string | string[] | undefined)"
   >
     <slot>
       <SToggle

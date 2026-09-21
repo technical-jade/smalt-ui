@@ -117,6 +117,43 @@ subset. Items are set with the `options` prop or with `SToggle`s placed in the s
 </Demo>
 </ClientOnly>
 
+### Required selection
+
+In `single` mode a click on the active item clears the value. `mandatory` keeps it selected, so
+the group always has a value once one is picked.
+
+<ClientOnly>
+<Demo>
+  <SToggleGroup
+    mandatory
+    model-value="list"
+    aria-label="View"
+    :options="[
+      { value: 'list', label: 'List' },
+      { value: 'grid', label: 'Grid' },
+    ]"
+  />
+
+<template #code>
+
+```vue
+<template>
+  <SToggleGroup
+    v-model="view"
+    mandatory
+    aria-label="View"
+    :options="[
+      { value: 'list', label: 'List' },
+      { value: 'grid', label: 'Grid' },
+    ]"
+  />
+</template>
+```
+
+  </template>
+</Demo>
+</ClientOnly>
+
 ## Color
 
 The `color` prop sets the color of the on state from the [palette](/style/palette).

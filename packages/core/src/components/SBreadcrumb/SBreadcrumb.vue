@@ -17,6 +17,12 @@ defineSlots<{
 const m = useMessages()
 
 const lastIndex = computed(() => p.items.length - 1)
+
+const currentIndex = computed(() => {
+  const marked = p.items.findIndex((item) => item.current)
+  if (marked !== -1) return marked
+  return p.items[lastIndex.value]?.href ? -1 : lastIndex.value
+})
 </script>
 
 <template>
@@ -34,10 +40,14 @@ const lastIndex = computed(() => p.items.length - 1)
         class="s-breadcrumb__item"
         role="listitem"
       >
-        <a
-          v-if="item.href && i !== lastIndex"
-          class="s-breadcrumb__link"
+        <component
+          :is="item.href ? 'a' : 'span'"
           :href="item.href"
+          :class="[
+            item.href ? 's-breadcrumb__link' : 's-breadcrumb__text',
+            { 's-breadcrumb__current': i === currentIndex },
+          ]"
+          :aria-current="i === currentIndex ? 'page' : undefined"
         >
           <SIcon
             v-if="item.icon"
@@ -45,19 +55,7 @@ const lastIndex = computed(() => p.items.length - 1)
             :size="16"
           />
           {{ item.label }}
-        </a>
-        <span
-          v-else
-          class="s-breadcrumb__current"
-          :aria-current="i === lastIndex ? 'page' : undefined"
-        >
-          <SIcon
-            v-if="item.icon"
-            :icon="item.icon"
-            :size="16"
-          />
-          {{ item.label }}
-        </span>
+        </component>
 
         <span
           v-if="i !== lastIndex"

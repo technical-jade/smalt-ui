@@ -28,6 +28,10 @@
   }
 }
 
+.s-breadcrumb__text {
+  color: var(--s-color-text-muted);
+}
+
 .s-breadcrumb__current {
   font-weight: var(--s-font-weight-medium);
   color: var(--s-color-text);

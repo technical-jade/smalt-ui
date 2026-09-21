@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { useTemplateRef, watch } from 'vue'
+import { computed, useTemplateRef, watch } from 'vue'
 import { TabsContent, TabsList, TabsRoot, TabsTrigger } from 'reka-ui'
 import { SIcon } from '../SIcon'
 import { useColorProp, useDefaults } from '../../composables'
@@ -25,13 +25,16 @@ defineSlots<{
 /** Value of the active tab. Two-way binding via `v-model`. */
 const model = defineModel<string>()
 
+// Without a value the first enabled tab is shown, so the tabs never render an empty panel.
+const active = computed(() => model.value ?? p.items?.find((item) => !item.disabled)?.value)
+
 /**
  * Keyboard focus scrolls a tab into view by itself, a value set from outside does not. Only the
  * list scrolls: scrollIntoView would also move the page.
  */
 const list = useTemplateRef<{ $el: HTMLElement }>('list')
 watch(
-  [model, list],
+  [active, list],
   () => {
     const el = list.value?.$el
     const active = el?.querySelector<HTMLElement>('[data-state="active"]')
@@ -47,13 +50,14 @@ watch(
 
 <template>
   <TabsRoot
-    v-model="model"
+    :model-value="active"
     class="s-tabs"
     :class="`s-tabs--${p.orientation}`"
     :style="colorStyle"
     :orientation="p.orientation"
     :activation-mode="p.activationMode"
     :unmount-on-hide="p.unmountOnHide"
+    @update:model-value="model = $event as string"
   >
     <TabsList
       ref="list"

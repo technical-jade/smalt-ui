@@ -63,4 +63,16 @@ describe('STabs', () => {
     })
     expect(screen.getByText('Content B')).not.toBeVisible()
   })
+
+  it('without a value shows the first enabled tab', () => {
+    render(STabs, {
+      props: {
+        items: [{ value: 'a', label: 'Tab A', disabled: true }, ...items.slice(1)],
+        ariaLabel: 'Sections',
+      },
+      slots: { a: 'Content A', b: 'Content B' },
+    })
+    expect(screen.getByRole('tab', { name: 'Tab B' })).toHaveAttribute('aria-selected', 'true')
+    expect(screen.getByText('Content B')).toBeInTheDocument()
+  })
 })

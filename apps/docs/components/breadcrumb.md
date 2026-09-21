@@ -1,8 +1,9 @@
 # Breadcrumb
 
 `SBreadcrumb` is a navigation trail from the root to the current page. Plain CSS on semantic markup
-(`nav > ol`): intermediate crumbs are links, the last one is marked `aria-current="page"`. The
-separator is a reusable `SIcon` (replace it with your own through the `#separator` slot).
+(`nav` with a list): crumbs with `href` are links, and the current page is marked
+`aria-current="page"`. The separator is a reusable `SIcon` (replace it with your own through the
+`#separator` slot).
 
 ## Basic usage
 
@@ -54,6 +55,38 @@ separator is a reusable `SIcon` (replace it with your own through the `#separato
   <SBreadcrumb :items="items">
     <template #separator>/</template>
   </SBreadcrumb>
+</template>
+```
+
+  </template>
+</Demo>
+
+## Current page
+
+By default the last item is the current page when it has no `href`. A last item with `href` stays
+a link and is not marked, for a trail that ends at a parent page. Set `current` to mark an item
+explicitly; it keeps its link to the page itself.
+
+<Demo>
+  <SBreadcrumb
+    :items="[
+      { label: 'Home', href: '/' },
+      { label: 'Account', href: '#' },
+      { label: 'Orders', href: '#', current: true },
+    ]"
+  />
+
+<template #code>
+
+```vue
+<template>
+  <SBreadcrumb
+    :items="[
+      { label: 'Home', href: '/' },
+      { label: 'Account', href: '#' },
+      { label: 'Orders', href: '#', current: true },
+    ]"
+  />
 </template>
 ```
 

@@ -22,4 +22,9 @@ export interface SToggleGroupProps {
   disabled?: boolean
   /** Accessible name of the group (`aria-label`). */
   ariaLabel?: string
+  /**
+   * In `single` mode, clicking the active item keeps it selected instead of clearing the value.
+   * Ignored in `multiple`.
+   */
+  mandatory?: boolean
 }

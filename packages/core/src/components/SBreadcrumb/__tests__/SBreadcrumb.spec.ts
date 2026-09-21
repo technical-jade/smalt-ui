@@ -37,4 +37,32 @@ describe('SBreadcrumb', () => {
     const link = screen.getByRole('link', { name: /Home/ })
     expect(link.querySelector('.s-icon')).not.toBeNull()
   })
+
+  it('a last item with href stays a link and is not marked current', () => {
+    render(SBreadcrumb, {
+      props: {
+        items: [
+          { label: 'Home', href: '/' },
+          { label: 'Orders', href: '/orders' },
+        ],
+      },
+    })
+    const last = screen.getByRole('link', { name: 'Orders' })
+    expect(last).toHaveAttribute('href', '/orders')
+    expect(last).not.toHaveAttribute('aria-current')
+  })
+
+  it('current marks one item, which keeps its link', () => {
+    render(SBreadcrumb, {
+      props: {
+        items: [
+          { label: 'Home', href: '/' },
+          { label: 'Orders', href: '/orders', current: true },
+          { label: 'Filters' },
+        ],
+      },
+    })
+    expect(screen.getByRole('link', { name: 'Orders' })).toHaveAttribute('aria-current', 'page')
+    expect(screen.getByText('Filters')).not.toHaveAttribute('aria-current')
+  })
 })
