@@ -1,6 +1,7 @@
 import type { SColorName } from '../../composables/useColorProp'
 
 export type STabsOrientation = 'horizontal' | 'vertical'
+export type STabsActivationMode = 'automatic' | 'manual'
 
 export interface STabItem {
   /** Tab value (matches the name of its content slot). */
@@ -25,4 +26,14 @@ export interface STabsProps {
   orientation?: STabsOrientation
   /** Accessible name of the tab list. */
   ariaLabel?: string
+  /**
+   * How arrow keys work: `automatic` activates the focused tab right away, `manual` only moves
+   * focus, and the tab opens on Enter/Space. Use `manual` when showing a panel is expensive.
+   */
+  activationMode?: STabsActivationMode
+  /**
+   * Unmounts inactive panels. `false` keeps them mounted and hidden, so their fields and nested
+   * components keep their state between switches.
+   */
+  unmountOnHide?: boolean
 }

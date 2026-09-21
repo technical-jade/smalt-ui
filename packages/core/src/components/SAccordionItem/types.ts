@@ -7,4 +7,9 @@ export interface SAccordionItemProps {
   disabled?: boolean
   /** Expand indicator icon. */
   expandIcon?: string
+  /**
+   * Unmounts the content while the item is collapsed; `false` keeps it mounted and hidden. By
+   * default the item follows `unmount-on-hide` of its `SAccordion`.
+   */
+  unmountOnHide?: boolean
 }

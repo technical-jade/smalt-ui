@@ -7,4 +7,9 @@ export interface SCollapsibleProps {
   disabled?: boolean
   /** Icon of the expand indicator. */
   expandIcon?: string
+  /**
+   * Unmounts the content while collapsed. `false` keeps it mounted and hidden, so nested fields
+   * keep their state and the browser page search finds collapsed text.
+   */
+  unmountOnHide?: boolean
 }

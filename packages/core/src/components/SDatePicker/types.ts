@@ -46,6 +46,11 @@ export interface SDatePickerProps {
   weekStartsOn?: SDatePickerWeekStartsOn
   /** Always show 6 weeks (stable grid height). */
   fixedWeeks?: boolean
+  /**
+   * Closes the calendar once a day is picked; `false` keeps it open until Escape or a click
+   * outside.
+   */
+  closeOnSelect?: boolean
   /** Predicate function: return `true` to disable a specific date. */
   isDateDisabled?: (date: DateValue) => boolean
   /** Accessible name of the open-calendar button (defaults to the locale dictionary). */

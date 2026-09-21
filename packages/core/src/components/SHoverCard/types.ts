@@ -16,6 +16,11 @@ export interface SHoverCardProps {
   openDelay?: number
   /** Delay before closing after the pointer leaves, in ms. */
   closeDelay?: number
+  /**
+   * Opens the card on tap on touch devices. Off by default: a hover card only supplements its
+   * trigger, and a link trigger should keep navigating on tap.
+   */
+  enableTouch?: boolean
   /** Removes the shadow. Overridden by the `elevation` prop when it is set. */
   flat?: boolean
   /** Shadow level 0–5 ([scale](/style/elevation)); `0` means no shadow. Overrides `flat`. */

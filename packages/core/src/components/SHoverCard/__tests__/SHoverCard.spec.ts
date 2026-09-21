@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { render, screen } from '@testing-library/vue'
+import { fireEvent, render, screen } from '@testing-library/vue'
 import { SHoverCard } from '../index'
 
 const trigger = '<a href="#">@alex</a>'
@@ -29,5 +29,20 @@ describe('SHoverCard', () => {
     expect(card).toHaveClass('profile-card')
     expect(card).toHaveAttribute('data-testid', 'profile')
     expect(screen.getByRole('link', { name: '@alex' })).not.toHaveAttribute('data-testid')
+  })
+
+  it('enable-touch opens the card on tap', async () => {
+    const { emitted } = render(SHoverCard, {
+      props: { enableTouch: true },
+      slots: { trigger, default: 'Profile' },
+    })
+    await fireEvent.pointerUp(screen.getByRole('link'), { pointerType: 'touch' })
+    expect(emitted()['update:open']).toEqual([[true]])
+  })
+
+  it('ignores taps by default', async () => {
+    const { emitted } = render(SHoverCard, { slots: { trigger, default: 'Profile' } })
+    await fireEvent.pointerUp(screen.getByRole('link'), { pointerType: 'touch' })
+    expect(emitted()['update:open']).toBeUndefined()
   })
 })

@@ -1,6 +1,7 @@
 import { describe, expect, it } from 'vitest'
 import { fireEvent, render, screen } from '@testing-library/vue'
 import { SAccordion } from '../../SAccordion'
+import { installDefaults } from '../../../composables'
 import { SAccordionItem } from '../index'
 
 // SAccordionItem works only inside SAccordion (it takes the group context).
@@ -68,5 +69,26 @@ describe('SAccordionItem', () => {
       'd',
       'm18 15-6-6-6 6',
     )
+  })
+
+  it('follows unmount-on-hide of the accordion and can override it', () => {
+    render(
+      {
+        components: { SAccordion, SAccordionItem },
+        template: `
+          <SAccordion>
+            <SAccordionItem value="a" title="A">Body A</SAccordionItem>
+            <SAccordionItem value="b" title="B" unmount-on-hide>Body B</SAccordionItem>
+          </SAccordion>
+        `,
+      },
+      {
+        global: {
+          plugins: [(app) => installDefaults(app, { SAccordion: { unmountOnHide: false } })],
+        },
+      },
+    )
+    expect(screen.getByText('Body A')).not.toBeVisible()
+    expect(screen.queryByText('Body B')).toBeNull()
   })
 })

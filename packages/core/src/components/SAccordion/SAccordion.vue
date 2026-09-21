@@ -7,6 +7,7 @@ import type { SAccordionProps } from './types'
 const props = withDefaults(defineProps<SAccordionProps>(), {
   type: 'single',
   collapsible: true,
+  unmountOnHide: true,
 })
 const p = useDefaults(props, 'SAccordion')
 
@@ -30,6 +31,7 @@ defineSlots<{
     :type="p.type"
     :collapsible="p.collapsible"
     :disabled="p.disabled"
+    :unmount-on-hide="p.unmountOnHide"
   >
     <slot>
       <SAccordionItem

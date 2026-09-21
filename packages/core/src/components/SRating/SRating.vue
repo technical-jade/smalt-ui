@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed } from 'vue'
+import { computed, ref } from 'vue'
 import { RatingItem, RatingItemIndicator, RatingRoot } from 'reka-ui'
 import { SIcon } from '../SIcon'
 import { useColorProp, useDefaults, useMessages } from '../../composables'
@@ -24,6 +24,17 @@ const m = useMessages()
 const model = defineModel<number>({ default: 0 })
 
 /**
+ * Rating under the pointer, previewed instead of the value. Reka `hoverable` is not used: it
+ * never clears the hovered rating when the pointer leaves, so the preview would stick.
+ */
+const hovered = ref(0)
+const interactive = computed(() => !p.readonly && !p.disabled)
+
+function preview(step: number) {
+  if (interactive.value) hovered.value = step
+}
+
+/**
  * readonly ≠ disabled: the rating does not change, but the control stays in the tab order and
  * is announced as "read-only" rather than "unavailable". Reka has no readonly of its own, so
  * writes are dropped here; passing `disabled` is not an option because it removes focusability.
@@ -32,6 +43,7 @@ const value = computed<number>({
   get: () => model.value,
   set: (next) => {
     if (!p.readonly) model.value = next
+    hovered.value = 0
   },
 })
 
@@ -40,7 +52,7 @@ const value = computed<number>({
  * correctly: a half with `allowHalf` and read-only averages (e.g. 3.7).
  */
 function fillRatio(i: number): number {
-  const value = model.value ?? 0
+  const value = hovered.value || (model.value ?? 0)
   if (value >= i) return 1
   if (p.allowHalf && value >= i - 0.5) return 0.5
   return 0
@@ -59,6 +71,7 @@ function fillRatio(i: number): number {
     :clearable="p.clearable"
     :step="p.allowHalf ? 0.5 : 1"
     :aria-label="p.ariaLabel"
+    @mouseleave="hovered = 0"
   >
     <RatingItem
       v-for="i in p.length"
@@ -95,6 +108,7 @@ function fillRatio(i: number): number {
         :step="step"
         class="s-rating__step"
         :aria-label="`${m.rating} ${step}`"
+        @mouseenter="preview(step)"
       >
         <span class="s-rating__hit" />
       </RatingItemIndicator>

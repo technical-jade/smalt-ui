@@ -6,6 +6,8 @@ import type { SAccordionItemProps } from './types'
 
 const props = withDefaults(defineProps<SAccordionItemProps>(), {
   expandIcon: 'chevron-down',
+  // Vue casts an absent boolean prop to false, which would override the accordion's setting.
+  unmountOnHide: undefined,
 })
 const p = useDefaults(props, 'SAccordionItem')
 
@@ -22,6 +24,7 @@ defineSlots<{
     class="s-accordion__item"
     :value="p.value"
     :disabled="p.disabled"
+    :unmount-on-hide="p.unmountOnHide"
   >
     <AccordionHeader
       as="div"

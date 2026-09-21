@@ -7,6 +7,7 @@ import type { SCollapsibleProps } from './types'
 const props = withDefaults(defineProps<SCollapsibleProps>(), {
   disabled: false,
   expandIcon: 'chevron-down',
+  unmountOnHide: true,
 })
 const p = useDefaults(props, 'SCollapsible')
 
@@ -27,6 +28,7 @@ defineSlots<{
     class="s-collapsible"
     :class="{ 's-collapsible--square': p.square }"
     :disabled="p.disabled"
+    :unmount-on-hide="p.unmountOnHide"
   >
     <CollapsibleTrigger class="s-collapsible__trigger">
       <span class="s-collapsible__title"

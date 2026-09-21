@@ -116,4 +116,21 @@ describe('SRating', () => {
     expect(container.querySelector('.s-rating__star--bg path')?.getAttribute('d')).toBe('M0 0h24')
     expect(container.querySelector('.s-rating__star--fg path')?.getAttribute('d')).toBe('M2 2h20')
   })
+
+  it('previews the rating under the pointer and restores the value when it leaves', async () => {
+    const { container } = render(SRating, { props: { modelValue: 2, ariaLabel: 'Rating' } })
+    const active = () => container.querySelectorAll('.s-rating__item--active').length
+    await fireEvent.mouseEnter(screen.getByRole('radio', { name: 'Rating 4' }))
+    expect(active()).toBe(4)
+    await fireEvent.mouseLeave(screen.getByRole('radiogroup'))
+    expect(active()).toBe(2)
+  })
+
+  it('readonly does not preview on hover', async () => {
+    const { container } = render(SRating, {
+      props: { modelValue: 2, readonly: true, ariaLabel: 'Rating' },
+    })
+    await fireEvent.mouseEnter(screen.getByRole('radio', { name: 'Rating 4' }))
+    expect(container.querySelectorAll('.s-rating__item--active')).toHaveLength(2)
+  })
 })

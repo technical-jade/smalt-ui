@@ -7,6 +7,8 @@ import type { STabsProps } from './types'
 
 const props = withDefaults(defineProps<STabsProps>(), {
   orientation: 'horizontal',
+  activationMode: 'automatic',
+  unmountOnHide: true,
 })
 const p = useDefaults(props, 'STabs')
 
@@ -50,6 +52,8 @@ watch(
     :class="`s-tabs--${p.orientation}`"
     :style="colorStyle"
     :orientation="p.orientation"
+    :activation-mode="p.activationMode"
+    :unmount-on-hide="p.unmountOnHide"
   >
     <TabsList
       ref="list"

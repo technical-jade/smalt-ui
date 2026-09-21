@@ -18,6 +18,7 @@ const props = withDefaults(defineProps<SDatePickerProps>(), {
   invalid: false,
   floatingLabel: true,
   fixedWeeks: true,
+  closeOnSelect: true,
 })
 const p = useDefaults(props, 'SDatePicker')
 
@@ -76,6 +77,7 @@ const filled = computed(() => model.value != null)
         :max-value="p.maxValue"
         :week-starts-on="p.weekStartsOn"
         :fixed-weeks="p.fixedWeeks"
+        :close-on-select="p.closeOnSelect"
         :is-date-disabled="p.isDateDisabled"
         :disabled="p.disabled"
         :readonly="p.readonly"

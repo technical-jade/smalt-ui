@@ -17,6 +17,7 @@ const props = withDefaults(defineProps<SHoverCardProps>(), {
   sideOffset: 8,
   openDelay: 300,
   closeDelay: 200,
+  enableTouch: false,
 })
 const p = useDefaults(props, 'SHoverCard')
 
@@ -38,6 +39,7 @@ defineSlots<{
     v-model:open="open"
     :open-delay="p.openDelay"
     :close-delay="p.closeDelay"
+    :enable-touch="p.enableTouch"
   >
     <HoverCardTrigger as-child>
       <slot name="trigger" />

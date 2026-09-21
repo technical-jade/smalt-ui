@@ -48,4 +48,28 @@ describe('SDatePicker · browser', () => {
     await userEvent.click(screen.getByRole('button', { name: 'Next' }))
     expect(events).toEqual(['focus', 'blur'])
   })
+
+  it('closes the calendar once a day is picked, unless close-on-select is off', async () => {
+    const content = () => document.querySelector('.s-date-picker__content')
+    const { unmount } = render(SDatePicker, { props: { label: 'Date', locale: 'en-US' } })
+    await userEvent.click(screen.getByRole('button', { name: 'Open calendar' }))
+    await expect.poll(content).not.toBeNull()
+    await userEvent.click(
+      document.querySelector<HTMLElement>(
+        '[data-reka-calendar-cell-trigger]:not([data-outside-view])',
+      )!,
+    )
+    await expect.poll(content).toBeNull()
+    unmount()
+
+    render(SDatePicker, { props: { label: 'Date', locale: 'en-US', closeOnSelect: false } })
+    await userEvent.click(screen.getByRole('button', { name: 'Open calendar' }))
+    await expect.poll(content).not.toBeNull()
+    await userEvent.click(
+      document.querySelector<HTMLElement>(
+        '[data-reka-calendar-cell-trigger]:not([data-outside-view])',
+      )!,
+    )
+    expect(content()).not.toBeNull()
+  })
 })

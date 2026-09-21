@@ -22,4 +22,10 @@ export interface SAccordionProps {
   disabled?: boolean
   /** Square corners: removes the border radius (rounded by default). */
   square?: boolean
+  /**
+   * Unmounts the content of collapsed sections. `false` keeps it mounted and hidden, so nested
+   * fields keep their state and the browser page search finds collapsed text. A section can
+   * override it with its own `unmount-on-hide`.
+   */
+  unmountOnHide?: boolean
 }

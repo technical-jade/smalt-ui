@@ -1,5 +1,6 @@
 import { describe, expect, it } from 'vitest'
 import { fireEvent, render, screen } from '@testing-library/vue'
+import { installDefaults } from '../../../composables'
 import { SCollapsible } from '../index'
 
 describe('SCollapsible', () => {
@@ -50,5 +51,21 @@ describe('SCollapsible', () => {
       'd',
       'm18 15-6-6-6 6',
     )
+  })
+
+  it('unmount-on-hide=false keeps collapsed content mounted and hidden', () => {
+    render(SCollapsible, {
+      props: { title: 'T' },
+      slots: { default: '<input aria-label="Draft" />' },
+      global: {
+        plugins: [(app) => installDefaults(app, { SCollapsible: { unmountOnHide: false } })],
+      },
+    })
+    expect(screen.getByLabelText('Draft', { selector: 'input' })).not.toBeVisible()
+  })
+
+  it('unmounts collapsed content by default', () => {
+    render(SCollapsible, { props: { title: 'T' }, slots: { default: 'Body' } })
+    expect(screen.queryByText('Body')).toBeNull()
   })
 })
