@@ -21,6 +21,8 @@ export default defineConfigWithVueTs(
       '**/.data/**',
       '**/test-results/**',
       '**/playwright-report/**',
+      // Hidden root folders hold tool state and local caches, not project code.
+      '.*/**',
     ],
   },
   pluginVue.configs['flat/recommended'],
