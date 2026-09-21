@@ -49,6 +49,7 @@ const model = defineModel<DateValue | DateValue[] | undefined>()
     :disabled="p.disabled"
     :readonly="p.readonly"
     :is-date-disabled="p.isDateDisabled"
+    :calendar-label="p.calendarLabel ?? m.calendar"
   >
     <CalendarHeader class="s-calendar__header">
       <CalendarPrev

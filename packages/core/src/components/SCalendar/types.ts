@@ -26,6 +26,11 @@ export interface SCalendarProps {
   readonly?: boolean
   /** Predicate: return `true` to disable a specific date. */
   isDateDisabled?: (date: DateValue) => boolean
+  /**
+   * Accessible name of the calendar, followed by the visible month (defaults to the locale
+   * dictionary).
+   */
+  calendarLabel?: string
   /** Accessible name of the "previous month" button (defaults to the locale dictionary). */
   prevMonthLabel?: string
   /** Accessible name of the "next month" button (defaults to the locale dictionary). */

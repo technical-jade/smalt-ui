@@ -128,6 +128,7 @@ function focusFirstSegment() {
         </DateRangePickerField>
 
         <DateRangePickerCalendar
+          :calendar-label="p.calendarLabel"
           :prev-month-label="p.prevMonthLabel"
           :next-month-label="p.nextMonthLabel"
           :square="p.square"

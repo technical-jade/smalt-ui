@@ -58,7 +58,7 @@ onUnmounted(() => {
 <template>
   <RekaToastProvider
     :duration="p.duration"
-    :label="p.label ?? m.notifications"
+    :label="m.notification"
     :swipe-direction="swipeDirection"
   >
     <slot />
@@ -81,6 +81,7 @@ onUnmounted(() => {
       <ToastViewport
         class="s-toast-viewport"
         :class="`s-toast-viewport--${p.position}`"
+        :label="(hotkey: string) => `${p.label ?? m.notifications} (${hotkey})`"
       />
     </ToastPortal>
   </RekaToastProvider>

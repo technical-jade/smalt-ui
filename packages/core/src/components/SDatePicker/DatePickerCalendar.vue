@@ -23,6 +23,7 @@ import { useMessages } from '../../composables'
  * (`reset-inherited` on `__content`, since the portal goes to body).
  */
 defineProps<{
+  calendarLabel?: string
   prevMonthLabel?: string
   nextMonthLabel?: string
   square?: boolean
@@ -42,6 +43,7 @@ const m = useMessages()
     <RekaDatePickerCalendar
       v-slot="{ grid, weekDays }"
       class="s-date-picker__calendar"
+      :calendar-label="calendarLabel ?? m.calendar"
     >
       <DatePickerHeader class="s-date-picker__cal-header">
         <DatePickerPrev

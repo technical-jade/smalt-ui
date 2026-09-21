@@ -15,6 +15,11 @@ export interface SPinInputProps {
   square?: boolean
   /** Field name in native form submission: the value is sent in a hidden input. */
   name?: string
+  /**
+   * Accessible name of each cell; `{index}` and `{length}` are replaced with the cell number and
+   * the cell count (defaults to the locale dictionary).
+   */
+  cellLabel?: string
   /** Marks the field as required. */
   required?: boolean
   /** Disables input. */

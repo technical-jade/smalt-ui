@@ -37,6 +37,7 @@ const page = defineModel<number>('page', { default: 1 })
     :sibling-count="p.siblingCount"
     :show-edges="p.showEdges"
     :disabled="p.disabled"
+    :aria-label="p.ariaLabel ?? m.pagination"
   >
     <PaginationList
       v-slot="{ items }"

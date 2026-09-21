@@ -17,4 +17,6 @@ export interface SPaginationProps {
   prevPageLabel?: string
   /** Accessible name of the next page button (taken from the locale dictionary by default). */
   nextPageLabel?: string
+  /** Accessible name of the navigation landmark (taken from the locale dictionary by default). */
+  ariaLabel?: string
 }

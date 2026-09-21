@@ -33,12 +33,22 @@ export interface SMessages {
   prevMonth: string
   /** Moves the calendar to the next month. */
   nextMonth: string
+  /** Accessible name of a calendar grid, followed by the visible month ("Calendar, March 2026"). */
+  calendar: string
   /** Moves `SPagination` to the previous page. */
   prevPage: string
   /** Moves `SPagination` to the next page. */
   nextPage: string
   /** The word "page" in the accessible name of a page number (`SPagination`), e.g. "Page 3". */
   page: string
+  /** Accessible name of the page navigation landmark (`SPagination`). */
+  pagination: string
+  /**
+   * Accessible name of an `SPinInput` cell. `{index}` and `{length}` are replaced with the cell
+   * number and the cell count. A template rather than a function, so it survives the JSON of the
+   * Nuxt module options.
+   */
+  pinCell: string
   /** Button that removes a tag (`STag`, `use-tags` in `SInput`/`SSelect`). */
   removeTag: string
   /** The word "rating" in the accessible name of an `SRating` item, e.g. "Rating 3". */
@@ -65,6 +75,8 @@ export interface SMessages {
   stepCompleted: string
   /** Accessible name of the notification region (`ToastProvider`). */
   notifications: string
+  /** Word a screen reader says before each notification it announces (`ToastProvider`). */
+  notification: string
   /** Accessible name of the range start thumb (`SSlider`). */
   rangeStart: string
   /** Accessible name of the range end thumb (`SSlider`). */
@@ -86,9 +98,12 @@ export const enMessages: SMessages = {
   openCalendar: 'Open calendar',
   prevMonth: 'Previous month',
   nextMonth: 'Next month',
+  calendar: 'Calendar',
   prevPage: 'Previous page',
   nextPage: 'Next page',
   page: 'Page',
+  pagination: 'Pagination',
+  pinCell: 'Character {index} of {length}',
   removeTag: 'Remove tag',
   rating: 'Rating',
   colorSwatches: 'Color swatches',
@@ -102,6 +117,7 @@ export const enMessages: SMessages = {
   pickColor: 'Pick a color',
   stepCompleted: 'Completed',
   notifications: 'Notifications',
+  notification: 'Notification',
   rangeStart: 'start',
   rangeEnd: 'end',
   autocompleteEmpty: 'Nothing found',

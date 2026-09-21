@@ -3,7 +3,7 @@ import { useTemplateRef } from 'vue'
 import type { ComponentPublicInstance } from 'vue'
 import { PinInputInput, PinInputRoot } from 'reka-ui'
 import { SFormField } from '../SFormField'
-import { useDefaults } from '../../composables'
+import { useDefaults, useMessages } from '../../composables'
 import { useFieldFocus } from '../../internal/useFieldFocus'
 import type { SPinInputProps } from './types'
 
@@ -17,6 +17,15 @@ const props = withDefaults(defineProps<SPinInputProps>(), {
   otp: false,
 })
 const p = useDefaults(props, 'SPinInput')
+
+const m = useMessages()
+
+// Replaces Reka's own English "pin input 1 of 4".
+function cellLabel(index: number): string {
+  return (p.cellLabel ?? m.value.pinCell)
+    .replace('{index}', String(index))
+    .replace('{length}', String(p.length))
+}
 
 const emit = defineEmits<{
   /** Focus entered the field. Moving between cells does not count. */
@@ -85,6 +94,7 @@ const model = defineModel<string[]>({ default: () => [] })
             :key="i"
             class="s-pin-input__cell"
             :index="i - 1"
+            :aria-label="cellLabel(i)"
             :aria-describedby="describedBy"
             :aria-invalid="fieldInvalid || undefined"
           />

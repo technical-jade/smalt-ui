@@ -23,6 +23,7 @@ import { useMessages } from '../../composables'
  * SDateRangePicker.scss (`reset-inherited` on `__content`, since it is a portal).
  */
 defineProps<{
+  calendarLabel?: string
   prevMonthLabel?: string
   nextMonthLabel?: string
   square?: boolean
@@ -42,6 +43,7 @@ const m = useMessages()
     <RekaDateRangePickerCalendar
       v-slot="{ grid, weekDays }"
       class="s-date-range-picker__calendar"
+      :calendar-label="calendarLabel ?? m.calendar"
     >
       <DateRangePickerHeader class="s-date-range-picker__cal-header">
         <DateRangePickerPrev
