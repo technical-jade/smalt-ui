@@ -39,4 +39,15 @@ describe('SButton · browser', () => {
     })
     expect(getComputedStyle(container.querySelector('.s-button')!).boxShadow).not.toBe('none')
   })
+
+  it('loading does not change the width of the button', async () => {
+    const { container, rerender } = render(SButton, {
+      props: { icon: 'star' },
+      slots: { default: 'Save changes' },
+    })
+    const button = container.querySelector('.s-button')!
+    const width = button.getBoundingClientRect().width
+    await rerender({ loading: true })
+    expect(button.getBoundingClientRect().width).toBe(width)
+  })
 })

@@ -32,7 +32,10 @@ export interface SButtonProps {
   type?: 'button' | 'submit' | 'reset'
   /** Disables the button. */
   disabled?: boolean
-  /** Loading state: shows a spinner and blocks interaction. */
+  /**
+   * Loading state: shows a spinner over the content and blocks interaction. The button keeps its
+   * width and its accessible name.
+   */
   loading?: boolean
   /**
    * Icon button: a square sized by the control height, without horizontal padding. Turns on

@@ -6,6 +6,7 @@ $sizes: sm, md, lg;
 .s-button {
   // typescale sets its own line-height/letter-spacing, so the reset skips them (no duplicate).
   @include tools.reset-inherited($typography: false);
+  position: relative;
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -132,7 +133,16 @@ $sizes: sm, md, lg;
     align-items: center;
   }
 
+  // The content keeps its place under the spinner, so the width does not jump. opacity rather
+  // than visibility: hidden text would drop out of the accessible name.
+  &[data-loading] > :not(.s-button__spinner) {
+    opacity: 0;
+  }
+
   &__spinner {
+    position: absolute;
+    inset: 0;
+    margin: auto;
     width: 1em;
     height: 1em;
     border: 2px solid currentColor;

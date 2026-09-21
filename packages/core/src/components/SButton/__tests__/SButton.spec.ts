@@ -153,4 +153,23 @@ describe('SButton', () => {
     expect(style).toContain('--s-button-elevation: var(--s-elevation-2)')
     expect(style).toContain('--s-button-elevation-hover: var(--s-elevation-3)')
   })
+
+  it.each([
+    ['sm', '16'],
+    ['md', '18'],
+    ['lg', '20'],
+  ] as const)('size %s draws %spx icons', (size, px) => {
+    const { container } = render(SButton, {
+      props: { size, icon: 'star', iconRight: 'x' },
+      slots: { default: 'Save' },
+    })
+    const icons = container.querySelectorAll('svg')
+    expect(icons).toHaveLength(2)
+    icons.forEach((icon) => expect(icon).toHaveAttribute('width', px))
+  })
+
+  it('loading keeps the content, so the accessible name stays', () => {
+    render(SButton, { props: { loading: true, icon: 'star' }, slots: { default: 'Save' } })
+    expect(screen.getByRole('button', { name: 'Save' })).toBeInTheDocument()
+  })
 })

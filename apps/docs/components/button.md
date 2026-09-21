@@ -134,6 +134,8 @@ its shades (`primary`, `teal`, `teal-10`). It overrides the variant color while 
 
 ## States
 
+`loading` shows a spinner over the content: the button keeps its width and its accessible name.
+
 <Demo>
   <SButton disabled>Disabled</SButton>
   <SButton loading>Loading</SButton>
@@ -174,8 +176,9 @@ its shades (`primary`, `teal`, `teal-10`). It overrides the variant color while 
 
 ## Icons
 
-The leading (`icon`) and trailing (`icon-right`) icons take a registry name. For a button without
-text, set `aria-label` so the icon gets an accessible name.
+The leading (`icon`) and trailing (`icon-right`) icons take a registry name and follow the button
+size: 16px for `sm`, 18px for `md`, 20px for `lg`. For a button without text, set `aria-label` so
+the icon gets an accessible name.
 
 <Demo>
   <SButton icon="plus" variant="primary">Add</SButton>

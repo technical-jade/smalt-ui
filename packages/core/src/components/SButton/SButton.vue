@@ -43,6 +43,9 @@ function onClick(event: MouseEvent) {
   }
 }
 
+const ICON_SIZES = { sm: 16, md: 18, lg: 20 } as const
+const iconSize = computed(() => ICON_SIZES[p.size] ?? ICON_SIZES.md)
+
 const colorStyle = useColorProp(p, 's-button')
 // hover: a filled button rises one level on hover, including when elevation is set.
 const elevationStyle = useElevationProp(p, 's-button', { hover: true })
@@ -82,18 +85,13 @@ watchEffect(() => {
     @click="onClick"
   >
     <span
-      v-if="p.loading"
-      class="s-button__spinner"
-      aria-hidden="true"
-    />
-    <span
-      v-if="($slots.leading || p.icon) && !p.loading"
+      v-if="$slots.leading || p.icon"
       class="s-button__affix"
     >
       <slot name="leading">
         <SIcon
           :icon="p.icon"
-          :size="18"
+          :size="iconSize"
         />
       </slot>
     </span>
@@ -109,10 +107,15 @@ watchEffect(() => {
       <slot name="trailing">
         <SIcon
           :icon="p.iconRight"
-          :size="18"
+          :size="iconSize"
         />
       </slot>
     </span>
+    <span
+      v-if="p.loading"
+      class="s-button__spinner"
+      aria-hidden="true"
+    />
   </Primitive>
 </template>
 
