@@ -69,6 +69,7 @@ defineSlots<{
         class="s-radio-group"
         :class="[`s-radio-group--${p.orientation}`, p.groupClass]"
         :disabled="p.disabled"
+        :name="p.name"
         :required="p.required"
         :aria-label="labelId ? undefined : p.ariaLabel"
         :aria-labelledby="labelId"

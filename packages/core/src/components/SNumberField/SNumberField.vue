@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import { useTemplateRef } from 'vue'
+import type { ComponentPublicInstance } from 'vue'
 import {
   NumberFieldDecrement,
   NumberFieldIncrement,
@@ -8,7 +10,11 @@ import {
 import { SFormField } from '../SFormField'
 import { SIcon } from '../SIcon'
 import { useDefaults, useMessages } from '../../composables'
+import { useFieldAttrs } from '../../internal/useFieldAttrs'
+import { useFieldFocus } from '../../internal/useFieldFocus'
 import type { SNumberFieldProps } from './types'
+
+defineOptions({ inheritAttrs: false })
 
 const props = withDefaults(defineProps<SNumberFieldProps>(), {
   invalid: false,
@@ -20,6 +26,17 @@ const p = useDefaults(props, 'SNumberField')
 
 const m = useMessages()
 
+const { rootClass, rootStyle, controlAttrs } = useFieldAttrs()
+
+const emit = defineEmits<{
+  /** Focus entered the field. Clicking the +/- buttons does not count. */
+  focus: [event: FocusEvent]
+  /** Focus left the field. Clicking the +/- buttons does not count. */
+  blur: [event: FocusEvent]
+}>()
+const root = useTemplateRef<ComponentPublicInstance>('root')
+const { onFocusIn, onFocusOut } = useFieldFocus(root, emit)
+
 /** Numeric value of the field. Two-way binding via `v-model`. */
 const model = defineModel<number | null>({ default: null })
 </script>
@@ -27,14 +44,19 @@ const model = defineModel<number | null>({ default: null })
 <template>
   <SFormField
     :id="p.id"
+    ref="root"
     :floating-label="false"
     class="s-number-field"
+    :class="rootClass"
+    :style="rootStyle"
     :label="p.label"
     :hint="p.hint"
     :error="p.error"
     :invalid="p.invalid"
     :required="p.required"
     :square="p.square"
+    @focusin="onFocusIn"
+    @focusout="onFocusOut"
   >
     <template #default="{ id: fieldId, describedBy, invalid: fieldInvalid }">
       <NumberFieldRoot
@@ -44,6 +66,8 @@ const model = defineModel<number | null>({ default: null })
         :max="p.max"
         :step="p.step"
         :disabled="p.disabled"
+        :name="p.name"
+        :required="p.required"
       >
         <NumberFieldDecrement
           class="s-number-field__button"
@@ -56,6 +80,7 @@ const model = defineModel<number | null>({ default: null })
         </NumberFieldDecrement>
 
         <NumberFieldInput
+          v-bind="controlAttrs"
           :id="fieldId"
           class="s-number-field__input"
           :placeholder="p.placeholder"

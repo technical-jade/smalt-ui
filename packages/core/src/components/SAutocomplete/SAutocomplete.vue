@@ -210,6 +210,8 @@ function clear() {
         class="s-autocomplete__root"
         ignore-filter
         :disabled="p.disabled"
+        :name="p.name"
+        :required="p.required"
       >
         <ComboboxAnchor
           ref="anchor"

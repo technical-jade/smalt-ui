@@ -45,4 +45,16 @@ describe('SPinInput', () => {
     expect(wrap?.querySelector('.s-pin-input__prepend [data-test="pre"]')).toBeTruthy()
     expect(wrap?.querySelector('.s-pin-input__append [data-test="app"]')).toBeTruthy()
   })
+
+  it('focus/blur fire once for the group, not when moving between cells', async () => {
+    const { container, emitted } = render(SPinInput, { props: { label: 'Code', length: 2 } })
+    const [first, second] = container.querySelectorAll('.s-pin-input__cell')
+    await fireEvent.focusIn(first!)
+    await fireEvent.focusOut(first!, { relatedTarget: second })
+    await fireEvent.focusIn(second!, { relatedTarget: first })
+    expect(emitted().focus).toHaveLength(1)
+    expect(emitted().blur).toBeUndefined()
+    await fireEvent.focusOut(second!, { relatedTarget: document.body })
+    expect(emitted().blur).toHaveLength(1)
+  })
 })

@@ -53,9 +53,29 @@ they are useful rather than to the outermost element:
   `SDialog`, `SDrawer`, `SAlertDialog`) put them on the panel itself: the teleported element with
   the component's `__content` class.
 - **Fields with a single control** (`SInput`, `STextarea`, `SAutocomplete`, `SSelect`,
-  `SCheckbox`, `SSwitch`) keep `class`/`style` on the outer field and pass everything else to the
+  `SCheckbox`, `SSwitch`, `SColorField`, `SNumberField`) keep `class`/`style` on the outer field and pass everything else to the
   control, so `aria-*`, `data-testid` and `@keydown` reach the element that uses them.
 - Other components keep them on their root element.
+
+Composite fields (`SSelect`, `SNumberField`, `SPinInput`, the date and time fields) emit `focus`
+and `blur` for the field as a whole: moving between segments, cells, buttons or into the open
+list does not count.
+
+## Native forms
+
+Every form control accepts `name`. Inside a `<form>` it submits the value with the form and
+takes part in native validation (`required`), the same as a native input. Controls without a
+native element behind them render a hidden one that carries the value:
+
+| Component                   | Submitted value                                                      |
+| --------------------------- | -------------------------------------------------------------------- |
+| `SSelect` with `multiple`   | one entry per selected value (`formData.getAll(name)`)               |
+| `SAutocomplete`             | the suggestion's `value`, not the text in the input                  |
+| `SDateField`, `SDatePicker` | ISO date, `2026-01-02` (date-time with a time `granularity`)         |
+| `STimeField`                | ISO time, `09:30:00`                                                 |
+| `SDateRangePicker`          | ISO interval, `2026-01-02/2026-01-05`; empty until both ends are set |
+| `SSlider` with a range      | `name[0]`, `name[1]`                                                 |
+| `SPinInput`                 | the cells joined into one string                                     |
 
 ## SSR and portals
 

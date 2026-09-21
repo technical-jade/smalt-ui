@@ -40,6 +40,7 @@ function thumbLabel(index: number, total: number): string | undefined {
 }
 
 // Reka works with an array of values; for a single thumb it is unwrapped back into a number.
+const isRange = computed(() => Array.isArray(model.value))
 const arrayValue = computed({
   get: () => (Array.isArray(model.value) ? model.value : [model.value ?? p.min]),
   set: (v: number[]) => {
@@ -97,6 +98,8 @@ defineSlots<{
         :max="p.max"
         :step="p.step"
         :disabled="p.disabled"
+        :name="isRange ? p.name : undefined"
+        :required="p.required"
         @pointerenter="hovered = true"
         @pointerleave="hovered = false"
         @pointerdown="onDragStart"
@@ -132,6 +135,14 @@ defineSlots<{
           </span>
         </SliderThumb>
       </SliderRoot>
+      <!-- Reka names form values by index, "price[0]"; a single thumb submits a plain "price". -->
+      <input
+        v-if="p.name && !isRange"
+        type="hidden"
+        :name="p.name"
+        :value="arrayValue[0]"
+        :disabled="p.disabled"
+      />
     </template>
   </SFormField>
 </template>

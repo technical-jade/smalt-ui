@@ -23,6 +23,8 @@ export interface SColorFieldProps {
   disabled?: boolean
   /** Read-only. */
   readonly?: boolean
+  /** Field name in native form submission: the value is sent in a hidden input. */
+  name?: string
   /** Marks the field as required: shows `*` next to the label. */
   required?: boolean
   /** Explicitly marks the field invalid (in addition to `error`). */

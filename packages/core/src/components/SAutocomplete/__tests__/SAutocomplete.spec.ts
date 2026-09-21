@@ -154,7 +154,8 @@ describe('SAutocomplete', () => {
     })
     const input = screen.getByLabelText('City')
     expect(input).toHaveAttribute('maxlength', '60')
-    expect(input).toHaveAttribute('name', 'city')
+    // The visible input holds the label; the value is submitted by the hidden input of the root.
+    expect(input).not.toHaveAttribute('name')
     expect(input).not.toHaveClass('own-field')
     expect(container.querySelector('.s-field')).toHaveClass('own-field')
   })

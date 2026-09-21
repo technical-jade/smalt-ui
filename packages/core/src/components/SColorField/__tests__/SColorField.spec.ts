@@ -1,5 +1,5 @@
-import { describe, expect, it } from 'vitest'
-import { render, screen } from '@testing-library/vue'
+import { describe, expect, it, vi } from 'vitest'
+import { fireEvent, render, screen } from '@testing-library/vue'
 import { SColorField } from '../index'
 
 describe('SColorField', () => {
@@ -38,5 +38,20 @@ describe('SColorField', () => {
     const control = container.querySelector('.s-color-field__control')
     expect(control?.querySelector('.s-color-field__prepend')?.textContent).toBe('P')
     expect(control?.querySelector('.s-color-field__append')?.textContent).toBe('A')
+  })
+
+  it('class/style stay on the field, attributes and listeners reach the input', async () => {
+    const onBlur = vi.fn()
+    const { container } = render(SColorField, {
+      props: { label: 'Brand color' },
+      attrs: { class: 'brand', style: 'width: 200px', 'data-testid': 'brand', onBlur },
+    })
+    const root = container.firstElementChild as HTMLElement
+    expect(root).toHaveClass('s-color-field', 'brand')
+    expect(root.style.width).toBe('200px')
+    const input = screen.getByLabelText('Brand color')
+    expect(input).toHaveAttribute('data-testid', 'brand')
+    await fireEvent.blur(input)
+    expect(onBlur).toHaveBeenCalledTimes(1)
   })
 })

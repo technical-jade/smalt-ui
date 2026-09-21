@@ -31,6 +31,8 @@ export interface SSelectProps {
   invalid?: boolean
   /** Square corners: removes the field border rounding (rounded by default). */
   square?: boolean
+  /** Field name in native form submission: the value is sent in a hidden input. */
+  name?: string
   /** Required field: a `*` marker next to the label. */
   required?: boolean
   /** Trigger id. Generated (SSR-safe) when not set. */

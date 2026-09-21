@@ -21,6 +21,8 @@ export interface SSliderProps {
   error?: string
   /** Marks the field invalid explicitly (in addition to `error`). */
   invalid?: boolean
+  /** Field name in native form submission: the value is sent in a hidden input. */
+  name?: string
   /** Marks the field as required. */
   required?: boolean
   /** Disables the slider. */

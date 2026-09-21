@@ -77,6 +77,8 @@ const filled = computed(() => model.value != null)
         :is-date-disabled="p.isDateDisabled"
         :disabled="p.disabled"
         :readonly="p.readonly"
+        :name="p.name"
+        :required="p.required"
       >
         <DatePickerField
           :field-id="fieldId"

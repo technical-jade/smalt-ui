@@ -86,6 +86,19 @@ defineSlots<{
  * `value` (`string[]`). Two-way binding via `v-model`.
  */
 const model = defineModel<string | string[]>()
+
+/**
+ * The form gets its own hidden select rather than Reka's: Reka assigns an array to
+ * `select.value`, so `multiple` submits an empty string, and the Combobox branch would name the
+ * values "tags[0]", "tags[1]". `v-model` also brings browser autofill back into the value.
+ */
+const isMultiple = computed(() => p.multiple || p.useTags)
+
+// Native validation focuses the hidden select on submit; the user needs the visible control.
+function focusControl() {
+  const el = root.value?.$el as HTMLElement | undefined
+  el?.querySelector<HTMLElement>('.s-select__trigger, .s-select__input')?.focus()
+}
 </script>
 
 <template>
@@ -190,6 +203,28 @@ const model = defineModel<string | string[]>()
           <slot name="append" />
         </template>
       </SelectDropdown>
+      <select
+        v-if="p.name"
+        v-model="model"
+        class="s-select__native"
+        tabindex="-1"
+        aria-hidden="true"
+        :name="p.name"
+        :multiple="isMultiple"
+        :required="p.required"
+        :disabled="p.disabled"
+        @focus="focusControl"
+      >
+        <option
+          v-if="!isMultiple"
+          value=""
+        />
+        <option
+          v-for="option in p.options"
+          :key="option.value"
+          :value="option.value"
+        />
+      </select>
     </template>
   </SFormField>
 </template>

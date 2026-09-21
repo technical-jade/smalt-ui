@@ -11,6 +11,8 @@ export interface SNumberFieldProps {
   invalid?: boolean
   /** Square corners: removes the field border rounding (rounded by default). */
   square?: boolean
+  /** Field name in native form submission: the value is sent in a hidden input. */
+  name?: string
   /** Marks the field as required. */
   required?: boolean
   /** Disables the field and the step buttons. */

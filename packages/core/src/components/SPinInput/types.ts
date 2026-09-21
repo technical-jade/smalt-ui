@@ -13,6 +13,8 @@ export interface SPinInputProps {
   invalid?: boolean
   /** Square corners: removes the cell border radius (rounded by default). */
   square?: boolean
+  /** Field name in native form submission: the value is sent in a hidden input. */
+  name?: string
   /** Marks the field as required. */
   required?: boolean
   /** Disables input. */

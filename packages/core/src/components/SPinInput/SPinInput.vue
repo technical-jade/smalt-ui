@@ -1,7 +1,10 @@
 <script setup lang="ts">
+import { useTemplateRef } from 'vue'
+import type { ComponentPublicInstance } from 'vue'
 import { PinInputInput, PinInputRoot } from 'reka-ui'
 import { SFormField } from '../SFormField'
 import { useDefaults } from '../../composables'
+import { useFieldFocus } from '../../internal/useFieldFocus'
 import type { SPinInputProps } from './types'
 
 const props = withDefaults(defineProps<SPinInputProps>(), {
@@ -14,6 +17,15 @@ const props = withDefaults(defineProps<SPinInputProps>(), {
   otp: false,
 })
 const p = useDefaults(props, 'SPinInput')
+
+const emit = defineEmits<{
+  /** Focus entered the field. Moving between cells does not count. */
+  focus: [event: FocusEvent]
+  /** Focus left the field. Moving between cells does not count. */
+  blur: [event: FocusEvent]
+}>()
+const root = useTemplateRef<ComponentPublicInstance>('root')
+const { onFocusIn, onFocusOut } = useFieldFocus(root, emit)
 
 defineSlots<{
   /** Content at the start of the field, inside the border (icon, button). */
@@ -33,6 +45,7 @@ const model = defineModel<string[]>({ default: () => [] })
 <template>
   <SFormField
     :id="p.id"
+    ref="root"
     :floating-label="false"
     class="s-pin-input"
     :label="p.label"
@@ -41,6 +54,8 @@ const model = defineModel<string[]>({ default: () => [] })
     :invalid="p.invalid"
     :required="p.required"
     :square="p.square"
+    @focusin="onFocusIn"
+    @focusout="onFocusOut"
   >
     <template #default="{ id: fieldId, labelId, describedBy, invalid: fieldInvalid }">
       <div class="s-pin-input__wrap">
@@ -59,6 +74,8 @@ const model = defineModel<string[]>({ default: () => [] })
           :otp="p.otp"
           :placeholder="p.placeholder"
           :disabled="p.disabled"
+          :name="p.name"
+          :required="p.required"
         >
           <!-- aria-describedby/aria-invalid go on the cell inputs themselves: PinInputRoot is a
                div, and screen readers do not announce its attributes when a cell is focused. -->

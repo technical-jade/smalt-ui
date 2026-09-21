@@ -3,6 +3,10 @@
 $sizes: sm, md, lg;
 
 .s-color-field {
+  &__native {
+    @include tools.visually-hidden;
+  }
+
   &__control {
     @include tools.segmented-field-control;
     gap: var(--s-space-2);

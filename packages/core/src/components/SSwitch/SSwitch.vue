@@ -36,6 +36,7 @@ const switchId = computed(() => p.id ?? `s-switch-${uid}`)
       v-bind="controlAttrs"
       :id="switchId"
       v-model="model"
+      :name="p.name"
       class="s-switch__track"
       :disabled="p.disabled"
       :required="p.required"

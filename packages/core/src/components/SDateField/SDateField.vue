@@ -95,6 +95,8 @@ const hasLeading = computed(() => !!slots.prepend)
           :max-value="p.maxValue"
           :disabled="p.disabled"
           :readonly="p.readonly"
+          :name="p.name"
+          :required="p.required"
           :aria-labelledby="labelId"
           :aria-invalid="fieldInvalid || undefined"
           :aria-describedby="describedBy"

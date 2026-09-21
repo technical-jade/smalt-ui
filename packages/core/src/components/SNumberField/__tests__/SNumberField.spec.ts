@@ -40,4 +40,27 @@ describe('SNumberField', () => {
     const { container } = render(SNumberField, { props: { modelValue: 1, disabled: true } })
     expect(container.querySelector('.s-number-field__control')).toHaveAttribute('data-disabled')
   })
+
+  it('class/style stay on the field, other attributes reach the input', () => {
+    const { container } = render(SNumberField, {
+      props: { label: 'Quantity' },
+      attrs: { class: 'qty', style: 'width: 120px', 'data-testid': 'qty' },
+    })
+    const root = container.firstElementChild as HTMLElement
+    expect(root).toHaveClass('s-number-field', 'qty')
+    expect(root.style.width).toBe('120px')
+    expect(screen.getByLabelText('Quantity')).toHaveAttribute('data-testid', 'qty')
+  })
+
+  it('focus/blur fire for the field as a whole, not for the +/- buttons', async () => {
+    const { emitted } = render(SNumberField, { props: { label: 'Quantity' } })
+    const input = screen.getByLabelText('Quantity')
+    const plus = screen.getByRole('button', { name: 'Increase' })
+    await fireEvent.focusIn(input)
+    await fireEvent.focusOut(input, { relatedTarget: plus })
+    expect(emitted().focus).toHaveLength(1)
+    expect(emitted().blur).toBeUndefined()
+    await fireEvent.focusOut(plus, { relatedTarget: document.body })
+    expect(emitted().blur).toHaveLength(1)
+  })
 })

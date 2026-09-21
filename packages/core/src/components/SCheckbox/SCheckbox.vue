@@ -55,6 +55,7 @@ defineSlots<{
           v-model="model"
           class="s-checkbox__box"
           :value="p.value"
+          :name="p.name"
           :disabled="p.disabled"
           :required="p.required"
           :aria-label="p.ariaLabel"

@@ -14,6 +14,8 @@ export interface SSwitchProps {
   ariaLabel?: string
   /** Disables the switch and makes it inactive. */
   disabled?: boolean
+  /** Field name in native form submission: the value is sent in a hidden input. */
+  name?: string
   /** Required for form submission. */
   required?: boolean
   /** Switch id. Generated automatically when not set (SSR-safe). */

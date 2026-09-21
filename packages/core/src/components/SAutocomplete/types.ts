@@ -34,6 +34,8 @@ export interface SAutocompleteProps {
   error?: string
   /** Explicitly marks the field invalid (in addition to `error`). */
   invalid?: boolean
+  /** Field name in native form submission: the value is sent in a hidden input. */
+  name?: string
   /** Required field: a `*` marker next to the label. */
   required?: boolean
   /** Disables the field. */

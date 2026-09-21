@@ -18,6 +18,8 @@ export interface SCheckboxProps {
   value?: string
   /** Disables the checkbox. */
   disabled?: boolean
+  /** Field name in native form submission: the value is sent in a hidden input. */
+  name?: string
   /** Required for form submission. */
   required?: boolean
   /** Hint below the checkbox. */

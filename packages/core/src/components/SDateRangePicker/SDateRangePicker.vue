@@ -52,6 +52,24 @@ const model = defineModel<SDateRange | undefined>()
  * start placeholder segment must not disappear until the end is picked.
  */
 const filled = computed(() => model.value?.start != null || model.value?.end != null)
+
+/**
+ * The form gets its own hidden input: Reka's one carries `"${start} - ${end}"` and turns an
+ * empty range into "undefined - undefined", so `required` would never fail. The value here is an
+ * ISO 8601 interval, empty until both bounds are picked.
+ */
+const formValue = computed(() => {
+  const { start, end } = model.value ?? {}
+  return start && end ? `${start.toString()}/${end.toString()}` : ''
+})
+
+// Native validation focuses the hidden input on submit; the user needs the first segment instead.
+function focusFirstSegment() {
+  const el = root.value?.$el as HTMLElement | undefined
+  el?.querySelector<HTMLElement>(
+    '.s-date-range-picker__segment:not(.s-date-range-picker__segment--literal)',
+  )?.focus()
+}
 </script>
 
 <template>
@@ -117,6 +135,17 @@ const filled = computed(() => model.value?.start != null || model.value?.end != 
           @focusout="onFocusOut"
         />
       </DateRangePickerRoot>
+      <input
+        v-if="p.name"
+        class="s-date-range-picker__native"
+        tabindex="-1"
+        aria-hidden="true"
+        :name="p.name"
+        :value="formValue"
+        :required="p.required"
+        :disabled="p.disabled"
+        @focus="focusFirstSegment"
+      />
     </template>
   </SFormField>
 </template>

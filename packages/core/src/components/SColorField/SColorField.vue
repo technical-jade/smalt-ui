@@ -1,9 +1,13 @@
 <script setup lang="ts">
-import { computed } from 'vue'
+import { computed, useTemplateRef } from 'vue'
+import type { ComponentPublicInstance } from 'vue'
 import { ColorFieldRoot, ColorFieldInput } from 'reka-ui'
 import { SFormField } from '../SFormField'
 import { useDefaults } from '../../composables'
+import { useFieldAttrs } from '../../internal/useFieldAttrs'
 import type { SColorFieldProps } from './types'
+
+defineOptions({ inheritAttrs: false })
 
 const props = withDefaults(defineProps<SColorFieldProps>(), {
   size: 'md',
@@ -14,6 +18,8 @@ const props = withDefaults(defineProps<SColorFieldProps>(), {
   floatingLabel: true,
 })
 const p = useDefaults(props, 'SColorField')
+
+const { rootClass, rootStyle, controlAttrs } = useFieldAttrs()
 
 defineSlots<{
   /** Content at the start of the field, inside the border (icon, button). */
@@ -39,14 +45,24 @@ const colorModel = computed<string | undefined>({
 })
 
 const floating = computed(() => p.floatingLabel && !!p.label)
+
+const root = useTemplateRef<ComponentPublicInstance>('root')
+
+// Native validation focuses the hidden input on submit; the user needs the visible one.
+function focusInput() {
+  const el = root.value?.$el as HTMLElement | undefined
+  el?.querySelector<HTMLElement>('.s-color-field__input')?.focus()
+}
 const filled = computed(() => !!model.value)
 </script>
 
 <template>
   <SFormField
     :id="p.id"
+    ref="root"
     class="s-color-field"
-    :class="`s-color-field--${p.size}`"
+    :class="[`s-color-field--${p.size}`, rootClass]"
+    :style="rootStyle"
     :label="p.label"
     :hint="p.hint"
     :error="p.error"
@@ -84,6 +100,7 @@ const filled = computed(() => !!model.value)
           aria-hidden="true"
         />
         <ColorFieldInput
+          v-bind="controlAttrs"
           :id="fieldId"
           class="s-color-field__input"
           :placeholder="p.placeholder"
@@ -112,6 +129,19 @@ const filled = computed(() => !!model.value)
           <slot name="append" />
         </span>
       </ColorFieldRoot>
+      <!-- Reka's hidden input would submit its '#000000' default for an empty field, and
+           `required` would never fail. -->
+      <input
+        v-if="p.name"
+        class="s-color-field__native"
+        tabindex="-1"
+        aria-hidden="true"
+        :name="p.name"
+        :value="model ?? ''"
+        :required="p.required"
+        :disabled="p.disabled"
+        @focus="focusInput"
+      />
     </template>
   </SFormField>
 </template>

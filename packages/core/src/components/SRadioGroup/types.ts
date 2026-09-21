@@ -31,6 +31,8 @@ export interface SRadioGroupProps {
   groupClass?: HTMLAttributes['class']
   /** Disables the whole group. */
   disabled?: boolean
+  /** Field name in native form submission: the value is sent in a hidden input. */
+  name?: string
   /** Selection is required for form submission. */
   required?: boolean
   /** Accessible name of the group when there is no visible `label`. */

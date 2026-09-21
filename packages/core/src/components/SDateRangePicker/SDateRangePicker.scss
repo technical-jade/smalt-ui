@@ -19,6 +19,10 @@ $sizes: sm, md, lg;
     @include tools.segmented-field-segment;
   }
 
+  &__native {
+    @include tools.visually-hidden;
+  }
+
   &__dash {
     padding-inline: var(--s-space-2);
     color: var(--s-color-text-muted);

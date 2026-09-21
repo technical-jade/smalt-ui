@@ -43,6 +43,10 @@ $tag-heights: (
   }
 
   // Multiple mode without tags: a comma-separated list of the selected labels.
+  &__native {
+    @include tools.visually-hidden;
+  }
+
   &__comma {
     flex: 0 1 auto;
     min-width: 0;
