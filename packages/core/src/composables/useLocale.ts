@@ -77,6 +77,8 @@ export interface SMessages {
   notifications: string
   /** Word a screen reader says before each notification it announces (`ToastProvider`). */
   notification: string
+  /** Accessible name of a resize handle between panels (`SSplitter`). */
+  resize: string
   /** Accessible name of the range start thumb (`SSlider`). */
   rangeStart: string
   /** Accessible name of the range end thumb (`SSlider`). */
@@ -118,6 +120,7 @@ export const enMessages: SMessages = {
   stepCompleted: 'Completed',
   notifications: 'Notifications',
   notification: 'Notification',
+  resize: 'Resize',
   rangeStart: 'start',
   rangeEnd: 'end',
   autocompleteEmpty: 'Nothing found',

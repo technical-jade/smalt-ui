@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { useTemplateRef, watchEffect } from 'vue'
 import { PopoverArrow, PopoverContent, PopoverPortal, PopoverRoot, PopoverTrigger } from 'reka-ui'
 import { useDefaults, useElevationProp } from '../../composables'
 import type { SPopoverProps } from './types'
@@ -17,6 +18,22 @@ const elevationStyle = useElevationProp(p, 's-surface')
 
 /** Whether the panel is open. Two-way binding via `v-model:open`. */
 const open = defineModel<boolean>('open', { default: false })
+
+/**
+ * Reka names the panel after the trigger with `aria-labelledby`, which beats `aria-label`, and
+ * its own binding wins over ours. The attribute is removed from the element: Vue does not write
+ * it back while its value stays the same.
+ */
+const content = useTemplateRef<{ $el: Element | null }>('content')
+watchEffect(
+  () => {
+    // The component root is Reka's positioning wrapper around the panel.
+    const wrapper = content.value?.$el
+    if (!p.ariaLabel || !(wrapper instanceof Element)) return
+    wrapper.querySelector('.s-popover__content')?.removeAttribute('aria-labelledby')
+  },
+  { flush: 'post' },
+)
 
 defineSlots<{
   /** Trigger element that opens the panel on click. */
@@ -37,6 +54,7 @@ defineSlots<{
 
     <PopoverPortal>
       <PopoverContent
+        ref="content"
         v-bind="$attrs"
         class="s-popover__content"
         :class="{ 's-popover__content--square': p.square }"

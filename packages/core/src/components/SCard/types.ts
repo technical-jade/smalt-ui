@@ -21,7 +21,10 @@ export interface SCardProps {
   interactive?: boolean
   /** The card is selected: accent border and `data-selected` for custom styles. */
   selected?: boolean
-  /** The card is disabled: dimmed and ignores the pointer. */
+  /**
+   * The card is disabled: dimmed and ignores the pointer. A button or link card (`as`) also
+   * stops responding to the keyboard.
+   */
   disabled?: boolean
   /**
    * Class of the content wrapper (`.s-card__body`) for a custom layout inside the card.

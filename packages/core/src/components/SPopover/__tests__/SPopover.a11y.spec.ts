@@ -19,4 +19,33 @@ describe('SPopover · a11y', () => {
     await screen.findByText('Panel content')
     expect(await axe(document.body)).toHaveNoViolations()
   })
+
+  it('ariaLabel names the panel instead of the trigger', async () => {
+    render(SPopover, {
+      props: { open: true, ariaLabel: 'Quick actions' },
+      slots: { trigger: '<button type="button">Open</button>', default: 'Body' },
+    })
+    const panel = await screen.findByRole('dialog')
+    expect(panel).not.toHaveAttribute('aria-labelledby')
+    expect(panel).toHaveAccessibleName('Quick actions')
+  })
+
+  it('ariaLabel still names the panel after it reopens', async () => {
+    const { rerender } = render(SPopover, {
+      props: { open: true, ariaLabel: 'Quick actions' },
+      slots: { trigger: '<button type="button">Open</button>', default: 'Body' },
+    })
+    await screen.findByRole('dialog')
+    await rerender({ open: false, ariaLabel: 'Quick actions' })
+    await rerender({ open: true, ariaLabel: 'Quick actions' })
+    expect(await screen.findByRole('dialog')).toHaveAccessibleName('Quick actions')
+  })
+
+  it('without ariaLabel the panel is still named by its trigger', async () => {
+    render(SPopover, {
+      props: { open: true },
+      slots: { trigger: '<button type="button">Filters</button>', default: 'Body' },
+    })
+    expect(await screen.findByRole('dialog')).toHaveAccessibleName('Filters')
+  })
 })

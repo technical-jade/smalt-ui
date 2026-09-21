@@ -47,4 +47,22 @@ describe('SSplitter', () => {
     })
     expect(container.querySelector('.s-splitter')).toHaveClass('s-splitter--vertical')
   })
+
+  it('the handle has a name and the orientation across the split', () => {
+    render(SSplitter, { props: { panels: [{ defaultSize: 30 }, { defaultSize: 70 }] } })
+    const handle = screen.getByRole('separator', { name: 'Resize' })
+    expect(handle).toHaveAttribute('aria-orientation', 'vertical')
+  })
+
+  it('handleLabel and a vertical split', () => {
+    render(SSplitter, {
+      props: {
+        panels: [{ defaultSize: 50 }, { defaultSize: 50 }],
+        direction: 'vertical',
+        handleLabel: 'Resize preview',
+      },
+    })
+    const handle = screen.getByRole('separator', { name: 'Resize preview' })
+    expect(handle).toHaveAttribute('aria-orientation', 'horizontal')
+  })
 })

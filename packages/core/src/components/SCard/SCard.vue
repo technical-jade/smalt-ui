@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { computed } from 'vue'
 import { Primitive } from 'reka-ui'
 import { useDefaults, useElevationProp } from '../../composables'
 import type { SCardProps } from './types'
@@ -17,6 +18,22 @@ const p = useDefaults(props, 'SCard')
  * list, and the keyword would invalidate the whole declaration.
  */
 const elevationStyle = useElevationProp(p, 's-card', { zero: '0 0 #0000' })
+
+/**
+ * `pointer-events: none` stops only the mouse: a disabled button or link card would still take
+ * focus and activate from the keyboard. A native button gets `disabled`; on other tags the click
+ * (which Enter on a link also fires, as does a click on a label) is cancelled, and a link leaves
+ * the tab order.
+ */
+const isNativeButton = computed(() => p.as === 'button')
+const isLink = computed(() => p.as === 'a')
+
+function onClick(event: MouseEvent) {
+  if (p.disabled && !isNativeButton.value) {
+    event.preventDefault()
+    event.stopImmediatePropagation()
+  }
+}
 
 defineSlots<{
   /** Card header. */
@@ -46,6 +63,10 @@ defineSlots<{
     :style="elevationStyle"
     :data-selected="p.selected || undefined"
     :data-disabled="p.disabled || undefined"
+    :disabled="isNativeButton ? p.disabled : undefined"
+    :aria-disabled="isLink && p.disabled ? true : undefined"
+    :tabindex="isLink && p.disabled ? -1 : undefined"
+    @click.capture="onClick"
   >
     <div
       v-if="$slots.header"

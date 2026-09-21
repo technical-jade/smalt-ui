@@ -99,15 +99,22 @@ watchEffect(() => {
       :square="p.square"
     />
 
+    <!-- A live region is announced only if it exists before its content appears, so the
+         container stays in the DOM and the error is rendered into it. -->
     <div
-      v-if="p.error"
-      :id="errorId"
-      class="s-field__error"
+      class="s-field__live"
+      aria-live="polite"
     >
-      {{ p.error }}
+      <div
+        v-if="p.error"
+        :id="errorId"
+        class="s-field__error"
+      >
+        {{ p.error }}
+      </div>
     </div>
     <div
-      v-else-if="p.hint"
+      v-if="!p.error && p.hint"
       :id="hintId"
       class="s-field__hint"
     >

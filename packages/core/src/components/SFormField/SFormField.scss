@@ -35,6 +35,11 @@
     color: var(--s-color-text-muted);
   }
 
+  // Out of the flex flow while empty, so it adds no gap; still in the accessibility tree.
+  &__live:empty {
+    position: absolute;
+  }
+
   &__error {
     font-size: var(--s-font-size-xs);
     line-height: var(--s-line-height-normal);

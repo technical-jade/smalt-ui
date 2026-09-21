@@ -9,7 +9,10 @@ export interface SSplitterPanel {
   minSize?: number
   /** Maximum panel size in percent. @defaultValue 100 */
   maxSize?: number
-  /** Allows collapsing the panel when dragged below `minSize`. */
+  /**
+   * Allows collapsing the panel when dragged below `minSize`. Enter on the handle after the panel
+   * collapses it and restores the previous size.
+   */
   collapsible?: boolean
 }
 
@@ -21,4 +24,6 @@ export interface SSplitterProps {
    * @defaultValue 'horizontal'
    */
   direction?: SSplitterDirection
+  /** Accessible name of the resize handles (defaults to the locale dictionary). */
+  handleLabel?: string
 }

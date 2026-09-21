@@ -106,4 +106,13 @@ describe('SFormField', () => {
     expect(label.querySelector('a')?.textContent).toBe('Declared value')
     expect(label.getAttribute('for')).toBe('declared-value')
   })
+
+  it('renders the error into a live region that exists before the error appears', async () => {
+    const { container, rerender } = render(SFormField, { props: { label: 'Email' } })
+    const live = container.querySelector('[aria-live="polite"]')
+    expect(live).not.toBeNull()
+    await rerender({ label: 'Email', error: 'Enter an email' })
+    expect(container.querySelector('[aria-live="polite"]')).toBe(live)
+    expect(live).toHaveTextContent('Enter an email')
+  })
 })

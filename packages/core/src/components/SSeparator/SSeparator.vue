@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed } from 'vue'
+import { computed, useId } from 'vue'
 import { Separator } from 'reka-ui'
 import { useDefaults } from '../../composables'
 import type { SSeparatorProps } from './types'
@@ -18,21 +18,30 @@ const slots = defineSlots<{
 const hasLabel = computed(
   () => p.orientation === 'horizontal' && (p.label != null || !!slots.default),
 )
+
+/**
+ * The separator role hides its children from screen readers, so the visible label is linked by
+ * id: that also covers a label passed through the slot. A decorative separator keeps no role, and
+ * its label is read as plain text.
+ */
+const labelId = useId()
 </script>
 
 <template>
   <div
     v-if="hasLabel"
     class="s-separator s-separator--labeled"
-    role="separator"
-    aria-orientation="horizontal"
-    :aria-label="p.label"
+    :role="p.decorative ? 'none' : 'separator'"
+    :aria-orientation="p.decorative ? undefined : 'horizontal'"
+    :aria-labelledby="p.decorative ? undefined : labelId"
   >
     <Separator
       class="s-separator__line"
       decorative
     />
-    <span class="s-separator__label"
+    <span
+      :id="labelId"
+      class="s-separator__label"
       ><slot>{{ p.label }}</slot></span
     >
     <Separator

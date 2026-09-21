@@ -1,4 +1,4 @@
-import { describe, expect, it } from 'vitest'
+import { describe, expect, it, vi } from 'vitest'
 import { render, screen } from '@testing-library/vue'
 import { userEvent } from 'vitest/browser'
 import { SCard } from '../index'
@@ -61,5 +61,38 @@ describe('SCard · browser', () => {
     const [outer, inner] = [...container.querySelectorAll('.s-card__body')]
     expect(getComputedStyle(outer).paddingTop).toBe('0px')
     expect(getComputedStyle(inner).paddingTop).not.toBe('0px')
+  })
+
+  it('a disabled button card is skipped by Tab and ignores Enter', async () => {
+    const onClick = vi.fn()
+    render({
+      components: { SCard },
+      setup: () => ({ onClick }),
+      template: `
+        <button>Before</button>
+        <SCard as="button" disabled @click="onClick">Plan</SCard>
+        <button>After</button>`,
+    })
+    screen.getByRole('button', { name: 'Before' }).focus()
+    await userEvent.keyboard('{Tab}')
+    expect(document.activeElement).toBe(screen.getByRole('button', { name: 'After' }))
+    expect(screen.getByRole('button', { name: 'Plan' })).toBeDisabled()
+    expect(onClick).not.toHaveBeenCalled()
+  })
+
+  it('a disabled link card leaves the tab order and does not navigate', async () => {
+    const onClick = vi.fn()
+    render({
+      components: { SCard },
+      setup: () => ({ onClick }),
+      template: `<SCard as="a" href="#plan" disabled @click="onClick">Plan</SCard>`,
+    })
+    const link = screen.getByText('Plan').closest('a')!
+    expect(link).toHaveAttribute('aria-disabled', 'true')
+    expect(link).toHaveAttribute('tabindex', '-1')
+    link.focus()
+    await userEvent.keyboard('{Enter}')
+    expect(location.hash).not.toBe('#plan')
+    expect(onClick).not.toHaveBeenCalled()
   })
 })
