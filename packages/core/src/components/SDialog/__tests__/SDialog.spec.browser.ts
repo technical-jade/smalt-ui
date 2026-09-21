@@ -57,4 +57,17 @@ describe('SDialog · browser', () => {
     const footer = screen.getByRole('button', { name: 'Accept' }).getBoundingClientRect()
     expect(footer.bottom).toBeLessThanOrEqual(window.innerHeight)
   })
+
+  it('the body leaves room for the focus ring of a field at its edge', async () => {
+    render(SDialog, {
+      props: { open: true, title: 'Rename' },
+      slots: { default: '<input aria-label="Name" style="display: block; width: 100%" />' },
+    })
+    const dialog = await screen.findByRole('dialog')
+    const body = dialog.querySelector('.s-dialog__body')!.getBoundingClientRect()
+    const field = screen.getByLabelText('Name').getBoundingClientRect()
+    const ring = 4 // --s-focus-ring-width + --s-focus-ring-offset
+    expect(field.left - ring).toBeGreaterThanOrEqual(body.left)
+    expect(field.right + ring).toBeLessThanOrEqual(body.right)
+  })
 })

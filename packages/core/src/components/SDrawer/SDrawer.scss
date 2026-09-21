@@ -78,10 +78,15 @@
     color: var(--s-color-text-muted);
   }
 
+  // The padding, taken back by the margins, keeps the focus rings of edge fields unclipped by the
+  // scroll container.
   &__body {
+    --s-drawer-ring: calc(var(--s-focus-ring-width) + var(--s-focus-ring-offset));
     flex: 1;
-    margin-top: var(--s-space-4);
     overflow-y: auto;
+    padding: var(--s-drawer-ring);
+    margin: calc(var(--s-space-4) - var(--s-drawer-ring)) calc(-1 * var(--s-drawer-ring))
+      calc(-1 * var(--s-drawer-ring));
   }
 
   &__footer {
