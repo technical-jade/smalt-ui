@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { computed, watch } from 'vue'
 import {
   PaginationEllipsis,
   PaginationList,
@@ -26,6 +27,15 @@ const p = useDefaults(props, 'SPagination')
 
 /** Current page (1-based). Two-way binding via `v-model:page`. */
 const page = defineModel<number>('page', { default: 1 })
+
+/**
+ * Reka does not clamp the page when the page count drops (fewer results after filtering): no
+ * button is current and "next" leads further out.
+ */
+const pageCount = computed(() => Math.max(1, Math.ceil(p.total / p.itemsPerPage)))
+watch(pageCount, (count) => {
+  if (page.value > count) page.value = count
+})
 </script>
 
 <template>

@@ -19,10 +19,11 @@ defineSlots<{
     class="s-avatar"
     :class="`s-avatar--${p.size}`"
   >
+    <!-- Rendered without v-if: Reka keeps the "loaded" status after the image unmounts, and the
+         fallback would not come back when src is cleared. An empty src reports an error. -->
     <AvatarImage
-      v-if="p.src"
       class="s-avatar__image"
-      :src="p.src"
+      :src="p.src ?? ''"
       :alt="p.alt ?? ''"
     />
     <AvatarFallback

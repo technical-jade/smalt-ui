@@ -1,6 +1,7 @@
 import { describe, expect, it } from 'vitest'
 import { fireEvent, render, screen } from '@testing-library/vue'
 import { SToggleGroup } from '../index'
+import { SToggle } from '../../SToggle'
 
 const options = [
   { value: 'left', label: 'Left' },
@@ -33,5 +34,21 @@ describe('SToggleGroup', () => {
   it('passes the size to the items', () => {
     const { container } = render(SToggleGroup, { props: { options, size: 'sm' } })
     expect(container.querySelector('.s-toggle')).toHaveClass('s-toggle--sm')
+  })
+
+  it('passes the size to toggles in the slot; their own size wins', () => {
+    const { container } = render({
+      components: { SToggleGroup, SToggle },
+      template: `
+        <SToggleGroup size="sm">
+          <SToggle value="a">A</SToggle>
+          <SToggle value="b" size="lg">B</SToggle>
+          <SToggle value="c" :size="undefined">C</SToggle>
+        </SToggleGroup>`,
+    })
+    const [a, b, c] = container.querySelectorAll('.s-toggle')
+    expect(a).toHaveClass('s-toggle--sm')
+    expect(b).toHaveClass('s-toggle--lg')
+    expect(c).toHaveClass('s-toggle--sm')
   })
 })

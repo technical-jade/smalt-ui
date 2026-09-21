@@ -1,5 +1,6 @@
 import { describe, expect, it, vi } from 'vitest'
 import { fireEvent, render, screen } from '@testing-library/vue'
+import { nextTick } from 'vue'
 import { SColorField } from '../index'
 
 describe('SColorField', () => {
@@ -53,5 +54,34 @@ describe('SColorField', () => {
     expect(input).toHaveAttribute('data-testid', 'brand')
     await fireEvent.blur(input)
     expect(onBlur).toHaveBeenCalledTimes(1)
+  })
+
+  it('an empty value shows an empty input, not a default color', async () => {
+    const { container } = render(SColorField, { props: { label: 'Brand color', modelValue: '' } })
+    await nextTick()
+    expect(screen.getByLabelText('Brand color')).toHaveValue('')
+    expect(container.querySelector('.s-color-field__control')).not.toHaveAttribute('data-filled')
+  })
+
+  it('erasing the text clears the value', async () => {
+    const { emitted } = render(SColorField, {
+      props: { label: 'Brand color', modelValue: '#3b82f6' },
+    })
+    const input = screen.getByLabelText('Brand color')
+    await fireEvent.focus(input)
+    await fireEvent.update(input, '')
+    await fireEvent.blur(input)
+    await nextTick()
+    expect(emitted()['update:modelValue']?.at(-1)).toEqual([''])
+    expect(input).toHaveValue('')
+  })
+
+  it('clearing the value from outside empties the input', async () => {
+    const { rerender } = render(SColorField, {
+      props: { label: 'Brand color', modelValue: '#3b82f6' },
+    })
+    await rerender({ label: 'Brand color', modelValue: '' })
+    await nextTick()
+    expect(screen.getByLabelText('Brand color')).toHaveValue('')
   })
 })

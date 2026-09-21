@@ -62,4 +62,12 @@ describe('SPinInput', () => {
     const { container } = render(SPinInput, { props: { size: 'lg' } })
     expect(container.querySelector('.s-pin-input')).toHaveClass('s-pin-input--lg')
   })
+
+  it('emits complete once every cell is filled', async () => {
+    const { container, emitted } = render(SPinInput, { props: { length: 2 } })
+    const cells = container.querySelectorAll('.s-pin-input__cell')
+    await fireEvent.input(cells[0]!, { target: { value: '1' } })
+    await fireEvent.input(cells[1]!, { target: { value: '2' } })
+    expect(emitted().complete).toEqual([[['1', '2']]])
+  })
 })

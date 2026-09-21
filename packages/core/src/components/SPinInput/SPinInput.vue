@@ -29,6 +29,8 @@ function cellLabel(index: number): string {
 }
 
 const emit = defineEmits<{
+  /** All cells are filled; receives the characters, one per cell. */
+  complete: [value: string[]]
   /** Focus entered the field. Moving between cells does not count. */
   focus: [event: FocusEvent]
   /** Focus left the field. Moving between cells does not count. */
@@ -88,6 +90,7 @@ const model = defineModel<string[]>({ default: () => [] })
           :disabled="p.disabled"
           :name="p.name"
           :required="p.required"
+          @complete="emit('complete', $event)"
         >
           <!-- aria-describedby/aria-invalid go on the cell inputs themselves: PinInputRoot is a
                div, and screen readers do not announce its attributes when a cell is focused. -->

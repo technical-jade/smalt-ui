@@ -34,7 +34,9 @@ const camelToKebab = (value: string) => value.replace(/[A-Z]/g, (c) => `-${c.toL
 export function mergeDefaults(base: SDefaults = {}, over: SDefaults = {}): SDefaults {
   const merged: SDefaults = { ...base }
   for (const [component, props] of Object.entries(over)) {
-    merged[component] = { ...base[component], ...props }
+    // An undefined value means "not set" here too, as for an explicit prop: it keeps the base one.
+    const defined = Object.entries(props ?? {}).filter(([, value]) => value !== undefined)
+    merged[component] = { ...base[component], ...Object.fromEntries(defined) }
   }
   return merged
 }

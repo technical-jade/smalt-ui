@@ -39,6 +39,15 @@ function thumbLabel(index: number, total: number): string | undefined {
   return name ? `${name}: ${edge}` : edge
 }
 
+const emit = defineEmits<{
+  /**
+   * The user finished changing the value (released the thumb or pressed a key), unlike
+   * `update:modelValue`, which fires on every step of a drag. A number for a single thumb, an
+   * array for a range.
+   */
+  valueCommit: [value: number | number[]]
+}>()
+
 // Reka works with an array of values; for a single thumb it is unwrapped back into a number.
 const isRange = computed(() => Array.isArray(model.value))
 const arrayValue = computed({
@@ -100,6 +109,7 @@ defineSlots<{
         :disabled="p.disabled"
         :name="isRange ? p.name : undefined"
         :required="p.required"
+        @value-commit="emit('valueCommit', isRange ? $event : $event[0])"
         @pointerenter="hovered = true"
         @pointerleave="hovered = false"
         @pointerdown="onDragStart"

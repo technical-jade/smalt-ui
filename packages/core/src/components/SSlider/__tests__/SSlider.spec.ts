@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { render, screen } from '@testing-library/vue'
+import { fireEvent, render, screen } from '@testing-library/vue'
 import { SSlider } from '../index'
 
 /**
@@ -99,5 +99,19 @@ describe('SSlider', () => {
       t.getAttribute('aria-label'),
     )
     expect(labels).toEqual(['Price: start', 'Price: end'])
+  })
+
+  it('emits valueCommit with a number for a single thumb', async () => {
+    const { emitted } = render(SSlider, { props: { modelValue: 40, label: 'Volume' } })
+    await fireEvent.keyDown(screen.getByRole('slider', { hidden: true }), { key: 'ArrowRight' })
+    expect(emitted().valueCommit).toEqual([[41]])
+  })
+
+  it('emits valueCommit with an array for a range', async () => {
+    const { container, emitted } = render(SSlider, {
+      props: { modelValue: [20, 60], label: 'Price' },
+    })
+    await fireEvent.keyDown(container.querySelector('.s-slider__thumb')!, { key: 'ArrowRight' })
+    expect(emitted().valueCommit).toEqual([[[21, 60]]])
   })
 })

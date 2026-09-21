@@ -1,4 +1,4 @@
-import { describe, expect, it } from 'vitest'
+import { describe, expect, it, vi } from 'vitest'
 import { render, screen } from '@testing-library/vue'
 import { SProgress } from '../index'
 
@@ -32,5 +32,19 @@ describe('SProgress', () => {
       'data-state',
       'indeterminate',
     )
+  })
+
+  it.each([
+    [150, 100, '100'],
+    [-5, 100, '0'],
+    [30, 0, '30'],
+  ])('value %s of max %s is announced as drawn', (value, max, now) => {
+    const errors = vi.spyOn(console, 'error').mockImplementation(() => {})
+    render(SProgress, { props: { value, max } })
+    const bar = screen.getByRole('progressbar')
+    expect(bar).toHaveAttribute('aria-valuenow', now)
+    expect(Number(bar.getAttribute('aria-valuemax'))).toBeGreaterThan(0)
+    expect(errors).not.toHaveBeenCalled()
+    errors.mockRestore()
   })
 })

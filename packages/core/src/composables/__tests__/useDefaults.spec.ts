@@ -2,7 +2,7 @@
 import { describe, expect, it } from 'vitest'
 import { computed, defineComponent, h, nextTick, ref } from 'vue'
 import { render } from '@testing-library/vue'
-import { provideDefaults, useDefaults } from '../useDefaults'
+import { mergeDefaults, provideDefaults, useDefaults } from '../useDefaults'
 
 const Probe = defineComponent({
   name: 'SProbe',
@@ -129,5 +129,11 @@ describe('useDefaults', () => {
       props: { defaults: { SOther: { size: 'lg' } } },
     })
     expect(read(container).size).toBe('md')
+  })
+
+  it('an undefined value in a nested layer keeps the outer one', () => {
+    expect(
+      mergeDefaults({ SButton: { variant: 'negative' } }, { SButton: { variant: undefined } }),
+    ).toEqual({ SButton: { variant: 'negative' } })
   })
 })

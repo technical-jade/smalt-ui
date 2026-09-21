@@ -61,4 +61,10 @@ describe('SPagination', () => {
       'm6 9 6 6 6-6',
     )
   })
+
+  it('clamps the page when the page count drops', async () => {
+    const { emitted, rerender } = render(SPagination, { props: { total: 100, page: 8 } })
+    await rerender({ total: 20, page: 8 })
+    expect(emitted()['update:page']?.at(-1)).toEqual([2])
+  })
 })

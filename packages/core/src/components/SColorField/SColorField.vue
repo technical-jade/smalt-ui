@@ -1,8 +1,9 @@
 <script setup lang="ts">
-import { computed, useTemplateRef } from 'vue'
+import { computed, ref, useTemplateRef } from 'vue'
 import type { ComponentPublicInstance } from 'vue'
 import { ColorFieldRoot, ColorFieldInput } from 'reka-ui'
 import { SFormField } from '../SFormField'
+import ColorFieldEmptyText from './ColorFieldEmptyText'
 import { useDefaults } from '../../composables'
 import { useFieldAttrs } from '../../internal/useFieldAttrs'
 import type { SColorFieldProps } from './types'
@@ -45,6 +46,14 @@ const colorModel = computed<string | undefined>({
 })
 
 const floating = computed(() => p.floatingLabel && !!p.label)
+
+const editing = ref(false)
+
+// Reka restores the last color when the text is erased; erased text means "no color" here.
+function onBlur(event: FocusEvent) {
+  editing.value = false
+  if (!(event.target as HTMLInputElement).value.trim()) model.value = ''
+}
 
 const root = useTemplateRef<ComponentPublicInstance>('root')
 
@@ -107,6 +116,12 @@ const filled = computed(() => !!model.value)
           :required="p.required"
           :aria-invalid="fieldInvalid || undefined"
           :aria-describedby="describedBy"
+          @focus="editing = true"
+          @blur="onBlur"
+        />
+        <ColorFieldEmptyText
+          :empty="!model"
+          :editing="editing"
         />
         <label
           v-if="floating"

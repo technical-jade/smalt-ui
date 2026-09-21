@@ -15,14 +15,16 @@ const p = useDefaults(props, 'SProgress')
 const colorStyle = useColorProp(p, 's-progress')
 
 /**
- * Fill percentage; null means indeterminate mode (styled via data-state).
- * An invalid `max` is not used: Reka falls back to its own values in that case, and a bar
- * computed from our max would diverge from the announced value.
+ * The same clamped numbers feed the bar and Reka: Reka only logs an out-of-range value and
+ * announces it as is, so the announced value would disagree with the drawn bar.
  */
-const percent = computed(() => {
-  if (p.value == null || !(p.max > 0)) return null
-  return Math.min(100, Math.max(0, (p.value / p.max) * 100))
-})
+const max = computed(() => (Number.isFinite(p.max) && p.max > 0 ? p.max : 100))
+const value = computed(() =>
+  p.value == null || Number.isNaN(p.value) ? null : Math.min(max.value, Math.max(0, p.value)),
+)
+
+// Fill percentage; null means indeterminate mode (styled via data-state).
+const percent = computed(() => (value.value == null ? null : (value.value / max.value) * 100))
 </script>
 
 <template>
@@ -30,8 +32,8 @@ const percent = computed(() => {
     class="s-progress"
     :class="[`s-progress--${p.size}`, `s-progress--${p.variant}`]"
     :style="colorStyle"
-    :model-value="p.value"
-    :max="p.max"
+    :model-value="value"
+    :max="max"
     :aria-label="p.label"
   >
     <ProgressIndicator
