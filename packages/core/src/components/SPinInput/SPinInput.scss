@@ -1,3 +1,4 @@
+@use 'sass:list';
 @use '../../styles/tools';
 
 // No outer field-shell frame: each cell has its own border, and a shared frame would double it.
@@ -23,10 +24,10 @@
 }
 
 .s-pin-input__cell {
-  width: 2.75rem;
-  height: 2.75rem;
+  width: var(--s-pin-cell);
+  height: var(--s-pin-cell);
   font-family: var(--s-font-sans);
-  font-size: var(--s-font-size-lg);
+  font-size: var(--s-pin-font);
   font-weight: var(--s-font-weight-medium);
   color: var(--s-color-text);
   text-align: center;
@@ -44,5 +45,28 @@
 
   &[aria-invalid='true'] {
     border-color: var(--s-color-negative);
+  }
+}
+
+// A cell holds one large glyph, so it is a step larger than a field of the same size.
+$cell-sizes: (
+  sm: (
+    2.25rem,
+    base,
+  ),
+  md: (
+    2.75rem,
+    lg,
+  ),
+  lg: (
+    3.25rem,
+    xl,
+  ),
+);
+
+@each $name, $cfg in $cell-sizes {
+  .s-pin-input--#{$name} {
+    --s-pin-cell: #{list.nth($cfg, 1)};
+    --s-pin-font: var(--s-font-size-#{list.nth($cfg, 2)});
   }
 }

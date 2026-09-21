@@ -17,6 +17,7 @@ import type { SNumberFieldProps } from './types'
 defineOptions({ inheritAttrs: false })
 
 const props = withDefaults(defineProps<SNumberFieldProps>(), {
+  size: 'md',
   invalid: false,
   required: false,
   disabled: false,
@@ -47,13 +48,14 @@ const model = defineModel<number | null>({ default: null })
     ref="root"
     :floating-label="false"
     class="s-number-field"
-    :class="rootClass"
+    :class="[`s-number-field--${p.size}`, rootClass]"
     :style="rootStyle"
     :label="p.label"
     :hint="p.hint"
     :error="p.error"
     :invalid="p.invalid"
     :required="p.required"
+    :size="p.size"
     :square="p.square"
     @focusin="onFocusIn"
     @focusout="onFocusOut"

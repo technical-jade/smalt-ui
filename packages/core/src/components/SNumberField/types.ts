@@ -1,3 +1,5 @@
+export type SNumberFieldSize = 'sm' | 'md' | 'lg'
+
 export interface SNumberFieldProps {
   /** Control id. Generated automatically (SSR-safe) when not set. */
   id?: string
@@ -9,6 +11,8 @@ export interface SNumberFieldProps {
   error?: string
   /** Marks the field invalid explicitly (in addition to `error`). */
   invalid?: boolean
+  /** Field size: `sm` (32px), `md` (40px) or `lg` (48px). @defaultValue 'md' */
+  size?: SNumberFieldSize
   /** Square corners: removes the field border rounding (rounded by default). */
   square?: boolean
   /** Field name in native form submission: the value is sent in a hidden input. */

@@ -1,3 +1,5 @@
+@use 'sass:map';
+@use '../../styles/settings';
 @use '../../styles/tools';
 
 .s-number-field__control {
@@ -6,7 +8,6 @@
   // SFormField is a flex column with align-items: stretch. Without align-self the control
   // spans the full width (inline-flex has no effect on a flex item), leaving a gap after "+".
   align-self: flex-start;
-  height: 2.5rem;
   overflow: hidden;
   background-color: var(--s-color-surface);
   border: 1px solid var(--s-color-outline);
@@ -25,7 +26,7 @@
   height: 100%;
   padding: 0 var(--s-space-2);
   font-family: var(--s-font-sans);
-  font-size: var(--s-font-size-sm);
+  font-size: inherit;
   color: var(--s-color-text);
   text-align: center;
   background-color: transparent;
@@ -53,5 +54,13 @@
 
   &:not(:disabled):hover {
     color: var(--s-color-text);
+  }
+}
+
+// Same heights as the other fields, so the density presets reach the control.
+@each $name, $cfg in settings.$control-sizes {
+  .s-number-field--#{$name} .s-number-field__control {
+    height: map.get($cfg, height);
+    font-size: var(--s-font-size-#{map.get($cfg, font)});
   }
 }

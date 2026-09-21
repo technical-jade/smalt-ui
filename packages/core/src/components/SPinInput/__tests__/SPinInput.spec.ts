@@ -57,4 +57,9 @@ describe('SPinInput', () => {
     await fireEvent.focusOut(second!, { relatedTarget: document.body })
     expect(emitted().blur).toHaveLength(1)
   })
+
+  it('size sets the modifier', () => {
+    const { container } = render(SPinInput, { props: { size: 'lg' } })
+    expect(container.querySelector('.s-pin-input')).toHaveClass('s-pin-input--lg')
+  })
 })

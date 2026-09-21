@@ -8,6 +8,7 @@ import { useFieldFocus } from '../../internal/useFieldFocus'
 import type { SPinInputProps } from './types'
 
 const props = withDefaults(defineProps<SPinInputProps>(), {
+  size: 'md',
   invalid: false,
   required: false,
   disabled: false,
@@ -57,11 +58,13 @@ const model = defineModel<string[]>({ default: () => [] })
     ref="root"
     :floating-label="false"
     class="s-pin-input"
+    :class="`s-pin-input--${p.size}`"
     :label="p.label"
     :hint="p.hint"
     :error="p.error"
     :invalid="p.invalid"
     :required="p.required"
+    :size="p.size"
     :square="p.square"
     @focusin="onFocusIn"
     @focusout="onFocusOut"

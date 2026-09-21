@@ -63,4 +63,13 @@ describe('SNumberField', () => {
     await fireEvent.focusOut(plus, { relatedTarget: document.body })
     expect(emitted().blur).toHaveLength(1)
   })
+
+  it('size sets the modifier; the density preset reaches it through global defaults', () => {
+    const { container } = render(SNumberField, { props: { size: 'lg' } })
+    expect(container.querySelector('.s-number-field')).toHaveClass('s-number-field--lg')
+    const preset = render(SNumberField, {
+      global: { plugins: [(app) => installDefaults(app, { global: { size: 'sm' } })] },
+    })
+    expect(preset.container.querySelector('.s-number-field')).toHaveClass('s-number-field--sm')
+  })
 })

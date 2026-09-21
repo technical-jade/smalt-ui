@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { useTemplateRef, watch } from 'vue'
 import { TabsContent, TabsList, TabsRoot, TabsTrigger } from 'reka-ui'
 import { SIcon } from '../SIcon'
 import { useColorProp, useDefaults } from '../../composables'
@@ -21,6 +22,25 @@ defineSlots<{
 
 /** Value of the active tab. Two-way binding via `v-model`. */
 const model = defineModel<string>()
+
+/**
+ * Keyboard focus scrolls a tab into view by itself, a value set from outside does not. Only the
+ * list scrolls: scrollIntoView would also move the page.
+ */
+const list = useTemplateRef<{ $el: HTMLElement }>('list')
+watch(
+  [model, list],
+  () => {
+    const el = list.value?.$el
+    const active = el?.querySelector<HTMLElement>('[data-state="active"]')
+    if (!el || !active || p.orientation !== 'horizontal') return
+    const box = el.getBoundingClientRect()
+    const tab = active.getBoundingClientRect()
+    if (tab.left < box.left) el.scrollLeft -= box.left - tab.left
+    else if (tab.right > box.right) el.scrollLeft += tab.right - box.right
+  },
+  { flush: 'post' },
+)
 </script>
 
 <template>
@@ -32,6 +52,7 @@ const model = defineModel<string>()
     :orientation="p.orientation"
   >
     <TabsList
+      ref="list"
       class="s-tabs__list"
       :aria-label="p.ariaLabel"
     >

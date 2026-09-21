@@ -16,12 +16,25 @@
   &__list {
     display: flex;
     gap: var(--s-space-1);
-    border-bottom: 1px solid var(--s-color-border);
+  }
+
+  // Tabs that do not fit scroll instead of spilling out of the container. The baseline is an inset
+  // shadow rather than a border: the scroll container clips its border area, where the active
+  // tab's underline has to overlap it.
+  &--horizontal &__list {
+    overflow-x: auto;
+    scrollbar-width: thin;
+    box-shadow: inset 0 -1px var(--s-color-border);
+  }
+
+  &--horizontal &__trigger {
+    flex-shrink: 0;
+    margin-bottom: 0;
+    white-space: nowrap;
   }
 
   &--vertical &__list {
     flex-direction: column;
-    border-bottom: none;
     border-right: 1px solid var(--s-color-border);
   }
 

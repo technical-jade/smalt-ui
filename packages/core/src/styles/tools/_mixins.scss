@@ -261,7 +261,9 @@
     background-color
   );
 
-  :where(:focus-within, [data-filled]) > & {
+  // Browser autofill fills the input before any input event, so the model and data-filled stay
+  // empty. :where() forgives a browser without :has().
+  :where(:focus-within, [data-filled], :has(:autofill)) > & {
     inset-block-start: 0;
     inset-inline-start: calc(var(--s-field-pad-x, 0) - 0.25rem);
     padding-inline: 0.25rem;

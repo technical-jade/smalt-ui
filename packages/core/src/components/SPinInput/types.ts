@@ -1,5 +1,7 @@
 export type SPinInputType = 'text' | 'number'
 
+export type SPinInputSize = 'sm' | 'md' | 'lg'
+
 export interface SPinInputProps {
   /** Control id. Generated automatically when not set (SSR-safe). */
   id?: string
@@ -11,6 +13,8 @@ export interface SPinInputProps {
   error?: string
   /** Explicitly marks the field invalid (in addition to `error`). */
   invalid?: boolean
+  /** Cell size: `sm` (36px), `md` (44px) or `lg` (52px). @defaultValue 'md' */
+  size?: SPinInputSize
   /** Square corners: removes the cell border radius (rounded by default). */
   square?: boolean
   /** Field name in native form submission: the value is sent in a hidden input. */

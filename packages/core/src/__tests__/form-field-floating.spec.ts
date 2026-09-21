@@ -29,4 +29,10 @@ describe('SFormField wrappers', () => {
       expect(tag).toMatch(/:floating-label=/)
     })
   }
+
+  it('the floating label also rises over a value filled by browser autofill', () => {
+    const mixins = readFileSync(resolve(process.cwd(), 'src/styles/tools/_mixins.scss'), 'utf8')
+    const floating = mixins.slice(mixins.indexOf('@mixin floating-label'))
+    expect(floating).toMatch(/:has\(:autofill\)/)
+  })
 })
