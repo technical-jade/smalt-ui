@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, useTemplateRef } from 'vue'
+import { computed, ref, useTemplateRef } from 'vue'
 import type { ComponentPublicInstance } from 'vue'
 import { DateRangePickerRoot } from 'reka-ui'
 import { SFormField } from '../SFormField'
@@ -33,6 +33,8 @@ const { onFocusIn, onFocusOut } = useFieldFocus(root, emit, '.s-date-range-picke
 const formatLocale = useFormatLocale(() => p.locale)
 
 const elevationStyle = useElevationProp(p, 's-surface')
+
+const outOfRange = ref(false)
 
 const floating = computed(() => p.floatingLabel && !!p.label)
 
@@ -81,7 +83,7 @@ function focusFirstSegment() {
     :label="p.label"
     :hint="p.hint"
     :error="p.error"
-    :invalid="p.invalid"
+    :invalid="p.invalid || outOfRange"
     :required="p.required"
     :size="p.size"
     :floating-label="floating"
@@ -112,6 +114,7 @@ function focusFirstSegment() {
           :described-by="describedBy"
           :invalid="fieldInvalid"
           :open-calendar-label="p.openCalendarLabel"
+          @invalid="outOfRange = $event"
         >
           <template
             v-if="$slots.prepend"

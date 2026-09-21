@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, useTemplateRef } from 'vue'
+import { computed, ref, useTemplateRef } from 'vue'
 import type { ComponentPublicInstance } from 'vue'
 import { DatePickerRoot } from 'reka-ui'
 import type { DateValue } from '@internationalized/date'
@@ -34,6 +34,8 @@ const formatLocale = useFormatLocale(() => p.locale)
 
 const elevationStyle = useElevationProp(p, 's-surface')
 
+const outOfRange = ref(false)
+
 const floating = computed(() => p.floatingLabel && !!p.label)
 
 defineSlots<{
@@ -58,7 +60,7 @@ const filled = computed(() => model.value != null)
     :label="p.label"
     :hint="p.hint"
     :error="p.error"
-    :invalid="p.invalid"
+    :invalid="p.invalid || outOfRange"
     :required="p.required"
     :size="p.size"
     :floating-label="floating"
@@ -90,6 +92,7 @@ const filled = computed(() => model.value != null)
           :described-by="describedBy"
           :invalid="fieldInvalid"
           :open-calendar-label="p.openCalendarLabel"
+          @invalid="outOfRange = $event"
         >
           <template
             v-if="$slots.prepend"

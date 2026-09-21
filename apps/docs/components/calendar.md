@@ -249,6 +249,29 @@ const max = parseDate('2026-07-20')
   </template>
 </Demo>
 
+## Server rendering
+
+Without a value, the calendar opens on today's month and marks today, both taken from the time
+zone where it renders. With SSR the server and the browser can disagree near midnight or across
+time zones. Pin the month with `v-model:placeholder` or render the calendar on the client only:
+
+```vue
+<script setup lang="ts">
+import { ref } from 'vue'
+import { CalendarDate } from '@internationalized/date'
+
+const date = ref<CalendarDate>()
+const month = ref(new CalendarDate(2026, 7, 1))
+</script>
+
+<template>
+  <SCalendar
+    v-model="date"
+    v-model:placeholder="month"
+  />
+</template>
+```
+
 ## API
 
 <ApiTable name="SCalendar" />

@@ -1,7 +1,11 @@
 <script setup lang="ts">
+import { useTemplateRef } from 'vue'
 import { DatePickerField as RekaDatePickerField, DatePickerInput, DatePickerTrigger } from 'reka-ui'
 import { SIcon } from '../SIcon'
 import { visibleSegments } from '../../internal/dateSegments'
+import SegmentedFieldBridge, {
+  type SegmentedFieldBridgeExposed,
+} from '../../internal/SegmentedFieldBridge'
 import { useMessages } from '../../composables'
 
 /**
@@ -23,6 +27,12 @@ defineProps<{
 
 const m = useMessages()
 
+const emit = defineEmits<{
+  /** Reka's own validity: a typed date outside minValue/maxValue. */
+  invalid: [value: boolean]
+}>()
+const bridge = useTemplateRef<SegmentedFieldBridgeExposed>('bridge')
+
 defineSlots<{
   prepend?: (props: Record<string, never>) => unknown
   append?: (props: Record<string, never>) => unknown
@@ -39,6 +49,7 @@ defineSlots<{
     :aria-labelledby="labelId"
     :aria-invalid="invalid || undefined"
     :aria-describedby="describedBy"
+    @paste="bridge?.paste($event)"
   >
     <label
       v-if="floating"
@@ -84,5 +95,10 @@ defineSlots<{
     >
       <slot name="append" />
     </span>
+    <SegmentedFieldBridge
+      ref="bridge"
+      kind="date"
+      @invalid="emit('invalid', $event)"
+    />
   </RekaDatePickerField>
 </template>

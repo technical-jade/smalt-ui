@@ -1,9 +1,12 @@
 <script setup lang="ts">
-import { computed, useTemplateRef } from 'vue'
+import { computed, ref, useTemplateRef } from 'vue'
 import type { ComponentPublicInstance } from 'vue'
 import { TimeFieldRoot, TimeFieldInput } from 'reka-ui'
 import { SFormField } from '../SFormField'
 import { visibleSegments } from '../../internal/dateSegments'
+import SegmentedFieldBridge, {
+  type SegmentedFieldBridgeExposed,
+} from '../../internal/SegmentedFieldBridge'
 import { useDefaults, useFormatLocale } from '../../composables'
 import { useFieldFocus } from '../../internal/useFieldFocus'
 import type { STimeFieldProps, STimeValue } from './types'
@@ -41,6 +44,9 @@ const slots = defineSlots<{
  */
 const model = defineModel<STimeValue | undefined>()
 
+const outOfRange = ref(false)
+const bridge = useTemplateRef<SegmentedFieldBridgeExposed>('bridge')
+
 const floating = computed(() => p.floatingLabel && !!p.label)
 const filled = computed(() => model.value != null)
 const hasLeading = computed(() => !!slots.prepend)
@@ -55,7 +61,7 @@ const hasLeading = computed(() => !!slots.prepend)
     :label="p.label"
     :hint="p.hint"
     :error="p.error"
-    :invalid="p.invalid"
+    :invalid="p.invalid || outOfRange"
     :required="p.required"
     :size="p.size"
     :floating-label="floating"
@@ -100,6 +106,7 @@ const hasLeading = computed(() => !!slots.prepend)
           :aria-labelledby="labelId"
           :aria-invalid="fieldInvalid || undefined"
           :aria-describedby="describedBy"
+          @paste="bridge?.paste($event)"
         >
           <TimeFieldInput
             v-for="item in visibleSegments(segments)"
@@ -110,6 +117,11 @@ const hasLeading = computed(() => !!slots.prepend)
           >
             {{ item.value }}
           </TimeFieldInput>
+          <SegmentedFieldBridge
+            ref="bridge"
+            kind="time"
+            @invalid="outOfRange = $event"
+          />
         </TimeFieldRoot>
         <label
           v-if="floating"

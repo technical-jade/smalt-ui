@@ -32,12 +32,21 @@ const m = useMessages()
 
 /** Selected date (or an array with `multiple`). Two-way binding via `v-model`. */
 const model = defineModel<DateValue | DateValue[] | undefined>()
+
+/**
+ * The date whose month is shown. Two-way binding via `v-model:placeholder`: it follows the month
+ * navigation and moves the calendar when set. Without a value or a placeholder the calendar opens
+ * on today in the time zone where it renders, so with SSR the server may pick a different month
+ * and "today" than the browser: pass a placeholder or render the calendar on the client only.
+ */
+const placeholder = defineModel<DateValue>('placeholder')
 </script>
 
 <template>
   <CalendarRoot
     v-slot="{ grid, weekDays }"
     v-model="model"
+    v-model:placeholder="placeholder"
     class="s-calendar"
     :locale="formatLocale"
     :min-value="p.minValue"
