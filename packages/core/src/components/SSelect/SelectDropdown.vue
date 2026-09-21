@@ -41,6 +41,8 @@ const props = defineProps<{
   useTags?: boolean
   square?: boolean
   contentStyle?: Record<string, string>
+  /** Fallthrough attributes of `SSelect` without class/style. */
+  controlAttrs?: Record<string, unknown>
 }>()
 
 const slots = defineSlots<{
@@ -119,6 +121,7 @@ const removeValue = (v: string) => {
         @remove="removeValue"
       />
       <SelectTrigger
+        v-bind="controlAttrs"
         :id="fieldId"
         class="s-select__trigger"
         :reference="control"

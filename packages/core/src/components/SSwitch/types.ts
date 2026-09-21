@@ -10,6 +10,8 @@ export interface SSwitchProps {
   textColor?: SColorName
   /** Label text next to the switch (can be replaced with the default slot). */
   label?: string
+  /** Accessible name of the switch when there is no visible label. */
+  ariaLabel?: string
   /** Disables the switch and makes it inactive. */
   disabled?: boolean
   /** Required for form submission. */

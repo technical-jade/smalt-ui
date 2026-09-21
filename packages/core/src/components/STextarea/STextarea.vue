@@ -1,7 +1,8 @@
 <script setup lang="ts">
-import { computed, useAttrs } from 'vue'
+import { computed } from 'vue'
 import { SFormField } from '../SFormField'
 import { useDefaults } from '../../composables'
+import { useFieldAttrs } from '../../internal/useFieldAttrs'
 import type { STextareaProps } from './types'
 
 /**
@@ -31,13 +32,7 @@ const slots = defineSlots<{
 /** Field value. Two-way bound via `v-model`. */
 const model = defineModel<string>()
 
-// class/style belong to the outer field frame, everything else to the native textarea inside it.
-const attrs = useAttrs()
-const rootClass = computed(() => attrs.class)
-const rootStyle = computed(() => attrs.style)
-const fieldAttrs = computed(() =>
-  Object.fromEntries(Object.entries(attrs).filter(([key]) => key !== 'class' && key !== 'style')),
-)
+const { rootClass, rootStyle, controlAttrs: fieldAttrs } = useFieldAttrs()
 
 const floating = computed(() => p.floatingLabel && !!p.label)
 const filled = computed(() => !!model.value)

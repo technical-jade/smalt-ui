@@ -26,4 +26,15 @@ describe('SSwitch', () => {
       'checked',
     )
   })
+
+  it('class/style stay on the root, other attributes reach the switch', () => {
+    const { container } = render(SSwitch, {
+      attrs: { 'aria-label': 'Wi-Fi', class: 'wifi', style: 'margin: 4px', 'data-testid': 'wifi' },
+    })
+    const root = container.firstElementChild as HTMLElement
+    expect(root).toHaveClass('s-switch', 'wifi')
+    expect(root.style.margin).toBe('4px')
+    expect(root).not.toHaveAttribute('data-testid')
+    expect(screen.getByRole('switch', { name: 'Wi-Fi' })).toHaveAttribute('data-testid', 'wifi')
+  })
 })

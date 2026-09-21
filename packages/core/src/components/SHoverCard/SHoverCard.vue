@@ -9,6 +9,8 @@ import {
 import { useDefaults, useElevationProp } from '../../composables'
 import type { SHoverCardProps } from './types'
 
+defineOptions({ inheritAttrs: false })
+
 const props = withDefaults(defineProps<SHoverCardProps>(), {
   side: 'bottom',
   align: 'center',
@@ -43,6 +45,7 @@ defineSlots<{
 
     <HoverCardPortal>
       <HoverCardContent
+        v-bind="$attrs"
         class="s-hover-card__content"
         :class="{ 's-hover-card__content--square': p.square }"
         :style="elevationStyle"

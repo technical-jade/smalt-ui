@@ -239,4 +239,44 @@ describe('SSelect · multiple / use-tags', () => {
     expect(style).toContain('--s-surface-elevation: none')
     expect(style).toContain('--s-select-max-height: 240px')
   })
+
+  it('class/style stay on the field, other attributes reach the trigger', () => {
+    const { container } = render(SSelect, {
+      props: { options, ariaLabel: 'Country' },
+      attrs: { class: 'country', style: 'width: 240px', 'data-testid': 'country-select' },
+    })
+    const root = container.firstElementChild as HTMLElement
+    expect(root).toHaveClass('s-select', 'country')
+    expect(root.style.width).toBe('240px')
+    expect(root).not.toHaveAttribute('data-testid')
+    expect(container.querySelector('.s-select__trigger')).toHaveAttribute(
+      'data-testid',
+      'country-select',
+    )
+  })
+
+  it('searchable: attributes reach the input', () => {
+    render(SSelect, {
+      props: { options, label: 'Country', searchable: true },
+      attrs: { autocomplete: 'country-name', 'data-testid': 'country-input' },
+    })
+    const input = screen.getByRole('combobox', { name: 'Country' })
+    expect(input).toHaveAttribute('autocomplete', 'country-name')
+    expect(input).toHaveAttribute('data-testid', 'country-input')
+  })
+
+  it('focus/blur fire when focus enters and leaves the field, not when it moves into the list', async () => {
+    const { emitted } = render(SSelect, { props: { options, label: 'Country', searchable: true } })
+    const input = screen.getByRole('combobox', { name: 'Country' })
+    await fireEvent.focusIn(input)
+    await fireEvent.keyDown(input, { key: 'ArrowDown' })
+    const option = await screen.findByRole('option', { name: 'New York' })
+
+    await fireEvent.focusOut(input, { relatedTarget: option })
+    expect(emitted().focus).toHaveLength(1)
+    expect(emitted().blur).toBeUndefined()
+
+    await fireEvent.focusOut(input, { relatedTarget: document.body })
+    expect(emitted().blur).toHaveLength(1)
+  })
 })

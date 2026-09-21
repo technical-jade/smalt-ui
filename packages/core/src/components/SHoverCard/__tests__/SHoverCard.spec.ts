@@ -18,4 +18,16 @@ describe('SHoverCard', () => {
     })
     expect(await screen.findByText('Profile card')).toBeInTheDocument()
   })
+
+  it('class and data attributes from the component land on the card, not the trigger', async () => {
+    render(SHoverCard, {
+      props: { open: true },
+      attrs: { class: 'profile-card', 'data-testid': 'profile' },
+      slots: { trigger, default: 'Profile card' },
+    })
+    const card = (await screen.findByText('Profile card')).closest('.s-hover-card__content')
+    expect(card).toHaveClass('profile-card')
+    expect(card).toHaveAttribute('data-testid', 'profile')
+    expect(screen.getByRole('link', { name: '@alex' })).not.toHaveAttribute('data-testid')
+  })
 })

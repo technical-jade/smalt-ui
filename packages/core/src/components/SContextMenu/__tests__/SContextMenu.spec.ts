@@ -41,4 +41,16 @@ describe('SContextMenu', () => {
     expect(path).not.toBeNull()
     expect(path?.getAttribute('d')).toBeTruthy()
   })
+
+  it('class and data attributes from the component land on the menu', async () => {
+    render(SContextMenu, {
+      props: { items },
+      attrs: { class: 'file-menu', 'data-testid': 'file' },
+      slots: { default: area },
+    })
+    await fireEvent.contextMenu(screen.getByText('area'))
+    const menu = await screen.findByRole('menu')
+    expect(menu).toHaveClass('s-context-menu__content', 'file-menu')
+    expect(menu).toHaveAttribute('data-testid', 'file')
+  })
 })

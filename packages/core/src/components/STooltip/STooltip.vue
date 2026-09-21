@@ -11,6 +11,8 @@ import {
 import { useDefaults, useElevationProp } from '../../composables'
 import type { STooltipProps } from './types'
 
+defineOptions({ inheritAttrs: false })
+
 const props = withDefaults(defineProps<STooltipProps>(), {
   side: 'top',
   trigger: 'hover',
@@ -102,6 +104,7 @@ defineSlots<{
 
       <TooltipPortal>
         <TooltipContent
+          v-bind="$attrs"
           class="s-tooltip__content"
           :class="{ 's-tooltip__content--square': p.square }"
           :style="elevationStyle"

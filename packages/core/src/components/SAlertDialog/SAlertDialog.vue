@@ -15,6 +15,8 @@ import { SVisuallyHidden } from '../../internal/SVisuallyHidden'
 import { useDefaults, useMessages } from '../../composables'
 import type { SAlertDialogProps } from './types'
 
+defineOptions({ inheritAttrs: false })
+
 const props = withDefaults(defineProps<SAlertDialogProps>(), {
   danger: false,
 })
@@ -93,9 +95,12 @@ defineSlots<{
     <AlertDialogPortal>
       <AlertDialogOverlay class="s-alert-dialog__overlay" />
       <AlertDialogContent
+        v-bind="{
+          ...$attrs,
+          ...(p.description || $slots.description ? {} : { 'aria-describedby': undefined }),
+        }"
         class="s-alert-dialog__content"
         :class="{ 's-alert-dialog__content--square': p.square }"
-        v-bind="p.description || $slots.description ? {} : { 'aria-describedby': undefined }"
       >
         <AlertDialogTitle
           v-if="p.title || $slots.title"

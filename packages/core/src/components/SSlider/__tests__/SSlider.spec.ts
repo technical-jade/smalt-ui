@@ -86,4 +86,18 @@ describe('SSlider', () => {
     const bubbles = [...container.querySelectorAll('.s-slider__value')]
     expect(bubbles.map((b) => b.textContent)).toEqual(['20%', '60%'])
   })
+
+  it('ariaLabel names the thumb without a visible label', () => {
+    const { container } = render(SSlider, { props: { modelValue: 40, ariaLabel: 'Volume' } })
+    expect(screen.getByRole('slider', { hidden: true })).toHaveAttribute('aria-label', 'Volume')
+    expect(container.querySelector('.s-field')).not.toHaveAttribute('aria-label')
+  })
+
+  it('ariaLabel labels range edges separately', () => {
+    const { container } = render(SSlider, { props: { modelValue: [20, 60], ariaLabel: 'Price' } })
+    const labels = [...container.querySelectorAll('.s-slider__thumb')].map((t) =>
+      t.getAttribute('aria-label'),
+    )
+    expect(labels).toEqual(['Price: start', 'Price: end'])
+  })
 })

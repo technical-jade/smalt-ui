@@ -32,10 +32,11 @@ const model = defineModel<number | number[]>()
  * edges get separate labels ("Price: start" / "Price: end").
  */
 function thumbLabel(index: number, total: number): string | undefined {
-  if (total < 2) return p.label
+  const name = p.label ?? p.ariaLabel
+  if (total < 2) return name
   const edge = index === 0 ? m.value.rangeStart : index === total - 1 ? m.value.rangeEnd : undefined
-  if (!edge) return p.label
-  return p.label ? `${p.label}: ${edge}` : edge
+  if (!edge) return name
+  return name ? `${name}: ${edge}` : edge
 }
 
 // Reka works with an array of values; for a single thumb it is unwrapped back into a number.

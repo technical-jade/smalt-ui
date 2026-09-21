@@ -27,4 +27,16 @@ describe('SPopover', () => {
     })
     expect(await screen.findByText('Visible content')).toBeInTheDocument()
   })
+
+  it('class, style and data attributes from the component land on the panel', async () => {
+    render(SPopover, {
+      props: { open: true },
+      attrs: { class: 'filters', style: 'width: 320px', 'data-testid': 'filters-popover' },
+      slots: { trigger: triggerBtn, default: 'Filters' },
+    })
+    const panel = await screen.findByRole('dialog')
+    expect(panel).toHaveClass('s-popover__content', 'filters')
+    expect(panel).toHaveAttribute('data-testid', 'filters-popover')
+    expect(panel.style.width).toBe('320px')
+  })
 })

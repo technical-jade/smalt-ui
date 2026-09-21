@@ -1,4 +1,4 @@
-import { describe, expect, it } from 'vitest'
+import { describe, expect, it, vi } from 'vitest'
 import { fireEvent, render, screen } from '@testing-library/vue'
 import { SAlertDialog } from '../index'
 
@@ -61,5 +61,18 @@ describe('SAlertDialog', () => {
     })
     await screen.findByRole('alertdialog')
     expect(screen.getByRole('button', { name: 'Delete' })).toHaveClass('s-button--negative')
+  })
+
+  it('class, data attributes and listeners from the component land on the dialog', async () => {
+    const onEscapeKeyDown = vi.fn()
+    render(SAlertDialog, {
+      props: { open: true, title: 'Delete project?' },
+      attrs: { class: 'delete-confirm', 'data-testid': 'delete-dialog', onEscapeKeyDown },
+    })
+    const dialog = await screen.findByRole('alertdialog')
+    expect(dialog).toHaveClass('s-alert-dialog__content', 'delete-confirm')
+    expect(dialog).toHaveAttribute('data-testid', 'delete-dialog')
+    await fireEvent.keyDown(dialog, { key: 'Escape' })
+    expect(onEscapeKeyDown).toHaveBeenCalled()
   })
 })

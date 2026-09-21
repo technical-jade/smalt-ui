@@ -12,6 +12,8 @@ export interface SCheckboxProps {
   textColor?: SColorName
   /** Label text next to the checkbox (can be replaced with the default slot). */
   label?: string
+  /** Accessible name of the checkbox when there is no visible label (a table row selector). */
+  ariaLabel?: string
   /** Checkbox value in a group/form (the `value` attribute). */
   value?: string
   /** Disables the checkbox. */

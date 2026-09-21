@@ -61,4 +61,15 @@ describe('STooltip', () => {
       vi.useRealTimers()
     }
   })
+
+  it('class and data attributes from the component land on the bubble', async () => {
+    render(STooltip, {
+      props: { content: 'Tooltip', open: true },
+      attrs: { class: 'hint', 'data-testid': 'hint' },
+      slots: { trigger: '<button>Hover me</button>' },
+    })
+    await waitFor(() => expect(content()).toHaveClass('hint'))
+    expect(content()).toHaveAttribute('data-testid', 'hint')
+    expect(triggerButton()).not.toHaveAttribute('data-testid')
+  })
 })

@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, onBeforeUnmount, onMounted, ref, useAttrs, watch } from 'vue'
+import { computed, onBeforeUnmount, onMounted, ref, watch } from 'vue'
 import {
   ComboboxAnchor,
   ComboboxContent,
@@ -14,6 +14,7 @@ import { SFormField } from '../SFormField'
 import { SIcon } from '../SIcon'
 import { SSpinner } from '../SSpinner'
 import { useDefaults, useElevationProp, useMessages } from '../../composables'
+import { useFieldAttrs } from '../../internal/useFieldAttrs'
 import type { SAutocompleteOption, SAutocompleteProps } from './types'
 
 /**
@@ -36,16 +37,10 @@ const p = useDefaults(props, 'SAutocomplete')
 
 const m = useMessages()
 
-/**
- * class/style belong to the outer field frame, everything else goes to the input inside it.
- * onBlur is taken out here and goes through the filter below.
- */
-const attrs = useAttrs()
-const rootClass = computed(() => attrs.class)
-const rootStyle = computed(() => attrs.style)
-const FIELD_ATTRS_SKIP = ['class', 'style', 'onBlur']
+const { attrs, rootClass, rootStyle, controlAttrs } = useFieldAttrs()
+// onBlur goes through the filter below.
 const fieldAttrs = computed(() =>
-  Object.fromEntries(Object.entries(attrs).filter(([key]) => !FIELD_ATTRS_SKIP.includes(key))),
+  Object.fromEntries(Object.entries(controlAttrs.value).filter(([key]) => key !== 'onBlur')),
 )
 
 /**

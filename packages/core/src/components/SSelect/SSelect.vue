@@ -1,10 +1,15 @@
 <script setup lang="ts">
-import { computed } from 'vue'
+import { computed, useTemplateRef } from 'vue'
+import type { ComponentPublicInstance } from 'vue'
 import { SFormField } from '../SFormField'
 import SelectCombobox from './SelectCombobox.vue'
 import SelectDropdown from './SelectDropdown.vue'
 import { useDefaults, useElevationProp } from '../../composables'
+import { useFieldAttrs } from '../../internal/useFieldAttrs'
+import { useFieldFocus } from '../../internal/useFieldFocus'
 import type { SSelectProps } from './types'
+
+defineOptions({ inheritAttrs: false })
 
 const props = withDefaults(defineProps<SSelectProps>(), {
   size: 'md',
@@ -25,6 +30,17 @@ const props = withDefaults(defineProps<SSelectProps>(), {
   virtualize: undefined,
 })
 const p = useDefaults(props, 'SSelect')
+
+const { rootClass, rootStyle, controlAttrs } = useFieldAttrs()
+
+const emit = defineEmits<{
+  /** Focus entered the field. Moving into the open list does not count. */
+  focus: [event: FocusEvent]
+  /** Focus left the field. Moving into the open list does not count. */
+  blur: [event: FocusEvent]
+}>()
+const root = useTemplateRef<ComponentPublicInstance>('root')
+const { onFocusIn, onFocusOut } = useFieldFocus(root, emit, '.s-select__content')
 
 const elevationStyle = useElevationProp(p, 's-surface')
 
@@ -75,8 +91,10 @@ const model = defineModel<string | string[]>()
 <template>
   <SFormField
     :id="p.id"
+    ref="root"
     class="s-select"
-    :class="`s-select--${p.size}`"
+    :class="[`s-select--${p.size}`, rootClass]"
+    :style="rootStyle"
     :label="p.label"
     :hint="p.hint"
     :error="p.error"
@@ -85,6 +103,8 @@ const model = defineModel<string | string[]>()
     :size="p.size"
     :floating-label="floating"
     :square="p.square"
+    @focusin="onFocusIn"
+    @focusout="onFocusOut"
   >
     <template
       #default="{ id: fieldId, labelId, describedBy, invalid: fieldInvalid, label: fieldLabel }"
@@ -116,6 +136,7 @@ const model = defineModel<string | string[]>()
         :use-tags="p.useTags"
         :square="p.square"
         :content-style="contentStyle"
+        :control-attrs="controlAttrs"
         :virtualize="virtualize"
       >
         <template
@@ -154,6 +175,7 @@ const model = defineModel<string | string[]>()
         :use-tags="p.useTags"
         :square="p.square"
         :content-style="contentStyle"
+        :control-attrs="controlAttrs"
       >
         <template
           v-if="$slots.prepend"

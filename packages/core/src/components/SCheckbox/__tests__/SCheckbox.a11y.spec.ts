@@ -22,4 +22,9 @@ describe('SCheckbox · a11y', () => {
     })
     expect(await axe(container)).toHaveNoViolations()
   })
+
+  it('has no violations without a visible label when ariaLabel is set', async () => {
+    const { container } = render(SCheckbox, { props: { ariaLabel: 'Select row' } })
+    expect(await axe(container)).toHaveNoViolations()
+  })
 })

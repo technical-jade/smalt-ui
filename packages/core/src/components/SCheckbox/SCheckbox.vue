@@ -3,8 +3,11 @@ import { CheckboxIndicator, CheckboxRoot } from 'reka-ui'
 import { SIcon } from '../SIcon'
 import { SFormField } from '../SFormField'
 import { SLabel } from '../../internal/SLabel'
+import { useFieldAttrs } from '../../internal/useFieldAttrs'
 import { useColorProp, useDefaults } from '../../composables'
 import type { SCheckboxProps } from './types'
+
+defineOptions({ inheritAttrs: false })
 
 const props = withDefaults(defineProps<SCheckboxProps>(), {
   checkedIcon: 'check',
@@ -14,6 +17,7 @@ const props = withDefaults(defineProps<SCheckboxProps>(), {
 const p = useDefaults(props, 'SCheckbox')
 
 const colorStyle = useColorProp(p, 's-checkbox')
+const { rootClass, rootStyle, controlAttrs } = useFieldAttrs()
 
 /** Checkbox state. `'indeterminate'` is the mixed state. */
 const model = defineModel<boolean | 'indeterminate'>({ default: false })
@@ -27,6 +31,8 @@ defineSlots<{
 <template>
   <SFormField
     :id="p.id"
+    :class="rootClass"
+    :style="rootStyle"
     :floating-label="false"
     :inline="!p.stretch"
     :hint="p.hint"
@@ -44,12 +50,14 @@ defineSlots<{
         :style="colorStyle"
       >
         <CheckboxRoot
+          v-bind="controlAttrs"
           :id="boxId"
           v-model="model"
           class="s-checkbox__box"
           :value="p.value"
           :disabled="p.disabled"
           :required="p.required"
+          :aria-label="p.ariaLabel"
           :aria-invalid="invalid || undefined"
           :aria-describedby="describedBy"
         >

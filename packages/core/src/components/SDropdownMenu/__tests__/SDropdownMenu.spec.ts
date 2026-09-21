@@ -45,4 +45,15 @@ describe('SDropdownMenu', () => {
     expect(path).not.toBeNull()
     expect(path?.getAttribute('d')).toBeTruthy()
   })
+
+  it('class and data attributes from the component land on the menu', async () => {
+    render(SDropdownMenu, {
+      props: { items, open: true },
+      attrs: { class: 'account-menu', 'data-testid': 'account' },
+      slots: { trigger: triggerBtn },
+    })
+    const menu = await screen.findByRole('menu')
+    expect(menu).toHaveClass('s-dropdown-menu__content', 'account-menu')
+    expect(menu).toHaveAttribute('data-testid', 'account')
+  })
 })

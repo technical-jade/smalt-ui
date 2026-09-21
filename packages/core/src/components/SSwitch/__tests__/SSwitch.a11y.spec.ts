@@ -15,4 +15,9 @@ describe('SSwitch · a11y', () => {
     })
     expect(await axe(container)).toHaveNoViolations()
   })
+
+  it('has no violations without a visible label when ariaLabel is set', async () => {
+    const { container } = render(SSwitch, { props: { ariaLabel: 'Wi-Fi' } })
+    expect(await axe(container)).toHaveNoViolations()
+  })
 })

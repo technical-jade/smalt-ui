@@ -1,9 +1,10 @@
 <script setup lang="ts">
-import { computed, useAttrs } from 'vue'
+import { computed } from 'vue'
 import { SFormField } from '../SFormField'
 import InputText from './InputText.vue'
 import InputTags from './InputTags.vue'
 import { useDefaults } from '../../composables'
+import { useFieldAttrs } from '../../internal/useFieldAttrs'
 import type { SInputNumeric, SInputProps } from './types'
 
 /**
@@ -30,13 +31,7 @@ const props = withDefaults(defineProps<SInputProps>(), {
 })
 const p = useDefaults(props, 'SInput')
 
-// class/style belong to the outer field frame, everything else to the native input inside it.
-const attrs = useAttrs()
-const rootClass = computed(() => attrs.class)
-const rootStyle = computed(() => attrs.style)
-const controlAttrs = computed(() =>
-  Object.fromEntries(Object.entries(attrs).filter(([key]) => key !== 'class' && key !== 'style')),
-)
+const { rootClass, rootStyle, controlAttrs } = useFieldAttrs()
 
 /**
  * `numeric` accepts both `true` and an options object from outside; internally it is always an

@@ -3,6 +3,8 @@ import { PopoverArrow, PopoverContent, PopoverPortal, PopoverRoot, PopoverTrigge
 import { useDefaults, useElevationProp } from '../../composables'
 import type { SPopoverProps } from './types'
 
+defineOptions({ inheritAttrs: false })
+
 const props = withDefaults(defineProps<SPopoverProps>(), {
   side: 'bottom',
   align: 'center',
@@ -35,6 +37,7 @@ defineSlots<{
 
     <PopoverPortal>
       <PopoverContent
+        v-bind="$attrs"
         class="s-popover__content"
         :class="{ 's-popover__content--square': p.square }"
         :style="elevationStyle"

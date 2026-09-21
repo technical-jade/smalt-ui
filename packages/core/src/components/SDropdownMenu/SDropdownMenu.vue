@@ -12,6 +12,8 @@ import { SIcon } from '../SIcon'
 import { useDefaults, useElevationProp } from '../../composables'
 import type { SDropdownMenuOption, SDropdownMenuProps } from './types'
 
+defineOptions({ inheritAttrs: false })
+
 const props = withDefaults(defineProps<SDropdownMenuProps>(), {
   side: 'bottom',
   align: 'start',
@@ -53,6 +55,7 @@ function onItemSelect(opt: SDropdownMenuOption) {
 
     <DropdownMenuPortal>
       <DropdownMenuContent
+        v-bind="$attrs"
         class="s-dropdown-menu__content"
         :class="{ 's-dropdown-menu__content--square': p.square }"
         :style="elevationStyle"

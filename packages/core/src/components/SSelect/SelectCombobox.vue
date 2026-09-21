@@ -45,6 +45,8 @@ const props = defineProps<{
   useTags?: boolean
   square?: boolean
   contentStyle?: Record<string, string>
+  /** Fallthrough attributes of `SSelect` without class/style. */
+  controlAttrs?: Record<string, unknown>
   virtualize?: boolean
 }>()
 
@@ -123,6 +125,7 @@ const removeValue = (v: string) => {
         >{{ commaText }}</span
       >
       <ComboboxInput
+        v-bind="controlAttrs"
         :id="fieldId"
         class="s-select__input"
         :placeholder="placeholder"

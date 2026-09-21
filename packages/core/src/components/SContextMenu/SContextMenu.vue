@@ -12,6 +12,8 @@ import { SIcon } from '../SIcon'
 import { useDefaults, useElevationProp } from '../../composables'
 import type { SContextMenuOption, SContextMenuProps } from './types'
 
+defineOptions({ inheritAttrs: false })
+
 const props = withDefaults(defineProps<SContextMenuProps>(), {
   modal: false,
 })
@@ -44,6 +46,7 @@ function onItemSelect(opt: SContextMenuOption) {
 
     <ContextMenuPortal>
       <ContextMenuContent
+        v-bind="$attrs"
         class="s-context-menu__content"
         :class="{ 's-context-menu__content--square': p.square }"
         :style="elevationStyle"

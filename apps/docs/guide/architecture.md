@@ -44,6 +44,19 @@ primitives again. For example, all text and composite fields are built on `SForm
 hint, error message and a11y wiring), and `SIcon` is reused by dozens of components. So
 customizing a base component (e.g. `.s-field` or its tokens) affects everything that uses it.
 
+## Attributes and listeners
+
+Attributes that are not props (`class`, `style`, `data-*`, `aria-*`, event listeners) go where
+they are useful rather than to the outermost element:
+
+- **Floating layers** (`SPopover`, `SHoverCard`, `STooltip`, `SDropdownMenu`, `SContextMenu`,
+  `SDialog`, `SDrawer`, `SAlertDialog`) put them on the panel itself: the teleported element with
+  the component's `__content` class.
+- **Fields with a single control** (`SInput`, `STextarea`, `SAutocomplete`, `SSelect`,
+  `SCheckbox`, `SSwitch`) keep `class`/`style` on the outer field and pass everything else to the
+  control, so `aria-*`, `data-testid` and `@keydown` reach the element that uses them.
+- Other components keep them on their root element.
+
 ## SSR and portals
 
 - Components are SSR-safe: they do not access `window`/`document` without checks. This is verified

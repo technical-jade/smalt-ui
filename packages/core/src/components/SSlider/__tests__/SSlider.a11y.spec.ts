@@ -17,4 +17,9 @@ describe('SSlider · a11y', () => {
     })
     expect(await axe(container)).toHaveNoViolations()
   })
+
+  it('has no violations without a visible label when ariaLabel is set', async () => {
+    const { container } = render(SSlider, { props: { modelValue: 40, ariaLabel: 'Volume' } })
+    expect(await axe(container)).toHaveNoViolations()
+  })
 })

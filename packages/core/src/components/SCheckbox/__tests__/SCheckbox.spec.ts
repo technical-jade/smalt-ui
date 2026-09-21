@@ -65,4 +65,22 @@ describe('SCheckbox', () => {
       's-checkbox--align-center',
     )
   })
+
+  it('class/style stay on the field, other attributes reach the checkbox', () => {
+    const { container } = render(SCheckbox, {
+      props: { ariaLabel: 'Select row' },
+      attrs: { class: 'row-check', style: 'margin: 4px', 'data-testid': 'row-1' },
+    })
+    const root = container.firstElementChild as HTMLElement
+    expect(root).toHaveClass('row-check')
+    expect(root.style.margin).toBe('4px')
+    const box = screen.getByRole('checkbox', { name: 'Select row' })
+    expect(box).toHaveAttribute('data-testid', 'row-1')
+    expect(root).not.toHaveAttribute('data-testid')
+  })
+
+  it('aria-label passed as an attribute names the checkbox', () => {
+    render(SCheckbox, { attrs: { 'aria-label': 'Select row' } })
+    expect(screen.getByRole('checkbox', { name: 'Select row' })).toBeInTheDocument()
+  })
 })

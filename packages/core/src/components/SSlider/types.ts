@@ -10,6 +10,11 @@ export interface SSliderProps {
   id?: string
   /** Field label. */
   label?: string
+  /**
+   * Accessible name of the thumb when there is no visible `label`. A range adds the edge to it
+   * ("Price: start").
+   */
+  ariaLabel?: string
   /** Hint below the field. */
   hint?: string
   /** Error message. When set, the field is marked invalid. */
