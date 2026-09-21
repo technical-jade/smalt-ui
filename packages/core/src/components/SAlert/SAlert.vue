@@ -12,10 +12,21 @@ const p = useDefaults(props, 'SAlert')
 
 const m = useMessages()
 
-defineEmits<{
+const emit = defineEmits<{
   /** The close button was clicked. */
   close: []
 }>()
+
+/**
+ * Whether the alert is shown. `closable` hides it by itself; `v-model:visible` brings it back.
+ * Hiding it with `v-if` on `close` works too.
+ */
+const visible = defineModel<boolean>('visible', { default: true })
+
+function onClose() {
+  visible.value = false
+  emit('close')
+}
 
 defineSlots<{
   /** Alert body. */
@@ -49,6 +60,7 @@ const statusIcon = computed(() => p.icon ?? STATUS_ICONS[p.variant])
 
 <template>
   <div
+    v-if="visible"
     class="s-alert"
     :class="[`s-alert--${p.variant}`, { 's-alert--square': p.square }]"
     :style="colorStyle"
@@ -76,7 +88,7 @@ const statusIcon = computed(() => p.icon ?? STATUS_ICONS[p.variant])
       type="button"
       class="s-alert__close"
       :aria-label="p.closeLabel ?? m.close"
-      @click="$emit('close')"
+      @click="onClose"
     >
       ×
     </button>

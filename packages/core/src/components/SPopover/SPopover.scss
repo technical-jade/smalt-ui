@@ -5,6 +5,11 @@
   @include tools.floating-surface;
   z-index: var(--s-z-popover);
   max-width: 20rem;
+  // Reka reports the space left to the window edge; long content scrolls instead of leaving the
+  // screen. The arrow is not clipped: its containing block is Reka's positioned wrapper.
+  max-block-size: var(--reka-popover-content-available-height, 100vh);
+  overflow-y: auto;
+  overscroll-behavior: contain;
   padding: var(--s-space-4);
   font-size: var(--s-font-size-sm);
   color: var(--s-color-text);

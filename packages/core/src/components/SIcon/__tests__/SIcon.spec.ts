@@ -81,4 +81,12 @@ describe('SIcon', () => {
     expect(container.querySelector('svg path')).toBeNull()
     expect(container.querySelector('svg circle')).toBeNull()
   })
+
+  it('accepts a CSS length and puts it in the style', () => {
+    const { container } = render(SIcon, { props: { icon: 'x', size: '1em' } })
+    const svg = container.querySelector('svg')!
+    expect(svg.style.width).toBe('1em')
+    expect(svg.style.height).toBe('1em')
+    expect(svg).not.toHaveAttribute('width')
+  })
 })

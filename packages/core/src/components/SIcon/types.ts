@@ -1,6 +1,7 @@
 import type { SColorName } from '../../composables/useColorProp'
 
-export type SIconSize = 'sm' | 'md' | 'lg' | number
+// `string & {}` keeps the token names in autocompletion next to arbitrary CSS lengths.
+export type SIconSize = 'sm' | 'md' | 'lg' | number | (string & {})
 
 export interface SIconProps {
   /**
@@ -13,7 +14,10 @@ export interface SIconProps {
    * it, the icon inherits the parent's color through `currentColor`.
    */
   color?: SColorName
-  /** Size: a token (`sm`/`md`/`lg`) or a number of pixels. */
+  /**
+   * Size: a token (`sm` 16px / `md` 20px / `lg` 24px), a number of pixels, or a CSS length such as
+   * `1em` to follow the surrounding font size.
+   */
   size?: SIconSize
   /**
    * Accessible name of the icon. When set, `role="img"` is applied; otherwise the icon is hidden

@@ -121,6 +121,13 @@ an icon next to the title), and the `cancelLabel` prop sets the cancel button la
 </Demo>
 </ClientOnly>
 
+## Initial focus
+
+When the dialog opens, focus lands on the cancel button, so an accidental Enter does not confirm a
+destructive action. `initial-focus="confirm"` focuses the confirm button for routine
+confirmations; `initial-focus="none"` focuses the dialog itself, so no button is one keypress
+away.
+
 ## Async confirmation {#async-confirmation}
 
 The `useConfirm()` composable gives you a call in the spirit of the native `confirm()`, only
@@ -177,7 +184,7 @@ Worth knowing:
   close the dialog, so the user cannot dismiss it without answering;
 - calls are queued: the next dialog opens once the current one is answered;
 - the options are a subset of the component props (`title`, `description`, `confirmLabel`,
-  `cancelLabel`, `danger`, `square`), so the dialog looks the same as the declarative version;
+  `cancelLabel`, `danger`, `square`, `initialFocus`), so the dialog looks the same as the declarative version;
 - without a mounted `ConfirmProvider` the call resolves to `false` and logs a console warning — the
   promise never hangs. On the server (SSR) it also resolves to a refusal: the queue is shared by
   all requests.

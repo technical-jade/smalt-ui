@@ -77,4 +77,19 @@ describe('SAlert', () => {
     })
     expect(container.querySelector('.custom-icon')).not.toBeNull()
   })
+
+  it('closable hides the alert itself and still emits close', async () => {
+    const { emitted } = render(SAlert, { props: { closable: true }, slots: { default: 'Saved' } })
+    await fireEvent.click(screen.getByRole('button', { name: 'Close' }))
+    expect(screen.queryByText('Saved')).toBeNull()
+    expect(emitted().close).toHaveLength(1)
+    expect(emitted()['update:visible']).toEqual([[false]])
+  })
+
+  it('v-model:visible controls whether the alert is shown', async () => {
+    const { rerender } = render(SAlert, { props: { visible: false }, slots: { default: 'Saved' } })
+    expect(screen.queryByText('Saved')).toBeNull()
+    await rerender({ visible: true })
+    expect(screen.getByText('Saved')).toBeInTheDocument()
+  })
 })

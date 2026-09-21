@@ -45,4 +45,20 @@ describe('SPopover · browser', () => {
     const flat = getComputedStyle(await open({ elevation: 0 })).boxShadow
     expect(flat).toBe('none')
   })
+
+  it('long content scrolls within the space left on screen', async () => {
+    render(SPopover, {
+      slots: {
+        trigger: '<button>Open</button>',
+        default: '<div style="height: 3000px">Long content</div>',
+      },
+    })
+    await userEvent.click(screen.getByRole('button', { name: 'Open' }))
+    await screen.findByText('Long content')
+    const panel = document.querySelector<HTMLElement>('.s-popover__content')!
+    await expect
+      .poll(() => panel.getBoundingClientRect().bottom)
+      .toBeLessThanOrEqual(window.innerHeight)
+    expect(panel.scrollHeight).toBeGreaterThan(panel.clientHeight)
+  })
 })

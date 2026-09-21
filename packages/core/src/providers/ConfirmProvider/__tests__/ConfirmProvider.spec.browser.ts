@@ -54,4 +54,17 @@ describe('ConfirmProvider · browser', () => {
     await userEvent.click(screen.getByRole('button', { name: 'Cancel' }))
     await expect.poll(() => document.activeElement).toBe(trigger)
   })
+
+  it.each([
+    ['cancel', () => screen.getByRole('button', { name: 'Cancel' })],
+    ['confirm', () => screen.getByRole('button', { name: 'Confirm' })],
+    ['none', () => screen.getByRole('alertdialog')],
+  ] as const)('initialFocus=%s decides what gets focus', async (initialFocus, target) => {
+    render(ConfirmProvider)
+    void useConfirm().confirm({ title: 'Delete the project?', initialFocus })
+    await screen.findByRole('alertdialog')
+    // Reka moves focus in a later tick; let it settle before checking.
+    await new Promise((resolve) => setTimeout(resolve, 50))
+    expect(document.activeElement).toBe(target())
+  })
 })

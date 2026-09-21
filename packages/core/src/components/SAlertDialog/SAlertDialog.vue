@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import { nextTick, useTemplateRef } from 'vue'
+import type { ComponentPublicInstance } from 'vue'
 import {
   AlertDialogAction,
   AlertDialogCancel,
@@ -19,6 +21,7 @@ defineOptions({ inheritAttrs: false })
 
 const props = withDefaults(defineProps<SAlertDialogProps>(), {
   danger: false,
+  initialFocus: 'cancel',
 })
 const p = useDefaults(props, 'SAlertDialog')
 
@@ -68,6 +71,23 @@ function onOpenChange(next: boolean) {
   })
 }
 
+const content = useTemplateRef<ComponentPublicInstance>('content')
+const confirmButton = useTemplateRef<ComponentPublicInstance>('confirmButton')
+
+/**
+ * Reka focuses Cancel in a nextTick scheduled after this handler runs, so the other targets are
+ * focused one tick later, once Reka is done.
+ */
+function onOpenAutoFocus() {
+  if (p.initialFocus === 'cancel') return
+  nextTick(() =>
+    nextTick(() => {
+      const target = p.initialFocus === 'confirm' ? confirmButton.value : content.value
+      ;(target?.$el as HTMLElement | undefined)?.focus({ preventScroll: true })
+    }),
+  )
+}
+
 defineSlots<{
   /** Trigger element that opens the dialog. */
   trigger?: (props: Record<string, never>) => unknown
@@ -95,12 +115,14 @@ defineSlots<{
     <AlertDialogPortal>
       <AlertDialogOverlay class="s-alert-dialog__overlay" />
       <AlertDialogContent
+        ref="content"
         v-bind="{
           ...$attrs,
           ...(p.description || $slots.description ? {} : { 'aria-describedby': undefined }),
         }"
         class="s-alert-dialog__content"
         :class="{ 's-alert-dialog__content--square': p.square }"
+        @open-auto-focus="onOpenAutoFocus"
       >
         <AlertDialogTitle
           v-if="p.title || $slots.title"
@@ -140,6 +162,7 @@ defineSlots<{
           </AlertDialogCancel>
           <AlertDialogAction as-child>
             <SButton
+              ref="confirmButton"
               :variant="p.danger ? 'negative' : 'primary'"
               @click="onConfirm"
             >

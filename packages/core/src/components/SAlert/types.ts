@@ -14,7 +14,7 @@ export interface SAlertProps {
   square?: boolean
   /** Title (can be replaced with the `title` slot). */
   title?: string
-  /** Shows the close button (emits `close`). */
+  /** Shows the close button: it hides the alert and emits `close`. */
   closable?: boolean
   /**
    * Icon (a registry name or a raw SVG path). Overrides the variant's status icon; the `icon`

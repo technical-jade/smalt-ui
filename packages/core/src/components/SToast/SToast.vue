@@ -29,6 +29,9 @@ const ICON_NAMES: Record<NonNullable<SToastProps['variant']>, string> = {
 
 const iconName = computed(() => ICON_NAMES[p.variant])
 
+// Reka announces a `foreground` toast assertively and a `background` one politely, as SAlert does.
+const urgency = computed(() => (p.variant === 'negative' ? 'foreground' : 'background'))
+
 function onOpenChange(open: boolean) {
   if (!open) emit('close')
 }
@@ -39,6 +42,7 @@ function onOpenChange(open: boolean) {
     class="s-toast"
     :class="[`s-toast--${p.variant}`, { 's-toast--square': p.square }]"
     :style="[colorStyle, elevationStyle]"
+    :type="urgency"
     :duration="p.duration"
     @update:open="onOpenChange"
   >

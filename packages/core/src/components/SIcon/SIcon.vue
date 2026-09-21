@@ -2,7 +2,7 @@
 import { computed, useSlots } from 'vue'
 import { resolveIcon, type SIconNode } from '../../composables/useIcons'
 import { useDefaults } from '../../composables'
-import type { SIconProps } from './types'
+import type { SIconProps, SIconSize } from './types'
 import { devWarn } from '../../internal/dev'
 
 const props = withDefaults(defineProps<SIconProps>(), {
@@ -18,10 +18,26 @@ defineSlots<{
 
 const SIZES = { sm: 16, md: 20, lg: 24 } as const
 
-const pixelSize = computed(() => (typeof p.size === 'number' ? p.size : SIZES[p.size]))
+const isToken = (size: SIconSize): size is keyof typeof SIZES => size in SIZES
 
-// The color prop sets `color` (= currentColor for stroke/fill); otherwise it is inherited.
-const colorStyle = computed(() => (p.color ? { color: `var(--s-${p.color})` } : undefined))
+/**
+ * A CSS length goes to the style: the width/height attributes of an SVG do not take `calc()` or
+ * `var()`.
+ */
+const cssSize = computed(() =>
+  typeof p.size === 'string' && !isToken(p.size) ? p.size : undefined,
+)
+const pixelSize = computed(() => {
+  if (typeof p.size === 'number') return p.size
+  return isToken(p.size) ? SIZES[p.size] : undefined
+})
+
+const iconStyle = computed(() => ({
+  // The color prop sets `color` (= currentColor for stroke/fill); otherwise it is inherited.
+  color: p.color ? `var(--s-${p.color})` : undefined,
+  width: cssSize.value,
+  height: cssSize.value,
+}))
 
 const slots = useSlots()
 
@@ -41,7 +57,7 @@ const nodes = computed<SIconNode>(() => {
 <template>
   <svg
     class="s-icon"
-    :style="colorStyle"
+    :style="iconStyle"
     :width="pixelSize"
     :height="pixelSize"
     :viewBox="p.viewBox"

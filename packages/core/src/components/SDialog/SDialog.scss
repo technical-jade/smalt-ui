@@ -18,9 +18,10 @@
     left: 50%;
     z-index: var(--s-z-modal);
     transform: translate(-50%, -50%);
+    display: flex;
+    flex-direction: column;
     width: min(92vw, var(--s-dialog-width, 32rem));
     max-height: 85vh;
-    overflow-y: auto;
     padding: var(--s-space-6);
     color: var(--s-color-text);
     background-color: var(--s-color-surface);
@@ -45,8 +46,16 @@
     color: var(--s-color-text-muted);
   }
 
+  // Only the body scrolls: the title, the footer actions and the close button stay in view.
+  // The padding, taken back by the margins, keeps the focus rings of edge fields unclipped.
   &__body {
-    margin-top: var(--s-space-4);
+    --s-dialog-ring: calc(var(--s-focus-ring-width) + var(--s-focus-ring-offset));
+    flex: 1 1 auto;
+    min-height: 0;
+    overflow-y: auto;
+    padding: var(--s-dialog-ring);
+    margin: calc(var(--s-space-4) - var(--s-dialog-ring)) calc(-1 * var(--s-dialog-ring))
+      calc(-1 * var(--s-dialog-ring));
   }
 
   &__footer {

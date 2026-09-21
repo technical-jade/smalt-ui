@@ -37,6 +37,8 @@ status icon is rendered with the reusable `SIcon` (composition instead of duplic
 
 ## Closable
 
+The close button hides the alert and emits `close`. To show it again, bind `v-model:visible`.
+
 <Demo>
   <SAlert variant="info" title="Tip" closable style="width: 100%">
     This notification can be closed.
@@ -45,12 +47,18 @@ status icon is rendered with the reusable `SIcon` (composition instead of duplic
 <template #code>
 
 ```vue
+<script setup lang="ts">
+import { ref } from 'vue'
+
+const visible = ref(true)
+</script>
+
 <template>
   <SAlert
+    v-model:visible="visible"
     variant="info"
     title="Tip"
     closable
-    @close="visible = false"
   >
     This notification can be closed.
   </SAlert>

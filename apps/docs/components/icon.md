@@ -54,7 +54,8 @@ section.
 
 ## Sizes
 
-The `size` prop takes a token — `sm` (16px) / `md` (20px) / `lg` (24px) — or a number of pixels:
+The `size` prop takes a token — `sm` (16px) / `md` (20px) / `lg` (24px) — or a number of pixels.
+A CSS length such as `size="1em"` makes the icon follow the surrounding font size.
 
 <Demo>
   <div style="display: flex; align-items: center; gap: 16px; color: var(--s-color-text)">

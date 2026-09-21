@@ -38,4 +38,16 @@ describe('SToast', () => {
     await screen.findByText('Done')
     expect(container.querySelector('.s-toast__icon.s-icon')).not.toBeNull()
   })
+
+  it.each([
+    ['negative', 'assertive'],
+    ['info', 'polite'],
+    ['positive', 'polite'],
+  ])('a %s toast is announced %s', async (variant, live) => {
+    mountToast({ title: 'Notification', variant })
+    // Reka renders the announcement text a frame after the live region appears.
+    await vi.waitFor(() =>
+      expect(document.querySelector(`[aria-live="${live}"]`)).toHaveTextContent('Notification'),
+    )
+  })
 })

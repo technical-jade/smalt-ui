@@ -55,6 +55,7 @@ defineSlots<{
     :cancel-label="current.cancelLabel"
     :danger="current.danger"
     :square="current.square"
+    :initial-focus="current.initialFocus"
     @confirm="settle(current.id, true)"
     @cancel="settle(current.id, false)"
   />

@@ -5,7 +5,7 @@ import { devWarn } from '../internal/dev'
 /** What the confirmation dialog shows: a subset of `SAlertDialog` props. */
 export type SConfirmOptions = Pick<
   SAlertDialogProps,
-  'title' | 'description' | 'confirmLabel' | 'cancelLabel' | 'danger' | 'square'
+  'title' | 'description' | 'confirmLabel' | 'cancelLabel' | 'danger' | 'square' | 'initialFocus'
 >
 
 export interface SConfirmEntry extends SConfirmOptions {

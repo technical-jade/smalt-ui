@@ -41,4 +41,20 @@ describe('SDialog · browser', () => {
     expect(overlay.width).toBeGreaterThanOrEqual(window.innerWidth - 1)
     expect(overlay.height).toBeGreaterThanOrEqual(window.innerHeight - 1)
   })
+
+  it('long content scrolls in the body; the title and the footer stay in view', async () => {
+    render(SDialog, {
+      props: { open: true, title: 'Terms' },
+      slots: {
+        default: '<div style="height: 3000px">Long text</div>',
+        footer: '<button>Accept</button>',
+      },
+    })
+    const dialog = await screen.findByRole('dialog')
+    const body = dialog.querySelector<HTMLElement>('.s-dialog__body')!
+    expect(dialog.scrollHeight).toBe(dialog.clientHeight)
+    expect(body.scrollHeight).toBeGreaterThan(body.clientHeight)
+    const footer = screen.getByRole('button', { name: 'Accept' }).getBoundingClientRect()
+    expect(footer.bottom).toBeLessThanOrEqual(window.innerHeight)
+  })
 })
