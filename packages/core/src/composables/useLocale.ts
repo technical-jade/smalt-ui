@@ -87,6 +87,26 @@ export interface SMessages {
   autocompleteEmpty: string
   /** Hidden label of a loading state (`SAutocomplete` suggestions, indeterminate `SProgress`). */
   loading: string
+  /** Error of the `required()` rule. */
+  ruleRequired: string
+  /** Error of `minLength()` for text; `{min}` is the limit. */
+  ruleMinLength: string
+  /** Error of `maxLength()` for text; `{max}` is the limit. */
+  ruleMaxLength: string
+  /** Error of `minLength()` for a list (tags, multiple select); `{min}` is the limit. */
+  ruleMinItems: string
+  /** Error of `maxLength()` for a list; `{max}` is the limit. */
+  ruleMaxItems: string
+  /** Error of the `min()` rule; `{min}` is the limit. */
+  ruleMin: string
+  /** Error of the `max()` rule; `{max}` is the limit. */
+  ruleMax: string
+  /** Error of the `pattern()` rule. */
+  rulePattern: string
+  /** Error of the `email()` rule. */
+  ruleEmail: string
+  /** Error shown when a rule throws or its Promise rejects. */
+  ruleFailed: string
 }
 
 /** Built-in English dictionary (the default). */
@@ -125,6 +145,16 @@ export const enMessages: SMessages = {
   rangeEnd: 'end',
   autocompleteEmpty: 'Nothing found',
   loading: 'Loading',
+  ruleRequired: 'This field is required',
+  ruleMinLength: 'Enter at least {min} characters',
+  ruleMaxLength: 'Enter no more than {max} characters',
+  ruleMinItems: 'Select at least {min}',
+  ruleMaxItems: 'Select no more than {max}',
+  ruleMin: 'Must be at least {min}',
+  ruleMax: 'Must be no more than {max}',
+  rulePattern: 'Invalid format',
+  ruleEmail: 'Enter a valid email address',
+  ruleFailed: 'The value could not be checked',
 }
 
 /** Identifier of a built-in locale. Other languages are supplied through `messages`. */

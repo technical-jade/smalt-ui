@@ -30,6 +30,7 @@ const guideSidebar = [
       { text: 'Auto-import', link: '/guide/auto-import' },
       { text: 'Prop defaults', link: '/guide/defaults' },
       { text: 'Presets', link: '/guide/presets' },
+      { text: 'Validation', link: '/guide/validation' },
     ],
   },
 ]
