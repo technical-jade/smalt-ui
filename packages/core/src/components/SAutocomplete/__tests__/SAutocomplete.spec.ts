@@ -177,4 +177,9 @@ describe('SAutocomplete', () => {
     await rerender({ ...props, selectedLabel: 'Boston' })
     expect(screen.getByLabelText('City')).toHaveValue('Bost')
   })
+
+  it('required is announced on the input', () => {
+    render(SAutocomplete, { props: { options, label: 'City', required: true } })
+    expect(screen.getByRole('combobox')).toHaveAttribute('aria-required', 'true')
+  })
 })

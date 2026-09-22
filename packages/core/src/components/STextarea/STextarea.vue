@@ -76,6 +76,7 @@ const hasLeading = computed(() => !!slots.prepend)
           <slot name="prepend" />
         </span>
         <textarea
+          v-bind="fieldAttrs"
           :id="fieldId"
           v-model="model"
           class="s-textarea__field"
@@ -86,7 +87,6 @@ const hasLeading = computed(() => !!slots.prepend)
           :readonly="p.readonly"
           :aria-invalid="fieldInvalid || undefined"
           :aria-describedby="describedBy"
-          v-bind="fieldAttrs"
         />
         <label
           v-if="floating"

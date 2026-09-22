@@ -1,3 +1,5 @@
+import type { SAccordionHeadingLevel } from '../SAccordionItem/types'
+
 export type SAccordionType = 'single' | 'multiple'
 
 export interface SAccordionOption {
@@ -28,4 +30,6 @@ export interface SAccordionProps {
    * override it with its own `unmount-on-hide`.
    */
   unmountOnHide?: boolean
+  /** Heading level of the section headers (`aria-level`); pick it to fit the page outline. */
+  headingLevel?: SAccordionHeadingLevel
 }

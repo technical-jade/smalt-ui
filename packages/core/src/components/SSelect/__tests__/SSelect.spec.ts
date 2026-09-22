@@ -26,6 +26,16 @@ describe('SSelect', () => {
     expect(container.querySelector('.s-select__label-required')).not.toBeNull()
   })
 
+  it.each([
+    ['dropdown', {}, '.s-select__trigger'],
+    ['searchable', { searchable: true }, 'input'],
+  ])('required is announced on the %s control', (_, extra, selector) => {
+    const { container } = render(SSelect, {
+      props: { options, label: 'City', required: true, ...extra },
+    })
+    expect(container.querySelector(selector)).toHaveAttribute('aria-required', 'true')
+  })
+
   it('an empty string is not treated as a selected value', () => {
     const { container } = render(SSelect, {
       props: { options, label: 'City', modelValue: '', clearable: true },

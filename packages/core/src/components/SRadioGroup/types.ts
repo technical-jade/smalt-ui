@@ -24,9 +24,8 @@ export interface SRadioGroupProps {
   /** Layout orientation: `vertical` (default) or `horizontal`. */
   orientation?: SRadioGroupOrientation
   /**
-   * Class of the options container (`.s-radio-group`). The component's own classes and
-   * attributes go to the field wrapper along with the title and hint, while the options
-   * layout lives here.
+   * Class of the options container (`.s-radio-group`). The component's own `class` and `style`
+   * go to the field wrapper along with the title and hint, while the options layout lives here.
    */
   groupClass?: HTMLAttributes['class']
   /** Disables the whole group. */

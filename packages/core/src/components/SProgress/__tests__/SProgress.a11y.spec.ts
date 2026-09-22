@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { render } from '@testing-library/vue'
+import { render, screen } from '@testing-library/vue'
 import { axe } from 'vitest-axe'
 import { SProgress } from '../index'
 
@@ -7,5 +7,22 @@ describe('SProgress · a11y', () => {
   it('has no violations with an accessible name', async () => {
     const { container } = render(SProgress, { props: { value: 60, label: 'Uploading file' } })
     expect(await axe(container)).toHaveNoViolations()
+  })
+
+  it('without label the bar is named by its percentage', async () => {
+    const { container } = render(SProgress, { props: { value: 60 } })
+    expect(screen.getByRole('progressbar')).toHaveAccessibleName('60%')
+    expect(await axe(container)).toHaveNoViolations()
+  })
+
+  it('an indeterminate bar without label is named from the dictionary', async () => {
+    const { container } = render(SProgress, { props: { value: null } })
+    expect(screen.getByRole('progressbar')).toHaveAccessibleName('Loading')
+    expect(await axe(container)).toHaveNoViolations()
+  })
+
+  it('label names the bar', () => {
+    render(SProgress, { props: { value: 60, label: 'Uploading file' } })
+    expect(screen.getByRole('progressbar')).toHaveAccessibleName('Uploading file')
   })
 })

@@ -3,12 +3,16 @@ import { RadioGroupRoot } from 'reka-ui'
 import { SFormField } from '../SFormField'
 import { SRadio } from '../SRadio'
 import { useDefaults } from '../../composables'
+import { useFieldAttrs } from '../../internal/useFieldAttrs'
 import type { SRadioGroupProps } from './types'
+
+defineOptions({ inheritAttrs: false })
 
 const props = withDefaults(defineProps<SRadioGroupProps>(), {
   orientation: 'vertical',
 })
 const p = useDefaults(props, 'SRadioGroup')
+const { rootClass, rootStyle, controlAttrs } = useFieldAttrs()
 
 /** Selected value of the group. Two-way binding via `v-model`. */
 const model = defineModel<string>()
@@ -47,6 +51,8 @@ defineSlots<{
 <template>
   <SFormField
     :id="p.id"
+    :class="rootClass"
+    :style="rootStyle"
     :floating-label="false"
     :label="p.label"
     :hint="p.hint"
@@ -64,6 +70,7 @@ defineSlots<{
          role="radiogroup" container, which has no value of its own. -->
     <template #default="{ id, labelId, describedBy, invalid }">
       <RadioGroupRoot
+        v-bind="controlAttrs"
         :id="id"
         v-model="model"
         class="s-radio-group"

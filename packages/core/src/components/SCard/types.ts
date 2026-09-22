@@ -23,7 +23,9 @@ export interface SCardProps {
   selected?: boolean
   /**
    * The card is disabled: dimmed and ignores the pointer. A button or link card (`as`) also
-   * stops responding to the keyboard.
+   * stops responding to the keyboard. A `label` card cannot disable the control inside it:
+   * set `disabled` on the radio/checkbox as well, so it leaves the tab order and is announced
+   * as unavailable.
    */
   disabled?: boolean
   /**

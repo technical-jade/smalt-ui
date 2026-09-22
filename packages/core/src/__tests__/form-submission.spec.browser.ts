@@ -10,6 +10,7 @@ import {
   SDateField,
   SDatePicker,
   SDateRangePicker,
+  SInput,
   SNumberField,
   SPinInput,
   SRadioGroup,
@@ -103,5 +104,31 @@ describe('native form submission', () => {
       multiple: true,
     })
     expect(new FormData(form).getAll('tags')).toEqual(['one', 'two'])
+  })
+
+  it("SInput use-tags submits every tag from Reka's hidden inputs", async () => {
+    const { form, data } = await submit(SInput, {
+      name: 'tags',
+      useTags: true,
+      modelValue: ['a', 'b'],
+    })
+    expect([data.get('tags[0]'), data.get('tags[1]')]).toEqual(['a', 'b'])
+    expect(form.querySelector('.s-input__tags-field')).not.toHaveAttribute('name')
+  })
+
+  it('SInput use-tags: required passes with tags and fails without them', async () => {
+    const filled = await submit(SInput, {
+      name: 'tags',
+      useTags: true,
+      required: true,
+      modelValue: ['a'],
+    })
+    expect(filled.form.checkValidity()).toBe(true)
+    expect(filled.form.querySelector('.s-input__tags-field')).toHaveAttribute(
+      'aria-required',
+      'true',
+    )
+    const empty = await submit(SInput, { name: 'tags', useTags: true, required: true })
+    expect(empty.form.checkValidity()).toBe(false)
   })
 })

@@ -142,6 +142,7 @@ const removeValue = (v: string) => {
         :aria-label="ariaLabel"
         :aria-describedby="describedBy"
         :aria-invalid="invalid || undefined"
+        :aria-required="required || undefined"
       />
       <!-- Floating label: a direct child of the frame, floats up on focus/fill.
            ComboboxInput is a native input, so the name is linked via <label for>. -->

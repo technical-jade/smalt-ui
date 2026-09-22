@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { watch } from 'vue'
+import { useTemplateRef, watch } from 'vue'
 import {
   DropdownMenuContent,
   DropdownMenuItem,
@@ -12,6 +12,7 @@ import {
 import { SIcon } from '../SIcon'
 import { useDefaults, useElevationProp } from '../../composables'
 import { useMenuTabOut } from '../../internal/useMenuTabOut'
+import { useOwnAccessibleName } from '../../internal/useOwnAccessibleName'
 import type { SDropdownMenuOption, SDropdownMenuProps } from './types'
 
 defineOptions({ inheritAttrs: false })
@@ -28,6 +29,9 @@ const elevationStyle = useElevationProp(p, 's-surface')
 
 /** Whether the menu is open. Two-way binding via `v-model:open`. */
 const open = defineModel<boolean>('open', { default: false })
+
+const content = useTemplateRef<{ $el: Element | null }>('content')
+useOwnAccessibleName(content, '.s-dropdown-menu__content', () => p.ariaLabel)
 
 const { onOpenChange, onKeydown } = useMenuTabOut(() => p.modal)
 // Synchronously, before the menu takes focus.
@@ -61,6 +65,7 @@ function onItemSelect(opt: SDropdownMenuOption) {
 
     <DropdownMenuPortal>
       <DropdownMenuContent
+        ref="content"
         v-bind="$attrs"
         class="s-dropdown-menu__content"
         :class="{ 's-dropdown-menu__content--square': p.square }"

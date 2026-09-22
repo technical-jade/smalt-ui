@@ -31,13 +31,18 @@ const isNativeButton = computed(() => p.as === 'button')
 const isBlocked = computed(() => p.disabled || p.loading)
 
 /**
- * On a non-native tag (`as="a"` etc.) the `disabled` attribute does nothing, and `aria-disabled`
- * only announces the state — clicks and link navigation still work. The event is cancelled here:
- * `stopImmediatePropagation` also blocks the consumer's handler (Vue calls the inherited
- * listener after ours in the shared invoker).
+ * Native `disabled` is kept for the `disabled` prop only: a focused button that turns disabled
+ * drops focus to `<body>`, so `loading` blocks the button through `aria-disabled` instead.
+ */
+const nativeDisabled = computed(() => isNativeButton.value && p.disabled)
+
+/**
+ * `aria-disabled` only announces the state — clicks, form submission and link navigation still
+ * work. The event is cancelled here: `stopImmediatePropagation` also blocks the consumer's
+ * handler (Vue calls the inherited listener after ours in the shared invoker).
  */
 function onClick(event: MouseEvent) {
-  if (isBlocked.value && !isNativeButton.value) {
+  if (isBlocked.value && !nativeDisabled.value) {
     event.preventDefault()
     event.stopImmediatePropagation()
   }
@@ -65,8 +70,8 @@ watchEffect(() => {
   <Primitive
     :as="p.as"
     :type="isNativeButton ? p.type : undefined"
-    :disabled="isNativeButton ? isBlocked : undefined"
-    :aria-disabled="!isNativeButton && isBlocked ? true : undefined"
+    :disabled="isNativeButton ? p.disabled : undefined"
+    :aria-disabled="isBlocked && !nativeDisabled ? true : undefined"
     :aria-busy="p.loading || undefined"
     :aria-label="p.ariaLabel"
     :data-loading="p.loading || undefined"

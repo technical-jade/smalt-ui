@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { computed } from 'vue'
 import { ProgressIndicator, ProgressRoot } from 'reka-ui'
-import { useColorProp, useDefaults } from '../../composables'
+import { useColorProp, useDefaults, useMessages } from '../../composables'
 import type { SProgressProps } from './types'
 
 const props = withDefaults(defineProps<SProgressProps>(), {
@@ -13,6 +13,7 @@ const props = withDefaults(defineProps<SProgressProps>(), {
 const p = useDefaults(props, 'SProgress')
 
 const colorStyle = useColorProp(p, 's-progress')
+const m = useMessages()
 
 /**
  * The same clamped numbers feed the bar and Reka: Reka only logs an out-of-range value and
@@ -25,6 +26,12 @@ const value = computed(() =>
 
 // Fill percentage; null means indeterminate mode (styled via data-state).
 const percent = computed(() => (value.value == null ? null : (value.value / max.value) * 100))
+
+// Reka names the bar with the percentage and leaves an indeterminate bar unnamed.
+function valueLabel() {
+  if (p.label) return p.label
+  return percent.value == null ? m.value.loading : `${Math.round(percent.value)}%`
+}
 </script>
 
 <template>
@@ -34,7 +41,7 @@ const percent = computed(() => (value.value == null ? null : (value.value / max.
     :style="colorStyle"
     :model-value="value"
     :max="max"
-    :aria-label="p.label"
+    :get-value-label="valueLabel"
   >
     <ProgressIndicator
       class="s-progress__indicator"

@@ -19,6 +19,8 @@ defineOptions({ inheritAttrs: false })
 defineProps<{
   fieldId?: string
   describedBy?: string
+  // Comes with the consumer's attrs: it belongs to Reka's hidden inputs, not the typing buffer.
+  name?: string
   invalid?: boolean
   placeholder?: string
   disabled?: boolean
@@ -49,6 +51,8 @@ const m = useMessages()
     :add-on-paste="addOnPaste"
     :max="max"
     :disabled="disabled"
+    :name="name"
+    :required="required"
   >
     <span
       v-if="$slots.prepend"
@@ -85,13 +89,13 @@ const m = useMessages()
     </TagsInputItem>
 
     <TagsInputInput
+      v-bind="$attrs"
       :id="fieldId"
       class="s-input__tags-field"
       :placeholder="placeholder"
-      :required="required"
+      :aria-required="required || undefined"
       :aria-describedby="describedBy"
       :aria-invalid="invalid || undefined"
-      v-bind="$attrs"
     />
     <span
       v-if="$slots.append"

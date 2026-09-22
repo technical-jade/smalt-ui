@@ -114,4 +114,18 @@ describe('SSlider', () => {
     await fireEvent.keyDown(container.querySelector('.s-slider__thumb')!, { key: 'ArrowRight' })
     expect(emitted().valueCommit).toEqual([[[21, 60]]])
   })
+
+  it('consumer attributes go to the first thumb, class and style stay on the field', () => {
+    const { container } = render(SSlider, {
+      props: { modelValue: [20, 60], ariaLabel: 'Price' },
+      attrs: { class: 'outer', style: 'margin: 4px', 'data-testid': 'price' },
+    })
+    const thumbs = container.querySelectorAll('.s-slider__thumb')
+    expect(thumbs[0]).toHaveAttribute('data-testid', 'price')
+    expect(thumbs[1]).not.toHaveAttribute('data-testid')
+    const field = container.querySelector('.s-field')!
+    expect(field).toHaveClass('s-slider', 'outer')
+    expect(field).toHaveStyle({ margin: '4px' })
+    expect(field).not.toHaveAttribute('data-testid')
+  })
 })

@@ -34,4 +34,28 @@ describe('SAccordion', () => {
       'true',
     )
   })
+
+  it('marks the open section of a non-collapsible single accordion as aria-disabled', () => {
+    render(SAccordion, {
+      props: { items, type: 'single', collapsible: false, modelValue: 'a' },
+    })
+    expect(screen.getByRole('button', { name: 'Section A' })).toHaveAttribute(
+      'aria-disabled',
+      'true',
+    )
+    expect(screen.getByRole('button', { name: 'Section B' })).not.toHaveAttribute('aria-disabled')
+  })
+
+  it('a collapsible accordion leaves the open section enabled', () => {
+    render(SAccordion, { props: { items, modelValue: 'a' } })
+    expect(screen.getByRole('button', { name: 'Section A' })).not.toHaveAttribute('aria-disabled')
+  })
+
+  it('a disabled section keeps aria-disabled', () => {
+    render(SAccordion, { props: { items } })
+    expect(screen.getByRole('button', { name: 'Section C' })).toHaveAttribute(
+      'aria-disabled',
+      'true',
+    )
+  })
 })

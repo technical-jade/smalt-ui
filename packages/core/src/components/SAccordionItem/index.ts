@@ -1,2 +1,2 @@
 export { default as SAccordionItem } from './SAccordionItem.vue'
-export type { SAccordionItemProps } from './types'
+export type { SAccordionItemProps, SAccordionHeadingLevel } from './types'

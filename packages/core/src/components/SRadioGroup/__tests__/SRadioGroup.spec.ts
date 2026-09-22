@@ -42,4 +42,24 @@ describe('SRadioGroup', () => {
     expect(container.querySelector('.s-radio-group')).toHaveClass('tariffs')
     expect(container.querySelector('.s-field')).not.toHaveClass('tariffs')
   })
+
+  it('consumer attributes go to the radiogroup, class and style stay on the field', () => {
+    const { container } = render(SRadioGroup, {
+      props: { options, ariaLabel: 'Choice' },
+      attrs: {
+        class: 'outer',
+        style: 'margin: 4px',
+        'data-testid': 'plan',
+        'aria-labelledby': 'x',
+      },
+    })
+    const group = screen.getByRole('radiogroup')
+    expect(group).toHaveAttribute('data-testid', 'plan')
+    // A field binding: the group keeps the name it builds itself.
+    expect(group).toHaveAccessibleName('Choice')
+    const field = container.querySelector('.s-field')!
+    expect(field).toHaveClass('outer')
+    expect(field).toHaveStyle({ margin: '4px' })
+    expect(field).not.toHaveAttribute('data-testid')
+  })
 })

@@ -90,6 +90,7 @@ const removeValue = (v: string) => {
     v-model="model"
     :multiple="isMultiple"
     :disabled="disabled"
+    :required="required"
   >
     <div
       ref="control"

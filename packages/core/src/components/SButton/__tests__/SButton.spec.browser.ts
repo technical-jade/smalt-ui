@@ -50,4 +50,14 @@ describe('SButton · browser', () => {
     await rerender({ loading: true })
     expect(button.getBoundingClientRect().width).toBe(width)
   })
+
+  it('a focused button keeps focus when it starts loading', async () => {
+    const { container, rerender } = render(SButton, { slots: { default: 'Save' } })
+    const btn = container.querySelector<HTMLButtonElement>('.s-button')!
+    btn.focus()
+    await rerender({ loading: true })
+    await new Promise((resolve) => requestAnimationFrame(() => requestAnimationFrame(resolve)))
+    expect(document.activeElement).toBe(btn)
+    expect(btn).toHaveAttribute('aria-busy', 'true')
+  })
 })

@@ -1,10 +1,10 @@
 import { computed, useAttrs } from 'vue'
 
 /**
- * Splits fallthrough attributes of a field whose root is a frame around the actual control:
- * `class`/`style` stay on the frame, everything else (`aria-*`, `data-*`, `name`, listeners) goes
- * to the control. Left on the root, an `@blur` handler would never fire (blur does not bubble)
- * and an `aria-label` would name a `div`. The component must declare `inheritAttrs: false`.
+ * Splits fallthrough attributes of a framed field: `class`/`style` stay on the frame, the rest
+ * goes to the control (on the root `@blur` never fires). Needs `inheritAttrs: false`. Bind
+ * `controlAttrs` before the `SFormField` bindings (`id`, `aria-describedby`, `aria-labelledby`,
+ * `aria-invalid`): consumer attributes override the component's own, but not those bindings.
  */
 export function useFieldAttrs() {
   const attrs = useAttrs()

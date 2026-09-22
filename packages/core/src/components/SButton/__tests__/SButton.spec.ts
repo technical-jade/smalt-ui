@@ -48,12 +48,31 @@ describe('SButton', () => {
     expect(clicks).toBe(0)
   })
 
-  it('loading sets aria-busy and disables the button', () => {
-    const { container } = render(SButton, { props: { loading: true }, slots: { default: 'x' } })
+  it('loading sets aria-busy and blocks the button without native disabled', async () => {
+    const onClick = vi.fn()
+    const { container } = render(SButton, {
+      props: { loading: true },
+      attrs: { onClick },
+      slots: { default: 'x' },
+    })
     const btn = screen.getByRole('button')
     expect(btn).toHaveAttribute('aria-busy', 'true')
-    expect(btn).toBeDisabled()
+    expect(btn).toHaveAttribute('aria-disabled', 'true')
+    expect(btn).not.toHaveAttribute('disabled')
     expect(container.querySelector('.s-button__spinner')).not.toBeNull()
+    await fireEvent.click(btn)
+    expect(onClick).not.toHaveBeenCalled()
+  })
+
+  it('a loading submit button does not submit its form', async () => {
+    const onSubmit = vi.fn((event: Event) => event.preventDefault())
+    render({
+      components: { SButton },
+      setup: () => ({ onSubmit }),
+      template: '<form @submit="onSubmit"><SButton type="submit" loading>Save</SButton></form>',
+    })
+    await fireEvent.click(screen.getByRole('button'))
+    expect(onSubmit).not.toHaveBeenCalled()
   })
 
   it('renders as a link via the as prop', () => {

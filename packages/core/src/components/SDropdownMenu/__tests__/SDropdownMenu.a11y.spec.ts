@@ -36,4 +36,34 @@ describe('SDropdownMenu · a11y', () => {
     const menu = await screen.findByRole('menu')
     expect(await axe(menu)).toHaveNoViolations()
   })
+
+  it('ariaLabel names the menu instead of the trigger', async () => {
+    render(SDropdownMenu, {
+      props: { open: true, ariaLabel: 'User menu', items: [{ label: 'Profile', value: 'p' }] },
+      slots: { trigger: triggerBtn },
+    })
+    const menu = await screen.findByRole('menu')
+    expect(menu).not.toHaveAttribute('aria-labelledby')
+    expect(menu).toHaveAccessibleName('User menu')
+  })
+
+  it('ariaLabel still names the menu after it reopens', async () => {
+    const props = { ariaLabel: 'User menu', items: [{ label: 'Profile', value: 'p' }] }
+    const { rerender } = render(SDropdownMenu, {
+      props: { ...props, open: true },
+      slots: { trigger: triggerBtn },
+    })
+    await screen.findByRole('menu')
+    await rerender({ ...props, open: false })
+    await rerender({ ...props, open: true })
+    expect(await screen.findByRole('menu')).toHaveAccessibleName('User menu')
+  })
+
+  it('without ariaLabel the menu is still named by its trigger', async () => {
+    render(SDropdownMenu, {
+      props: { open: true, items: [{ label: 'Profile', value: 'p' }] },
+      slots: { trigger: triggerBtn },
+    })
+    expect(await screen.findByRole('menu')).toHaveAccessibleName('Menu')
+  })
 })

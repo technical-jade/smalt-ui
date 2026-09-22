@@ -85,7 +85,7 @@ export interface SMessages {
   rangeEnd: string
   /** Placeholder shown when `SAutocomplete` has no suggestions. */
   autocompleteEmpty: string
-  /** Hidden label of the suggestion loading state (`SAutocomplete`). */
+  /** Hidden label of a loading state (`SAutocomplete` suggestions, indeterminate `SProgress`). */
   loading: string
 }
 

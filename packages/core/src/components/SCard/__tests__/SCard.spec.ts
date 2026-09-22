@@ -1,8 +1,9 @@
-import { describe, expect, it } from 'vitest'
-import { defineComponent, h } from 'vue'
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
+import { defineComponent, h, nextTick } from 'vue'
 import { provideDefaults } from '../../../composables'
 import { render, screen } from '@testing-library/vue'
 import { SCard } from '../index'
+import { resetDevWarnings } from '../../../internal/dev'
 
 describe('SCard', () => {
   it('renders the header/default/footer slots', () => {
@@ -90,5 +91,30 @@ describe('SCard', () => {
       slots: { default: 'Body' },
     })
     expect(container.querySelector('.s-card__body')).toHaveClass('cargo-row')
+  })
+
+  describe('disabled label card', () => {
+    beforeEach(() => resetDevWarnings())
+    afterEach(() => vi.restoreAllMocks())
+
+    it('warns about an enabled control inside', async () => {
+      const warn = vi.spyOn(console, 'warn').mockImplementation(() => {})
+      render(SCard, {
+        props: { as: 'label', disabled: true },
+        slots: { default: '<input type="radio" name="size" /> Small' },
+      })
+      await nextTick()
+      expect(warn).toHaveBeenCalledWith(expect.stringContaining('[SCard] disabled label card'))
+    })
+
+    it('stays quiet when the control is disabled too', async () => {
+      const warn = vi.spyOn(console, 'warn').mockImplementation(() => {})
+      render(SCard, {
+        props: { as: 'label', disabled: true },
+        slots: { default: '<input type="radio" name="size" disabled /> Small' },
+      })
+      await nextTick()
+      expect(warn).not.toHaveBeenCalled()
+    })
   })
 })

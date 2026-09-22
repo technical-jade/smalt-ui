@@ -3,7 +3,10 @@ import { computed, ref } from 'vue'
 import { SliderRange, SliderRoot, SliderThumb, SliderTrack } from 'reka-ui'
 import { SFormField } from '../SFormField'
 import { useColorProp, useDefaults, useMessages } from '../../composables'
+import { useFieldAttrs } from '../../internal/useFieldAttrs'
 import type { SSliderProps } from './types'
+
+defineOptions({ inheritAttrs: false })
 
 const props = withDefaults(defineProps<SSliderProps>(), {
   invalid: false,
@@ -18,6 +21,8 @@ const props = withDefaults(defineProps<SSliderProps>(), {
 const p = useDefaults(props, 'SSlider')
 
 const colorStyle = useColorProp(p, 's-slider')
+// The first thumb carries the field id, so the consumer's attributes go there too.
+const { rootClass, rootStyle, controlAttrs } = useFieldAttrs()
 const m = useMessages()
 
 /**
@@ -91,7 +96,8 @@ defineSlots<{
     :id="p.id"
     :floating-label="false"
     class="s-slider"
-    :style="colorStyle"
+    :class="rootClass"
+    :style="[colorStyle, rootStyle]"
     :label="p.label"
     :hint="p.hint"
     :error="p.error"
@@ -123,6 +129,7 @@ defineSlots<{
         </SliderTrack>
         <SliderThumb
           v-for="(_, i) in arrayValue"
+          v-bind="i === 0 ? controlAttrs : {}"
           :id="i === 0 ? fieldId : undefined"
           :key="i"
           class="s-slider__thumb"

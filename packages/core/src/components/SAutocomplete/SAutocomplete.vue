@@ -223,6 +223,7 @@ function clear() {
           />
 
           <ComboboxInput
+            v-bind="fieldAttrs"
             :id="fieldId"
             ref="input"
             v-model="text"
@@ -232,7 +233,7 @@ function clear() {
             :aria-label="p.label ? undefined : p.ariaLabel"
             :aria-describedby="describedBy"
             :aria-invalid="fieldInvalid || undefined"
-            v-bind="fieldAttrs"
+            :aria-required="p.required || undefined"
             @input="onInput"
             @blur="onBlur"
           />

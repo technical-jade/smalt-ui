@@ -136,19 +136,22 @@ const filled = computed(() => isFill.value || !!model.value)
 
 // With fill-mask the native placeholder is off: the ghost overlay takes its place.
 const inputAttrs = computed(() => ({
-  id: props.fieldId,
   placeholder: isFill.value ? undefined : props.placeholder,
   disabled: props.disabled,
   required: props.required,
   readonly: props.readonly || undefined,
   inputmode: numericInputMode.value,
+}))
+
+// The consumer may override inputmode/placeholder, but not the field bindings (see useFieldAttrs).
+const attrs = useAttrs()
+const fieldAttrs = computed(() => ({
+  ...inputAttrs.value,
+  ...attrs,
+  id: props.fieldId,
   'aria-invalid': props.invalid || undefined,
   'aria-describedby': props.describedBy,
 }))
-
-// External attributes go last: the consumer may override our inputmode/placeholder.
-const attrs = useAttrs()
-const fieldAttrs = computed(() => ({ ...inputAttrs.value, ...attrs }))
 
 /**
  * The bounds check is added alongside the consumer's `change` rather than replacing it: a key
