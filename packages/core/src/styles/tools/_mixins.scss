@@ -115,7 +115,8 @@
 // The layer switches instantly: background-image (a gradient) does not interpolate, and the
 // component's base transition handles smooth color/shadow changes.
 @mixin state-layer($color: var(--s-color-text)) {
-  &:not(:disabled):not([data-disabled]):hover,
+  // A polymorphic control (as="a") is disabled only through aria-disabled.
+  &:not(:disabled):not([data-disabled]):not([aria-disabled='true']):hover,
   &[data-highlighted] {
     background-image: linear-gradient(
       color-mix(in srgb, #{$color} 8%, transparent),
@@ -123,7 +124,7 @@
     );
   }
 
-  &:not(:disabled):not([data-disabled]):active {
+  &:not(:disabled):not([data-disabled]):not([aria-disabled='true']):active {
     background-image: linear-gradient(
       color-mix(in srgb, #{$color} 12%, transparent),
       color-mix(in srgb, #{$color} 12%, transparent)
@@ -321,9 +322,11 @@
     border-color: var(--s-color-primary);
   }
 
-  // Keyed on the attribute, not the --invalid class as in field-shell: the root here is a Reka
-  // group with aria-invalid, while in field-shell the attribute sits on the inner input.
-  &[aria-invalid='true'] {
+  // Keyed on attributes, not the --invalid class as in field-shell: the root here is a Reka
+  // group. Date pickers mark it with aria-invalid; ColorFieldRoot is not a control, so
+  // SColorField sets data-invalid.
+  &[aria-invalid='true'],
+  &[data-invalid] {
     border-color: var(--s-color-negative);
   }
 }

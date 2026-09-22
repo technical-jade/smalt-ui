@@ -64,6 +64,7 @@ const model = defineModel<number | null>({ default: null })
       <NumberFieldRoot
         v-model="model"
         class="s-number-field__control"
+        :class="{ 's-number-field__control--invalid': fieldInvalid }"
         :min="p.min"
         :max="p.max"
         :step="p.step"

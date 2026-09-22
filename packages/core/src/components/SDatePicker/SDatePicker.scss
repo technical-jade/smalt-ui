@@ -65,7 +65,7 @@ $sizes: sm, md, lg;
 // Calendar popup (a portal to the document root, so outside the .s-date-picker block).
 .s-date-picker__content {
   @include tools.reset-inherited;
-  z-index: var(--s-z-popover, 50);
+  z-index: var(--s-z-popover);
   padding: var(--s-space-3);
   color: var(--s-color-text);
   @include tools.floating-surface;

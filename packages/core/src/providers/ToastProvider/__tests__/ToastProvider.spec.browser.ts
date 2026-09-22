@@ -1,5 +1,6 @@
 import { afterEach, describe, expect, it } from 'vitest'
 import { render, screen } from '@testing-library/vue'
+import { userEvent } from 'vitest/browser'
 import { defineComponent, h } from 'vue'
 import { useToast } from '../../../composables/useToast'
 import { ToastProvider } from '../index'
@@ -89,5 +90,19 @@ describe('ToastProvider · browser', () => {
     const byTitle = (title: string) =>
       toasts.find((el) => el.textContent?.includes(title))!.getBoundingClientRect()
     expect(byTitle('Second').top).toBeLessThan(byTitle('First').top)
+  })
+
+  it('the close button shows the focus ring outside .s-root', async () => {
+    render(ToastProvider)
+    useToast().toast({ title: 'File uploaded' })
+    await screen.findByText('File uploaded')
+    const close = document.querySelector<HTMLElement>('.s-toast__close')!
+    // Keyboard modality first, otherwise Chromium does not match :focus-visible.
+    await userEvent.keyboard('{Shift}')
+    close.focus()
+    expect(close.matches(':focus-visible')).toBe(true)
+    const style = getComputedStyle(close)
+    expect(style.outlineStyle).toBe('solid')
+    expect(parseFloat(style.outlineWidth)).toBeGreaterThan(0)
   })
 })

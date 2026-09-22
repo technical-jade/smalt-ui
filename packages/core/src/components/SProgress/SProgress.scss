@@ -48,6 +48,13 @@ $variants: (
   }
 }
 
+// Slower, not stopped: a frozen bar would look like a stalled determinate one.
+@media (prefers-reduced-motion: reduce) {
+  .s-progress[data-state='indeterminate'] .s-progress__indicator {
+    animation-duration: 3s;
+  }
+}
+
 @keyframes s-progress-indeterminate {
   0% {
     transform: translateX(-100%);

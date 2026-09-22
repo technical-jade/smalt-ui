@@ -152,6 +152,12 @@ $sizes: sm, md, lg;
   }
 }
 
+@media (prefers-reduced-motion: reduce) {
+  .s-button__spinner {
+    animation-duration: 1.5s;
+  }
+}
+
 @keyframes s-button-spin {
   to {
     transform: rotate(360deg);

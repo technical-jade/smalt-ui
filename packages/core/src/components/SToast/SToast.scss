@@ -22,6 +22,12 @@ $variants: (
   max-width: calc(100vw - var(--s-space-8));
   padding: var(--s-space-4);
 
+  // The toast is teleported out of .s-root, so the shared :focus-visible ring does not reach it.
+  &:focus-visible,
+  &__close:focus-visible {
+    @include tools.focus-ring;
+  }
+
   @each $name, $var in $variants {
     &--#{$name} .s-toast__icon {
       color: var(--s-toast-c, var(#{$var}));

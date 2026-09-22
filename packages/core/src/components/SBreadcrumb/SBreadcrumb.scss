@@ -1,6 +1,10 @@
 @use '../../styles/tools';
-.s-breadcrumb__list {
+
+.s-breadcrumb {
   @include tools.reset-inherited;
+}
+
+.s-breadcrumb__list {
   display: flex;
   flex-wrap: wrap;
   align-items: center;

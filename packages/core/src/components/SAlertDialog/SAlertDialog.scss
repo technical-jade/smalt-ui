@@ -1,4 +1,5 @@
 @use '../../styles/tools';
+
 .s-alert-dialog {
   &__overlay {
     @include tools.reset-inherited;
@@ -14,7 +15,10 @@
     top: 50%;
     left: 50%;
     z-index: var(--s-z-modal);
+    display: flex;
+    flex-direction: column;
     width: min(92vw, 26rem);
+    max-height: 85vh;
     padding: var(--s-space-6);
     color: var(--s-color-text);
     background-color: var(--s-color-surface);
@@ -35,13 +39,22 @@
   }
 
   &__description {
+    min-height: 0;
+    overflow-y: auto;
     margin: var(--s-space-2) 0 0;
     font-size: var(--s-font-size-sm);
     color: var(--s-color-text-muted);
   }
 
+  // The same scrolling body as in SDialog: the actions stay in view, edge focus rings unclipped.
   &__body {
-    margin-top: var(--s-space-4);
+    --s-alert-dialog-ring: calc(var(--s-focus-ring-width) + var(--s-focus-ring-offset));
+    flex: 1 1 auto;
+    min-height: 0;
+    overflow-y: auto;
+    padding: var(--s-alert-dialog-ring);
+    margin: calc(var(--s-space-4) - var(--s-alert-dialog-ring))
+      calc(-1 * var(--s-alert-dialog-ring)) calc(-1 * var(--s-alert-dialog-ring));
   }
 
   &__footer {
