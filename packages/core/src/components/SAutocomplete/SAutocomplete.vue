@@ -72,25 +72,38 @@ defineExpose(expose)
 
 /**
  * The user's query: what they typed. The application searches by it, usually debounced, and
- * passes the result back into `options`. The component writes only typed text here (and an empty
- * string from the clear button): the selected label and the reset on panel close do not get here,
- * otherwise the query would be indistinguishable from text the component inserted itself. Writing
- * from outside puts the text into the input, which is how a saved form is restored.
+ * passes the result back into `options`. The component never writes a label here, otherwise the
+ * query would be indistinguishable from text the component inserted itself; it only empties the
+ * query when the input stops showing the user's text. Writing from outside puts the text into the
+ * input, which is how a saved form is restored.
  */
 const search = defineModel<string>('search', { default: '' })
 
 /**
- * Text in the input. Kept apart from the query: it also receives the selected label and the reset
- * on panel close, which the application does not need to see in `search`.
+ * Text in the input. Kept apart from the query: it also receives the selected label, which the
+ * application does not need to see in `search`.
  */
 const text = ref(search.value)
 
+/**
+ * What the input shows right now: the label of the selected value, put there by the component, or
+ * the user's own text. Only text the component wrote may be taken back — a typed query stays even
+ * when the panel closes.
+ */
+const showsLabel = ref(!!model.value)
+
 watch(search, (value) => {
-  if (value !== text.value) text.value = value
+  // Emptying the query is how the component announces the label it just put in: the label stays.
+  if (showsLabel.value && value === '') return
+  if (value !== text.value) {
+    text.value = value
+    showsLabel.value = false
+  }
 })
 
 function onInput(event: Event) {
   search.value = (event.target as HTMLInputElement).value
+  showsLabel.value = false
 }
 
 const emit = defineEmits<{
@@ -142,30 +155,39 @@ onMounted(() => {
 })
 /**
  * After a selection the suggestion list is empty, so the label comes from the prop. Reka calls
- * `displayValue` on blur and on value change, so the input keeps the name rather than the raw
- * value. A cleared value gets no label, even if the prop has not been updated yet.
+ * `displayValue` on value change, so the input keeps the name rather than the raw value. A cleared
+ * value gets no label, even if the prop has not been updated yet.
  */
 const displayValue = () => {
   if (model.value) return p.selectedLabel ?? ''
   return mounted.value ? '' : search.value
 }
 
-/** Panel state: tells whether the input text belongs to the user or to the label. */
+/** Panel state: while it is open, the input text belongs to the user's typing. */
 const open = ref(false)
 
 /**
- * Reka asks for `displayValue` only at selection time and when the panel closes. An application
- * with server-side search learns `selectedLabel` later, when nothing calls it anymore, and the
- * input stays empty until the next close. So the label is written here. While the panel is open,
- * the input text belongs to the user's query, and the label does not override it.
+ * Reka asks for `displayValue` only at selection time, so an application with server-side search,
+ * which learns `selectedLabel` later, would be left with an empty input: the label is written
+ * here instead. While the panel is open the input belongs to the user's query; the check runs
+ * again on close, which also catches a value that disappeared meanwhile.
  */
-watch([model, () => p.selectedLabel, open], ([value], [prevValue, , prevOpen]) => {
+watch([model, () => p.selectedLabel, open], () => {
   if (open.value) return
-  // Without a value, the input is cleared by a selection reset or panel close, not a label update.
-  if (!value && value === prevValue && prevOpen === open.value) return
-  const label = displayValue()
-  if (text.value !== label) text.value = label
+  // Only the label the component put in is taken back; text the user typed stays in the input.
+  if (!model.value && !showsLabel.value) return
+  takeOverText(model.value ? (p.selectedLabel ?? '') : '')
 })
+
+/**
+ * The input stops showing the user's text, so the query behind it is gone as well: left in
+ * `search`, it would make the next opening of the panel list suggestions for text nobody sees.
+ */
+function takeOverText(label: string) {
+  if (text.value !== label) text.value = label
+  showsLabel.value = !!model.value
+  if (search.value !== '') search.value = ''
+}
 
 const showClear = computed(() => p.clearable && !p.disabled && (!!model.value || !!text.value))
 
@@ -204,12 +226,15 @@ function clear() {
     <template #default="{ id: fieldId, describedBy, invalid: fieldInvalid }">
       <!-- ignore-filter: the application has already picked the suggestions. If Reka filtered
            them again by substring, fuzzy, transliterated and index search results would vanish
-           from the list even though the server returned them. -->
+           from the list even though the server returned them.
+           reset-search-term-on-blur: leaving the field without a choice is not a reason to throw
+           the typed text away — it stays in the input, as it does in `v-model:search`. -->
       <ComboboxRoot
         v-model="model"
         v-model:open="open"
         class="s-autocomplete__root"
         ignore-filter
+        :reset-search-term-on-blur="false"
         :disabled="p.disabled"
         :name="p.name"
         :required="p.required"

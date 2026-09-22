@@ -123,6 +123,36 @@ describe('SAutocomplete · browser', () => {
     await expect.poll(() => onBlur.mock.calls.length).toBe(1)
   })
 
+  /**
+   * Reka closes the panel on a real focus move, and that is where its own reset used to erase the
+   * input. happy-dom keeps `activeElement` on the input, so the close never happens there.
+   */
+  it('leaving the field without a selection keeps the typed text and the query', async () => {
+    const search = ref('')
+    const Harness = defineComponent(() => {
+      return () => [
+        h(SAutocomplete, {
+          label: 'City',
+          options,
+          search: search.value,
+          'onUpdate:search': (v: string) => (search.value = v),
+        }),
+        h('button', { type: 'button' }, 'Next'),
+      ]
+    })
+    render(Harness)
+    const input = screen.getByLabelText('City') as HTMLInputElement
+    await userEvent.click(input)
+    await userEvent.keyboard('new')
+    await screen.findByRole('listbox')
+
+    // The open panel covers the button, so focus moves without a click.
+    screen.getByRole('button', { name: 'Next' }).focus()
+    await expect.poll(() => screen.queryByRole('listbox')).toBeNull()
+    expect(input.value).toBe('new')
+    expect(search.value).toBe('new')
+  })
+
   it('square also removes the rounding of the suggestion panel', async () => {
     render(SAutocomplete, { props: { options, label: 'City', square: true } })
     await userEvent.click(screen.getByLabelText('City'))

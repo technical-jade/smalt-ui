@@ -1,5 +1,6 @@
 import { describe, expect, it, vi } from 'vitest'
 import { fireEvent, render, screen } from '@testing-library/vue'
+import { nextTick } from 'vue'
 import { SAutocomplete } from '../index'
 import type { SAutocompleteOption } from '../types'
 
@@ -63,7 +64,26 @@ describe('SAutocomplete', () => {
     })
 
     expect(screen.getByLabelText('City')).toHaveValue('San Francisco')
-    expect(emitted()['update:search']?.at(-1)).toEqual(['san'])
+    expect(emitted()['update:search']?.flat()).not.toContain('San Francisco')
+    // The input shows the label, not the query, so the query is emptied rather than left at 'san'.
+    expect(emitted()['update:search']?.at(-1)).toEqual([''])
+  })
+
+  it('the label replacing the typed text empties the query', async () => {
+    const props = { options, label: 'City', modelValue: undefined, selectedLabel: '' }
+    const { emitted, rerender } = render(SAutocomplete, { props })
+    const input = screen.getByLabelText('City')
+    await fireEvent.update(input, 'san')
+    await fireEvent.keyDown(input, { key: 'ArrowDown' })
+    await fireEvent.click(await screen.findByRole('option', { name: 'San Francisco' }))
+    await rerender({ ...props, modelValue: 'sf', selectedLabel: 'San Francisco' })
+
+    await fireEvent.update(input, 'San Franciscoo')
+    await fireEvent.keyDown(input, { key: 'Escape' })
+    await new Promise((resolve) => setTimeout(resolve, 10))
+
+    expect(input).toHaveValue('San Francisco')
+    expect(emitted()['update:search']?.at(-1)).toEqual([''])
   })
 
   it('closing the panel without a selection keeps the typed query', async () => {
@@ -74,7 +94,46 @@ describe('SAutocomplete', () => {
     await fireEvent.keyDown(input, { key: 'Escape' })
     await new Promise((resolve) => setTimeout(resolve, 10))
 
+    expect(input).toHaveValue('new')
     expect(emitted()['update:search']?.at(-1)).toEqual(['new'])
+  })
+
+  it('reopening the panel keeps the typed query', async () => {
+    render(SAutocomplete, { props: { options, label: 'City' } })
+    const input = screen.getByLabelText('City')
+    await fireEvent.update(input, 'new')
+    await fireEvent.keyDown(input, { key: 'ArrowDown' })
+    await fireEvent.keyDown(input, { key: 'Escape' })
+    await new Promise((resolve) => setTimeout(resolve, 10))
+    await fireEvent.keyDown(input, { key: 'ArrowDown' })
+    await screen.findByRole('option', { name: 'New York' })
+
+    expect(input).toHaveValue('new')
+  })
+
+  it('a value reset from outside empties the input', async () => {
+    const props = { options, label: 'City', modelValue: 'sf', selectedLabel: 'San Francisco' }
+    const { rerender } = render(SAutocomplete, { props })
+    await nextTick()
+    expect(screen.getByLabelText('City')).toHaveValue('San Francisco')
+
+    await rerender({ ...props, modelValue: undefined, selectedLabel: undefined })
+    expect(screen.getByLabelText('City')).toHaveValue('')
+  })
+
+  it('a value reset while the panel is open empties the input once it closes', async () => {
+    const props = { options, label: 'City', modelValue: 'sf', selectedLabel: 'San Francisco' }
+    const { rerender } = render(SAutocomplete, { props })
+    const input = screen.getByLabelText('City')
+    await nextTick()
+    await fireEvent.keyDown(input, { key: 'ArrowDown' })
+    await screen.findByRole('option', { name: 'San Francisco' })
+
+    await rerender({ ...props, modelValue: undefined, selectedLabel: undefined })
+    await fireEvent.keyDown(input, { key: 'Escape' })
+    await new Promise((resolve) => setTimeout(resolve, 10))
+
+    expect(input).toHaveValue('')
   })
 
   it('a query set by the application is put into the input', async () => {

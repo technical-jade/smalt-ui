@@ -53,9 +53,9 @@ suggestion's `value` under `name`, not the typed text.
 The value and the query are separate: `v-model` holds the selected value, `v-model:search` holds
 what the user typed. The app searches by the latter, usually with a debounce.
 
-`v-model:search` receives only typed text: the label of the selected option and the text reset on
-panel close are not written there, so there is no extra request for the label, and the typed text
-does not disappear when the user leaves the field without picking anything. Writing to it from
+`v-model:search` receives only typed text: the label of the selected option is not written there,
+so there is no extra request for the label. It is emptied when the component takes the input text
+over itself, so a query the user can no longer see does not stay behind. Writing to it from
 outside puts the text into the field — this is how a saved form is restored.
 
 The label of the selected value comes from the `selected-label` prop: after a selection the
@@ -120,6 +120,25 @@ watch(query, search)
 
   </template>
 </Demo>
+
+## The typed text stays
+
+Leaving the field without picking anything is not a reason to throw the query away: the text stays
+in the input and in `v-model:search`, so the suggestions are still the answer to what is written
+there. Closing the panel with `Esc` and opening it again keeps the text too.
+
+The field replaces the text only when it has something truer to show:
+
+- a suggestion is picked — the input switches to `selected-label`, because the text must match the
+  value the form will submit. This also happens when the user edits the text after a pick and then
+  leaves without picking again: the value is still the old one, so its label comes back;
+- the value is cleared — by the clear button or by a reset of `v-model` from the app, after which
+  the input is empty. A reset while the panel is open reaches the field as soon as it closes.
+
+In both cases the typed query is gone with the text, so `v-model:search` becomes an empty string:
+otherwise the next opening of the panel would list suggestions for text that is no longer in the
+field. This applies to text the user typed; a query the app writes into `v-model:search` itself is
+never touched, so after such a write the query and the field text can differ.
 
 ## Custom option row
 
@@ -232,7 +251,8 @@ typed query, so `required()` fails on text that matches no suggestion. The value
 details.
 
 Type "chi" and move focus out of the field without picking a suggestion: the typed text is not a
-choice, so the error appears. Pick Chicago and the error goes away.
+choice, so the error appears — and the text stays in the field, so it is clear what the error is
+about. Pick Chicago and the error goes away.
 
 <Demo>
   <ClientOnly>
