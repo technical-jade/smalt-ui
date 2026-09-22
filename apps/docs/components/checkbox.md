@@ -10,6 +10,7 @@ const checkedDemo = ref(true)
 `SCheckbox` is a checkbox built on Reka UI with correct semantics (`role="checkbox"`, keyboard,
 `data-state`). The label is rendered with the reusable `SLabel`. It supports a mixed state
 (`indeterminate`) and works with `v-model`.
+Without a visible label, name the checkbox with `aria-label`.
 
 ## Basic usage
 

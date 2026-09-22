@@ -4,6 +4,8 @@
 interactive hints. It is built on Reka UI (portal, positioning, closing on `Esc`/outside click,
 focus management). The trigger goes into the `#trigger` slot (`as-child`), the content into the
 default slot.
+The panel fits the space left on screen: long content scrolls inside it instead of running off the
+edge. `aria-label` names the panel; without it the panel is named by its trigger.
 
 ## Basic usage
 

@@ -7,6 +7,8 @@ the 12/24-hour format. The value is a `Time` (or `CalendarDateTime`/`ZonedDateTi
 [`SDateField`](./date-field). Keep the value in a
 [`shallowRef`](./date-field#value-and-shallowref), not a `ref`: a regular `ref` unwraps the date
 class, and type checking no longer recognizes it as a `DateValue`.
+Pasting into a segment fills the whole value, such as `09:30` or `9:30 PM`. A typed time outside
+`min-value`/`max-value` marks the field invalid (red frame and `aria-invalid`).
 
 ## Basic usage
 

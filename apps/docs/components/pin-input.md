@@ -3,7 +3,9 @@
 `SPinInput` is a code input split into cells (OTP, PIN, a code from a text message). It is built
 on Reka UI (auto-advance between cells, pasting the whole code, keyboard control) and reuses
 `SFormField` for the label, hint, error message and a11y wiring. The value is an array of
-characters bound with `v-model`.
+characters bound with `v-model`, strings also with `type="number"`.
+`complete` fires once every cell is filled; `size` matches the height of the other fields. Focus
+moving between the cells does not emit `blur`.
 
 ## Basic usage
 

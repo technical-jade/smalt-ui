@@ -449,6 +449,11 @@ If there really are thousands of options, enable `searchable`: it also makes the
 findable.
 :::
 
+## Keyboard and focus
+
+The clear button returns focus to the field. In `searchable` mode Home and End move the caret in
+the text, as in any input, instead of jumping to the first or last option.
+
 ## Square corners
 
 `square` removes the rounding from both the border and the dropdown panel — open both lists and

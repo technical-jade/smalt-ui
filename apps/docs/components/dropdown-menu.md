@@ -9,6 +9,8 @@ const dropdownOpen = ref(false)
 keyboard navigation, `roving focus`, `menu`/`menuitem` roles). The entries come from the `items`
 prop: items, separators (`separator`), and group labels (`label`); leading icons are rendered with
 the reusable `SIcon`.
+`aria-label` names the menu; without it the menu is named by its trigger. Tab in a non-modal menu
+closes it and moves focus on from the trigger, the same as leaving any other control.
 
 ## Basic usage
 

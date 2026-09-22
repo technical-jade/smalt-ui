@@ -86,6 +86,7 @@ Defaults stack in layers and **per prop**: preset → plugin `defaults` or the N
 `ConfigProvider` in a subtree. Each layer refines the previous one instead of replacing it
 entirely, so a `ConfigProvider` added for one locale or one default does not cancel the app
 configuration.
+A value of `undefined` in a layer counts as not set and keeps the value of the layer below.
 
 ## Styling is configured with defaults too
 

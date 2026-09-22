@@ -135,6 +135,9 @@ its shades (`primary`, `teal`, `teal-10`). It overrides the variant color while 
 ## States
 
 `loading` shows a spinner over the content: the button keeps its width and its accessible name.
+It also keeps focus: the button is announced as unavailable (`aria-disabled`) and ignores clicks
+and form submission, but does not get native `disabled`, which would drop focus to the page.
+With `prefers-reduced-motion` the spinner turns slower.
 
 <Demo>
   <SButton disabled>Disabled</SButton>

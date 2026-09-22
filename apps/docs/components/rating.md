@@ -4,6 +4,7 @@
 selection). The stars are a reused `SIcon`; filled ones are highlighted with the accent color
 (gold by default), and the item under the cursor grows slightly. The value is bound with
 `v-model`.
+While the pointer moves over the stars, they preview the rating it would set.
 
 <script setup>
 import { ref } from 'vue'

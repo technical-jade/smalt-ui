@@ -74,3 +74,5 @@ export default defineNuxtConfig({
 There is deliberately no `density` prop: density is a set of defaults (`global: { size: 'sm' }`),
 not a property of every component. This keeps the component API from growing, and density can be
 set both globally and for a subtree through [`ConfigProvider`](/guide/defaults).
+For this, every control that density affects has `size`, including `SSelect`, `STextarea`,
+`SNumberField` and `SPinInput`.

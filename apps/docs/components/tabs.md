@@ -3,6 +3,8 @@
 `STabs` is a set of tabs built on Reka UI (the `tablist`/`tab`/`tabpanel` roles, arrow-key
 navigation). Tabs are set with the `items` prop, and the content of each goes into the slot of the
 same name (`#<value>`). It works with `v-model` (the active tab).
+Without a value the first enabled tab is shown (it is not written to `v-model`). Tabs that do not
+fit scroll within the list, and a tab activated from outside scrolls into view.
 
 <script setup>
 import { ref } from 'vue'
@@ -158,6 +160,13 @@ The `color` prop sets the color of the active tab and the indicator from the
   </template>
 </Demo>
 </ClientOnly>
+
+## Keyboard activation and hidden panels
+
+By default an arrow key both moves focus and opens the tab. `activation-mode="manual"` only moves
+focus; Enter or Space opens the focused tab, which suits panels that are expensive to render.
+Inactive panels are unmounted; `:unmount-on-hide="false"` keeps them mounted and hidden, so nested
+fields keep their state and the browser page search finds their text.
 
 ## API
 

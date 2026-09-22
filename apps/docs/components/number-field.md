@@ -4,6 +4,9 @@
 (the `spinbutton` role, arrow-key stepping, `min`/`max` bounds, formatting) and
 reuses `SFormField` (label, hint, error message, a11y), `SButton`-like step buttons
 and `SIcon`. The value is bound with `v-model`.
+`size` (`sm`/`md`/`lg`) matches the height of the other fields, so density presets reach it, and
+`invalid`/`error` turn the frame red. Focus moving between the input and the buttons does not
+emit `blur`.
 
 <script setup>
 import { ref } from 'vue'

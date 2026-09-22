@@ -16,6 +16,8 @@ const position = ref('bottom-right')
 (a portal into the `ToastViewport` region, auto-dismiss, swipe, screen reader roles) and reuses
 `SIcon` for the status icon. Toasts are shown imperatively with the `useToast` composable, and
 `ToastProvider` renders the queue.
+A `negative` toast is announced to screen readers at once (assertive), the other variants
+politely, without interrupting.
 
 ## Setup
 

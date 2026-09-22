@@ -2,8 +2,9 @@
 
 `SColorField` is a text input for a hex color with a preview swatch on the left. The value is
 normalized (case, `#`) and can be changed with the arrow keys and the mouse wheel. It is built on
-`SFormField` (label, hint, error message); the value is a hex string bound with `v-model`. For
-visual color picking, use `SColorPicker`.
+`SFormField` (label, hint, error message); the value is a hex string bound with `v-model`, and
+erasing the text (then Enter or leaving the field) clears it to an empty string. For visual color
+picking, use `SColorPicker`.
 
 ## Basic usage
 

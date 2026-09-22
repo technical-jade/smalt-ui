@@ -421,8 +421,11 @@ not dimmed, stays in the tab order and is submitted with the form; the clear but
 ## Native attributes and events
 
 Everything not declared as a prop goes to the `<input>` itself: `maxlength`, `autocomplete`,
-`name`, `pattern`, `@blur`, `@focus`, `@change` handlers. Only `class` and `style` stay on the
-outer border.
+`name`, `pattern`, `inputmode`, `@blur`, `@focus`, `@change` handlers. Only `class` and `style`
+stay on the outer border. The links to the label, hint and error (`id`, `aria-describedby`,
+`aria-invalid`) are the field's own and are not overridden.
+
+The clear button returns focus to the input, so keyboard users stay in the field.
 
 ```vue
 <template>
@@ -607,7 +610,8 @@ const license = ref('')
 The `use-tags` flag enables entering multiple tags (it replaces the former standalone `STagsInput`
 component). In this mode `v-model` is a `string[]`: a new tag is added on Enter, and each tag is an
 [`STag`](/components/tag) chip with a remove button. The `duplicate`, `add-on-paste` and `max`
-props control input behavior.
+props control input behavior. Inside a `<form>` the tags are submitted under `name` as
+`name[0]`, `name[1]`, …, and `required` passes once there is at least one tag.
 
 <Demo>
   <SInput

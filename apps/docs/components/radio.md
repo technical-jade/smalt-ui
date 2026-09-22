@@ -249,8 +249,9 @@ stretches the radio button to the container width and gives the free space to th
 `align="center"` centers the circle against a multi-line label instead of the first line. The
 same props exist on [`SCheckbox`](/components/checkbox).
 
-Classes and attributes of `SRadioGroup` go to the field wrapper together with the title and hint.
-The layout of the options themselves is set with `group-class` — the class of the
+The class and style of `SRadioGroup` go to the field wrapper together with the title and hint;
+other attributes (`data-*`, `aria-*`, listeners) go to the element with `role="radiogroup"`. The
+layout of the options themselves is set with `group-class` — the class of the
 `.s-radio-group` container. The gap between options is the `--s-radio-group-gap` variable.
 
 <ClientOnly>

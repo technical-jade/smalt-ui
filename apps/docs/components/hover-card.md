@@ -9,6 +9,8 @@ const cardOpen = ref(false)
 previewing a profile, a link, or an entity without navigating away. It is built on Reka UI (portal,
 open/close delays, positioning). The trigger is the `#trigger` slot (`as-child`), the content is
 the default slot.
+Touch screens have no hover, so by default the card does not open there; `enable-touch` opens it
+on tap.
 
 ## Basic usage
 

@@ -101,6 +101,7 @@ The `square` prop removes the frame rounding (the radius is on by default).
 the card and disables the pointer. The clickability itself comes from the `as` prop and the
 content: a card can be a link (`as="a"`), a button (`as="button"`), or a control wrapper
 (`as="label"`).
+A disabled button or link card also leaves the tab order and ignores the keyboard.
 
 <Demo>
   <div style="display: flex; flex-wrap: wrap; gap: 12px">

@@ -2,7 +2,10 @@
 
 `SProgress` is a progress indicator built on Reka UI (`role="progressbar"`, correct
 `aria-valuenow`/`aria-valuemax`). It supports variants, sizes and an indeterminate mode
-(without `value`).
+(without `value`). `label` names the bar for screen readers; without it the bar is named by its
+percentage, or by the `loading` message while indeterminate.
+`value` is clamped to `0…max`, so the announced value matches the bar. With
+`prefers-reduced-motion` the indeterminate stripe moves slower.
 
 ## Value and variants
 

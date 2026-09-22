@@ -2,6 +2,7 @@
 
 `SAvatar` is a user avatar built on Reka UI: it shows an image, and when there is none or it fails
 to load, a fallback (usually initials). It supports sizes.
+Clearing `src` after an image has loaded brings the fallback back.
 
 ## Sizes (fallback initials)
 

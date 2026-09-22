@@ -7,6 +7,10 @@ portal. The value is a `{ start, end }` object with `DateValue` dates from
 `@internationalized/date`. Keep the value in a [`shallowRef`](./date-field#value-and-shallowref),
 not a `ref`: a regular `ref` unwraps the date class, and type checking no longer recognizes it as a
 `DateValue`.
+Pasting into a segment fills the whole value: ISO 8601 (`2024-03-15`, a `2024-03-15/2024-03-20` interval), the
+numeric date format of the locale (`03/15/2024` in en-US, `15/03/2024` in en-GB) and times like
+`9:30 PM`. A typed value outside `min-value`/`max-value` marks the field invalid (red frame and
+`aria-invalid`).
 
 ## Basic usage
 

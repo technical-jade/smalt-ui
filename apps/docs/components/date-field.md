@@ -4,6 +4,10 @@
 text. This rules out ambiguous formats and parsing errors, works from the keyboard (arrows
 increment, typing digits fills the segment), and is localized. The value is a `DateValue` from
 `@internationalized/date`; the field is built on `SFormField` (label, hint, error message).
+Pasting into a segment fills the whole value: ISO 8601 (`2024-03-15`, `2024-03-15T09:30`), the
+numeric date format of the locale (`03/15/2024` in en-US, `15/03/2024` in en-GB) and times like
+`9:30 PM`. A typed value outside `min-value`/`max-value` marks the field invalid (red frame and
+`aria-invalid`).
 
 ## Value and shallowRef
 

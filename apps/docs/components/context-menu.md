@@ -4,6 +4,7 @@
 trigger area. It is built on Reka UI (portal, keyboard navigation, `menu`/`menuitem` roles). The
 entries come from the `items` prop (items, separators, group labels), leading icons are rendered
 with `SIcon`. Picking an item emits the `select` event.
+Tab in a non-modal menu closes it and returns focus to the page after the trigger area.
 
 ## Basic usage
 

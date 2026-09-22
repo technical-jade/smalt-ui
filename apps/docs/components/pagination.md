@@ -4,6 +4,8 @@
 (page calculation from `total`/`itemsPerPage`, sibling pages, ellipsis,
 keyboard control). The buttons are reused `SButton`s, the arrows are `SIcon`s.
 The current page is bound with `v-model:page`.
+The component is a `nav` landmark named from the locale dictionary (`pagination` key) or by
+`aria-label`. When `total` shrinks, a page past the new end is moved to the last one.
 
 ## Basic usage
 

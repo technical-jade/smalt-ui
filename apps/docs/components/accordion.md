@@ -10,7 +10,10 @@ const accMulti3 = ref(['a'])
 `SAccordion` is a set of collapsible sections. It is built on Reka UI (roles, keyboard navigation,
 `aria-expanded`). The `single` mode keeps one section open, `multiple` allows any number. Sections
 come from the `items` prop or from a slot with hand-written `SAccordionItem` elements (each section
-is a reusable item, the chevron is an `SIcon`). Expansion is controlled with `v-model`.
+is a reusable item, the chevron is an `SIcon`). Expansion is controlled with `v-model`; without
+`type` the mode follows it, so an array means `multiple`. Section headers are headings for screen
+readers, level 3 by default: set `heading-level` on the accordion (or on one item) to fit the page
+outline.
 
 ## Single mode
 
@@ -233,8 +236,9 @@ The `#title` slot replaces the `title` prop, so the header can hold an icon or a
 
 ## Collapsible single mode
 
-In `single` mode the `collapsible` prop lets the user close the open section (without it, one
-section always stays expanded).
+In `single` mode the `collapsible` prop lets the user close the open section. With
+`:collapsible="false"` one section always stays expanded, and its header is marked
+`aria-disabled` while open.
 
 <ClientOnly>
 <Demo>
@@ -270,6 +274,12 @@ section always stays expanded).
   </template>
 </Demo>
 </ClientOnly>
+
+## Keeping collapsed content
+
+Collapsed sections are unmounted. `:unmount-on-hide="false"` on the accordion keeps them mounted
+and hidden, so nested fields keep their state and the browser page search finds collapsed text. A
+section can override it with its own `unmount-on-hide`.
 
 ## API
 

@@ -38,6 +38,10 @@ on them.
 
 The full set is in `SemanticTokenName` (a type exported from `@smalt-ui/core`).
 
+Layers are ordered by `--s-z-*` tokens: `--s-z-sticky` (1100) < `--s-z-overlay` (1300) <
+`--s-z-modal` (1400) < `--s-z-dropdown` and `--s-z-popover` (1500) < `--s-z-toast` (1700). Lists
+and popovers sit above dialogs, so a select inside `SDialog` or `SDrawer` opens over the overlay.
+
 ## Light and dark theme
 
 The theme is switched with the `data-theme` attribute on `<html>`. The `useColorMode` composable

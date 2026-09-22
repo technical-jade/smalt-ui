@@ -7,6 +7,11 @@ built on `SFormField` (label, hint, error message), the navigation uses `SIcon`.
 wrapped in `<ClientOnly>`. Keep the value in a
 [`shallowRef`](./date-field#value-and-shallowref), not a `ref`: a regular `ref` unwraps the date
 class, and type checking no longer recognizes it as a `DateValue`.
+Pasting into a segment fills the whole value: ISO 8601 (`2024-03-15`, `2024-03-15T09:30`), the
+numeric date format of the locale (`03/15/2024` in en-US, `15/03/2024` in en-GB) and times like
+`9:30 PM`. A typed value outside `min-value`/`max-value` marks the field invalid (red frame and
+`aria-invalid`).
+The calendar closes once a day is picked; `:close-on-select="false"` keeps it open.
 
 ## Basic usage
 

@@ -3,7 +3,11 @@
 `SSplitter` divides an area into panels with draggable dividers — the user sets the width/height
 of the sections (sidebar + content, editor + preview). The handles are keyboard accessible
 (arrow keys resize), and Reka keeps the ARIA attributes. Panels are described with the `panels`
-array, content goes into the `panel-0`, `panel-1`, … slots (or by `name`).
+array, content goes into the `panel-0`, `panel-1`, … slots (or by `name`). Give panels a `name`
+when the list changes at runtime: panels are tracked by it, so removing one keeps the sizes of the
+rest.
+Each handle is named from the locale dictionary (`resize` key) or by `handle-label`. Enter on a
+handle collapses the `collapsible` panel before it and restores its size.
 
 ## Basic usage
 

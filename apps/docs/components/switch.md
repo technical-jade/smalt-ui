@@ -8,6 +8,7 @@ const darkMode = ref(true)
 
 `SSwitch` is a toggle switch built on Reka UI (`role="switch"`, keyboard support, `data-state`).
 The label renders through the reused `SLabel`. It works with `v-model` (boolean).
+Without a visible label, name the switch with `aria-label`.
 
 ## Basic usage
 

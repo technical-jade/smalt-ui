@@ -48,8 +48,9 @@ an editor) or inside `SToggleGroup` — then the group manages the state.
 ## Group (`SToggleGroup`)
 
 Groups related toggles. `type="single"` keeps one item active, `type="multiple"` allows any
-subset. Items are set with the `options` prop or with `SToggle`s placed in the slot (each needs a
-`value`).
+subset; without `type` the mode follows `v-model`, so an array means `multiple`. Items are set
+with the `options` prop or with `SToggle`s placed in the slot (each needs a `value`); `SToggle`s in
+the slot take the group `size` unless they set their own.
 
 <ClientOnly>
 <Demo>

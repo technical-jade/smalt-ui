@@ -4,6 +4,8 @@
 a11y relationships (`for`, `aria-describedby`, `aria-invalid`). The control goes into the default
 slot and receives the scoped props `{ id, describedBy, invalid }`. `SInput`, `SSelect`, and
 `STextarea` are built on this block — composition instead of duplicated markup.
+An error that appears is announced by screen readers (a polite live region), and a floating label
+rises over a value filled in by browser autofill.
 
 ## Basic usage
 

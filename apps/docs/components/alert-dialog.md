@@ -21,7 +21,8 @@ async function askToRemove() {
 `SAlertDialog` is a modal confirmation dialog for important or irreversible actions. It is built on
 Reka UI AlertDialog (`alertdialog` role, focus trap, `Esc`, portal). Unlike `SDialog`, it requires
 an explicit choice between the confirm and cancel buttons: clicking the overlay does not close it.
-The buttons are reusable `SButton` components.
+The buttons are reusable `SButton` components. Long content scrolls inside the dialog while the
+buttons stay in view.
 It is controlled with `v-model:open`; the choice emits `confirm` / `cancel`. When you need a
 confirmation in the middle of an async function, you can skip the markup and handlers entirely —
 see [Async confirmation](#async-confirmation).
@@ -185,7 +186,7 @@ Worth knowing:
 - calls are queued: the next dialog opens once the current one is answered;
 - the options are a subset of the component props (`title`, `description`, `confirmLabel`,
   `cancelLabel`, `danger`, `square`, `initialFocus`), so the dialog looks the same as the declarative version;
-- without a mounted `ConfirmProvider` the call resolves to `false` and logs a console warning — the
+- without a mounted `ConfirmProvider` the call resolves to `false` and warns in development — the
   promise never hangs. On the server (SSR) it also resolves to a refusal: the queue is shared by
   all requests.
 

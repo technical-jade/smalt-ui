@@ -3,6 +3,9 @@
 `SAspectRatio` keeps its content (an image, video, map, or embed) at a fixed aspect ratio
 regardless of the container width, so the layout does not jump while media loads. The `ratio` prop
 is the width divided by the height.
+`class` and `style` apply to the outer box, so they size the whole component. A `ratio` that is
+not a positive finite number falls back to 1:1 with a warning in development. `square` removes
+the border radius.
 
 ## Basic usage
 

@@ -4,6 +4,9 @@
 role, `aria-valuenow`/`min`/`max`, arrow-key control) and reuses `SFormField` for the label,
 hint, error message and a11y wiring. `v-model` takes a number (a single thumb) or an array
 (a range).
+`v-model` updates on every step of a drag; `value-commit` fires once the user releases the thumb
+or presses a key. Without a visible `label`, name the slider with `aria-label`: in a range the
+thumbs are announced as its start and end.
 
 <script setup>
 import { ref } from 'vue'

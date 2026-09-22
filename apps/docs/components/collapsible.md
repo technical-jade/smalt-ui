@@ -179,6 +179,11 @@ headers are common in mockups, so they do not need a rule with higher specificit
   </template>
 </Demo>
 
+## Keeping collapsed content
+
+The collapsed content is unmounted. `:unmount-on-hide="false"` keeps it mounted and hidden, so
+nested fields keep their state and the browser page search finds its text.
+
 ## API
 
 <ApiTable name="SCollapsible" />

@@ -3,6 +3,8 @@
 `SSeparator` is a visual divider between blocks of content or groups of elements. It is built on
 Reka UI: by default it carries the `separator` role (`aria-orientation`), and in decorative mode
 it is hidden from screen readers.
+A separator with a label (the `label` prop or the slot) is named by it; `decorative` hides a
+labeled separator too.
 
 ## Horizontal
 

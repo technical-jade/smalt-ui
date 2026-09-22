@@ -53,8 +53,12 @@ they are useful rather than to the outermost element:
   `SDialog`, `SDrawer`, `SAlertDialog`) put them on the panel itself: the teleported element with
   the component's `__content` class.
 - **Fields with a single control** (`SInput`, `STextarea`, `SAutocomplete`, `SSelect`,
-  `SCheckbox`, `SSwitch`, `SColorField`, `SNumberField`) keep `class`/`style` on the outer field and pass everything else to the
-  control, so `aria-*`, `data-testid` and `@keydown` reach the element that uses them.
+  `SCheckbox`, `SSwitch`, `SColorField`, `SNumberField`, `SRadioGroup`, `SSlider`) keep
+  `class`/`style` on the outer field and pass everything else to the control (the radio group,
+  the first slider thumb), so `aria-*`, `data-testid` and `@keydown` reach the element that uses
+  them. They override the control's own attributes such as `inputmode` or `placeholder`, but not
+  the links `SFormField` builds (`id`, `aria-describedby`, `aria-labelledby`, `aria-invalid`):
+  those keep the control tied to its label, hint and error, and the name is set with `ariaLabel`.
 - Other components keep them on their root element.
 
 Composite fields (`SSelect`, `SNumberField`, `SPinInput`, the date and time fields) emit `focus`
@@ -75,6 +79,7 @@ native element behind them render a hidden one that carries the value:
 | `STimeField`                | ISO time, `09:30:00`                                                 |
 | `SDateRangePicker`          | ISO interval, `2026-01-02/2026-01-05`; empty until both ends are set |
 | `SSlider` with a range      | `name[0]`, `name[1]`                                                 |
+| `SInput` with `use-tags`    | one entry per tag, `name[0]`, `name[1]`, …                           |
 | `SPinInput`                 | the cells joined into one string                                     |
 
 ## SSR and portals
