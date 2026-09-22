@@ -70,6 +70,7 @@ defineSlots<{
           v-if="p.label || $slots.default"
           class="s-switch__label"
           :for="switchId"
+          :required="p.required"
           :disabled="p.disabled"
         >
           <slot>{{ p.label }}</slot>

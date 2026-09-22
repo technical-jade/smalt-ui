@@ -37,8 +37,8 @@ Without a visible label, name the switch with `aria-label`.
 
 ## Required
 
-`required` marks the switch as required for form submission (passed through to the control's
-native semantics).
+`required` adds the `*` marker to the label and marks the switch as required for form submission
+(passed through to the control's native semantics).
 
 <ClientOnly>
 <Demo>

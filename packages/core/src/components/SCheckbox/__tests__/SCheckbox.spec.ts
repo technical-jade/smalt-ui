@@ -83,4 +83,15 @@ describe('SCheckbox', () => {
     render(SCheckbox, { attrs: { 'aria-label': 'Select row' } })
     expect(screen.getByRole('checkbox', { name: 'Select row' })).toBeInTheDocument()
   })
+
+  it('required shows the label marker and sets aria-required', () => {
+    render(SCheckbox, { props: { label: 'I agree', required: true } })
+    expect(screen.getByText('*')).toBeInTheDocument()
+    expect(screen.getByRole('checkbox', { name: 'I agree' })).toBeRequired()
+  })
+
+  it('hides the marker without required', () => {
+    render(SCheckbox, { props: { label: 'I agree' } })
+    expect(screen.queryByText('*')).toBeNull()
+  })
 })

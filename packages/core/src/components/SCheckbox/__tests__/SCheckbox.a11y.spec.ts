@@ -27,4 +27,11 @@ describe('SCheckbox · a11y', () => {
     const { container } = render(SCheckbox, { props: { ariaLabel: 'Select row' } })
     expect(await axe(container)).toHaveNoViolations()
   })
+
+  it('has no violations when required', async () => {
+    const { container } = render(SCheckbox, {
+      props: { label: 'I agree to the terms', required: true },
+    })
+    expect(await axe(container)).toHaveNoViolations()
+  })
 })

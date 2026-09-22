@@ -59,6 +59,20 @@ describe('SSwitch', () => {
     expect(screen.getByRole('switch', { name: 'Terms' })).toHaveAttribute('aria-invalid', 'true')
   })
 
+  it('required shows the label marker and sets aria-required', () => {
+    render(SSwitch, { props: { label: 'Notifications', required: true } })
+    expect(screen.getByText('*')).toBeInTheDocument()
+    expect(screen.getByRole('switch', { name: 'Notifications' })).toHaveAttribute(
+      'aria-required',
+      'true',
+    )
+  })
+
+  it('hides the marker without required', () => {
+    render(SSwitch, { props: { label: 'Notifications' } })
+    expect(screen.queryByText('*')).toBeNull()
+  })
+
   it('a failed rule shows its message after validate()', async () => {
     const wrapper = mount(SSwitch, {
       props: { label: 'Terms', rules: [(on: boolean) => on || 'Accept the terms'] },

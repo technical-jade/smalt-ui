@@ -70,6 +70,7 @@ defineSlots<{
           :disabled="p.disabled"
           :required="p.required"
           :aria-label="p.ariaLabel"
+          :aria-labelledby="p.label || $slots.default ? `${boxId}-label` : undefined"
           :aria-invalid="invalid || undefined"
           :aria-describedby="describedBy"
         >
@@ -90,10 +91,16 @@ defineSlots<{
           </CheckboxIndicator>
         </CheckboxRoot>
 
+        <!-- Reka reads its own aria-label fallback from `[for=id]`'s `innerText`, which does not
+             skip aria-hidden content and would pull the required marker into it. An explicit
+             aria-labelledby wins over aria-label in the accessible name computation and, unlike
+             innerText, excludes aria-hidden descendants. -->
         <SLabel
           v-if="p.label || $slots.default"
+          :id="`${boxId}-label`"
           class="s-checkbox__label"
           :for="boxId"
+          :required="p.required"
           :disabled="p.disabled"
         >
           <slot>{{ p.label }}</slot>

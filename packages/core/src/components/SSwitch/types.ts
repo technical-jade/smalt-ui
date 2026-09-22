@@ -17,7 +17,7 @@ export interface SSwitchProps extends SValidationProps<boolean> {
   disabled?: boolean
   /** Field name in native form submission: the value is sent in a hidden input. */
   name?: string
-  /** Required for form submission. */
+  /** Marks the switch as required: adds `*` to the label and sets `required`. */
   required?: boolean
   /** Hint below the switch. */
   hint?: string

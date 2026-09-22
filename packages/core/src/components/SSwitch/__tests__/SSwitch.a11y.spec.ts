@@ -21,6 +21,13 @@ describe('SSwitch · a11y', () => {
     expect(await axe(container)).toHaveNoViolations()
   })
 
+  it('has no violations when required', async () => {
+    const { container } = render(SSwitch, {
+      props: { label: 'Receive notifications', required: true },
+    })
+    expect(await axe(container)).toHaveNoViolations()
+  })
+
   it('has no violations with a hint and with an error', async () => {
     const { container } = render(SSwitch, {
       props: { label: 'Receive notifications', hint: 'Sent daily' },

@@ -119,8 +119,8 @@ registry name or a raw path).
 
 ## Required checkbox
 
-The `required` prop marks the checkbox as required for form submission: the browser will not
-submit the form until it is checked.
+The `required` prop adds the `*` marker to the label and marks the checkbox as required for form
+submission: the browser will not submit the form until it is checked.
 
 <ClientOnly>
 <Demo>

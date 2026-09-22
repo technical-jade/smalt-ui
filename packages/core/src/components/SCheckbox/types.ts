@@ -21,7 +21,7 @@ export interface SCheckboxProps extends SValidationProps<boolean | 'indeterminat
   disabled?: boolean
   /** Field name in native form submission: the value is sent in a hidden input. */
   name?: string
-  /** Required for form submission. */
+  /** Marks the checkbox as required: adds `*` to the label and sets `required`. */
   required?: boolean
   /** Hint below the checkbox. */
   hint?: string
