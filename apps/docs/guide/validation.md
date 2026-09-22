@@ -1302,6 +1302,7 @@ A rule receives the field's `v-model` value as is. Write custom rules and schema
 | `SDatePicker`      | `DateValue`                                                                                                        | no date                |
 | `SDateRangePicker` | `SDateRange`: `{ start, end }`                                                                                     | both ends missing      |
 | `SCheckbox`        | `boolean \| 'indeterminate'`                                                                                       | `false`                |
+| `SCheckboxGroup`   | `string[]`: the `value`s of the checked boxes                                                                      | `[]`                   |
 | `SRadioGroup`      | `string`                                                                                                           | nothing chosen         |
 | `SSwitch`          | `boolean`                                                                                                          | `false`                |
 | `SRating`          | `number`, `0` without a rating                                                                                     | never: use `min(1)`    |

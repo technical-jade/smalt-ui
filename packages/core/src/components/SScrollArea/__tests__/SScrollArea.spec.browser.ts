@@ -27,6 +27,25 @@ describe('SScrollArea · browser', () => {
     expect(viewport.scrollTop).toBe(120)
   })
 
+  /**
+   * `maxHeight` caps the viewport rather than the root: a root that is only capped has no definite
+   * height to hand down, so the viewport would grow with the content and get clipped without ever
+   * scrolling.
+   */
+  it('scrolls when the size comes from maxHeight', async () => {
+    const { container } = render(SScrollArea, {
+      props: { maxHeight: 96, type: 'always' },
+      slots: { default: '<div style="height: 400px">Release notes</div>' },
+      attrs: { style: 'width: 240px' },
+    })
+    const viewport = container.querySelector<HTMLElement>('.s-scroll-area__viewport')!
+    await scrollable(viewport)
+    expect(viewport.clientHeight).toBeLessThanOrEqual(96)
+    expect(viewport.scrollHeight).toBeGreaterThan(viewport.clientHeight)
+    viewport.scrollTop = 80
+    expect(viewport.scrollTop).toBe(80)
+  })
+
   it('gives the vertical thumb a height once the sizes are measured', async () => {
     const { container } = tall()
     const scrollbar = container.querySelector<HTMLElement>(

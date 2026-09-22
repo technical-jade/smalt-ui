@@ -1,0 +1,84 @@
+@use '../../styles/tools';
+
+.s-list-item {
+  @include tools.reset-inherited;
+  display: flex;
+  color: var(--s-color-text);
+  @include tools.disabled-state;
+
+  // The dimming lives on the wrapper, so the pointer is stopped there as well; the keyboard is
+  // handled in the script.
+  &--disabled {
+    pointer-events: none;
+  }
+}
+
+.s-list-item__row {
+  display: flex;
+  flex: 1;
+  gap: var(--s-space-3);
+  align-items: center;
+  min-width: 0;
+  // The metrics come from the enclosing .s-list; the fallbacks are the md values.
+  min-height: var(--s-list-row-min-height, 3rem);
+  padding: var(--s-list-row-pad-y, var(--s-space-2)) var(--s-list-row-pad-x, var(--s-space-4));
+  font-size: var(--s-list-row-font-size, var(--s-font-size-sm));
+  color: inherit;
+  text-align: start;
+  text-decoration: none;
+  background: none;
+  border: none;
+
+  &--interactive {
+    cursor: pointer;
+    @include tools.interactive-item;
+    @include tools.transition(background-color, color);
+
+    &:focus-visible {
+      @include tools.focus-ring;
+      // A bordered list clips its overflow, so an outset ring would be cut off at the edges.
+      outline-offset: calc(var(--s-focus-ring-offset) * -1);
+    }
+  }
+
+  &[data-active] {
+    color: var(--s-color-primary);
+    background-color: var(--s-color-primary-subtle);
+  }
+}
+
+.s-list-item__prepend,
+.s-list-item__append {
+  display: flex;
+  flex-shrink: 0;
+  gap: var(--s-space-2);
+  align-items: center;
+}
+
+.s-list-item__append {
+  font-size: var(--s-font-size-xs);
+  color: var(--s-color-text-muted);
+}
+
+.s-list-item__content {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  gap: var(--s-space-1);
+  min-width: 0;
+}
+
+.s-list-item__title {
+  overflow: hidden;
+  font-family: var(--s-font-heading);
+  font-weight: var(--s-font-weight-medium);
+  line-height: var(--s-line-height-tight);
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.s-list-item__description {
+  font-size: var(--s-font-size-xs);
+  line-height: var(--s-line-height-normal);
+  color: var(--s-color-text-muted);
+}

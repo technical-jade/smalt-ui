@@ -33,6 +33,9 @@ Inputs on the shared `SFormField` frame (label, hint, error message, a11y relati
   multiple selection), [Autocomplete](/components/autocomplete) (suggestions from server-side
   search results)
 - Color: [Color Field](/components/color-field), [Color Picker](/components/color-picker)
+- Files: [File Upload](/components/file-upload) (drop zone, per-file progress and rejections)
+- Lists: [Listbox](/components/listbox) (a selectable list surface),
+  [Editable](/components/editable) (editing text in place)
 - Toggles: [Checkbox](/components/checkbox), [Radio](/components/radio),
   [Switch](/components/switch), [Toggle](/components/toggle)
 - Value: [Slider](/components/slider), [Rating](/components/rating)
@@ -43,7 +46,8 @@ Fields and calendars on `@internationalized/date`.
 
 - [Calendar](/components/calendar), [Date Field](/components/date-field),
   [Time Field](/components/time-field), [Date Picker](/components/date-picker),
-  [Date Range Picker](/components/date-range-picker)
+  [Date Range Picker](/components/date-range-picker),
+  [Time Picker](/components/time-picker)
 
 ## Navigation and menus
 
@@ -81,4 +85,5 @@ Layout, containers, and expandable content.
   [Splitter](/components/splitter), [Scroll Area](/components/scroll-area)
 - Disclosure: [Accordion](/components/accordion), [Collapsible](/components/collapsible),
   [Tree](/components/tree)
-- Data: [Timeline](/components/timeline)
+- Data: [Timeline](/components/timeline), [List](/components/list),
+  [Stat](/components/stat)

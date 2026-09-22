@@ -1,0 +1,22 @@
+@use '../../styles/tools';
+
+.s-checkbox-group {
+  @include tools.reset-inherited;
+  display: flex;
+  gap: var(--s-checkbox-group-gap, var(--s-space-3));
+
+  &--vertical {
+    flex-direction: column;
+  }
+
+  &--horizontal {
+    flex-direction: row;
+    flex-wrap: wrap;
+  }
+
+  // aria-invalid sits on the group, not on each checkbox; after the checked rule of the box,
+  // so only its border turns red and the check mark stays readable.
+  &[aria-invalid='true'] .s-checkbox__box {
+    border-color: var(--s-color-negative);
+  }
+}

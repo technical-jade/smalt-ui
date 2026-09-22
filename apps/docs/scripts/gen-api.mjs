@@ -14,11 +14,12 @@ const componentsDir = join(coreDir, 'src/components')
 const tsconfig = join(coreDir, 'tsconfig.json')
 
 /**
- * External @internationalized/date types (DateValue = CalendarDate | CalendarDateTime |
- * ZonedDateTime, etc.) are complex classes with methods. Fully expanding them in the schema gives
- * an unreadable 3000+ character wall of text, so they stay as alias names.
+ * External types with methods — the @internationalized/date classes (DateValue = CalendarDate |
+ * CalendarDateTime | ZonedDateTime, etc.) and the DOM `File`. Fully expanding them in the schema
+ * gives an unreadable wall of text, so they stay as alias names.
  */
 const OPAQUE_TYPES = [
+  'File',
   'DateValue',
   'Time',
   'CalendarDate',
@@ -176,9 +177,20 @@ function collapsePalette(type) {
   return type.replace(LITERAL_UNION, (union) => (union.includes(PALETTE_MARKER) ? 'string' : union))
 }
 
+/**
+ * `Intl.NumberFormatOptions` (formatting props) expands into the whole option bag of the
+ * standard library — two dozen fields no reader scans. The alias name says it all; the options
+ * worth setting are named in the prop's JSDoc.
+ */
+const INTL_NUMBER_BAG = /\{[^{}]*\btrailingZeroDisplay\?:[^{}]*\}/g
+
+function collapseIntlOptions(type) {
+  return type ? type.replace(INTL_NUMBER_BAG, 'Intl.NumberFormatOptions') : type
+}
+
 function renderType(prop) {
   const type = normalizeDateTypes(expandType(prop.schema) ?? stripUndefined(clean(prop.type)))
-  return collapsePalette(type)
+  return collapseIntlOptions(collapsePalette(type))
 }
 
 function describeEvent(name) {

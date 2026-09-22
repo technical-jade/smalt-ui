@@ -27,11 +27,19 @@ defineSlots<{
 const toLength = (value: string | number | undefined) =>
   typeof value === 'number' ? `${value}px` : value
 
-const sizeStyle = computed(() => {
+const rootStyle = computed(() => {
   const height = toLength(p.height)
+  return height ? { height } : undefined
+})
+
+/**
+ * `maxHeight` belongs to the viewport, not to the root: the viewport takes its height from the
+ * root, and a root that is only capped has no definite height to give it. The viewport would then
+ * grow with the content and the root would merely clip it — a cut-off region with no scrollbar.
+ */
+const viewportStyle = computed(() => {
   const maxHeight = toLength(p.maxHeight)
-  if (!height && !maxHeight) return undefined
-  return { height, maxHeight }
+  return maxHeight ? { maxHeight } : undefined
 })
 </script>
 
@@ -39,13 +47,16 @@ const sizeStyle = computed(() => {
   <ScrollAreaRoot
     class="s-scroll-area"
     :class="`s-scroll-area--${p.size}`"
-    :style="sizeStyle"
+    :style="rootStyle"
     :type="p.type"
     :scroll-hide-delay="p.scrollHideDelay"
   >
     <!-- The viewport is the scrolling element; Reka hides its native scrollbars and makes it
          focusable, which keeps arrow keys, Page Up/Down and Home/End working. -->
-    <ScrollAreaViewport class="s-scroll-area__viewport">
+    <ScrollAreaViewport
+      class="s-scroll-area__viewport"
+      :style="viewportStyle"
+    >
       <slot />
     </ScrollAreaViewport>
 

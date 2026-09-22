@@ -52,6 +52,15 @@ export const SSR_CASES: Record<string, () => VNode> = {
     }),
   SImage: () =>
     h(components.SImage, { src: '/media/cover.jpg', alt: 'Mountain lake', ratio: 16 / 9 }),
+  SStat: () => h(components.SStat, { label: 'Revenue', value: 1234567, trend: 12.4 }),
+  SListbox: () =>
+    h(components.SListbox, {
+      options: [
+        { label: 'New York', value: 'nyc' },
+        { label: 'London', value: 'lon' },
+      ],
+      label: 'City',
+    }),
   STimeline: () =>
     h(components.STimeline, {
       items: [

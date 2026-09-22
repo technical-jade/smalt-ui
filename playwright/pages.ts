@@ -69,4 +69,10 @@ export const COMPONENT_PAGES = [
   { name: 'scroll-area', path: '/components/scroll-area' },
   { name: 'image', path: '/components/image' },
   { name: 'back-top', path: '/components/back-top' },
+  { name: 'file-upload', path: '/components/file-upload' },
+  { name: 'time-picker', path: '/components/time-picker' },
+  { name: 'listbox', path: '/components/listbox' },
+  { name: 'list', path: '/components/list' },
+  { name: 'editable', path: '/components/editable' },
+  { name: 'stat', path: '/components/stat' },
 ]

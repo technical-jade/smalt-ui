@@ -54,20 +54,26 @@ describe('SScrollArea', () => {
     expect(container.querySelector('.s-scroll-area')).toHaveClass('s-scroll-area--lg')
   })
 
+  /**
+   * The cap lands on the viewport, not on the root: a root that is only capped has no definite
+   * height to hand down, so the viewport would outgrow it and be clipped without scrolling.
+   */
   it('turns the sizing props into inline lengths, treating a number as pixels', () => {
     const { container } = render(SScrollArea, {
       props: { height: 240, maxHeight: '50vh' },
       slots: { default: 'Release notes' },
     })
     const root = container.querySelector<HTMLElement>('.s-scroll-area')!
+    const viewport = container.querySelector<HTMLElement>('.s-scroll-area__viewport')!
     expect(root.style.height).toBe('240px')
-    expect(root.style.maxHeight).toBe('50vh')
+    expect(viewport.style.maxHeight).toBe('50vh')
   })
 
   it('leaves the sizing to the consumer without the sizing props', () => {
     const { container } = render(SScrollArea, { slots: { default: 'Release notes' } })
     const root = container.querySelector<HTMLElement>('.s-scroll-area')!
+    const viewport = container.querySelector<HTMLElement>('.s-scroll-area__viewport')!
     expect(root.style.height).toBe('')
-    expect(root.style.maxHeight).toBe('')
+    expect(viewport.style.maxHeight).toBe('')
   })
 })

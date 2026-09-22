@@ -1,10 +1,23 @@
 <script setup>
-import { ref } from 'vue'
+import { computed, ref } from 'vue'
 import { required } from '@smalt-ui/core'
 
 const terms = ref(false)
 const subscribe = ref(true)
 const checkedDemo = ref(true)
+const contacts = ref(['email'])
+const extras = ref(['gift'])
+const TOPPINGS = ['cheese', 'olives', 'basil']
+const toppings = ref(['cheese'])
+const allToppings = computed({
+  get() {
+    if (toppings.value.length === TOPPINGS.length) return true
+    return toppings.value.length === 0 ? false : 'indeterminate'
+  },
+  set(checked) {
+    toppings.value = checked === true ? [...TOPPINGS] : []
+  },
+})
 </script>
 
 # Checkbox
@@ -285,6 +298,190 @@ const terms = ref(false)
 </Demo>
 </ClientOnly>
 
+## Checkbox group
+
+`SCheckboxGroup` keeps several checkboxes together: the `v-model` of the group is the array of the
+checked `value`s, and the boxes inside report to it instead of holding a state of their own. The
+options come either from the `options` prop (`{ label, value, disabled?, hint? }`) or from
+`SCheckbox` items in the default slot — those need a `value`, which is what the group puts into the
+array. A value stays there until its box is unchecked, in the order the boxes were checked.
+
+`orientation="horizontal"` lays the options out in a row, `disabled` on the group turns all of them
+off, and `disabled` on an option turns off only that one. `label` becomes the group title and is
+linked with `aria-labelledby` (a native `<label for>` does not work with a `role="group"`
+container); `hint` and `error` go below the options, so no separate `SFormField` wrapper is needed.
+Unlike a radio group, every checkbox keeps its own tab stop: Tab walks through the options, and the
+arrow keys do nothing.
+
+The class and style of `SCheckboxGroup` go to the field wrapper together with the title and the
+hint; other attributes (`data-*`, `aria-*`, listeners) go to the element with `role="group"`. The
+layout of the options themselves is set with `group-class` — the class of the `.s-checkbox-group`
+container. The gap between options is the `--s-checkbox-group-gap` variable.
+
+<ClientOnly>
+<Demo>
+  <SCheckboxGroup
+    v-model="contacts"
+    label="How can we reach you"
+    :options="[
+      { label: 'Email', value: 'email' },
+      { label: 'Phone', value: 'phone', hint: 'On working days only' },
+      { label: 'Post (unavailable)', value: 'post', disabled: true }
+    ]"
+  />
+  <SCheckboxGroup v-model="extras" aria-label="Extra services" orientation="horizontal">
+    <SCheckbox value="gift" label="Gift wrap" />
+    <SCheckbox value="insurance" label="Insurance" />
+    <SCheckbox value="fragile" label="Fragile" />
+  </SCheckboxGroup>
+
+<template #code>
+
+```vue
+<script setup lang="ts">
+import { ref } from 'vue'
+
+const contacts = ref(['email'])
+const extras = ref(['gift'])
+const channels = [
+  { label: 'Email', value: 'email' },
+  { label: 'Phone', value: 'phone', hint: 'On working days only' },
+]
+</script>
+
+<template>
+  <SCheckboxGroup
+    v-model="contacts"
+    label="How can we reach you"
+    :options="channels"
+  />
+
+  <SCheckboxGroup
+    v-model="extras"
+    orientation="horizontal"
+    aria-label="Extra services"
+  >
+    <SCheckbox
+      value="gift"
+      label="Gift wrap"
+    />
+    <SCheckbox
+      value="insurance"
+      label="Insurance"
+    />
+  </SCheckboxGroup>
+</template>
+```
+
+  </template>
+</Demo>
+</ClientOnly>
+
+## Select all
+
+A parent checkbox that reflects the whole group is a composition rather than a prop of the group:
+keep an `SCheckbox` outside it and drive it from the array — `true` when every option is checked,
+`false` when none is, and `'indeterminate'` in between. Writing to it either checks everything or
+clears the selection.
+
+<ClientOnly>
+<Demo>
+  <div style="display: flex; flex-direction: column; gap: 12px">
+    <SCheckbox v-model="allToppings" label="All toppings" />
+    <SCheckboxGroup
+      v-model="toppings"
+      aria-label="Toppings"
+      style="margin-left: 28px"
+      :options="[
+        { label: 'Cheese', value: 'cheese' },
+        { label: 'Olives', value: 'olives' },
+        { label: 'Basil', value: 'basil' }
+      ]"
+    />
+  </div>
+
+<template #code>
+
+```vue
+<script setup lang="ts">
+import { computed, ref } from 'vue'
+
+const options = [
+  { label: 'Cheese', value: 'cheese' },
+  { label: 'Olives', value: 'olives' },
+  { label: 'Basil', value: 'basil' },
+]
+const toppings = ref(['cheese'])
+
+const all = computed({
+  get() {
+    if (toppings.value.length === options.length) return true
+    return toppings.value.length === 0 ? false : 'indeterminate'
+  },
+  set(checked) {
+    toppings.value = checked === true ? options.map((option) => option.value) : []
+  },
+})
+</script>
+
+<template>
+  <SCheckbox
+    v-model="all"
+    label="All toppings"
+  />
+  <SCheckboxGroup
+    v-model="toppings"
+    :options="options"
+    aria-label="Toppings"
+  />
+</template>
+```
+
+  </template>
+</Demo>
+</ClientOnly>
+
+## Group validation
+
+`rules` go on `SCheckboxGroup`, not on the single `SCheckbox`. They receive the array of the
+checked values, so `required()` fails while nothing is chosen and `minLength(2)` counts the
+options. The group checks when focus leaves it — moving between the options does not count — and
+then on every change while the error is shown. Inside [`SForm`](/components/form) it is checked on
+submit as well, and an invalid group takes the focus of its first checkbox. The boxes of an invalid
+group get a red border. See the [Validation](/guide/validation) guide for the details.
+
+```vue
+<script setup lang="ts">
+import { ref } from 'vue'
+import { minLength, required } from '@smalt-ui/core'
+
+const interests = ref<string[]>([])
+const topics = [
+  { label: 'Design', value: 'design' },
+  { label: 'Engineering', value: 'engineering' },
+  { label: 'Marketing', value: 'marketing' },
+]
+</script>
+
+<template>
+  <SForm>
+    <SCheckboxGroup
+      v-model="interests"
+      label="Interests"
+      required
+      :rules="[required('Choose at least one topic'), minLength(2)]"
+      :options="topics"
+    />
+  </SForm>
+</template>
+```
+
 ## API
 
+The checkbox itself:
+
 <ApiTable name="SCheckbox" />
+
+The group:
+
+<ApiTable name="SCheckboxGroup" />

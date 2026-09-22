@@ -1,0 +1,98 @@
+@use '../../styles/tools';
+
+$sizes: sm, md, lg;
+
+.s-editable {
+  // The value and the optional buttons share a row.
+  &__root {
+    display: flex;
+    align-items: center;
+    gap: var(--s-space-2);
+  }
+
+  // One box for both states: padding, height and border width never change, only the colors, so
+  // the text keeps its place when the preview gives way to the input.
+  &__area {
+    @include tools.field-shell;
+    gap: var(--s-space-2);
+    cursor: text;
+    background-color: transparent;
+    border-color: transparent;
+    @include tools.transition(background-color, border-color);
+
+    // auto-resize: Reka stacks the preview and the input in one inline grid cell, so the box is
+    // as wide as the text — the full-row width of a form field would undo that.
+    &--auto {
+      inline-size: auto;
+      min-inline-size: 6ch;
+      max-inline-size: 100%;
+    }
+
+    // At rest the box is plain text with a state layer as the only affordance.
+    &:not([data-focus]) {
+      @include tools.state-layer;
+    }
+
+    &[data-focus] {
+      background-color: var(--s-color-surface);
+      border-color: var(--s-color-outline);
+    }
+
+    &[data-focus]:focus-within {
+      border-color: var(--s-color-primary);
+    }
+
+    // The second selector carries the weight of [data-focus]: an invalid field keeps the
+    // negative border while it is being edited.
+    &--invalid,
+    &--invalid[data-focus] {
+      border-color: var(--s-color-negative);
+    }
+  }
+
+  // Both states share the type scale of the box; the frame is drawn by the area alone.
+  &__preview,
+  &__input {
+    flex: 1;
+    min-width: 0;
+    padding: 0;
+    font: inherit;
+    color: var(--s-color-text);
+    background: transparent;
+    border: none;
+    outline: none;
+  }
+
+  &__preview {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+
+    &:focus-visible {
+      @include tools.focus-ring;
+      border-radius: var(--s-radius-sm);
+    }
+  }
+
+  &__input::placeholder {
+    color: var(--s-color-text-subtle);
+  }
+
+  // Empty value: what the preview shows is the placeholder.
+  &__area[data-empty] &__preview {
+    color: var(--s-color-text-subtle);
+  }
+
+  &__controls {
+    display: flex;
+    flex: none;
+    align-items: center;
+    gap: var(--s-space-1);
+  }
+
+  @each $name in $sizes {
+    &--#{$name} &__area {
+      @include tools.control-size($name);
+    }
+  }
+}

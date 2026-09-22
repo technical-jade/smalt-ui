@@ -1,0 +1,155 @@
+@use 'sass:map';
+@use '../../styles/tools';
+
+// The drop zone grows with its content, so control-size does not fit: only the font and the
+// padding follow the size. The compact trigger does use control-size, below.
+$sizes: (
+  sm: (
+    font: xs,
+    pad: 3,
+  ),
+  md: (
+    font: sm,
+    pad: 4,
+  ),
+  lg: (
+    font: base,
+    pad: 5,
+  ),
+);
+
+// reset-inherited is not repeated here: the rendered root is SFormField's .s-field, which has it.
+.s-file-upload {
+  // Hidden but focusable: display: none would take the input out of the tab order, and with it
+  // the only way to open the dialog from the keyboard.
+  &__input {
+    @include tools.visually-hidden;
+  }
+
+  &__zone {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: var(--s-space-2);
+    padding: var(--s-space-5) var(--s-space-4);
+    font-size: var(--s-font-size-sm);
+    color: var(--s-color-text-muted);
+    text-align: center;
+    cursor: pointer;
+    background-color: var(--s-color-surface);
+    border: 1px dashed var(--s-color-outline);
+    border-radius: var(--s-field-radius, var(--s-radius-md));
+    @include tools.transition(background-color, border-color, color);
+    @include tools.state-layer;
+
+    // The input carries the focus while being invisible, so the ring goes on the zone; :has
+    // keeps it to keyboard focus, as a click on the zone focuses the input too.
+    &:focus-within:has(:focus-visible) {
+      @include tools.focus-ring;
+    }
+
+    &--dragging {
+      color: var(--s-color-text);
+      background-color: var(--s-color-primary-subtle);
+      border-color: var(--s-color-primary);
+      border-style: solid;
+    }
+
+    &--invalid {
+      border-color: var(--s-color-negative);
+    }
+
+    &--disabled {
+      cursor: not-allowed;
+      opacity: 0.38;
+    }
+
+    // Compact mode (no drop zone): a button-shaped trigger of the field's own size.
+    &--compact {
+      flex-direction: row;
+      align-self: flex-start;
+      padding: 0 var(--s-field-pad-x);
+      color: var(--s-color-text);
+      border-style: solid;
+      @include tools.control-size(md);
+    }
+  }
+
+  @each $name, $cfg in $sizes {
+    &--#{$name} &__zone {
+      padding: var(--s-space-#{map.get($cfg, pad)}) var(--s-space-4);
+      font-size: var(--s-font-size-#{map.get($cfg, font)});
+    }
+
+    &--#{$name} &__zone--compact {
+      @include tools.control-size($name);
+      padding: 0 var(--s-field-pad-x);
+    }
+  }
+
+  &__icon {
+    flex: none;
+    color: var(--s-color-text-subtle);
+  }
+
+  &__zone--dragging &__icon {
+    color: var(--s-color-primary);
+  }
+
+  &__list {
+    display: flex;
+    flex-direction: column;
+    gap: var(--s-space-1);
+    margin-block-start: var(--s-space-2);
+  }
+
+  &__item {
+    display: flex;
+    align-items: center;
+    gap: var(--s-space-2);
+    padding: var(--s-space-1) var(--s-space-2);
+    font-size: var(--s-font-size-sm);
+    color: var(--s-color-text);
+    background-color: var(--s-color-bg-subtle);
+    border-radius: var(--s-field-radius, var(--s-radius-sm));
+  }
+
+  &__name {
+    flex: 1;
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  &__size {
+    flex: none;
+    font-size: var(--s-font-size-xs);
+    color: var(--s-color-text-muted);
+    font-variant-numeric: tabular-nums;
+  }
+
+  &__remove {
+    display: inline-flex;
+    flex: none;
+    align-items: center;
+    justify-content: center;
+    padding: var(--s-space-1);
+    color: var(--s-color-text-muted);
+    cursor: pointer;
+    background: none;
+    border: none;
+    border-radius: var(--s-radius-full);
+    @include tools.transition(background-color, color);
+    @include tools.state-layer;
+    @include tools.disabled-state;
+  }
+
+  &__empty {
+    margin-block-start: var(--s-space-2);
+    font-size: var(--s-font-size-sm);
+    color: var(--s-color-text-muted);
+  }
+}

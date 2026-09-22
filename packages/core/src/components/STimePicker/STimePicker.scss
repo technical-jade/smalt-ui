@@ -1,0 +1,90 @@
+@use '../../styles/tools';
+
+.s-time-picker {
+  &__anchor {
+    display: inline-flex;
+  }
+
+  &__base {
+    display: none;
+  }
+
+  &__trigger {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    inline-size: 1.75rem;
+    block-size: 1.75rem;
+    color: var(--s-color-text-muted);
+    background: transparent;
+    border: 0;
+    border-radius: var(--s-radius-full);
+    cursor: pointer;
+    @include tools.state-layer;
+    @include tools.disabled-state;
+
+    &:focus-visible {
+      @include tools.focus-ring;
+    }
+  }
+}
+
+// The panel is portalled to the document root, so it lives outside the .s-time-picker block.
+.s-time-picker__content {
+  @include tools.reset-inherited;
+  @include tools.floating-surface;
+  z-index: var(--s-z-popover);
+  padding: var(--s-space-1);
+  color: var(--s-color-text);
+
+  .s-time-picker__columns {
+    display: flex;
+    gap: var(--s-space-1);
+  }
+
+  .s-time-picker__column {
+    block-size: 13rem;
+  }
+
+  .s-time-picker__list {
+    display: flex;
+    flex-direction: column;
+    gap: 1px;
+    // Room for the overlay scrollbar, which is painted on top of the options.
+    padding-inline-end: var(--s-space-3);
+  }
+
+  .s-time-picker__option {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    inline-size: 3rem;
+    block-size: 2rem;
+    font-size: var(--s-font-size-sm);
+    font-variant-numeric: tabular-nums;
+    color: var(--s-color-text);
+    background: transparent;
+    border: 0;
+    border-radius: var(--s-radius-sm);
+    cursor: pointer;
+    outline: none;
+    @include tools.state-layer(var(--s-color-primary));
+    @include tools.disabled-state;
+    @include tools.transition(background-color, color);
+
+    &:focus-visible {
+      @include tools.focus-ring;
+    }
+
+    &[data-selected] {
+      color: var(--s-color-primary-contrast);
+      background: var(--s-color-primary);
+    }
+  }
+}
+
+.s-time-picker__content--square {
+  --s-surface-radius: 0;
+}

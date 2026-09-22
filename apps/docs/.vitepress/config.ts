@@ -116,6 +116,9 @@ export default defineConfig({
             { text: 'Toggle', link: '/components/toggle' },
             { text: 'Slider', link: '/components/slider' },
             { text: 'Rating', link: '/components/rating' },
+            { text: 'File Upload', link: '/components/file-upload' },
+            { text: 'Listbox', link: '/components/listbox' },
+            { text: 'Editable', link: '/components/editable' },
           ],
         },
         {
@@ -126,6 +129,7 @@ export default defineConfig({
             { text: 'Time Field', link: '/components/time-field' },
             { text: 'Date Picker', link: '/components/date-picker' },
             { text: 'Date Range Picker', link: '/components/date-range-picker' },
+            { text: 'Time Picker', link: '/components/time-picker' },
           ],
         },
         {
@@ -178,6 +182,8 @@ export default defineConfig({
             { text: 'Collapsible', link: '/components/collapsible' },
             { text: 'Tree', link: '/components/tree' },
             { text: 'Timeline', link: '/components/timeline' },
+            { text: 'List', link: '/components/list' },
+            { text: 'Stat', link: '/components/stat' },
           ],
         },
       ],

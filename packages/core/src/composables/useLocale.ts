@@ -95,6 +95,28 @@ export interface SMessages {
   showPassword: string
   /** Button that hides the value of a password `SInput`. */
   hidePassword: string
+  /** Button that opens the file dialog (`SFileUpload`). */
+  chooseFiles: string
+  /** Hint inside the `SFileUpload` drop zone. */
+  dropFilesHint: string
+  /** Button that removes a file from the `SFileUpload` list. */
+  removeFile: string
+  /** `SFileUpload` rejection: the file is over the limit; `{max}` is the readable size. */
+  fileTooLarge: string
+  /** `SFileUpload` rejection: the file does not match `accept`. */
+  fileTypeRejected: string
+  /** `SFileUpload` rejection: more files than `maxFiles` allows; `{max}` is the limit. */
+  tooManyFiles: string
+  /** Button that starts editing (`SEditable`). */
+  edit: string
+  /** Button that commits an edit (`SEditable`). */
+  save: string
+  /** Button that opens the time panel (`STimePicker`). */
+  openTimePicker: string
+  /** Hidden label of an upward trend (`SStat`). */
+  trendUp: string
+  /** Hidden label of a downward trend (`SStat`). */
+  trendDown: string
   /** Error of the `required()` rule. */
   ruleRequired: string
   /** Error of `minLength()` for text; `{min}` is the limit. */
@@ -157,6 +179,17 @@ export const enMessages: SMessages = {
   noData: 'No data',
   showPassword: 'Show password',
   hidePassword: 'Hide password',
+  chooseFiles: 'Choose files',
+  dropFilesHint: 'Drop files here or click to choose',
+  removeFile: 'Remove file',
+  fileTooLarge: 'The file is larger than {max}',
+  fileTypeRejected: 'This file type is not accepted',
+  tooManyFiles: 'Too many files ({max} at most)',
+  edit: 'Edit',
+  save: 'Save',
+  openTimePicker: 'Open time picker',
+  trendUp: 'Up',
+  trendDown: 'Down',
   ruleRequired: 'This field is required',
   ruleMinLength: 'Enter at least {min} characters',
   ruleMaxLength: 'Enter no more than {max} characters',

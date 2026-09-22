@@ -1,0 +1,41 @@
+@use '../../styles/tools';
+
+.s-list {
+  @include tools.reset-inherited;
+  // Row metrics are handed down as custom properties instead of descendant selectors: a row
+  // placed outside a list falls back to the md values on its own.
+  --s-list-row-min-height: 3rem;
+  --s-list-row-pad-y: var(--s-space-2);
+  --s-list-row-pad-x: var(--s-space-4);
+  --s-list-row-font-size: var(--s-font-size-sm);
+  display: flex;
+  flex-direction: column;
+  color: var(--s-color-text);
+
+  &--sm {
+    --s-list-row-min-height: 2.25rem;
+    --s-list-row-pad-y: var(--s-space-1);
+    --s-list-row-pad-x: var(--s-space-3);
+    --s-list-row-font-size: var(--s-font-size-xs);
+  }
+
+  &--lg {
+    --s-list-row-min-height: 3.5rem;
+    --s-list-row-pad-y: var(--s-space-3);
+    --s-list-row-font-size: var(--s-font-size-base);
+  }
+
+  &--bordered {
+    // The state layer of a row is a square background: without clipping it would stick out of
+    // the rounded frame.
+    overflow: hidden;
+    border: 1px solid var(--s-color-border);
+    border-radius: var(--s-radius-md);
+  }
+
+  // Any element, not only .s-list-item: the divider belongs to the gap between rows, whatever
+  // the consumer put there.
+  &--divided > * + * {
+    border-top: 1px solid var(--s-color-border);
+  }
+}
