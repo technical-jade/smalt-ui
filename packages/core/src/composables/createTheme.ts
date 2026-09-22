@@ -49,6 +49,10 @@ export type SemanticTokenName =
   | 'color-info-text'
   | 'color-dark'
   | 'color-focus-ring'
+  // Elevation shadows: the color and the strength of the key and ambient layers.
+  | 'shadow-color'
+  | 'shadow-key-opacity'
+  | 'shadow-ambient-opacity'
   | 'radius-sm'
   | 'radius-md'
   | 'radius-lg'

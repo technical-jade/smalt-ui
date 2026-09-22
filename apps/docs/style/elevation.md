@@ -117,6 +117,29 @@ Levels are emitted as the `--s-elevation-0…5` tokens and can be overridden lik
 including through [`createTheme`](/theming). Changing a token changes the shadow everywhere that
 level is used.
 
+## Dark theme
+
+A black shadow disappears on a dark page, so in the dark theme the same levels are drawn with a
+light shadow: the surface gets a soft glow that grows with the level. Both themes build the
+levels from three tokens, which also retune the shadows without redefining every level:
+
+| Token                        | Light  | Dark   | What it sets                          |
+| ---------------------------- | ------ | ------ | ------------------------------------- |
+| `--s-shadow-color`           | `#000` | `#fff` | shadow color                          |
+| `--s-shadow-key-opacity`     | `30%`  | `20%`  | strength of the sharp shadow under it |
+| `--s-shadow-ambient-opacity` | `15%`  | `12%`  | strength of the soft spread around it |
+
+The values differ between the themes, so a change sets each one with its own selector:
+
+```css
+:root {
+  --s-shadow-key-opacity: 40%;
+}
+:root[data-theme='dark'] {
+  --s-shadow-key-opacity: 28%;
+}
+```
+
 To change the shadow of one component without touching props, use these variables:
 
 | Variable                                              | What it sets                                      |

@@ -648,28 +648,36 @@ $font-heading: var(--s-font-sans) !default;
 $font-mono: ('JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, monospace) !default;
 $ease-standard: cubic-bezier(0.4, 0, 0.2, 1) !default;
 
-// Elevation (MD3) — levels 0–5 from umbra + penumbra. Emitted as --s-elevation-*.
+// Elevation (MD3) — levels 0–5 from a key and an ambient shadow. Emitted as --s-elevation-*.
+// The color and strength come from the theme (--s-shadow-*): a black shadow vanishes on a dark
+// page, so the dark theme draws it light, as Quasar does.
+$shadow-key: color-mix(in srgb, var(--s-shadow-color) var(--s-shadow-key-opacity), transparent);
+$shadow-ambient: color-mix(
+  in srgb,
+  var(--s-shadow-color) var(--s-shadow-ambient-opacity),
+  transparent
+);
 $elevation: (
   0: none,
   1: (
-    0 1px 2px 0 rgb(0 0 0 / 0.3),
-    0 1px 3px 1px rgb(0 0 0 / 0.15),
+    0 1px 2px 0 $shadow-key,
+    0 1px 3px 1px $shadow-ambient,
   ),
   2: (
-    0 1px 2px 0 rgb(0 0 0 / 0.3),
-    0 2px 6px 2px rgb(0 0 0 / 0.15),
+    0 1px 2px 0 $shadow-key,
+    0 2px 6px 2px $shadow-ambient,
   ),
   3: (
-    0 4px 8px 3px rgb(0 0 0 / 0.15),
-    0 1px 3px 0 rgb(0 0 0 / 0.3),
+    0 4px 8px 3px $shadow-ambient,
+    0 1px 3px 0 $shadow-key,
   ),
   4: (
-    0 6px 10px 4px rgb(0 0 0 / 0.15),
-    0 2px 3px 0 rgb(0 0 0 / 0.3),
+    0 6px 10px 4px $shadow-ambient,
+    0 2px 3px 0 $shadow-key,
   ),
   5: (
-    0 8px 12px 6px rgb(0 0 0 / 0.15),
-    0 4px 4px 0 rgb(0 0 0 / 0.3),
+    0 8px 12px 6px $shadow-ambient,
+    0 4px 4px 0 $shadow-key,
   ),
 ) !default;
 
@@ -747,6 +755,9 @@ $semantic-light: (
   // Shading direction for deriving hover/active from an arbitrary color (the color prop):
   // the light theme mixes in black.
   'shade': #000,
+  'shadow-color': #000,
+  'shadow-key-opacity': 30%,
+  'shadow-ambient-opacity': 15%,
   'focus-ring-width': 2px,
   'focus-ring-offset': 2px,
 ) !default;
@@ -814,4 +825,7 @@ $semantic-dark: (
   'color-focus-ring': var(--s-primary),
   // The dark theme mixes in white (lightening); see the comment in $semantic-light.
   'shade': #fff,
+  'shadow-color': #fff,
+  'shadow-key-opacity': 20%,
+  'shadow-ambient-opacity': 12%,
 ) !default;

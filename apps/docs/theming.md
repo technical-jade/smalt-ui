@@ -23,18 +23,19 @@ on them.
 
 ## Main semantic tokens
 
-| Token                                                                                | Purpose                                               |
-| ------------------------------------------------------------------------------------ | ----------------------------------------------------- |
-| `--s-color-bg` / `--s-color-bg-subtle` / `--s-color-bg-muted`                        | page background and its variations                    |
-| `--s-color-surface`                                                                  | "surface" background (cards, overlays, inputs)        |
-| `--s-color-text` / `--s-color-text-muted` / `--s-color-text-subtle`                  | text and its muted variants                           |
-| `--s-color-border` / `--s-color-outline`                                             | borders and control outlines                          |
-| `--s-color-primary` (+ `-hover` / `-active` / `-contrast` / `-text` / `-container`)  | accent color and its derivatives                      |
-| `--s-color-positive` / `--s-color-warning` / `--s-color-negative` / `--s-color-info` | status colors                                         |
-| `--s-color-<role>-text`                                                              | the same role for text, see [Palette](/style/palette) |
-| `--s-color-focus-ring`                                                               | focus ring color                                      |
-| `--s-radius-sm` / `-md` / `-lg` / `-xl`                                              | corner radii                                          |
-| `--s-font-sans` / `--s-font-heading` / `--s-font-mono`                               | fonts (see [below](#fonts))                           |
+| Token                                                                                | Purpose                                                                 |
+| ------------------------------------------------------------------------------------ | ----------------------------------------------------------------------- |
+| `--s-color-bg` / `--s-color-bg-subtle` / `--s-color-bg-muted`                        | page background and its variations                                      |
+| `--s-color-surface`                                                                  | "surface" background (cards, overlays, inputs)                          |
+| `--s-color-text` / `--s-color-text-muted` / `--s-color-text-subtle`                  | text and its muted variants                                             |
+| `--s-color-border` / `--s-color-outline`                                             | borders and control outlines                                            |
+| `--s-color-primary` (+ `-hover` / `-active` / `-contrast` / `-text` / `-container`)  | accent color and its derivatives                                        |
+| `--s-color-positive` / `--s-color-warning` / `--s-color-negative` / `--s-color-info` | status colors                                                           |
+| `--s-color-<role>-text`                                                              | the same role for text, see [Palette](/style/palette)                   |
+| `--s-color-focus-ring`                                                               | focus ring color                                                        |
+| `--s-shadow-color` / `--s-shadow-key-opacity` / `--s-shadow-ambient-opacity`         | shadow color and strength, see [Elevation](/style/elevation#dark-theme) |
+| `--s-radius-sm` / `-md` / `-lg` / `-xl`                                              | corner radii                                                            |
+| `--s-font-sans` / `--s-font-heading` / `--s-font-mono`                               | fonts (see [below](#fonts))                                             |
 
 The full set is in `SemanticTokenName` (a type exported from `@smalt-ui/core`).
 
