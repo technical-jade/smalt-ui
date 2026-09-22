@@ -5,12 +5,14 @@ import { email, maxLength, minLength, required } from '@smalt-ui/core'
 const signupEmail = ref('')
 const signupPassword = ref('')
 const signupAbout = ref('')
+const signupTerms = ref(false)
 const signupSent = ref(false)
 
 function onSignupReset() {
   signupEmail.value = ''
   signupPassword.value = ''
   signupAbout.value = ''
+  signupTerms.value = false
   signupSent.value = false
 }
 
@@ -53,8 +55,8 @@ the fields as you like.
 
 ## Sign-up form
 
-Press **Create account** with empty fields: every required field shows its error, and focus moves to the
-first one. **Reset** clears the values and the errors.
+Press **Create account** with empty fields: every required field shows its error, the terms
+checkbox included, and focus moves to the first one. **Reset** clears the values and the errors.
 
 <Demo>
   <SForm
@@ -86,6 +88,15 @@ first one. **Reset** clears the values and the errors.
       hint="Up to 200 characters"
       :rules="[maxLength(200)]"
     />
+    <ClientOnly>
+      <SCheckbox
+        v-model="signupTerms"
+        label="I accept the terms of service"
+        name="terms"
+        required
+        :rules="[required('Accept the terms')]"
+      />
+    </ClientOnly>
     <div style="display: flex; align-items: center; gap: 8px">
       <SButton type="submit">Create account</SButton>
       <SButton type="reset" variant="ghost">Reset</SButton>
@@ -103,12 +114,14 @@ import { email, maxLength, minLength, required } from '@smalt-ui/core'
 const address = ref('')
 const password = ref('')
 const about = ref('')
+const terms = ref(false)
 const sent = ref(false)
 
 function onReset() {
   address.value = ''
   password.value = ''
   about.value = ''
+  terms.value = false
   sent.value = false
 }
 </script>
@@ -141,6 +154,13 @@ function onReset() {
       name="about"
       hint="Up to 200 characters"
       :rules="[maxLength(200)]"
+    />
+    <SCheckbox
+      v-model="terms"
+      label="I accept the terms of service"
+      name="terms"
+      required
+      :rules="[required('Accept the terms')]"
     />
     <SButton type="submit"> Create account </SButton>
     <SButton

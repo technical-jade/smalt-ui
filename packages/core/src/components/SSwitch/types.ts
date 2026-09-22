@@ -1,6 +1,7 @@
 import type { SColorName } from '../../composables/useColorProp'
+import type { SValidationProps } from '../../composables/useValidation'
 
-export interface SSwitchProps {
+export interface SSwitchProps extends SValidationProps<boolean> {
   /**
    * Accent color (of the on state): a name from the [palette](/style/palette)
    * (`primary`/`teal`/`teal-10`).
@@ -18,6 +19,12 @@ export interface SSwitchProps {
   name?: string
   /** Required for form submission. */
   required?: boolean
+  /** Hint below the switch. */
+  hint?: string
+  /** Error message below the switch. When set, the switch is marked invalid. */
+  error?: string
+  /** Marks the switch invalid explicitly (in addition to `error`). */
+  invalid?: boolean
   /** Switch id. Generated automatically when not set (SSR-safe). */
   id?: string
 }

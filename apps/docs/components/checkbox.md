@@ -1,6 +1,8 @@
 <script setup>
 import { ref } from 'vue'
+import { required } from '@smalt-ui/core'
 
+const terms = ref(false)
 const subscribe = ref(true)
 const checkedDemo = ref(true)
 </script>
@@ -232,6 +234,50 @@ and a click anywhere on the row toggles the checkbox.
     <span class="option-title">Cargo insurance</span>
     <span class="option-note">0.5% of the declared value</span>
   </SCheckbox>
+</template>
+```
+
+  </template>
+</Demo>
+</ClientOnly>
+
+## Validation
+
+`rules` checks the checkbox when focus leaves it, and then on every change while the error is
+shown, so checking the box clears the error at once. The rules receive the `v-model` value:
+`false` for an unchecked box, which `required()` treats as empty, and `true` or `'indeterminate'`
+otherwise. `'indeterminate'` is not empty, so a tri-state checkbox that must be checked needs
+`(v) => v === true || '…'`. An invalid checkbox gets a red border. See the
+[Validation](/guide/validation) guide for the details.
+
+Move focus to the checkbox and away without checking it, then check it.
+
+<ClientOnly>
+<Demo>
+  <SCheckbox
+    v-model="terms"
+    label="I accept the terms of service"
+    required
+    :rules="[required('Accept the terms')]"
+  />
+
+<template #code>
+
+```vue
+<script setup lang="ts">
+import { ref } from 'vue'
+import { required } from '@smalt-ui/core'
+
+const terms = ref(false)
+</script>
+
+<template>
+  <SCheckbox
+    v-model="terms"
+    label="I accept the terms of service"
+    required
+    :rules="[required('Accept the terms')]"
+  />
 </template>
 ```
 

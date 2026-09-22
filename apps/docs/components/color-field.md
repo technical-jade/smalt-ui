@@ -10,7 +10,9 @@ picking, use `SColorPicker`.
 
 <script setup>
 import { ref } from 'vue'
+import { pattern, required } from '@smalt-ui/core'
 const color = ref('#3B82F6')
+const accent = ref('#3B82F6')
 </script>
 
 <Demo>
@@ -191,6 +193,47 @@ button.
       />
     </template>
   </SColorField>
+</template>
+```
+
+  </template>
+</Demo>
+
+## Validation
+
+`rules` checks the color when focus leaves the field, and then on every change while the error is
+shown. The rules receive the `v-model` value: a hex string, or `''` when the text is erased, which
+`required()` treats as empty. Text that is not a color never reaches the rules: the field restores
+the last valid color. A color with transparency (`#3B82F680`) is valid for the field, so a rule
+can ask for the six-digit form. See the [Validation](/guide/validation) guide for the details.
+
+Erase the text and leave the field, then type `#3B82F680`.
+
+<Demo>
+  <ClientOnly>
+    <SColorField
+      v-model="accent"
+      label="Accent color"
+      :rules="[required(), pattern(/^#[0-9a-f]{6}$/i, 'Use #RRGGBB, without transparency')]"
+    />
+  </ClientOnly>
+
+<template #code>
+
+```vue
+<script setup lang="ts">
+import { ref } from 'vue'
+import { pattern, required } from '@smalt-ui/core'
+
+const accent = ref('#3B82F6')
+</script>
+
+<template>
+  <SColorField
+    v-model="accent"
+    label="Accent color"
+    :rules="[required(), pattern(/^#[0-9a-f]{6}$/i, 'Use #RRGGBB, without transparency')]"
+  />
 </template>
 ```
 

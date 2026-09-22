@@ -31,6 +31,11 @@
       background-color: var(--s-checkbox-c, var(--s-color-primary));
       border-color: var(--s-checkbox-c, var(--s-color-primary));
     }
+
+    // After the checked rule: only the border turns red, the fill keeps the check readable.
+    &[aria-invalid='true'] {
+      border-color: var(--s-color-negative);
+    }
   }
 
   &__indicator {

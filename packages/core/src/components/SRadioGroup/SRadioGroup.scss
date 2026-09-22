@@ -12,4 +12,9 @@
     flex-direction: row;
     flex-wrap: wrap;
   }
+
+  // aria-invalid sits on the group, not on each radio; the dot keeps the accent color.
+  &[aria-invalid='true'] .s-radio__control {
+    border-color: var(--s-color-negative);
+  }
 }

@@ -50,14 +50,24 @@ export function focusControl(root: Element | null, controlId?: string): void {
 }
 
 /**
+ * Focuses the first editable segment of a date or time field; `block` is its BEM block
+ * (`s-date-field`).
+ */
+export function focusFirstSegment(root: Element | null | undefined, block: string): void {
+  root?.querySelector<HTMLElement>(`.${block}__segment:not(.${block}__segment--literal)`)?.focus()
+}
+
+/**
  * Validation of a library field. `validate-on` is read as passed on the field itself: a default
  * from `useDefaults` would otherwise beat an explicit `validate-on` of the enclosing `SForm`, so
- * the field's configured default applies only after the form.
+ * the field's configured default applies only after the form. `focusField` replaces
+ * `focusControl` in date fields: Reka puts the id on a hidden input, and prepend is in the group.
  */
 export function useFieldValidation<T>(
   p: FieldValidationProps<T>,
   value: () => T,
   root: Readonly<ShallowRef<ComponentPublicInstance | null>>,
+  focusField?: () => void,
 ) {
   const vm = getCurrentInstance()
   // vnode.props is not reactive; refreshed before each update, as in useDefaults.
@@ -71,7 +81,9 @@ export function useFieldValidation<T>(
 
   const el = () => (root.value?.$el as Element | undefined) ?? null
   // The root is SFormField, which exposes the id of the control.
-  const focus = () => focusControl(el(), (root.value as { controlId?: string } | null)?.controlId)
+  const focus =
+    focusField ??
+    (() => focusControl(el(), (root.value as { controlId?: string } | null)?.controlId))
 
   const validation = useValidation<T>({
     value,

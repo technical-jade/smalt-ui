@@ -46,7 +46,12 @@ const nameRules = [
 ]
 
 // Built-in rules
-const signup = ref({ login: '', email: '', password: '', age: '' })
+const signup = ref({ login: '', email: '', password: '', age: '', topics: [], terms: false })
+const topicOptions = [
+  { label: 'Design', value: 'design' },
+  { label: 'Frontend', value: 'frontend' },
+  { label: 'Backend', value: 'backend' },
+]
 const signupSent = ref(false)
 
 // When fields check
@@ -200,8 +205,9 @@ from the library dictionary ([`SMessages`](#localization)).
 | `schemaRule(schema)`       | a [schema](#schemas-zod-valibot) accepts the value | checked by the schema | the schema's first issue                                                                                      |
 
 A sign-up form built from the factories. The email is optional, so it only has to look like an
-address when filled; the age is a numeric `SInput`, checked with `min`. Press **Sign up** with
-empty fields to see every rule at once (the form is [`SForm`](/components/form)):
+address when filled; the age is a numeric `SInput`, checked with `min`. For the multiple `SSelect`
+`minLength` counts the chosen options, and the terms `SCheckbox` is required to be checked. Press
+**Sign up** with empty fields to see every rule at once (the form is [`SForm`](/components/form)):
 
 <Demo>
   <SForm
@@ -236,6 +242,22 @@ empty fields to see every rule at once (the form is [`SForm`](/components/form))
       required
       :rules="[required(), min(18, 'You must be 18 or older')]"
     />
+    <ClientOnly>
+      <SSelect
+        v-model="signup.topics"
+        multiple
+        label="Topics"
+        placeholder="Choose at least two"
+        :options="topicOptions"
+        :rules="[required(), minLength(2)]"
+      />
+      <SCheckbox
+        v-model="signup.terms"
+        label="I accept the terms of service"
+        required
+        :rules="[required('Accept the terms')]"
+      />
+    </ClientOnly>
     <div style="display: flex; align-items: center; gap: 12px">
       <SButton type="submit">Sign up</SButton>
       <span v-if="signupSent">Sent</span>
@@ -253,7 +275,14 @@ const login = ref('')
 const address = ref('')
 const password = ref('')
 const age = ref('')
+const topics = ref<string[]>([])
+const terms = ref(false)
 const sent = ref(false)
+const topicOptions = [
+  { label: 'Design', value: 'design' },
+  { label: 'Frontend', value: 'frontend' },
+  { label: 'Backend', value: 'backend' },
+]
 </script>
 
 <template>
@@ -285,6 +314,20 @@ const sent = ref(false)
       :numeric="{ unsigned: true }"
       required
       :rules="[required(), min(18, 'You must be 18 or older')]"
+    />
+    <SSelect
+      v-model="topics"
+      multiple
+      label="Topics"
+      placeholder="Choose at least two"
+      :options="topicOptions"
+      :rules="[required(), minLength(2)]"
+    />
+    <SCheckbox
+      v-model="terms"
+      label="I accept the terms of service"
+      required
+      :rules="[required('Accept the terms')]"
     />
     <SButton type="submit"> Sign up </SButton>
     <span v-if="sent">Sent</span>

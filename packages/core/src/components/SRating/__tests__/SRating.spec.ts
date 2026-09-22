@@ -1,5 +1,7 @@
 import { describe, expect, it } from 'vitest'
 import { fireEvent, render, screen } from '@testing-library/vue'
+import { flushPromises, mount } from '@vue/test-utils'
+import { min } from '../../../composables'
 import { SRating } from '../index'
 
 describe('SRating', () => {
@@ -132,5 +134,38 @@ describe('SRating', () => {
     })
     await fireEvent.mouseEnter(screen.getByRole('radio', { name: 'Rating 4' }))
     expect(container.querySelectorAll('.s-rating__item--active')).toHaveLength(2)
+  })
+
+  it('min(1) fails on the default 0 after validate()', async () => {
+    const wrapper = mount(SRating, { props: { ariaLabel: 'Rating', rules: [min(1)] } })
+    expect(await (wrapper.vm as unknown as { validate(): Promise<boolean> }).validate()).toBe(false)
+    await flushPromises()
+    expect(wrapper.find('.s-field__error').text()).toBe('Must be at least 1')
+    const group = wrapper.find('[role="radiogroup"]')
+    expect(group.attributes('aria-invalid')).toBe('true')
+    expect(group.attributes('aria-describedby')).toBe(
+      wrapper.find('.s-field__error').attributes('id'),
+    )
+  })
+
+  it('shows the hint and the error prop', async () => {
+    const { rerender } = render(SRating, { props: { ariaLabel: 'Rating', hint: 'Rate the stay' } })
+    const group = screen.getByRole('radiogroup', { name: 'Rating' })
+    expect(group).toHaveAccessibleDescription('Rate the stay')
+    await rerender({ error: 'Rate the stay first' })
+    expect(group).toHaveAttribute('aria-invalid', 'true')
+    expect(group).toHaveAccessibleDescription('Rate the stay first')
+  })
+
+  it('class/style stay on the field, other attributes reach the rating', () => {
+    const { container } = render(SRating, {
+      props: { ariaLabel: 'Rating' },
+      attrs: { class: 'stars', style: 'margin: 4px', 'data-testid': 'stars' },
+    })
+    const root = container.firstElementChild as HTMLElement
+    expect(root).toHaveClass('s-field', 'stars')
+    expect(root.style.margin).toBe('4px')
+    expect(root).not.toHaveAttribute('data-testid')
+    expect(screen.getByRole('radiogroup')).toHaveAttribute('data-testid', 'stars')
   })
 })

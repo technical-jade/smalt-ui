@@ -7,6 +7,7 @@ import DateRangePickerField from './DateRangePickerField.vue'
 import DateRangePickerCalendar from './DateRangePickerCalendar.vue'
 import { useDefaults, useElevationProp, useFormatLocale } from '../../composables'
 import { useFieldFocus } from '../../internal/useFieldFocus'
+import { focusFirstSegment, useFieldValidation } from '../../internal/useFieldValidation'
 import type { SDateRangePickerProps, SDateRange } from './types'
 
 const props = withDefaults(defineProps<SDateRangePickerProps>(), {
@@ -28,7 +29,6 @@ const emit = defineEmits<{
   blur: [event: FocusEvent]
 }>()
 const root = useTemplateRef<ComponentPublicInstance>('root')
-const { onFocusIn, onFocusOut } = useFieldFocus(root, emit, '.s-date-range-picker__content')
 
 const formatLocale = useFormatLocale(() => p.locale)
 
@@ -66,12 +66,20 @@ const formValue = computed(() => {
 })
 
 // Native validation focuses the hidden input on submit; the user needs the first segment instead.
-function focusFirstSegment() {
-  const el = root.value?.$el as HTMLElement | undefined
-  el?.querySelector<HTMLElement>(
-    '.s-date-range-picker__segment:not(.s-date-range-picker__segment--literal)',
-  )?.focus()
-}
+const focusSegment = () => focusFirstSegment(root.value?.$el, 's-date-range-picker')
+
+const {
+  errorMessage,
+  onBlur: onLeave,
+  expose,
+} = useFieldValidation(p, () => model.value, root, focusSegment)
+const { onFocusIn, onFocusOut } = useFieldFocus(
+  root,
+  emit,
+  '.s-date-range-picker__content',
+  onLeave,
+)
+defineExpose(expose)
 </script>
 
 <template>
@@ -82,7 +90,7 @@ function focusFirstSegment() {
     :class="`s-date-range-picker--${p.size}`"
     :label="p.label"
     :hint="p.hint"
-    :error="p.error"
+    :error="errorMessage"
     :invalid="p.invalid || outOfRange"
     :required="p.required"
     :size="p.size"
@@ -148,7 +156,7 @@ function focusFirstSegment() {
         :value="formValue"
         :required="p.required"
         :disabled="p.disabled"
-        @focus="focusFirstSegment"
+        @focus="focusSegment"
       />
     </template>
   </SFormField>

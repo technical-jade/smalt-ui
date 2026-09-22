@@ -1,9 +1,12 @@
 <script setup lang="ts">
+import { useTemplateRef, type ComponentPublicInstance } from 'vue'
 import { CheckboxIndicator, CheckboxRoot } from 'reka-ui'
 import { SIcon } from '../SIcon'
 import { SFormField } from '../SFormField'
 import { SLabel } from '../../internal/SLabel'
 import { useFieldAttrs } from '../../internal/useFieldAttrs'
+import { useFieldFocus } from '../../internal/useFieldFocus'
+import { useFieldValidation } from '../../internal/useFieldValidation'
 import { useColorProp, useDefaults } from '../../composables'
 import type { SCheckboxProps } from './types'
 
@@ -22,6 +25,11 @@ const { rootClass, rootStyle, controlAttrs } = useFieldAttrs()
 /** Checkbox state. `'indeterminate'` is the mixed state. */
 const model = defineModel<boolean | 'indeterminate'>({ default: false })
 
+const root = useTemplateRef<ComponentPublicInstance>('root')
+const { errorMessage, onBlur: onLeave, expose } = useFieldValidation(p, () => model.value, root)
+const { onFocusIn, onFocusOut } = useFieldFocus(root, () => {}, undefined, onLeave)
+defineExpose(expose)
+
 defineSlots<{
   /** Label text (alternative to the `label` prop). */
   default?: (props: Record<string, never>) => unknown
@@ -31,13 +39,16 @@ defineSlots<{
 <template>
   <SFormField
     :id="p.id"
+    ref="root"
     :class="rootClass"
     :style="rootStyle"
     :floating-label="false"
     :inline="!p.stretch"
     :hint="p.hint"
-    :error="p.error"
+    :error="errorMessage"
     :invalid="p.invalid"
+    @focusin="onFocusIn"
+    @focusout="onFocusOut"
   >
     <template #default="{ id: boxId, describedBy, invalid }">
       <div

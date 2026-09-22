@@ -1,3 +1,10 @@
+<script setup>
+import { ref } from 'vue'
+
+const otp = ref([])
+const fullCode = (v) => v.join('').length === 4 || 'Enter all 4 digits'
+</script>
+
 # Pin Input
 
 `SPinInput` is a code input split into cells (OTP, PIN, a code from a text message). It is built
@@ -183,6 +190,52 @@ The slots put arbitrary content next to the code cells — an icon or a caption.
       />
     </template>
   </SPinInput>
+</template>
+```
+
+  </template>
+</Demo>
+</ClientOnly>
+
+## Validation
+
+`rules` checks the code when focus leaves the field; moving between the cells does not count. The
+rules receive the `v-model` value, a `string[]` with one character per cell. `required()` only
+checks that the array is not empty, and erased cells leave empty strings in it, so check the
+joined length to require every cell. See the [Validation](/guide/validation) guide for the
+details.
+
+Type two digits and leave the field.
+
+<ClientOnly>
+<Demo>
+  <SPinInput
+    v-model="otp"
+    :length="4"
+    label="Verification code"
+    type="number"
+    :rules="[fullCode]"
+  />
+
+<template #code>
+
+```vue
+<script setup lang="ts">
+import { ref } from 'vue'
+import type { SRule } from '@smalt-ui/core'
+
+const code = ref<string[]>([])
+const fullCode: SRule<string[]> = (v) => v.join('').length === 4 || 'Enter all 4 digits'
+</script>
+
+<template>
+  <SPinInput
+    v-model="code"
+    :length="4"
+    label="Verification code"
+    type="number"
+    :rules="[fullCode]"
+  />
 </template>
 ```
 

@@ -17,6 +17,10 @@ numeric date format of the locale (`03/15/2024` in en-US, `15/03/2024` in en-GB)
 <script setup>
 import { shallowRef } from 'vue'
 import { parseDate, today, getLocalTimeZone } from '@internationalized/date'
+import { required } from '@smalt-ui/core'
+const trip = shallowRef()
+const bothEnds = (v) => !!(v?.start && v?.end) || 'Pick both the start and the end'
+const twoWeeks = (v) => !v?.start || !v.end || v.end.compare(v.start) < 14 || 'The trip can last up to 14 days'
 const range = shallowRef({ start: parseDate('2026-07-11'), end: parseDate('2026-07-20') })
 const empty = shallowRef()
 const min = today(getLocalTimeZone())
@@ -293,8 +297,58 @@ next to the standard calendar trigger.
 ## Leaving the field
 
 The field emits `focus` and `blur` events, like [`SInput`](/components/input). Moving between
-segments and into the calendar does not count as leaving the field — see the details and a
-validation example on the [`SDatePicker` page](/components/date-picker#leaving-the-field).
+segments and into the calendar does not count as leaving the field — see the details on the
+[`SDatePicker` page](/components/date-picker#leaving-the-field). To check the value when the user
+leaves the field, pass `rules`: see [Validation](#validation) below.
+
+## Validation
+
+`rules` checks the range when focus leaves the field together with its calendar. The rules
+receive the `v-model` value, `{ start, end }`, or `undefined` before anything is set. `required()`
+treats a range whose `start` and `end` are both missing as empty, but a range with one end is not
+empty for it, so require both ends with a rule of your own. Compare the ends with `compare()`: for
+dates it returns the number of days between them. See the [Validation](/guide/validation) guide for
+the details.
+
+Type only the start date into the segments and leave the field, then set a range longer than two
+weeks.
+
+<Demo>
+  <ClientOnly>
+    <SDateRangePicker
+      v-model="trip"
+      label="Trip dates"
+      hint="Up to 14 days"
+      :rules="[required(), bothEnds, twoWeeks]"
+    />
+  </ClientOnly>
+
+<template #code>
+
+```vue
+<script setup lang="ts">
+import { shallowRef } from 'vue'
+import { required, type SDateRange, type SRule } from '@smalt-ui/core'
+
+const trip = shallowRef<SDateRange>()
+const bothEnds: SRule<SDateRange | undefined> = (v) =>
+  !!(v?.start && v?.end) || 'Pick both the start and the end'
+const twoWeeks: SRule<SDateRange | undefined> = (v) =>
+  !v?.start || !v.end || v.end.compare(v.start) < 14 || 'The trip can last up to 14 days'
+</script>
+
+<template>
+  <SDateRangePicker
+    v-model="trip"
+    label="Trip dates"
+    hint="Up to 14 days"
+    :rules="[required(), bothEnds, twoWeeks]"
+  />
+</template>
+```
+
+  </template>
+</Demo>
 
 ## API
 

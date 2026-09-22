@@ -1,10 +1,11 @@
 import type { DateValue } from '@internationalized/date'
 import type { SElevation } from '../../composables/useElevationProp'
+import type { SValidationProps } from '../../composables/useValidation'
 
 export type SDatePickerSize = 'sm' | 'md' | 'lg'
 export type SDatePickerWeekStartsOn = 0 | 1 | 2 | 3 | 4 | 5 | 6
 
-export interface SDatePickerProps {
+export interface SDatePickerProps extends SValidationProps<DateValue | undefined> {
   /** Field id. Generated automatically when not set (SSR-safe). */
   id?: string
   /** Field label. */

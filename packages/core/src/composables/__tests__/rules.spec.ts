@@ -13,6 +13,8 @@ import {
   required,
   schemaRule,
   type SRuleContext,
+  type StandardSchemaResult,
+  type StandardSchemaV1,
 } from '../index'
 
 const ctx: SRuleContext = { messages: enMessages }
@@ -123,6 +125,31 @@ describe('schemaRule', () => {
 
   it('awaits an async schema', async () => {
     const rule = schemaRule(z.string().refine(async (s) => s !== 'taken', 'Name is taken'))
+    await expect(rule('taken', ctx)).resolves.toBe('Name is taken')
+    await expect(rule('free', ctx)).resolves.toBe(true)
+  })
+
+  it('awaits a non-native thenable, not just a real Promise', async () => {
+    // A userland/polyfill thenable: has `then`, but is not `instanceof Promise`.
+    class FakeThenable<T> {
+      constructor(private readonly value: T) {}
+      then<R>(resolve: (value: T) => R): PromiseLike<R> {
+        return Promise.resolve(this.value).then(resolve)
+      }
+    }
+    const schema: StandardSchemaV1<string> = {
+      '~standard': {
+        version: 1,
+        vendor: 'test',
+        validate: (value) =>
+          new FakeThenable<StandardSchemaResult<string>>(
+            value === 'taken'
+              ? { issues: [{ message: 'Name is taken' }] }
+              : { value: value as string },
+          ) as unknown as Promise<StandardSchemaResult<string>>,
+      },
+    }
+    const rule = schemaRule(schema)
     await expect(rule('taken', ctx)).resolves.toBe('Name is taken')
     await expect(rule('free', ctx)).resolves.toBe(true)
   })

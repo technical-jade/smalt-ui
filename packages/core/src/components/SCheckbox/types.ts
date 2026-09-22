@@ -1,8 +1,9 @@
 import type { SColorName } from '../../composables/useColorProp'
+import type { SValidationProps } from '../../composables/useValidation'
 
 export type SCheckboxAlign = 'start' | 'center'
 
-export interface SCheckboxProps {
+export interface SCheckboxProps extends SValidationProps<boolean | 'indeterminate'> {
   /**
    * Accent color (checked state): a name from the [palette](/style/palette)
    * (`primary`/`teal`/`teal-10`).

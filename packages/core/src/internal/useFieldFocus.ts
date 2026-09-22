@@ -7,9 +7,9 @@ interface FocusEmit {
 
 /**
  * `focus`/`blur` of a composite field. Native events do not bubble, so focusin/focusout are
- * handled on `root` and on the calendar panel (`popup` is its selector: the panel lives in
- * `body`), and only entering and leaving the field are emitted, not moves between segments or
- * into the calendar. `onLeave` runs with the `blur` emit, whether or not anyone listens to it.
+ * handled on `root` and on the panel (`popup` is its selector: the panel lives in `body`), and
+ * only entering and leaving the field are emitted, not moves between segments or into the panel.
+ * `onLeave` runs with the `blur` emit, whether or not anyone listens to it.
  */
 export function useFieldFocus(
   root: Readonly<ShallowRef<ComponentPublicInstance | null>>,
@@ -29,10 +29,10 @@ export function useFieldFocus(
 
   function onFocusIn(event: FocusEvent) {
     /**
-     * A flag rather than relatedTarget alone: the selected calendar day is removed together with
+     * A flag rather than relatedTarget: the selected calendar day is removed together with
      * focus, and focus returning to the field arrives without a relatedTarget.
      */
-    if (focused || inside(event.relatedTarget)) return
+    if (focused) return
     focused = true
     emit('focus', event)
   }

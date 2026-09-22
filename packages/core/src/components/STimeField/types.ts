@@ -1,4 +1,5 @@
 import type { Time, CalendarDateTime, ZonedDateTime } from '@internationalized/date'
+import type { SValidationProps } from '../../composables/useValidation'
 
 /** Time value: `Time`, `CalendarDateTime` or `ZonedDateTime`. */
 export type STimeValue = Time | CalendarDateTime | ZonedDateTime
@@ -7,7 +8,7 @@ export type STimeFieldSize = 'sm' | 'md' | 'lg'
 export type STimeFieldGranularity = 'hour' | 'minute' | 'second'
 export type STimeFieldHourCycle = 12 | 24
 
-export interface STimeFieldProps {
+export interface STimeFieldProps extends SValidationProps<STimeValue | undefined> {
   /** Field id. Generated automatically when not set (SSR-safe). */
   id?: string
   /** Field label. */

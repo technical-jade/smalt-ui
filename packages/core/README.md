@@ -1,6 +1,6 @@
 # @smalt-ui/core
 
-The library core: **55 UI components** for Vue 3 built on [Reka UI](https://reka-ui.com/),
+The library core: **56 UI components** for Vue 3 built on [Reka UI](https://reka-ui.com/),
 three-tier design tokens with themes (light/dark), composables and providers. Built with Vite
 library mode (ESM + `.d.ts` + `styles.css`), tree-shakeable (`preserveModules` + `sideEffects`).
 
@@ -68,6 +68,9 @@ Wrap the app (or a subtree) in the `.s-root` container: it isolates the styles f
 - **Components** (`src/components/`, `S` prefix): basics, forms, feedback, navigation/layout.
 - **Providers** (`src/providers/`, no `S` prefix): `ConfigProvider` (i18n, explicit import only),
   `ToastProvider` (toasts).
+- **Form validation**: `SForm`, `rules` on every form field, built-in rules and Zod/Valibot
+  schemas through `schemaRule` (see the
+  [Validation guide](https://technical-jade.github.io/smalt-ui/guide/validation)).
 - **Composables**: `useColorMode`, `useToast`, `createTheme`/`injectTheme`,
   `useMessages`/`provideLocale`/`installLocale`, `useIcons`/`registerIcons`/`resolveIcon`.
 - **Tokens and themes**: SASS maps (`src/styles/`) → CSS variables with the `--s-` prefix; the

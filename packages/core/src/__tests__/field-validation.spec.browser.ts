@@ -4,14 +4,31 @@ import { userEvent } from 'vitest/browser'
 import { ref, type Component } from 'vue'
 import {
   SAutocomplete,
+  SCheckbox,
   SColorField,
+  SDateField,
+  SDatePicker,
+  SDateRangePicker,
+  SForm,
   SInput,
   SNumberField,
   SPinInput,
+  SRadioGroup,
+  SRating,
+  SSelect,
   SSlider,
+  SSwitch,
   STextarea,
+  STimeField,
   required,
 } from '../index'
+
+const options = [{ label: 'One', value: 'one' }]
+const radios = [
+  { label: 'A', value: 'a' },
+  { label: 'B', value: 'b' },
+]
+const segment = (block: string) => `.${block}__segment:not(.${block}__segment--literal)`
 
 describe('field validation · browser', () => {
   it('SInput: checks on blur, then clears the error while typing', async () => {
@@ -54,7 +71,7 @@ describe('field validation · browser', () => {
    * Validation tracks leaving the field on its own: the consumer's `@blur` keeps its path to
    * the control (or the field's own emit) and fires once per leave.
    */
-  const BLUR_CASES: [string, Component, string][] = [
+  const BLUR_CASES: [string, Component, string, string?][] = [
     ['SInput', SInput, '<SInput label="Field" :rules="rules" @blur="onBlur" />'],
     ['STextarea', STextarea, '<STextarea label="Field" :rules="rules" @blur="onBlur" />'],
     [
@@ -66,27 +83,78 @@ describe('field validation · browser', () => {
     ['SNumberField', SNumberField, '<SNumberField label="Field" :rules="rules" @blur="onBlur" />'],
     ['SPinInput', SPinInput, '<SPinInput label="Field" :rules="rules" @blur="onBlur" />'],
     ['SSlider', SSlider, '<SSlider label="Field" :rules="rules" @blur="onBlur" />'],
+    [
+      'SSelect',
+      SSelect,
+      '<SSelect label="Field" :options="options" :rules="rules" @blur="onBlur" />',
+      '.s-select__trigger',
+    ],
+    [
+      'SSelect searchable',
+      SSelect,
+      '<SSelect label="Field" searchable :options="options" :rules="rules" @blur="onBlur" />',
+      '.s-select__input',
+    ],
+    [
+      'SDateField',
+      SDateField,
+      '<SDateField label="Field" :rules="rules" @blur="onBlur" />',
+      segment('s-date-field'),
+    ],
+    [
+      'STimeField',
+      STimeField,
+      '<STimeField label="Field" :rules="rules" @blur="onBlur" />',
+      segment('s-time-field'),
+    ],
+    [
+      'SDatePicker',
+      SDatePicker,
+      '<SDatePicker label="Field" :rules="rules" @blur="onBlur" />',
+      segment('s-date-picker'),
+    ],
+    [
+      'SDateRangePicker',
+      SDateRangePicker,
+      '<SDateRangePicker label="Field" :rules="rules" @blur="onBlur" />',
+      segment('s-date-range-picker'),
+    ],
+    [
+      'SCheckbox',
+      SCheckbox,
+      '<SCheckbox label="Field" :rules="rules" @blur="onBlur" />',
+      '[role="checkbox"]',
+    ],
+    [
+      'SSwitch',
+      SSwitch,
+      '<SSwitch label="Field" :rules="rules" @blur="onBlur" />',
+      '[role="switch"]',
+    ],
   ]
 
-  it.each(BLUR_CASES)('%s: a consumer @blur fires once', async (name, component, template) => {
-    const onBlur = vi.fn()
-    const { container } = render({
-      components: { [name]: component },
-      setup: () => ({ rules: [() => 'Rule error'], onBlur }),
-      template: `${template}<button class="next">Next</button>`,
-    })
-    const control = container.querySelector<HTMLElement>(
-      'input:not([type="hidden"]):not([tabindex="-1"]), textarea, [role="slider"]',
-    )!
-    // A slider thumb takes focus only after the track is measured.
-    await vi.waitFor(() => {
-      control.focus()
-      expect(document.activeElement).toBe(control)
-    })
-    container.querySelector<HTMLElement>('.next')!.focus()
-    await vi.waitFor(() => expect(container.querySelector('.s-field__error')).not.toBeNull())
-    expect(onBlur).toHaveBeenCalledTimes(1)
-  })
+  it.each(BLUR_CASES)(
+    '%s: a consumer @blur fires once',
+    async (name, component, template, selector) => {
+      const onBlur = vi.fn()
+      const { container } = render({
+        components: { [name.split(' ')[0]]: component },
+        setup: () => ({ rules: [() => 'Rule error'], onBlur, options }),
+        template: `${template}<button class="next">Next</button>`,
+      })
+      const control = container.querySelector<HTMLElement>(
+        selector ?? 'input:not([type="hidden"]):not([tabindex="-1"]), textarea, [role="slider"]',
+      )!
+      // A slider thumb takes focus only after the track is measured.
+      await vi.waitFor(() => {
+        control.focus()
+        expect(document.activeElement).toBe(control)
+      })
+      container.querySelector<HTMLElement>('.next')!.focus()
+      await vi.waitFor(() => expect(container.querySelector('.s-field__error')).not.toBeNull())
+      expect(onBlur).toHaveBeenCalledTimes(1)
+    },
+  )
 
   const FOCUS_CASES: [string, Component, Record<string, unknown>, string][] = [
     ['SInput', SInput, {}, 'input'],
@@ -97,6 +165,29 @@ describe('field validation · browser', () => {
     ['SNumberField', SNumberField, {}, 'input[role="spinbutton"]'],
     ['SPinInput', SPinInput, {}, '.s-pin-input__cell'],
     ['SSlider', SSlider, { modelValue: [20, 60] }, '[role="slider"]'],
+    ['SSelect', SSelect, { options }, '.s-select__trigger'],
+    ['SSelect searchable', SSelect, { options, searchable: true }, '.s-select__input'],
+    ['SSelect use-tags', SSelect, { options, useTags: true }, '.s-select__trigger'],
+    ['SDateField', SDateField, {}, segment('s-date-field')],
+    ['STimeField', STimeField, {}, segment('s-time-field')],
+    ['SDatePicker', SDatePicker, {}, segment('s-date-picker')],
+    ['SDateRangePicker', SDateRangePicker, {}, segment('s-date-range-picker')],
+    ['SCheckbox', SCheckbox, {}, '[role="checkbox"]'],
+    ['SSwitch', SSwitch, {}, '[role="switch"]'],
+    ['SRadioGroup', SRadioGroup, { options: radios }, '[role="radio"]'],
+    [
+      'SRadioGroup with a value',
+      SRadioGroup,
+      { options: radios, modelValue: 'b' },
+      '[role="radio"][aria-checked="true"]',
+    ],
+    ['SRating', SRating, { ariaLabel: 'Rating' }, '[role="radio"]'],
+    [
+      'SRating with a value',
+      SRating,
+      { ariaLabel: 'Rating', modelValue: 3 },
+      '[role="radio"][aria-checked="true"]',
+    ],
   ]
 
   it.each(FOCUS_CASES)('%s: focus() lands on the control', async (_, component, props, target) => {
@@ -113,5 +204,55 @@ describe('field validation · browser', () => {
       exposed.value!.focus()
       expect(document.activeElement).toBe(control)
     })
+  })
+
+  it('SSelect: opening the list does not validate, leaving the field does', async () => {
+    const { container } = render({
+      components: { SSelect },
+      setup: () => ({ rules: [required()], options }),
+      template: '<SSelect label="City" :options="options" :rules="rules" /><button>Next</button>',
+    })
+    const trigger = container.querySelector<HTMLElement>('.s-select__trigger')!
+    await userEvent.click(trigger)
+    await vi.waitFor(() => expect(document.querySelector('.s-select__content')).not.toBeNull())
+    await vi.waitFor(() =>
+      expect(document.activeElement?.closest('.s-select__content')).toBeTruthy(),
+    )
+    await new Promise((resolve) => setTimeout(resolve, 50))
+    expect(trigger).not.toHaveAttribute('aria-invalid', 'true')
+    await userEvent.keyboard('{Escape}')
+    await vi.waitFor(() => expect(document.querySelector('.s-select__content')).toBeNull())
+    expect(trigger).not.toHaveAttribute('aria-invalid', 'true')
+    await userEvent.tab()
+    await vi.waitFor(() => expect(trigger).toHaveAttribute('aria-invalid', 'true'))
+  })
+
+  it('SDatePicker: moving into the calendar does not validate', async () => {
+    const { container } = render({
+      components: { SDatePicker },
+      setup: () => ({ rules: [required()] }),
+      template: '<SDatePicker label="Date" :rules="rules" /><button class="next">Next</button>',
+    })
+    await userEvent.click(container.querySelector<HTMLElement>('.s-date-picker__trigger')!)
+    await vi.waitFor(() =>
+      expect(document.activeElement?.closest('.s-date-picker__content')).toBeTruthy(),
+    )
+    await new Promise((resolve) => setTimeout(resolve, 50))
+    expect(container.querySelector('[aria-invalid="true"]')).toBeNull()
+    await userEvent.click(container.querySelector<HTMLElement>('.next')!)
+    await vi.waitFor(() => expect(container.querySelector('[aria-invalid="true"]')).not.toBeNull())
+  })
+
+  it('SForm focuses the tab stop of an invalid radio group', async () => {
+    const { container } = render({
+      components: { SForm, SRadioGroup },
+      setup: () => ({ rules: [required()], options: radios }),
+      template: `<SForm @submit="() => {}"><SRadioGroup label="Plan" :options="options" :rules="rules" />
+        <button type="submit">Send</button></SForm>`,
+    })
+    // Radios are buttons too.
+    await userEvent.click(container.querySelector('button[type="submit"]')!)
+    await vi.waitFor(() => expect(document.activeElement?.getAttribute('role')).toBe('radio'))
+    expect(document.activeElement).toBe(container.querySelector('[role="radio"]'))
   })
 })

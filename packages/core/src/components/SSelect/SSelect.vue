@@ -7,6 +7,7 @@ import SelectDropdown from './SelectDropdown.vue'
 import { useDefaults, useElevationProp } from '../../composables'
 import { useFieldAttrs } from '../../internal/useFieldAttrs'
 import { useFieldFocus } from '../../internal/useFieldFocus'
+import { useFieldValidation } from '../../internal/useFieldValidation'
 import type { SSelectProps } from './types'
 
 defineOptions({ inheritAttrs: false })
@@ -40,7 +41,6 @@ const emit = defineEmits<{
   blur: [event: FocusEvent]
 }>()
 const root = useTemplateRef<ComponentPublicInstance>('root')
-const { onFocusIn, onFocusOut } = useFieldFocus(root, emit, '.s-select__content')
 
 const elevationStyle = useElevationProp(p, 's-surface')
 
@@ -94,6 +94,19 @@ const model = defineModel<string | string[]>()
  */
 const isMultiple = computed(() => p.multiple || p.useTags)
 
+// Without v-model a multiple select still holds a list: the rules see [] rather than undefined.
+const {
+  errorMessage,
+  onBlur: onLeave,
+  expose,
+} = useFieldValidation(
+  p,
+  () => (isMultiple.value && !Array.isArray(model.value) ? [] : model.value),
+  root,
+)
+const { onFocusIn, onFocusOut } = useFieldFocus(root, emit, '.s-select__content', onLeave)
+defineExpose(expose)
+
 // Native validation focuses the hidden select on submit; the user needs the visible control.
 function focusControl() {
   const el = root.value?.$el as HTMLElement | undefined
@@ -110,7 +123,7 @@ function focusControl() {
     :style="rootStyle"
     :label="p.label"
     :hint="p.hint"
-    :error="p.error"
+    :error="errorMessage"
     :invalid="p.invalid"
     :required="p.required"
     :size="p.size"
@@ -151,6 +164,7 @@ function focusControl() {
         :content-style="contentStyle"
         :control-attrs="controlAttrs"
         :virtualize="virtualize"
+        @content-focusin="onFocusIn"
       >
         <template
           v-if="$slots.prepend"
@@ -189,6 +203,7 @@ function focusControl() {
         :square="p.square"
         :content-style="contentStyle"
         :control-attrs="controlAttrs"
+        @content-focusin="onFocusIn"
       >
         <template
           v-if="$slots.prepend"

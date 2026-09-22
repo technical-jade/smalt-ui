@@ -5,10 +5,10 @@ import { describe, expect, it } from 'vitest'
 /**
  * Density presets work through the `size` prop (`global: { size: 'sm' }`), so every field with a
  * control of fixed height must take it and pass it on to `SFormField` for the label size.
- * Checkbox, radio and slider have no field-height control and stay out.
+ * Checkbox, radio, switch, slider and rating have no field-height control and stay out.
  */
 const root = resolve(process.cwd(), 'src/components')
-const NO_FIELD_HEIGHT = ['SCheckbox', 'SRadioGroup', 'SSlider']
+const NO_FIELD_HEIGHT = ['SCheckbox', 'SRadioGroup', 'SSlider', 'SSwitch', 'SRating']
 
 const fields = readdirSync(root, { withFileTypes: true })
   .filter((entry) => entry.isDirectory() && entry.name !== 'SFormField')

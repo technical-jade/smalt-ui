@@ -1,4 +1,5 @@
 import type { SElevation } from '../../composables/useElevationProp'
+import type { SValidationProps } from '../../composables/useValidation'
 
 export interface SSelectOption {
   label: string
@@ -10,7 +11,7 @@ export interface SSelectOption {
 
 export type SSelectSize = 'sm' | 'md' | 'lg'
 
-export interface SSelectProps {
+export interface SSelectProps extends SValidationProps<string | string[]> {
   /** List of options. */
   options: readonly SSelectOption[]
   /** Field size: `sm` (32px), `md` (40px), or `lg` (48px). */

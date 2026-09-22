@@ -1,6 +1,6 @@
 <script setup>
 import { ref } from 'vue'
-import { registerIcons } from '@smalt-ui/core'
+import { email, minLength, registerIcons, required } from '@smalt-ui/core'
 
 registerIcons({
   search: [
@@ -16,6 +16,8 @@ const birth = ref('')
 const license = ref('')
 const fillPhone = ref('')
 const fillCard = ref('')
+const workEmail = ref('')
+const skills = ref([])
 </script>
 
 # Input
@@ -638,6 +640,67 @@ const stack = ref(['Vue', 'Nuxt'])
     label="Technologies"
     placeholder="Type and press Enter"
     :max="5"
+  />
+</template>
+```
+
+  </template>
+</Demo>
+
+## Validation
+
+`rules` checks the value when focus leaves the field, and then on every change while the error
+is shown. The rules receive the `v-model` value: a `string`, a `string[]` in tags mode, and in
+numeric mode a number as a string (`'1234.5'`), which `min()` and `max()` convert themselves. The
+details, including when fields check and forms, are in the [Validation](/guide/validation) guide.
+
+Leave the email field empty and move focus away, then type an address. In tags mode
+`minLength()` counts the tags ("Select at least 2"); an empty list passes it, so the field also
+has `required()`.
+
+<Demo>
+  <div style="display: grid; gap: 16px; width: 100%; max-width: 360px">
+    <SInput
+      v-model="workEmail"
+      label="Work email"
+      autocomplete="email"
+      required
+      :rules="[required(), email()]"
+    />
+    <SInput
+      v-model="skills"
+      use-tags
+      label="Skills"
+      placeholder="Type and press Enter"
+      :rules="[required(), minLength(2)]"
+    />
+  </div>
+
+<template #code>
+
+```vue
+<script setup lang="ts">
+import { ref } from 'vue'
+import { email, minLength, required } from '@smalt-ui/core'
+
+const address = ref('')
+const skills = ref<string[]>([])
+</script>
+
+<template>
+  <SInput
+    v-model="address"
+    label="Work email"
+    autocomplete="email"
+    required
+    :rules="[required(), email()]"
+  />
+  <SInput
+    v-model="skills"
+    use-tags
+    label="Skills"
+    placeholder="Type and press Enter"
+    :rules="[required(), minLength(2)]"
   />
 </template>
 ```

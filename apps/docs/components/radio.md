@@ -1,6 +1,8 @@
 <script setup>
 import { ref } from 'vue'
+import { required } from '@smalt-ui/core'
 
+const plan = ref()
 const delivery = ref('courier')
 const size = ref('m')
 const tariff = ref('parcel')
@@ -303,6 +305,60 @@ layout of the options themselves is set with `group-class` — the class of the
   }
 }
 </style>
+```
+
+  </template>
+</Demo>
+</ClientOnly>
+
+## Validation
+
+`rules` go on `SRadioGroup`, not on the single `SRadio`. The group checks when focus leaves it
+(moving between the options with the arrow keys does not count), and then on every change while
+the error is shown. The rules receive the `v-model` value, the `value` of the chosen option, or
+`undefined` while nothing is chosen, which `required()` treats as empty. An invalid group gives its
+radio buttons a red border. See the [Validation](/guide/validation) guide for the details.
+
+Tab into the group and out of it without choosing, then pick a plan.
+
+<ClientOnly>
+<Demo>
+  <SRadioGroup
+    v-model="plan"
+    label="Plan"
+    required
+    :rules="[required('Choose a plan')]"
+    :options="[
+      { label: 'Free', value: 'free' },
+      { label: 'Pro', value: 'pro' },
+      { label: 'Team', value: 'team' }
+    ]"
+  />
+
+<template #code>
+
+```vue
+<script setup lang="ts">
+import { ref } from 'vue'
+import { required } from '@smalt-ui/core'
+
+const plan = ref<string>()
+const plans = [
+  { label: 'Free', value: 'free' },
+  { label: 'Pro', value: 'pro' },
+  { label: 'Team', value: 'team' },
+]
+</script>
+
+<template>
+  <SRadioGroup
+    v-model="plan"
+    label="Plan"
+    required
+    :rules="[required('Choose a plan')]"
+    :options="plans"
+  />
+</template>
 ```
 
   </template>

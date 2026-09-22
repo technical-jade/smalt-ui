@@ -8,6 +8,7 @@ import DatePickerField from './DatePickerField.vue'
 import DatePickerCalendar from './DatePickerCalendar.vue'
 import { useDefaults, useElevationProp, useFormatLocale } from '../../composables'
 import { useFieldFocus } from '../../internal/useFieldFocus'
+import { focusFirstSegment, useFieldValidation } from '../../internal/useFieldValidation'
 import type { SDatePickerProps } from './types'
 
 const props = withDefaults(defineProps<SDatePickerProps>(), {
@@ -29,7 +30,6 @@ const emit = defineEmits<{
   blur: [event: FocusEvent]
 }>()
 const root = useTemplateRef<ComponentPublicInstance>('root')
-const { onFocusIn, onFocusOut } = useFieldFocus(root, emit, '.s-date-picker__content')
 
 const formatLocale = useFormatLocale(() => p.locale)
 
@@ -50,6 +50,19 @@ defineSlots<{
 const model = defineModel<DateValue | undefined>()
 
 const filled = computed(() => model.value != null)
+
+const {
+  errorMessage,
+  onBlur: onLeave,
+  expose,
+} = useFieldValidation(
+  p,
+  () => model.value,
+  root,
+  () => focusFirstSegment(root.value?.$el, 's-date-picker'),
+)
+const { onFocusIn, onFocusOut } = useFieldFocus(root, emit, '.s-date-picker__content', onLeave)
+defineExpose(expose)
 </script>
 
 <template>
@@ -60,7 +73,7 @@ const filled = computed(() => model.value != null)
     :class="`s-date-picker--${p.size}`"
     :label="p.label"
     :hint="p.hint"
-    :error="p.error"
+    :error="errorMessage"
     :invalid="p.invalid || outOfRange"
     :required="p.required"
     :size="p.size"

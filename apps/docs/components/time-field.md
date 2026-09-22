@@ -15,6 +15,9 @@ Pasting into a segment fills the whole value, such as `09:30` or `9:30 PM`. A ty
 <script setup>
 import { shallowRef } from 'vue'
 import { Time, parseTime } from '@internationalized/date'
+import { required } from '@smalt-ui/core'
+const meeting = shallowRef()
+const workingHours = (v) => !v || (v.hour >= 9 && v.hour < 18) || 'Pick a time between 9 AM and 6 PM'
 const time = shallowRef(parseTime('14:30'))
 const empty = shallowRef()
 </script>
@@ -231,8 +234,53 @@ The `prepend` and `append` slots put content inside the field border — for exa
 ## Leaving the field
 
 The field has `focus` and `blur` events, like [`SInput`](/components/input). Moving between
-segments does not count as leaving — see the details and a validation example on the
-[`SDatePicker` page](/components/date-picker#leaving-the-field).
+segments does not count as leaving — see the details on the
+[`SDatePicker` page](/components/date-picker#leaving-the-field). To check the value when the user
+leaves the field, pass `rules`: see [Validation](#validation) below.
+
+## Validation
+
+`rules` checks the time when focus leaves the field; moving between the segments does not count.
+The rules receive the `v-model` value, a `Time` (or `CalendarDateTime`/`ZonedDateTime`, whatever
+the model holds), or `undefined` while the time is not complete: `required()` fails on it, and your
+own rules should let it pass (`!v || …`). See the [Validation](/guide/validation) guide for the
+details.
+
+Type 7:30 PM and leave the field.
+
+<Demo>
+  <ClientOnly>
+    <STimeField
+      v-model="meeting"
+      label="Meeting time"
+      :rules="[required(), workingHours]"
+    />
+  </ClientOnly>
+
+<template #code>
+
+```vue
+<script setup lang="ts">
+import { shallowRef } from 'vue'
+import type { Time } from '@internationalized/date'
+import { required, type SRule } from '@smalt-ui/core'
+
+const meeting = shallowRef<Time>()
+const workingHours: SRule<Time | undefined> = (v) =>
+  !v || (v.hour >= 9 && v.hour < 18) || 'Pick a time between 9 AM and 6 PM'
+</script>
+
+<template>
+  <STimeField
+    v-model="meeting"
+    label="Meeting time"
+    :rules="[required(), workingHours]"
+  />
+</template>
+```
+
+  </template>
+</Demo>
 
 ## API
 

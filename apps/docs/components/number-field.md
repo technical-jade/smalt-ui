@@ -10,7 +10,9 @@ emit `blur`.
 
 <script setup>
 import { ref } from 'vue'
+import { max, min, required } from '@smalt-ui/core'
 
+const age = ref(null)
 const qty = ref(3)
 const price = ref(50)
 const nfInvalid = ref(5)
@@ -138,6 +140,47 @@ the same precision and bounds constraints, plus `suffix`, slots and `size`.
   />
 </template>
 ```
+
+## Validation
+
+`rules` checks the number when focus leaves the field, and then on every change while the error
+is shown. The rules receive the `v-model` value, a `number`, or `null` when the field is empty:
+`required()` fails on `null`, and `min()`/`max()` let it pass. Unlike the `min`/`max` props, which
+clamp the typed number to the bounds, the rules keep the number and report it. See the
+[Validation](/guide/validation) guide for the details.
+
+Clear the field and leave it, then type 12.
+
+<ClientOnly>
+<Demo>
+  <SNumberField
+    v-model="age"
+    label="Age"
+    :rules="[required(), min(18), max(99)]"
+  />
+
+<template #code>
+
+```vue
+<script setup lang="ts">
+import { ref } from 'vue'
+import { max, min, required } from '@smalt-ui/core'
+
+const age = ref<number | null>(null)
+</script>
+
+<template>
+  <SNumberField
+    v-model="age"
+    label="Age"
+    :rules="[required(), min(18), max(99)]"
+  />
+</template>
+```
+
+  </template>
+</Demo>
+</ClientOnly>
 
 ## API
 

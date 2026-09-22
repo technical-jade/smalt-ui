@@ -18,13 +18,13 @@ The calendar closes once a day is picked; `:close-on-select="false"` keeps it op
 <script setup>
 import { ref, shallowRef } from 'vue'
 import { parseDate, today, getLocalTimeZone } from '@internationalized/date'
+import { required } from '@smalt-ui/core'
 const date = shallowRef(parseDate('2026-07-11'))
 const empty = shallowRef()
 const pickup = shallowRef()
-const pickupError = ref()
-const checkPickup = () => {
-  pickupError.value = pickup.value ? undefined : 'Enter a pickup date'
-}
+const pickupEvents = ref([])
+const visit = shallowRef()
+const notPast = (v) => !v || v.compare(today(getLocalTimeZone())) >= 0 || 'Pick today or a later date'
 const min = today(getLocalTimeZone())
 const max = parseDate('2026-07-31')
 const noWeekends = (value) => {
@@ -240,39 +240,40 @@ turns off the stable 6-week grid height. The effect is visible with the calendar
 
 ## Leaving the field
 
-Like [`SInput`](/components/input), the field emits `focus` and `blur` events, for example to
-validate the value once the user leaves the field. Moving between segments and into the calendar
-does not count as leaving: `blur` fires when focus has left both the field and the open calendar.
-[`SDateRangePicker`](/components/date-range-picker), [`SDateField`](/components/date-field), and
-[`STimeField`](/components/time-field) emit the same events.
+Like [`SInput`](/components/input), the field emits `focus` and `blur` events. Moving between
+segments and into the calendar does not count as leaving: `blur` fires when focus has left both
+the field and the open calendar. [`SDateRangePicker`](/components/date-range-picker),
+[`SDateField`](/components/date-field), and [`STimeField`](/components/time-field) emit the same
+events. To check the date when the user leaves the field, pass `rules` instead of handling `blur`:
+see [Validation](#validation) below.
 
 <Demo>
   <ClientOnly>
-    <SDatePicker v-model="pickup" label="Pickup date" required :error="pickupError" @blur="checkPickup" />
+    <div style="display: grid; gap: 8px">
+      <SDatePicker v-model="pickup" label="Pickup date" @focus="pickupEvents.push('focus')" @blur="pickupEvents.push('blur')" />
+      <code>events: {{ pickupEvents.join(', ') || 'none' }}</code>
+    </div>
   </ClientOnly>
 
 <template #code>
 
 ```vue
-<script setup>
+<script setup lang="ts">
 import { ref, shallowRef } from 'vue'
+import type { DateValue } from '@internationalized/date'
 
-const pickup = shallowRef()
-const error = ref()
-
-function validate() {
-  error.value = pickup.value ? undefined : 'Enter a pickup date'
-}
+const pickup = shallowRef<DateValue>()
+const events = ref<string[]>([])
 </script>
 
 <template>
   <SDatePicker
     v-model="pickup"
     label="Pickup date"
-    required
-    :error="error"
-    @blur="validate"
+    @focus="events.push('focus')"
+    @blur="events.push('blur')"
   />
+  <code>events: {{ events.join(', ') }}</code>
 </template>
 ```
 
@@ -323,6 +324,51 @@ next to the standard calendar trigger.
       />
     </template>
   </SDatePicker>
+</template>
+```
+
+  </template>
+</Demo>
+
+## Validation
+
+`rules` checks the date when focus leaves the field together with its calendar: picking a day
+does not count as leaving. The rules receive the `v-model` value, a `DateValue`, or `undefined`
+while no complete date is set: `required()` fails on it, and your own rules should let it pass
+(`!v || …`). See the [Validation](/guide/validation) guide for the details.
+
+`min-value` greys out the earlier days in the calendar, but a date typed into the segments only
+gets a red frame, with no text, and does not fail the check of a form. The rule below gives it a
+message. Type a date in the past and leave the field.
+
+<Demo>
+  <ClientOnly>
+    <SDatePicker
+      v-model="visit"
+      label="Visit date"
+      :rules="[required(), notPast]"
+    />
+  </ClientOnly>
+
+<template #code>
+
+```vue
+<script setup lang="ts">
+import { shallowRef } from 'vue'
+import { getLocalTimeZone, today, type DateValue } from '@internationalized/date'
+import { required, type SRule } from '@smalt-ui/core'
+
+const visit = shallowRef<DateValue>()
+const notPast: SRule<DateValue | undefined> = (v) =>
+  !v || v.compare(today(getLocalTimeZone())) >= 0 || 'Pick today or a later date'
+</script>
+
+<template>
+  <SDatePicker
+    v-model="visit"
+    label="Visit date"
+    :rules="[required(), notPast]"
+  />
 </template>
 ```
 

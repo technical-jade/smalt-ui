@@ -1,3 +1,10 @@
+<script setup>
+import { ref } from 'vue'
+import { maxLength, required } from '@smalt-ui/core'
+
+const feedback = ref('')
+</script>
+
 # Textarea
 
 `STextarea` is a multi-line text field. It is built on `SFormField` (the same composition as
@@ -160,6 +167,49 @@ The slots put arbitrary content inside the field border — an icon or a button.
     label="Terms"
     readonly
     :rows="3"
+  />
+</template>
+```
+
+  </template>
+</Demo>
+
+## Validation
+
+`rules` checks the text when focus leaves the field, and then on every change while the error is
+shown. The rules receive the `v-model` string. `maxLength()` reports a text that is too long
+instead of cutting it, unlike the native `maxlength` attribute, so pasted text is not lost. See
+the [Validation](/guide/validation) guide for the details.
+
+Leave the field empty and move focus away, then write a few words. Paste more than 200 characters
+and leave the field again: now the second rule fails.
+
+<Demo>
+  <STextarea
+    v-model="feedback"
+    label="Feedback"
+    hint="Up to 200 characters"
+    :rows="3"
+    :rules="[required(), maxLength(200)]"
+  />
+
+<template #code>
+
+```vue
+<script setup lang="ts">
+import { ref } from 'vue'
+import { maxLength, required } from '@smalt-ui/core'
+
+const feedback = ref('')
+</script>
+
+<template>
+  <STextarea
+    v-model="feedback"
+    label="Feedback"
+    hint="Up to 200 characters"
+    :rows="3"
+    :rules="[required(), maxLength(200)]"
   />
 </template>
 ```

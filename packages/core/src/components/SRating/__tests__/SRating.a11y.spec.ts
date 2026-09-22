@@ -24,4 +24,11 @@ describe('SRating · a11y', () => {
     })
     expect(await axe(container)).toHaveNoViolations()
   })
+
+  it('has no violations with an error', async () => {
+    const { container } = render(SRating, {
+      props: { length: 5, ariaLabel: 'Product rating', error: 'Rate the product' },
+    })
+    expect(await axe(container)).toHaveNoViolations()
+  })
 })

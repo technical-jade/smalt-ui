@@ -1,5 +1,7 @@
 <script setup>
 import { ref } from 'vue'
+import { minLength, required } from '@smalt-ui/core'
+const visited = ref([])
 const framework = ref('vue')
 const cities = [
   { label: 'New York', value: 'nyc' },
@@ -454,6 +456,11 @@ findable.
 The clear button returns focus to the field. In `searchable` mode Home and End move the caret in
 the text, as in any input, instead of jumping to the first or last option.
 
+The field emits `focus` when focus enters it or its list and `blur` once focus has left both,
+however the list was opened: with the mouse the list takes focus right away, and `focus` still
+fires then. Moving between the field and its open list emits nothing, so validation on blur runs
+only when the user is done with the field.
+
 ## Square corners
 
 `square` removes the rounding from both the border and the dropdown panel — open both lists and
@@ -506,6 +513,58 @@ not overflow its boundary. If you still need a minimum, set it with a variable:
 the options come from the server and change on every keystroke, use
 [`SAutocomplete`](/components/autocomplete) — it does not filter the suggestions again and passes
 the query text out.
+
+## Validation
+
+`rules` checks the selection when focus leaves the field. Opening the list does not count as
+leaving: the field checks once focus has left both the field and its list. The rules receive the
+`v-model` value: a `string` (`undefined` while nothing is chosen), and a `string[]` with
+`multiple` or `use-tags`. For a list, `minLength()` and `maxLength()` count the chosen options
+("Select at least 2"). See the [Validation](/guide/validation) guide for the details.
+
+Open the list, pick one city and close it: the field asks for one more.
+
+<Demo>
+  <ClientOnly>
+    <SSelect
+      v-model="visited"
+      multiple
+      label="Cities you visited"
+      placeholder="Choose at least two"
+      :options="cities"
+      :rules="[required(), minLength(2)]"
+    />
+  </ClientOnly>
+
+<template #code>
+
+```vue
+<script setup lang="ts">
+import { ref } from 'vue'
+import { minLength, required } from '@smalt-ui/core'
+
+const visited = ref<string[]>([])
+const cities = [
+  { label: 'New York', value: 'nyc' },
+  { label: 'Los Angeles', value: 'la' },
+  { label: 'Chicago', value: 'chi' },
+]
+</script>
+
+<template>
+  <SSelect
+    v-model="visited"
+    multiple
+    label="Cities you visited"
+    placeholder="Choose at least two"
+    :options="cities"
+    :rules="[required(), minLength(2)]"
+  />
+</template>
+```
+
+  </template>
+</Demo>
 
 ## API
 

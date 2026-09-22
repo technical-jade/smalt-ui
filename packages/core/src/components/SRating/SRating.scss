@@ -74,6 +74,11 @@
     color: var(--s-color-border-strong);
   }
 
+  // The rating has no frame to turn red, so the empty star glyphs (filled with currentColor) do.
+  &[aria-invalid='true'] &__star--bg {
+    color: var(--s-color-negative);
+  }
+
   // Gold amber is used directly: rating stars are not a status, so the warning role does not fit.
   &__star--fg {
     position: absolute;

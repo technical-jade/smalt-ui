@@ -69,6 +69,12 @@ rises over a value filled in by browser autofill.
   </template>
 </Demo>
 
+The library fields built on `SFormField` fill `error` by themselves: with `rules`, a failed rule
+puts its text there, so there is no need to keep an error variable for every field. A manual
+`error` passed to the field, a server response for example, still wins over the rules. See the
+[Validation](/guide/validation) guide; a control of your own gets the same behavior from
+`useValidation` (see [Custom fields](/guide/validation#custom-fields)).
+
 ## Sizes
 
 The `size` prop (`sm` / `md` / `lg`) is passed to the label (`SLabel`) and changes its typography.
@@ -177,6 +183,36 @@ clicking it still focuses the field.
 
 The slot is incompatible with a floating label: that label is drawn by the field itself, not by
 `SFormField`. In dev mode this combination logs a warning — pass `floating-label="false"`.
+
+## Instance
+
+Through a template ref `SFormField` exposes `controlId`: the id it gives the control (the `id`
+prop, or a generated `s-field-…` id), the same value as the `id` slot prop. It lets code outside
+the slot find the control, for example to move focus to it:
+
+```vue
+<script setup lang="ts">
+import { useTemplateRef } from 'vue'
+
+const field = useTemplateRef('field')
+
+function focusControl() {
+  const id = field.value?.controlId
+  if (id) document.getElementById(id)?.focus()
+}
+</script>
+
+<template>
+  <SFormField
+    ref="field"
+    label="Name"
+  >
+    <template #default="{ id }">
+      <input :id="id" />
+    </template>
+  </SFormField>
+</template>
+```
 
 ## API
 

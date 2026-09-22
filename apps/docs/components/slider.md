@@ -18,6 +18,8 @@ const sliderInvalid = ref(70)
 const sliderRequired = ref(50)
 const volumeLabel = ref(65)
 const priceRangeLabel = ref([30, 80])
+const budget = ref([30, 60])
+const wideRange = (v) => !Array.isArray(v) || v[1] - v[0] >= 10 || 'Range must be at least 10'
 </script>
 
 ## Single value
@@ -189,6 +191,57 @@ with the `value` slot (a number by default) — for a range, the slot renders fo
   >
     <template #value="{ value }"> {{ value }}% </template>
   </SSlider>
+</template>
+```
+
+  </template>
+</Demo>
+</ClientOnly>
+
+## Validation
+
+`rules` checks the value when focus leaves the slider, after the user has moved a thumb or tabbed
+through it. The rules receive the `v-model` value: a `number` for a single thumb (the slider sits at
+`min` without a value, so the rules see `min`), and a `number[]` for a range. `min()` and `max()`
+check a single number and let an array pass, so a range needs a rule of its own. A slider always
+has a value, so `required()` never fails on it. See the [Validation](/guide/validation) guide for
+the details.
+
+Move a thumb so the range is under 10, then move focus away (Tab or click outside): the error
+appears; widen the range and it clears.
+
+<ClientOnly>
+<Demo>
+  <div style="width: 100%">
+    <SSlider
+      v-model="budget"
+      label="Budget"
+      :min="0"
+      :max="100"
+      :rules="[wideRange]"
+    />
+  </div>
+
+<template #code>
+
+```vue
+<script setup lang="ts">
+import { ref } from 'vue'
+import type { SRule } from '@smalt-ui/core'
+
+const budget = ref([30, 60])
+const wideRange: SRule<number | number[]> = (v) =>
+  !Array.isArray(v) || v[1] - v[0] >= 10 || 'Range must be at least 10'
+</script>
+
+<template>
+  <SSlider
+    v-model="budget"
+    label="Budget"
+    :min="0"
+    :max="100"
+    :rules="[wideRange]"
+  />
 </template>
 ```
 

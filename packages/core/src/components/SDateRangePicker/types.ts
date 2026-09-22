@@ -1,5 +1,6 @@
 import type { DateValue } from '@internationalized/date'
 import type { SElevation } from '../../composables/useElevationProp'
+import type { SValidationProps } from '../../composables/useValidation'
 
 export type SDateRangePickerSize = 'sm' | 'md' | 'lg'
 export type SDateRangePickerWeekStartsOn = 0 | 1 | 2 | 3 | 4 | 5 | 6
@@ -12,7 +13,7 @@ export interface SDateRange {
   end: DateValue | undefined
 }
 
-export interface SDateRangePickerProps {
+export interface SDateRangePickerProps extends SValidationProps<SDateRange | undefined> {
   /** Field id. Generated automatically when not set (SSR-safe). */
   id?: string
   /** Field label. */

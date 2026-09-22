@@ -2,6 +2,7 @@ import { describe, expect, it, onTestFinished, vi } from 'vitest'
 import { fireEvent, render } from '@testing-library/vue'
 import { flushPromises, mount } from '@vue/test-utils'
 import { ref, type Component } from 'vue'
+import { CalendarDate, Time } from '@internationalized/date'
 import * as lib from '../index'
 
 const rule = () => 'Rule error'
@@ -19,6 +20,22 @@ const CASES: [string, Component, Record<string, unknown>][] = [
   ['SNumberField', lib.SNumberField, {}],
   ['SPinInput', lib.SPinInput, {}],
   ['SSlider', lib.SSlider, {}],
+  ['SSelect', lib.SSelect, { options: [{ label: 'One', value: 'one' }] }],
+  ['SSelect multiple', lib.SSelect, { options: [{ label: 'One', value: 'one' }], multiple: true }],
+  [
+    'SSelect searchable',
+    lib.SSelect,
+    { options: [{ label: 'One', value: 'one' }], searchable: true },
+  ],
+  ['SSelect use-tags', lib.SSelect, { options: [{ label: 'One', value: 'one' }], useTags: true }],
+  ['SDateField', lib.SDateField, {}],
+  ['STimeField', lib.STimeField, {}],
+  ['SDatePicker', lib.SDatePicker, {}],
+  ['SDateRangePicker', lib.SDateRangePicker, {}],
+  ['SCheckbox', lib.SCheckbox, {}],
+  ['SRadioGroup', lib.SRadioGroup, { options: [{ label: 'A', value: 'a' }] }],
+  ['SSwitch', lib.SSwitch, {}],
+  ['SRating', lib.SRating, { ariaLabel: 'Rating' }],
 ]
 
 describe('field validation', () => {
@@ -41,6 +58,43 @@ describe('field validation', () => {
     await (wrapper.vm as unknown as { validate(): Promise<boolean> }).validate()
     await flushPromises()
     expect(wrapper.find('.s-field__error').text()).toBe('Server error')
+  })
+})
+
+describe('field validation · value seen by the rules', () => {
+  const options = [{ label: 'One', value: 'one' }]
+  const seen = async (component: Component, props: Record<string, unknown>) => {
+    const values: unknown[] = []
+    const wrapper = mount(component, {
+      props: { label: 'Field', rules: [(value: unknown) => (values.push(value), true)], ...props },
+    })
+    await (wrapper.vm as unknown as { validate(): Promise<boolean> }).validate()
+    return values[0]
+  }
+
+  it.each([
+    ['default', {}, undefined],
+    ['default with a value', { modelValue: 'one' }, 'one'],
+    ['searchable', { searchable: true, modelValue: 'one' }, 'one'],
+    ['multiple', { multiple: true }, []],
+    ['use-tags', { useTags: true }, []],
+    ['searchable multiple', { searchable: true, multiple: true, modelValue: ['one'] }, ['one']],
+  ])('SSelect %s', async (_, props, expected) => {
+    expect(await seen(lib.SSelect, { options, ...props })).toEqual(expected)
+  })
+
+  it('SDateRangePicker: required() treats a range without bounds as empty', async () => {
+    const wrapper = mount(lib.SDateRangePicker, {
+      props: {
+        label: 'Stay',
+        rules: [lib.required()],
+        modelValue: { start: undefined, end: undefined },
+      },
+    })
+    const vm = wrapper.vm as unknown as { validate(): Promise<boolean> }
+    expect(await vm.validate()).toBe(false)
+    await flushPromises()
+    expect(wrapper.find('.s-field__error').text()).toBe('This field is required')
   })
 })
 
@@ -136,10 +190,74 @@ const INLINE: [string, string, string][] = [
   ],
   ['SPinInput', '<SPinInput label="F" name="f" :rules="[() => \'E\']" v-model="value" />', 'cells'],
   ['SSlider', '<SSlider label="F" name="f" :rules="[() => \'E\']" v-model="value" />', 'number'],
+  [
+    'SSelect',
+    '<SSelect label="F" name="f" :options="options" :rules="[() => \'E\']" v-model="value" />',
+    'option',
+  ],
+  [
+    'SSelect multiple',
+    '<SSelect label="F" name="f" multiple :options="options" :rules="[() => \'E\']" v-model="value" />',
+    'options',
+  ],
+  [
+    'SDateField',
+    '<SDateField label="F" name="f" :rules="[() => \'E\']" v-model="value" />',
+    'date',
+  ],
+  [
+    'STimeField',
+    '<STimeField label="F" name="f" :rules="[() => \'E\']" v-model="value" />',
+    'time',
+  ],
+  [
+    'SDatePicker',
+    '<SDatePicker label="F" name="f" :rules="[() => \'E\']" v-model="value" />',
+    'date',
+  ],
+  [
+    'SDateRangePicker',
+    '<SDateRangePicker label="F" name="f" :rules="[() => \'E\']" v-model="value" />',
+    'range',
+  ],
+  ['SCheckbox', '<SCheckbox label="F" name="f" :rules="[() => \'E\']" v-model="value" />', 'bool'],
+  [
+    'SRadioGroup',
+    '<SRadioGroup label="F" name="f" :options="options" :rules="[() => \'E\']" v-model="value" />',
+    'option',
+  ],
+  ['SSwitch', '<SSwitch label="F" name="f" :rules="[() => \'E\']" v-model="value" />', 'bool'],
+  [
+    'SRating',
+    '<SRating aria-label="F" name="f" :rules="[() => \'E\']" v-model="value" />',
+    'rating',
+  ],
 ]
 
-const initial = { text: '', number: 1, cells: [] as string[] }
-const next = { text: '#ff0000', number: 2, cells: ['1'] }
+const initial = {
+  text: '',
+  number: 1,
+  cells: [] as string[],
+  option: undefined,
+  options: [] as string[],
+  date: undefined,
+  time: undefined,
+  range: undefined,
+  bool: false,
+  rating: 0,
+}
+const next = {
+  text: '#ff0000',
+  number: 2,
+  cells: ['1'],
+  option: 'one',
+  options: ['one'],
+  date: new CalendarDate(2026, 9, 22),
+  time: new Time(10, 30),
+  range: { start: new CalendarDate(2026, 9, 22), end: new CalendarDate(2026, 9, 25) },
+  bool: true,
+  rating: 3,
+}
 
 describe('field validation · inline rules in SForm', () => {
   const setup = (template: string, kind: keyof typeof initial, validateOn?: string) => {
@@ -154,7 +272,7 @@ describe('field validation · inline rules in SForm', () => {
     const { container } = render(
       {
         components: lib as unknown as Record<string, Component>,
-        setup: () => ({ value }),
+        setup: () => ({ value, options: [{ label: 'One', value: 'one' }] }),
         template: `<SForm${validateOn ? ` validate-on="${validateOn}"` : ''}>${template}</SForm>`,
       },
       { global: { config: { errorHandler: (error) => errors.push(error) } } },

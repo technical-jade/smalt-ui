@@ -9,6 +9,7 @@ import SegmentedFieldBridge, {
 } from '../../internal/SegmentedFieldBridge'
 import { useDefaults, useFormatLocale } from '../../composables'
 import { useFieldFocus } from '../../internal/useFieldFocus'
+import { focusFirstSegment, useFieldValidation } from '../../internal/useFieldValidation'
 import type { STimeFieldProps, STimeValue } from './types'
 
 const props = withDefaults(defineProps<STimeFieldProps>(), {
@@ -28,7 +29,6 @@ const emit = defineEmits<{
   blur: [event: FocusEvent]
 }>()
 const root = useTemplateRef<ComponentPublicInstance>('root')
-const { onFocusIn, onFocusOut } = useFieldFocus(root, emit)
 
 const formatLocale = useFormatLocale(() => p.locale)
 
@@ -43,6 +43,19 @@ const slots = defineSlots<{
  * Time value (`Time`/`CalendarDateTime`/`ZonedDateTime`). Two-way bound via `v-model`.
  */
 const model = defineModel<STimeValue | undefined>()
+
+const {
+  errorMessage,
+  onBlur: onLeave,
+  expose,
+} = useFieldValidation(
+  p,
+  () => model.value,
+  root,
+  () => focusFirstSegment(root.value?.$el, 's-time-field'),
+)
+const { onFocusIn, onFocusOut } = useFieldFocus(root, emit, undefined, onLeave)
+defineExpose(expose)
 
 const outOfRange = ref(false)
 const bridge = useTemplateRef<SegmentedFieldBridgeExposed>('bridge')
@@ -60,7 +73,7 @@ const hasLeading = computed(() => !!slots.prepend)
     :class="`s-time-field--${p.size}`"
     :label="p.label"
     :hint="p.hint"
-    :error="p.error"
+    :error="errorMessage"
     :invalid="p.invalid || outOfRange"
     :required="p.required"
     :size="p.size"

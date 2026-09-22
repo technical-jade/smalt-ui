@@ -43,7 +43,7 @@ export interface SValidationProps<T> {
    * Validation rules: functions of the value that return `true` or the error text, run in
    * order until the first failure. See [Validation](/guide/validation).
    */
-  rules?: SRule<T>[]
+  rules?: readonly SRule<T>[]
   /**
    * When the field checks its rules: `blur` (after the user leaves the field, then on every
    * change while an error is shown), `input` (on every change) or `submit` (only on form
@@ -86,7 +86,8 @@ export interface UseValidationReturn {
   onBlur(): void
 }
 
-function isThenable(value: unknown): value is PromiseLike<SRuleResult> {
+/** A native Promise or any other thenable (a Zod/Valibot async result, a userland polyfill…). */
+export function isThenable<T>(value: T | PromiseLike<T>): value is PromiseLike<T> {
   return (
     typeof value === 'object' &&
     value !== null &&

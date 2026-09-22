@@ -1,4 +1,5 @@
 import type { HTMLAttributes } from 'vue'
+import type { SValidationProps } from '../../composables/useValidation'
 
 export type SRadioGroupOrientation = 'vertical' | 'horizontal'
 
@@ -8,7 +9,7 @@ export interface SRadioOption {
   disabled?: boolean
 }
 
-export interface SRadioGroupProps {
+export interface SRadioGroupProps extends SValidationProps<string | undefined> {
   /** List of options. Alternatively, pass `SRadio` items in the default slot. */
   options?: readonly SRadioOption[]
   /** Group title. Linked to the group via `aria-labelledby`. */

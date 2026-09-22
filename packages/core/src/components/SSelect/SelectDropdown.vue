@@ -50,6 +50,11 @@ const slots = defineSlots<{
   append?: (props: Record<string, never>) => unknown
 }>()
 
+const emit = defineEmits<{
+  // Reka Select moves focus into the teleported list, past the SSelect root.
+  contentFocusin: [event: FocusEvent]
+}>()
+
 const model = defineModel<string | string[]>()
 const m = useMessages()
 
@@ -217,6 +222,7 @@ const removeValue = (v: string) => {
         position="popper"
         :side-offset="4"
         :body-lock="false"
+        @focusin="emit('contentFocusin', $event)"
       >
         <SelectViewport class="s-select__viewport">
           <SelectItem

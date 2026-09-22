@@ -1,9 +1,10 @@
 import type { DateValue } from '@internationalized/date'
+import type { SValidationProps } from '../../composables/useValidation'
 
 export type SDateFieldSize = 'sm' | 'md' | 'lg'
 export type SDateFieldGranularity = 'day' | 'hour' | 'minute' | 'second'
 
-export interface SDateFieldProps {
+export interface SDateFieldProps extends SValidationProps<DateValue | undefined> {
   /** Field id. Generated automatically when not set (SSR-safe). */
   id?: string
   /** Field label. */

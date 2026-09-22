@@ -1,8 +1,9 @@
 import type { SColorName } from '../../composables/useColorProp'
+import type { SValidationProps } from '../../composables/useValidation'
 
 export type SRatingSize = 'sm' | 'md' | 'lg' | number
 
-export interface SRatingProps {
+export interface SRatingProps extends SValidationProps<number> {
   /**
    * Star color: a name from the [palette](/style/palette) (`primary`/`teal`/`teal-10`). Gold
    * `amber` by default.
@@ -26,4 +27,10 @@ export interface SRatingProps {
   selectedIcon?: string
   /** Accessible name of the rating (`aria-label`). */
   ariaLabel?: string
+  /** Hint below the rating. */
+  hint?: string
+  /** Error message below the rating. When set, the rating is marked invalid. */
+  error?: string
+  /** Marks the rating invalid explicitly (in addition to `error`). */
+  invalid?: boolean
 }

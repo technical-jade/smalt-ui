@@ -8,7 +8,11 @@ While the pointer moves over the stars, they preview the rating it would set.
 
 <script setup>
 import { ref } from 'vue'
+import { min } from '@smalt-ui/core'
 
+const ratingHint = ref(0)
+const ratingError = ref(0)
+const ratingRequired = ref(0)
 const ratingBasic = ref(3)
 const ratingSeven = ref(0)
 const ratingHeart = ref(3)
@@ -253,6 +257,92 @@ The `color` prop sets the star color from the [palette](/style/palette). The def
   <SRating
     v-model="rate"
     color="blue-grey"
+  />
+</template>
+```
+
+  </template>
+</Demo>
+</ClientOnly>
+
+## Hint and error
+
+The `hint` and `error` props render text under the stars and link it to the rating through
+`aria-describedby`; `error` also sets `aria-invalid` and paints the empty stars red. `invalid`
+does the same without a text. The rating is wrapped in an inline
+[`SFormField`](/components/form-field) for this. The consumer's `class` and `style` go to that
+outer wrapper; other attributes (`data-*`, `title`, listeners) still reach the rating itself
+(`.s-rating`).
+
+<ClientOnly>
+<Demo>
+  <div style="display: flex; flex-direction: column; gap: 12px">
+    <SRating v-model="ratingHint" aria-label="Delivery" hint="How was the delivery?" />
+    <SRating v-model="ratingError" aria-label="Support" error="Rate the support to continue" />
+  </div>
+
+<template #code>
+
+```vue
+<script setup lang="ts">
+import { ref } from 'vue'
+
+const delivery = ref(0)
+const support = ref(0)
+</script>
+
+<template>
+  <SRating
+    v-model="delivery"
+    aria-label="Delivery"
+    hint="How was the delivery?"
+  />
+  <SRating
+    v-model="support"
+    aria-label="Support"
+    error="Rate the support to continue"
+  />
+</template>
+```
+
+  </template>
+</Demo>
+</ClientOnly>
+
+## Validation
+
+`rules` checks the rating when focus leaves it (moving between the stars with the arrow keys does
+not count), and then on every change while the error is shown. The rules receive the `v-model`
+value, a `number` that is `0` until the user picks a rating. `0` is a value, not an empty one, so
+`required()` always passes on a rating: ask for one with `min(1)`. A `readonly` rating is checked
+too, so a read-only rating with a failing rule keeps a form from submitting. See the
+[Validation](/guide/validation) guide for the details.
+
+Tab to the stars and away without picking, then pick a rating.
+
+<ClientOnly>
+<Demo>
+  <SRating
+    v-model="ratingRequired"
+    aria-label="Your rating"
+    :rules="[min(1, 'Please rate')]"
+  />
+
+<template #code>
+
+```vue
+<script setup lang="ts">
+import { ref } from 'vue'
+import { min } from '@smalt-ui/core'
+
+const score = ref(0)
+</script>
+
+<template>
+  <SRating
+    v-model="score"
+    aria-label="Your rating"
+    :rules="[min(1, 'Please rate')]"
   />
 </template>
 ```

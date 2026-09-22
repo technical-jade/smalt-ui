@@ -1,4 +1,4 @@
-import type { SRule, SRuleResult } from './useValidation'
+import { isThenable, type SRule, type SRuleResult } from './useValidation'
 
 /** Result of `StandardSchemaV1['~standard']['validate']`: the value, or a list of issues. */
 export type StandardSchemaResult<Output> =
@@ -128,13 +128,13 @@ export function email(message?: string): SRule<string | null | undefined> {
 
 /**
  * A rule from a Standard Schema (Zod, Valibot, ArkType…): the first issue's message becomes the
- * error. An async schema returns a Promise, which the field awaits.
+ * error. An async schema returns a Promise (or any other thenable), which the field awaits.
  */
 export function schemaRule<I>(schema: StandardSchemaV1<I>): SRule<I> {
   return (value, { messages }) => {
     const toResult = (result: StandardSchemaResult<unknown>): SRuleResult =>
       !result.issues?.length || result.issues[0]?.message || messages.ruleFailed
     const result = schema['~standard'].validate(value)
-    return result instanceof Promise ? result.then(toResult) : toResult(result)
+    return isThenable(result) ? result.then(toResult) : toResult(result)
   }
 }

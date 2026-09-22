@@ -20,4 +20,15 @@ describe('SSwitch · a11y', () => {
     const { container } = render(SSwitch, { props: { ariaLabel: 'Wi-Fi' } })
     expect(await axe(container)).toHaveNoViolations()
   })
+
+  it('has no violations with a hint and with an error', async () => {
+    const { container } = render(SSwitch, {
+      props: { label: 'Receive notifications', hint: 'Sent daily' },
+    })
+    expect(await axe(container)).toHaveNoViolations()
+    const { container: invalid } = render(SSwitch, {
+      props: { label: 'Accept the terms', error: 'Accept the terms to continue' },
+    })
+    expect(await axe(invalid)).toHaveNoViolations()
+  })
 })

@@ -1,9 +1,12 @@
 <script setup lang="ts">
+import { useTemplateRef, type ComponentPublicInstance } from 'vue'
 import { RadioGroupRoot } from 'reka-ui'
 import { SFormField } from '../SFormField'
 import { SRadio } from '../SRadio'
 import { useDefaults } from '../../composables'
 import { useFieldAttrs } from '../../internal/useFieldAttrs'
+import { useFieldFocus } from '../../internal/useFieldFocus'
+import { useFieldValidation } from '../../internal/useFieldValidation'
 import type { SRadioGroupProps } from './types'
 
 defineOptions({ inheritAttrs: false })
@@ -16,6 +19,11 @@ const { rootClass, rootStyle, controlAttrs } = useFieldAttrs()
 
 /** Selected value of the group. Two-way binding via `v-model`. */
 const model = defineModel<string>()
+
+const root = useTemplateRef<ComponentPublicInstance>('root')
+const { errorMessage, onBlur: onLeave, expose } = useFieldValidation(p, () => model.value, root)
+const { onFocusIn, onFocusOut } = useFieldFocus(root, () => {}, undefined, onLeave)
+defineExpose(expose)
 
 const ARROW_KEYS = ['ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight']
 
@@ -51,14 +59,17 @@ defineSlots<{
 <template>
   <SFormField
     :id="p.id"
+    ref="root"
     :class="rootClass"
     :style="rootStyle"
     :floating-label="false"
     :label="p.label"
     :hint="p.hint"
-    :error="p.error"
+    :error="errorMessage"
     :invalid="p.invalid"
     :required="p.required"
+    @focusin="onFocusIn"
+    @focusout="onFocusOut"
   >
     <template
       v-if="$slots.label"

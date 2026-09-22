@@ -22,7 +22,10 @@ as is, and a date does not need deep reactivity anyway, since it is replaced as 
 
 <script setup>
 import { shallowRef } from 'vue'
-import { CalendarDate, parseDate, parseDateTime } from '@internationalized/date'
+import { CalendarDate, getLocalTimeZone, parseDate, parseDateTime, today } from '@internationalized/date'
+import { required } from '@smalt-ui/core'
+const shipDate = shallowRef()
+const notPast = (v) => !v || v.compare(today(getLocalTimeZone())) >= 0 || 'Pick today or a later date'
 const date = shallowRef(parseDate('2026-07-11'))
 const empty = shallowRef()
 const dateTime = shallowRef(parseDateTime('2026-07-11T14:30'))
@@ -246,8 +249,55 @@ icon.
 ## Leaving the field
 
 The field emits `focus` and `blur` events, like [`SInput`](/components/input). Moving between
-segments does not count as leaving the field — see the details and a validation example on the
-[`SDatePicker` page](/components/date-picker#leaving-the-field).
+segments does not count as leaving the field — see the details on the
+[`SDatePicker` page](/components/date-picker#leaving-the-field). To check the value when the user
+leaves the field, pass `rules`: see [Validation](#validation) below.
+
+## Validation
+
+`rules` checks the date when focus leaves the field; moving between the segments does not count.
+The rules receive the `v-model` value, a `DateValue`, or `undefined` while the date is not
+complete: `required()` fails on it, and your own rules should let it pass (`!v || …`) so that
+only `required()` reports a missing date. Compare dates with `compare()`, which returns a negative
+number for an earlier date. See the [Validation](/guide/validation) guide for the details.
+
+`min-value` also marks an earlier typed date invalid, but it only paints the field red: it adds no
+text and does not fail the check of a form. A rule gives the error a message. Type a date in the
+past and leave the field.
+
+<Demo>
+  <ClientOnly>
+    <SDateField
+      v-model="shipDate"
+      label="Shipping date"
+      :rules="[required(), notPast]"
+    />
+  </ClientOnly>
+
+<template #code>
+
+```vue
+<script setup lang="ts">
+import { shallowRef } from 'vue'
+import { getLocalTimeZone, today, type DateValue } from '@internationalized/date'
+import { required, type SRule } from '@smalt-ui/core'
+
+const shipDate = shallowRef<DateValue>()
+const notPast: SRule<DateValue | undefined> = (v) =>
+  !v || v.compare(today(getLocalTimeZone())) >= 0 || 'Pick today or a later date'
+</script>
+
+<template>
+  <SDateField
+    v-model="shipDate"
+    label="Shipping date"
+    :rules="[required(), notPast]"
+  />
+</template>
+```
+
+  </template>
+</Demo>
 
 ## API
 

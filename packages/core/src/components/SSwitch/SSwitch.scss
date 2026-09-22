@@ -25,6 +25,11 @@
       background-color: var(--s-switch-c, var(--s-color-primary));
       border-color: var(--s-switch-c, var(--s-color-primary));
     }
+
+    // After the checked rule: an invalid switch stays red in both states, like a field frame.
+    &[aria-invalid='true'] {
+      border-color: var(--s-color-negative);
+    }
   }
 
   &__thumb {

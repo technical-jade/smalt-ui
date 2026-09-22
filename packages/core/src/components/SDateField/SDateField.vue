@@ -10,6 +10,7 @@ import SegmentedFieldBridge, {
 } from '../../internal/SegmentedFieldBridge'
 import { useDefaults, useFormatLocale } from '../../composables'
 import { useFieldFocus } from '../../internal/useFieldFocus'
+import { focusFirstSegment, useFieldValidation } from '../../internal/useFieldValidation'
 import type { SDateFieldProps } from './types'
 
 const props = withDefaults(defineProps<SDateFieldProps>(), {
@@ -29,7 +30,6 @@ const emit = defineEmits<{
   blur: [event: FocusEvent]
 }>()
 const root = useTemplateRef<ComponentPublicInstance>('root')
-const { onFocusIn, onFocusOut } = useFieldFocus(root, emit)
 
 const formatLocale = useFormatLocale(() => p.locale)
 
@@ -44,6 +44,19 @@ const slots = defineSlots<{
  * Field value (`DateValue` from `@internationalized/date`). Two-way bound via `v-model`.
  */
 const model = defineModel<DateValue | undefined>()
+
+const {
+  errorMessage,
+  onBlur: onLeave,
+  expose,
+} = useFieldValidation(
+  p,
+  () => model.value,
+  root,
+  () => focusFirstSegment(root.value?.$el, 's-date-field'),
+)
+const { onFocusIn, onFocusOut } = useFieldFocus(root, emit, undefined, onLeave)
+defineExpose(expose)
 
 const outOfRange = ref(false)
 const bridge = useTemplateRef<SegmentedFieldBridgeExposed>('bridge')
@@ -61,7 +74,7 @@ const hasLeading = computed(() => !!slots.prepend)
     :class="`s-date-field--${p.size}`"
     :label="p.label"
     :hint="p.hint"
-    :error="p.error"
+    :error="errorMessage"
     :invalid="p.invalid || outOfRange"
     :required="p.required"
     :size="p.size"

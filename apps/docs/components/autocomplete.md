@@ -1,5 +1,6 @@
 <script setup>
 import { ref, computed } from 'vue'
+import { required } from '@smalt-ui/core'
 
 const ALL = [
   { label: 'New York', value: 'nyc', region: 'New York' },
@@ -24,6 +25,15 @@ const richFound = computed(() =>
     : ALL,
 )
 const richLabel = computed(() => ALL.find((c) => c.value === richCity.value)?.label)
+
+const pickedQuery = ref('')
+const pickedCity = ref()
+const pickedFound = computed(() =>
+  pickedQuery.value
+    ? ALL.filter((c) => c.label.toLowerCase().includes(pickedQuery.value.toLowerCase()))
+    : ALL,
+)
+const pickedLabel = computed(() => ALL.find((c) => c.value === pickedCity.value)?.label)
 </script>
 
 # Autocomplete
@@ -212,6 +222,67 @@ sets its markup.
 | Many options, search over a ready list                     | `SSelect` with `searchable` |
 | Options come from the server and change on every keystroke | `SAutocomplete`             |
 | Fuzzy search, transliteration, or index search is needed   | `SAutocomplete`             |
+
+## Validation
+
+`rules` checks the value when focus leaves the field; picking a suggestion with the mouse is not
+leaving it. The rules receive the `v-model` value: the `value` of the chosen suggestion, not the
+typed query, so `required()` fails on text that matches no suggestion. The value stays
+`undefined` until a suggestion is picked. See the [Validation](/guide/validation) guide for the
+details.
+
+Type "chi" and move focus out of the field without picking a suggestion: the typed text is not a
+choice, so the error appears. Pick Chicago and the error goes away.
+
+<Demo>
+  <ClientOnly>
+    <SAutocomplete
+      v-model="pickedCity"
+      v-model:search="pickedQuery"
+      :options="pickedFound"
+      :selected-label="pickedLabel"
+      label="City"
+      placeholder="Start typing"
+      :rules="[required('Pick a city from the list')]"
+    />
+  </ClientOnly>
+
+<template #code>
+
+```vue
+<script setup lang="ts">
+import { computed, ref } from 'vue'
+import { required } from '@smalt-ui/core'
+
+const cities = [
+  { label: 'New York', value: 'nyc' },
+  { label: 'Chicago', value: 'chi' },
+  { label: 'Houston', value: 'hou' },
+]
+
+const city = ref<string>()
+const query = ref('')
+const options = computed(() =>
+  cities.filter((c) => c.label.toLowerCase().includes(query.value.toLowerCase())),
+)
+const selectedLabel = computed(() => cities.find((c) => c.value === city.value)?.label)
+</script>
+
+<template>
+  <SAutocomplete
+    v-model="city"
+    v-model:search="query"
+    :options="options"
+    :selected-label="selectedLabel"
+    label="City"
+    placeholder="Start typing"
+    :rules="[required('Pick a city from the list')]"
+  />
+</template>
+```
+
+  </template>
+</Demo>
 
 ## API
 

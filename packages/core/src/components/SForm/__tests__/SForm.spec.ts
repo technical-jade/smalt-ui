@@ -164,6 +164,28 @@ describe('SForm', () => {
     expect(onSubmit).not.toHaveBeenCalled()
   })
 
+  it('drops the failure of a field disabled while its async rule is pending', async () => {
+    const onSubmit = vi.fn()
+    const onInvalid = vi.fn()
+    const disabled = ref(false)
+    let resolve: (value: true | string) => void = () => {}
+    const rule: SRule<string> = () => new Promise((r) => (resolve = r))
+    const w = mountForm(
+      '<SForm @submit="onSubmit" @invalid="onInvalid">' +
+        '<Field value="x" :rules="rules" :disabled="disabled" />' +
+        '</SForm>',
+      () => ({ onSubmit, onInvalid, rules: [rule], disabled }),
+    )
+    await w.find('form').trigger('submit')
+    // Disabling mid-flight resets the field, so its rule resolves to a stale, message-less failure.
+    disabled.value = true
+    await nextTick()
+    resolve('Taken')
+    await flushPromises()
+    expect(onInvalid).not.toHaveBeenCalled()
+    expect(onSubmit).toHaveBeenCalledOnce()
+  })
+
   it('exposes the state to the default slot', async () => {
     const w = mountForm(
       `<SForm v-slot="{ valid, errors }">

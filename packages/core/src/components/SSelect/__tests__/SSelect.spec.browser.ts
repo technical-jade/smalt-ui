@@ -1,5 +1,6 @@
 import { describe, expect, it } from 'vitest'
 import { render, screen } from '@testing-library/vue'
+import { h } from 'vue'
 import { userEvent } from 'vitest/browser'
 import { SSelect } from '../index'
 
@@ -82,5 +83,43 @@ describe('SSelect · browser', () => {
     })
     const control = container.querySelector('.s-select__control')!
     expect(control.getBoundingClientRect().width).toBeLessThanOrEqual(120)
+  })
+
+  function withEvents() {
+    const events: string[] = []
+    render(() => [
+      h(SSelect, {
+        options,
+        label: 'City',
+        onFocus: () => events.push('focus'),
+        onBlur: () => events.push('blur'),
+      }),
+      h('button', { type: 'button' }, 'Next'),
+    ])
+    return events
+  }
+  const focusInList = () => document.activeElement?.closest('.s-select__content')
+
+  it('opened with the mouse, the field reports focus at once and blur on leaving', async () => {
+    const events = withEvents()
+    // Reka opens the list on pointerdown and moves focus straight into it, past the trigger.
+    await userEvent.click(screen.getByRole('combobox'))
+    await expect.poll(focusInList).toBeTruthy()
+    expect(events).toEqual(['focus'])
+    await userEvent.click(await screen.findByText('Chicago'))
+    await userEvent.tab()
+    expect(events).toEqual(['focus', 'blur'])
+  })
+
+  it('opened from the keyboard, moving into the list and back is not a leave', async () => {
+    const events = withEvents()
+    await userEvent.tab()
+    await userEvent.keyboard('{Enter}')
+    await expect.poll(focusInList).toBeTruthy()
+    await userEvent.keyboard('{Escape}')
+    await expect.poll(() => document.querySelector('.s-select__content')).toBeNull()
+    expect(events).toEqual(['focus'])
+    await userEvent.tab()
+    expect(events).toEqual(['focus', 'blur'])
   })
 })

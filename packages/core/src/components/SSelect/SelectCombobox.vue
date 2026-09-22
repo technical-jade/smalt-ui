@@ -56,6 +56,10 @@ const slots = defineSlots<{
   append?: (props: Record<string, never>) => unknown
 }>()
 
+const emit = defineEmits<{
+  contentFocusin: [event: FocusEvent]
+}>()
+
 const model = defineModel<string | string[]>()
 const m = useMessages()
 
@@ -197,6 +201,7 @@ const removeValue = (v: string) => {
         :style="contentStyle"
         position="popper"
         :side-offset="4"
+        @focusin="emit('contentFocusin', $event)"
       >
         <ComboboxViewport class="s-select__viewport">
           <ComboboxEmpty class="s-select__empty">{{ emptyText ?? m.selectEmpty }}</ComboboxEmpty>

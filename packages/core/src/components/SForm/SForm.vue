@@ -106,7 +106,8 @@ watch(
 async function validate(): Promise<SFormValidateResult> {
   const list = ordered()
   const results = await Promise.all(list.map((field) => field.validate()))
-  const failed = list.filter((_, index) => !results[index]).map(toError)
+  // A failing rule always leaves a message: `false` without one is a check reset mid-flight.
+  const failed = list.filter((field, index) => !results[index] && field.errorMessage()).map(toError)
   return { valid: failed.length === 0, errors: failed }
 }
 
