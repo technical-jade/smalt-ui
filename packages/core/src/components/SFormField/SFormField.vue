@@ -41,6 +41,11 @@ const hasLabel = computed(() => Boolean(p.label) || Boolean(slots.label))
  */
 const labelId = computed(() => (hasLabel.value ? `${controlId.value}-label` : undefined))
 
+defineExpose({
+  /** Id given to the control through the default slot: the field focuses it by this id. */
+  controlId,
+})
+
 const isInvalid = computed(() => p.invalid || Boolean(p.error))
 /**
  * References only what is actually in the DOM: there is one message below the field (the error

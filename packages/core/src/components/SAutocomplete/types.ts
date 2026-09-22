@@ -1,4 +1,5 @@
 import type { SElevation } from '../../composables/useElevationProp'
+import type { SValidationProps } from '../../composables/useValidation'
 
 export type SAutocompleteSize = 'sm' | 'md' | 'lg'
 
@@ -11,7 +12,7 @@ export interface SAutocompleteOption {
   disabled?: boolean
 }
 
-export interface SAutocompleteProps {
+export interface SAutocompleteProps extends SValidationProps<string> {
   /**
    * Current suggestions: the result of the application-side search. The list is not filtered
    * again; whatever arrives is shown (fuzzy search, transliteration, index search).

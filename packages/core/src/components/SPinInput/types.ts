@@ -1,8 +1,10 @@
+import type { SValidationProps } from '../../composables/useValidation'
+
 export type SPinInputType = 'text' | 'number'
 
 export type SPinInputSize = 'sm' | 'md' | 'lg'
 
-export interface SPinInputProps {
+export interface SPinInputProps extends SValidationProps<string[]> {
   /** Control id. Generated automatically when not set (SSR-safe). */
   id?: string
   /** Field label. */

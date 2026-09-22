@@ -1,10 +1,12 @@
 <script setup lang="ts">
-import { computed } from 'vue'
+import { computed, useTemplateRef, type ComponentPublicInstance } from 'vue'
 import { SFormField } from '../SFormField'
 import InputText from './InputText.vue'
 import InputTags from './InputTags.vue'
 import { useDefaults } from '../../composables'
 import { useFieldAttrs } from '../../internal/useFieldAttrs'
+import { useFieldFocus } from '../../internal/useFieldFocus'
+import { useFieldValidation } from '../../internal/useFieldValidation'
 import type { SInputNumeric, SInputProps } from './types'
 
 /**
@@ -61,6 +63,11 @@ defineSlots<{
  */
 const model = defineModel<string | string[]>()
 
+const root = useTemplateRef<ComponentPublicInstance>('root')
+const { errorMessage, onBlur: onLeave, expose } = useFieldValidation(p, () => model.value, root)
+const { onFocusIn, onFocusOut } = useFieldFocus(root, () => {}, undefined, onLeave)
+defineExpose(expose)
+
 /**
  * Adapters for the two branches: only one of them is mounted (v-if), so a single union `model`
  * is safely proxied to string or string[].
@@ -82,17 +89,20 @@ const tags = computed<string[]>({
 <template>
   <SFormField
     :id="p.id"
+    ref="root"
     class="s-input"
     :class="[`s-input--${p.size}`, rootClass]"
     :style="rootStyle"
     :label="p.label"
     :hint="p.hint"
-    :error="p.error"
+    :error="errorMessage"
     :invalid="p.invalid"
     :required="p.required"
     :size="p.size"
     :floating-label="floating"
     :square="p.square"
+    @focusin="onFocusIn"
+    @focusout="onFocusOut"
   >
     <template
       #default="{

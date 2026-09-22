@@ -5,6 +5,7 @@ import { PinInputInput, PinInputRoot } from 'reka-ui'
 import { SFormField } from '../SFormField'
 import { useDefaults, useMessages } from '../../composables'
 import { useFieldFocus } from '../../internal/useFieldFocus'
+import { useFieldValidation } from '../../internal/useFieldValidation'
 import type { SPinInputProps } from './types'
 
 const props = withDefaults(defineProps<SPinInputProps>(), {
@@ -37,7 +38,6 @@ const emit = defineEmits<{
   blur: [event: FocusEvent]
 }>()
 const root = useTemplateRef<ComponentPublicInstance>('root')
-const { onFocusIn, onFocusOut } = useFieldFocus(root, emit)
 
 defineSlots<{
   /** Content at the start of the field, inside the border (icon, button). */
@@ -51,6 +51,10 @@ defineSlots<{
  * Two-way bound via `v-model`.
  */
 const model = defineModel<string[]>({ default: () => [] })
+
+const { errorMessage, onBlur: onLeave, expose } = useFieldValidation(p, () => model.value, root)
+const { onFocusIn, onFocusOut } = useFieldFocus(root, emit, undefined, onLeave)
+defineExpose(expose)
 
 // Reka stores numbers with type="number"; the model promises strings, so they are converted back.
 const toStrings = (value: unknown[]) => value.map((v) => (v == null ? '' : String(v)))
@@ -87,7 +91,7 @@ function onComplete(value: unknown[]) {
     :class="`s-pin-input--${p.size}`"
     :label="p.label"
     :hint="p.hint"
-    :error="p.error"
+    :error="errorMessage"
     :invalid="p.invalid"
     :required="p.required"
     :size="p.size"

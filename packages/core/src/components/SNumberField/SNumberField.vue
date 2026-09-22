@@ -12,6 +12,7 @@ import { SIcon } from '../SIcon'
 import { useDefaults, useMessages } from '../../composables'
 import { useFieldAttrs } from '../../internal/useFieldAttrs'
 import { useFieldFocus } from '../../internal/useFieldFocus'
+import { useFieldValidation } from '../../internal/useFieldValidation'
 import type { SNumberFieldProps } from './types'
 
 defineOptions({ inheritAttrs: false })
@@ -36,10 +37,13 @@ const emit = defineEmits<{
   blur: [event: FocusEvent]
 }>()
 const root = useTemplateRef<ComponentPublicInstance>('root')
-const { onFocusIn, onFocusOut } = useFieldFocus(root, emit)
 
 /** Numeric value of the field. Two-way binding via `v-model`. */
 const model = defineModel<number | null>({ default: null })
+
+const { errorMessage, onBlur: onLeave, expose } = useFieldValidation(p, () => model.value, root)
+const { onFocusIn, onFocusOut } = useFieldFocus(root, emit, undefined, onLeave)
+defineExpose(expose)
 </script>
 
 <template>
@@ -52,7 +56,7 @@ const model = defineModel<number | null>({ default: null })
     :style="rootStyle"
     :label="p.label"
     :hint="p.hint"
-    :error="p.error"
+    :error="errorMessage"
     :invalid="p.invalid"
     :required="p.required"
     :size="p.size"

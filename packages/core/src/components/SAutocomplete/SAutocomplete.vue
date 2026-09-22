@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, onMounted, ref, watch } from 'vue'
+import { computed, onMounted, ref, useTemplateRef, watch, type ComponentPublicInstance } from 'vue'
 import {
   ComboboxAnchor,
   ComboboxContent,
@@ -15,6 +15,8 @@ import { SIcon } from '../SIcon'
 import { SSpinner } from '../SSpinner'
 import { useDefaults, useElevationProp, useMessages } from '../../composables'
 import { useFieldAttrs } from '../../internal/useFieldAttrs'
+import { useFieldFocus } from '../../internal/useFieldFocus'
+import { useFieldValidation } from '../../internal/useFieldValidation'
 import { useKeepCaretKeys } from '../../internal/useKeepCaretKeys'
 import type { SAutocompleteOption, SAutocompleteProps } from './types'
 
@@ -62,6 +64,11 @@ function onBlur(event: FocusEvent) {
 
 /** Selected value: the suggestion's `value`. Two-way binding via `v-model`. */
 const model = defineModel<string>()
+
+const root = useTemplateRef<ComponentPublicInstance>('root')
+const { errorMessage, onBlur: onLeave, expose } = useFieldValidation(p, () => model.value, root)
+const { onFocusIn, onFocusOut } = useFieldFocus(root, () => {}, '.s-autocomplete__content', onLeave)
+defineExpose(expose)
 
 /**
  * The user's query: what they typed. The application searches by it, usually debounced, and
@@ -179,17 +186,20 @@ function clear() {
 <template>
   <SFormField
     :id="p.id"
+    ref="root"
     :floating-label="false"
     class="s-autocomplete"
     :class="[`s-autocomplete--${p.size}`, rootClass]"
     :style="rootStyle"
     :label="p.label"
     :hint="p.hint"
-    :error="p.error"
+    :error="errorMessage"
     :invalid="p.invalid"
     :required="p.required"
     :size="p.size"
     :square="p.square"
+    @focusin="onFocusIn"
+    @focusout="onFocusOut"
   >
     <template #default="{ id: fieldId, describedBy, invalid: fieldInvalid }">
       <!-- ignore-filter: the application has already picked the suggestions. If Reka filtered

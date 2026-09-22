@@ -25,6 +25,7 @@ export const COMPONENT_NAMES = [
   'SDialog',
   'SDrawer',
   'SDropdownMenu',
+  'SForm',
   'SFormField',
   'SHoverCard',
   'SIcon',

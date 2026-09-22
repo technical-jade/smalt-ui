@@ -99,6 +99,7 @@ export default defineConfig({
           text: 'Forms',
           items: [
             { text: 'Autocomplete', link: '/components/autocomplete' },
+            { text: 'Form', link: '/components/form' },
             { text: 'Form Field', link: '/components/form-field' },
             { text: 'Input', link: '/components/input' },
             { text: 'Textarea', link: '/components/textarea' },

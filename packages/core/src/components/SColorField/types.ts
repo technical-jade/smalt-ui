@@ -1,6 +1,8 @@
+import type { SValidationProps } from '../../composables/useValidation'
+
 export type SColorFieldSize = 'sm' | 'md' | 'lg'
 
-export interface SColorFieldProps {
+export interface SColorFieldProps extends SValidationProps<string> {
   /** Field id. Generated automatically when omitted (SSR-safe). */
   id?: string
   /** Field label. */

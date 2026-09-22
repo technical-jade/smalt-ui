@@ -1,6 +1,8 @@
+import type { SValidationProps } from '../../composables/useValidation'
+
 export type STextareaSize = 'sm' | 'md' | 'lg'
 
-export interface STextareaProps {
+export interface STextareaProps extends SValidationProps<string> {
   /** Field size: affects the font and inner padding (height comes from `rows`/resizing). */
   size?: STextareaSize
   /** Field id. Generated automatically when not set (SSR-safe). */

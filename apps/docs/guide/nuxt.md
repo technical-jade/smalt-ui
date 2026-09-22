@@ -26,6 +26,9 @@ styles and theme are set up. Everything else is optional.
 ## What the module does
 
 - **Auto-import** of all `@smalt-ui/core` components (with a prefix, if set).
+  Only components are auto-imported, `SForm` included. Composables, `useValidation` and the
+  validation rules (`required`, `email`, …) are imported explicitly from `@smalt-ui/core`:
+  `import { required, email } from '@smalt-ui/core'`.
 - **Styles**: adds `@smalt-ui/core/styles.css` to `nuxt.options.css`.
 - **Fonts**: loads the Inter font, serves the files through Nitro and adds
   `<link rel="preload">` for the base subsets (see [below](#fonts)).

@@ -1,6 +1,16 @@
 <script setup>
 import { ref, useTemplateRef } from 'vue'
-import { minLength, required } from '@smalt-ui/core'
+import {
+  ConfigProvider,
+  email,
+  maxLength,
+  min,
+  minLength,
+  required,
+  schemaRule,
+} from '@smalt-ui/core'
+import { z } from 'zod'
+import * as valibot from 'valibot'
 import ColorCodeField from '../.vitepress/theme/demos/ValidationCustomField.vue'
 
 const blurColor = ref('')
@@ -27,6 +37,57 @@ function reset() {
   inputField.value.resetValidation()
   result.value = undefined
 }
+
+// Rules
+const ruleName = ref('')
+const nameRules = [
+  (value) => !!value || 'Enter your name',
+  (value) => value.length <= 20 || 'Use 20 characters or fewer',
+]
+
+// Built-in rules
+const signup = ref({ login: '', email: '', password: '', age: '' })
+const signupSent = ref(false)
+
+// When fields check
+const modeBlur = ref('')
+const modeInput = ref('')
+const modeSubmit = ref('')
+const modeRules = [required(), minLength(4)]
+const modeSent = ref(false)
+
+// Async rules
+const username = ref('')
+const takenNames = ['admin', 'root', 'smalt']
+const isNameFree = (value) =>
+  new Promise((resolve) => {
+    setTimeout(() => resolve(!takenNames.includes(value.toLowerCase()) || 'This username is taken'), 1000)
+  })
+
+// Server errors
+const account = ref('')
+const accountError = ref()
+
+// Schemas
+const zodLogin = ref('')
+const valibotEmail = ref('')
+const loginSchema = z
+  .string()
+  .min(3, 'At least 3 characters')
+  .regex(/^[a-z0-9_]+$/, 'Only lowercase letters, digits and _')
+const emailSchema = valibot.pipe(
+  valibot.string(),
+  valibot.nonEmpty('Enter your email'),
+  valibot.email('Enter a valid email address'),
+)
+
+// Localization
+const lang = ref('en')
+const localized = ref('')
+const deMessages = {
+  ruleRequired: 'Pflichtfeld',
+  ruleMinLength: 'Mindestens {min} Zeichen',
+}
 </script>
 
 # Validation
@@ -34,7 +95,7 @@ function reset() {
 Form fields check their own value with **rules**: plain functions that return `true` or an error
 text. The error is shown through `SFormField`, the wrapper every field is built on: the text
 replaces the hint under the field, the control gets `aria-invalid`, and screen readers announce
-the message. A whole form is checked on submit by the `SForm` component.
+the message. A whole form is checked on submit by the [`SForm`](/components/form) component.
 
 No validation library is required. Built-in rule factories cover the common cases, and schemas
 from Zod, Valibot and other [Standard Schema](https://standardschema.dev) libraries plug in as a
@@ -49,7 +110,18 @@ of the error otherwise. It may also return a Promise of either (see [Async rules
 type SRule<T> = (value: T, ctx: SRuleContext) => true | string | PromiseLike<true | string>
 ```
 
-Pass the rules to the field in the `rules` prop:
+Pass the rules to the field in the `rules` prop. Leave the field empty and move focus away: the
+first rule fails. Type a letter and the error goes away; type more than 20 characters and leave
+the field again: now the second rule fails.
+
+<Demo>
+  <SInput
+    v-model="ruleName"
+    label="Name"
+    :rules="nameRules"
+  />
+
+<template #code>
 
 ```vue
 <script setup lang="ts">
@@ -70,6 +142,9 @@ const rules = [
   />
 </template>
 ```
+
+  </template>
+</Demo>
 
 How the rules run:
 
@@ -110,8 +185,8 @@ const name = ref('')
 ## Built-in rules
 
 Factories for the common checks are exported from `@smalt-ui/core`. Each factory except
-`schemaRule` takes an optional text of its own as the last argument; without it the text comes from the library dictionary
-([`SMessages`](#localization)).
+`schemaRule` takes an optional text of its own as the last argument; without it the text comes
+from the library dictionary ([`SMessages`](#localization)).
 
 | Factory                    | Passes when                                        | Empty value           | Default text (key)                                                                                            |
 | -------------------------- | -------------------------------------------------- | --------------------- | ------------------------------------------------------------------------------------------------------------- |
@@ -124,29 +199,101 @@ Factories for the common checks are exported from `@smalt-ui/core`. Each factory
 | `email(message?)`          | a text looks like an email address                 | passes                | Enter a valid email address (`ruleEmail`)                                                                     |
 | `schemaRule(schema)`       | a [schema](#schemas-zod-valibot) accepts the value | checked by the schema | the schema's first issue                                                                                      |
 
+A sign-up form built from the factories. The email is optional, so it only has to look like an
+address when filled; the age is a numeric `SInput`, checked with `min`. Press **Sign up** with
+empty fields to see every rule at once (the form is [`SForm`](/components/form)):
+
+<Demo>
+  <SForm
+    style="display: grid; gap: 16px; width: 100%; max-width: 360px"
+    @submit="signupSent = true"
+  >
+    <SInput
+      v-model="signup.login"
+      label="Login"
+      autocomplete="username"
+      required
+      :rules="[required(), minLength(3), maxLength(20)]"
+    />
+    <SInput
+      v-model="signup.email"
+      label="Email"
+      autocomplete="email"
+      :rules="[email()]"
+    />
+    <SInput
+      v-model="signup.password"
+      label="Password"
+      type="password"
+      autocomplete="new-password"
+      required
+      :rules="[required(), minLength(8)]"
+    />
+    <SInput
+      v-model="signup.age"
+      label="Age"
+      :numeric="{ unsigned: true }"
+      required
+      :rules="[required(), min(18, 'You must be 18 or older')]"
+    />
+    <div style="display: flex; align-items: center; gap: 12px">
+      <SButton type="submit">Sign up</SButton>
+      <span v-if="signupSent">Sent</span>
+    </div>
+  </SForm>
+
+<template #code>
+
 ```vue
 <script setup lang="ts">
 import { ref } from 'vue'
-import { email, maxLength, minLength, required } from '@smalt-ui/core'
+import { email, maxLength, min, minLength, required } from '@smalt-ui/core'
 
 const login = ref('')
 const address = ref('')
+const password = ref('')
+const age = ref('')
+const sent = ref(false)
 </script>
 
 <template>
-  <SInput
-    v-model="login"
-    label="Login"
-    required
-    :rules="[required(), minLength(3), maxLength(20)]"
-  />
-  <SInput
-    v-model="address"
-    label="Email"
-    :rules="[email()]"
-  />
+  <SForm @submit="sent = true">
+    <SInput
+      v-model="login"
+      label="Login"
+      autocomplete="username"
+      required
+      :rules="[required(), minLength(3), maxLength(20)]"
+    />
+    <SInput
+      v-model="address"
+      label="Email"
+      autocomplete="email"
+      :rules="[email()]"
+    />
+    <SInput
+      v-model="password"
+      label="Password"
+      type="password"
+      autocomplete="new-password"
+      required
+      :rules="[required(), minLength(8)]"
+    />
+    <SInput
+      v-model="age"
+      label="Age"
+      :numeric="{ unsigned: true }"
+      required
+      :rules="[required(), min(18, 'You must be 18 or older')]"
+    />
+    <SButton type="submit"> Sign up </SButton>
+    <span v-if="sent">Sent</span>
+  </SForm>
 </template>
 ```
+
+  </template>
+</Demo>
 
 ### Empty values
 
@@ -193,25 +340,7 @@ range `SSlider`, passes them), `pattern`/`email` a string. What each field passe
 is converted with `Number()` and compared. A blank string passes, as any empty value does. A
 string that is not a number (an unfinished `'-'`) passes too: telling a malformed number apart is
 left to `pattern()` or rules of your own, so the field does not report "Must be at least 18" for
-something that is not a number yet.
-
-```vue
-<script setup lang="ts">
-import { ref } from 'vue'
-import { min, required } from '@smalt-ui/core'
-
-const age = ref('')
-</script>
-
-<template>
-  <SInput
-    v-model="age"
-    label="Age"
-    :numeric="{ unsigned: true }"
-    :rules="[required(), min(18, 'You must be 18 or older')]"
-  />
-</template>
-```
+something that is not a number yet. The age field of the sign-up form above works this way.
 
 ### Custom texts and placeholders
 
@@ -242,23 +371,86 @@ The `validate-on` prop of a field sets when it checks its rules:
 | `input`          | on every change of the value, and when focus leaves the field                                                 |
 | `submit`         | only when the form is submitted or `validate()` is called; then, while a rule error is shown, on every change |
 
+The three fields below have the same rules, `[required(), minLength(4)]`, and differ only in
+`validate-on`. Type two letters into each, move between them, then press **Submit**:
+
+<Demo>
+  <SForm
+    style="display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 16px; width: 100%"
+    @submit="modeSent = true"
+  >
+    <SInput
+      v-model="modeBlur"
+      label="validate-on blur"
+      hint="Checks when you leave the field"
+      validate-on="blur"
+      :rules="modeRules"
+    />
+    <SInput
+      v-model="modeInput"
+      label="validate-on input"
+      hint="Checks on every keystroke"
+      validate-on="input"
+      :rules="modeRules"
+    />
+    <SInput
+      v-model="modeSubmit"
+      label="validate-on submit"
+      hint="Checks only on Submit"
+      validate-on="submit"
+      :rules="modeRules"
+    />
+    <div style="grid-column: 1 / -1; display: flex; align-items: center; gap: 12px">
+      <SButton type="submit">Submit</SButton>
+      <span v-if="modeSent">Sent</span>
+    </div>
+  </SForm>
+
+<template #code>
+
 ```vue
 <script setup lang="ts">
 import { ref } from 'vue'
-import { pattern } from '@smalt-ui/core'
+import { minLength, required } from '@smalt-ui/core'
 
-const code = ref('')
+const onBlur = ref('')
+const onInput = ref('')
+const onSubmit = ref('')
+const rules = [required(), minLength(4)]
+const sent = ref(false)
 </script>
 
 <template>
-  <SInput
-    v-model="code"
-    label="Promo code"
-    validate-on="input"
-    :rules="[pattern(/^[A-Z0-9]{6}$/, 'Six capital letters or digits')]"
-  />
+  <SForm @submit="sent = true">
+    <SInput
+      v-model="onBlur"
+      label="validate-on blur"
+      hint="Checks when you leave the field"
+      validate-on="blur"
+      :rules="rules"
+    />
+    <SInput
+      v-model="onInput"
+      label="validate-on input"
+      hint="Checks on every keystroke"
+      validate-on="input"
+      :rules="rules"
+    />
+    <SInput
+      v-model="onSubmit"
+      label="validate-on submit"
+      hint="Checks only on Submit"
+      validate-on="submit"
+      :rules="rules"
+    />
+    <SButton type="submit"> Submit </SButton>
+    <span v-if="sent">Sent</span>
+  </SForm>
 </template>
 ```
+
+  </template>
+</Demo>
 
 With the default `blur` a field goes through these steps:
 
@@ -282,7 +474,8 @@ show an error before the user touches it. `submit` stays silent until the form i
 The mode can be set in several places. From strongest to weakest:
 
 1. `validate-on` passed to the field itself;
-2. `validate-on` of the enclosing `SForm` (passed to it or set in its [prop defaults](/guide/defaults));
+2. `validate-on` of the enclosing [`SForm`](/components/form) (passed to it or set in its
+   [prop defaults](/guide/defaults));
 3. the prop defaults of the field (`SInput: { validateOn: 'input' }`, or `global`);
 4. `blur`.
 
@@ -293,7 +486,11 @@ app.use(createSUI({ defaults: { global: { validateOn: 'input' } } }))
 ```
 
 `global` reaches `SForm` as well as the single fields, so the setting works the same inside a form
-and outside one.
+and outside one. The field's own defaults apply inside a form only while the form has no mode.
+With `global.validateOn` set, every `SForm` has a mode, so a default for one kind of field
+(`SInput: { validateOn }`) applies only outside forms. The same happens with
+`defaults: { SForm: { validateOn: 'submit' }, SInput: { validateOn: 'input' } }`: an `SInput`
+inside a form checks on submit, and outside a form on input.
 
 Changing the `rules` array does not check the field by itself: the new rules apply at the next
 check (blur, change, submit or `validate()`). An inline array (`:rules="[required()]"`) is a new
@@ -350,7 +547,65 @@ rules, and a rule error is cleared the moment the field becomes disabled. A manu
 
 ## Async rules
 
-A rule may return a Promise, for example to ask the server whether a login is free:
+A rule may return a Promise, for example to ask the server whether a login is free. In the demo
+the "server" answers after one second and knows the names `admin`, `root` and `smalt`; the form
+around the field reports `validating` while the answer is on its way. Type a name and move focus
+away:
+
+<Demo>
+  <SForm
+    v-slot="{ validating }"
+    style="display: grid; gap: 8px; width: 100%; max-width: 360px"
+    @submit="() => {}"
+  >
+    <SInput
+      v-model="username"
+      label="Username"
+      :rules="[required(), isNameFree]"
+    />
+    <code>validating: {{ validating }}</code>
+  </SForm>
+
+<template #code>
+
+```vue
+<script setup lang="ts">
+import { ref } from 'vue'
+import { required, type SRule } from '@smalt-ui/core'
+
+const username = ref('')
+const taken = ['admin', 'root', 'smalt']
+
+// Stands in for a request to the server.
+const isFree: SRule<string> = (v) =>
+  new Promise((resolve) => {
+    setTimeout(() => resolve(!taken.includes(v.toLowerCase()) || 'This username is taken'), 1000)
+  })
+
+function save() {
+  // The username is free here.
+}
+</script>
+
+<template>
+  <SForm
+    v-slot="{ validating }"
+    @submit="save"
+  >
+    <SInput
+      v-model="username"
+      label="Username"
+      :rules="[required(), isFree]"
+    />
+    <code>validating: {{ validating }}</code>
+  </SForm>
+</template>
+```
+
+  </template>
+</Demo>
+
+With a real request the rule is an `async` function:
 
 ```vue
 <script setup lang="ts">
@@ -378,8 +633,8 @@ const isFree: SRule<string> = async (v) => !(await api.isTaken(v)) || 'This logi
   answer is thrown away when it arrives, so a slow response can never overwrite a newer result.
 - **`validating`** is `true` while an awaited rule runs. Synchronous rules settle in the same
   tick and never set it. Library fields do not show a spinner by themselves; the state is
-  available to [custom fields](#custom-fields) through `useValidation`, and a form reports it
-  for all its fields.
+  available to [custom fields](#custom-fields) through `useValidation`, and `SForm` reports it
+  for all its fields in the `validating` slot prop, as in the demo above.
 - A rejected Promise shows the `ruleFailed` text, as a thrown error does.
 
 The field does not debounce the rules. In `blur` mode that rarely matters (one check per blur),
@@ -406,6 +661,55 @@ to the field in the `error` prop. A manual `error`:
   passes, and a form with such a field is not valid;
 - **stays until you clear it:** the field does not clear it on its own. The usual place to clear
   it is the change of the value.
+
+Enter a valid address, press **Simulate a server error**, then type into the field:
+
+<Demo>
+  <div style="display: grid; gap: 12px; width: 100%; max-width: 360px">
+    <SInput
+      v-model="account"
+      label="Email"
+      :rules="[required(), email()]"
+      :error="accountError"
+      @update:model-value="accountError = undefined"
+    />
+    <div>
+      <SButton variant="outline" @click="accountError = 'This email is already registered'">Simulate a server error</SButton>
+    </div>
+  </div>
+
+<template #code>
+
+```vue
+<script setup lang="ts">
+import { ref } from 'vue'
+import { email, required } from '@smalt-ui/core'
+
+const address = ref('')
+const serverError = ref<string>()
+</script>
+
+<template>
+  <SInput
+    v-model="address"
+    label="Email"
+    :rules="[required(), email()]"
+    :error="serverError"
+    @update:model-value="serverError = undefined"
+  />
+  <SButton
+    variant="outline"
+    @click="serverError = 'This email is already registered'"
+  >
+    Simulate a server error
+  </SButton>
+</template>
+```
+
+  </template>
+</Demo>
+
+With a real request, the error comes from the response:
 
 ```vue
 <script setup lang="ts">
@@ -443,40 +747,39 @@ When `error` is cleared, the field shows the error of its rules again, if there 
 [Standard Schema](https://standardschema.dev): Zod 3.24 and later, Valibot 1, ArkType, Effect
 Schema. Smalt UI does not depend on any of them: install the one you use.
 
-The message of the schema's first issue becomes the error text:
+The message of the schema's first issue becomes the error text. The first field below checks
+with Zod, the second with Valibot:
+
+<Demo>
+  <div style="display: grid; gap: 16px; width: 100%; max-width: 360px">
+    <SInput
+      v-model="zodLogin"
+      label="Login (Zod)"
+      :rules="[schemaRule(loginSchema)]"
+    />
+    <SInput
+      v-model="valibotEmail"
+      label="Email (Valibot)"
+      :rules="[schemaRule(emailSchema)]"
+    />
+  </div>
+
+<template #code>
 
 ```vue
 <script setup lang="ts">
 import { ref } from 'vue'
 import { schemaRule } from '@smalt-ui/core'
 import { z } from 'zod'
+import * as v from 'valibot'
 
 const login = ref('')
+const address = ref('')
 
 const loginSchema = z
   .string()
   .min(3, 'At least 3 characters')
   .regex(/^[a-z0-9_]+$/, 'Only lowercase letters, digits and _')
-</script>
-
-<template>
-  <SInput
-    v-model="login"
-    label="Login"
-    :rules="[schemaRule(loginSchema)]"
-  />
-</template>
-```
-
-The same with Valibot:
-
-```vue
-<script setup lang="ts">
-import { ref } from 'vue'
-import { schemaRule } from '@smalt-ui/core'
-import * as v from 'valibot'
-
-const address = ref('')
 
 const emailSchema = v.pipe(
   v.string(),
@@ -487,12 +790,20 @@ const emailSchema = v.pipe(
 
 <template>
   <SInput
+    v-model="login"
+    label="Login (Zod)"
+    :rules="[schemaRule(loginSchema)]"
+  />
+  <SInput
     v-model="address"
-    label="Email"
+    label="Email (Valibot)"
     :rules="[schemaRule(emailSchema)]"
   />
 </template>
 ```
+
+  </template>
+</Demo>
 
 An async schema (Zod `refine` with an async function, Valibot `pipeAsync`) makes the rule async,
 and the field awaits it as any [async rule](#async-rules):
@@ -507,7 +818,7 @@ const loginSchema = z
 `schemaRule` goes into the same array as other rules, and a field can have several schema rules;
 they run in order like any rules.
 
-Two things to keep in mind:
+Three things to keep in mind:
 
 - **The schema sees the value as the field holds it.** The rule receives the raw model, not a
   converted one: `SInput` passes a string even in `numeric` mode, `SNumberField` passes `null`
@@ -532,10 +843,142 @@ Two things to keep in mind:
 A schema rule sees one field's value only. Checks across fields ("the passwords match") need a
 validation library that owns the whole form.
 
+## Forms
+
+`SForm` wraps the fields in a native `<form novalidate>` and checks them together. The fields
+register in it by themselves, wherever they are inside it:
+
+- on submit it checks every field, emits `submit` only when all of them pass, and otherwise
+  emits `invalid` and moves focus to the first invalid field;
+- without a `submit` listener a valid form is submitted natively (`action`, `method`);
+- `validate-on` on the form sets the mode for all its fields;
+- `v-model` and the default slot report the validity (`true`, `false` or `null`), `validating`
+  and the list of errors;
+- `validate()` and `resetValidation()` check or clear every field from code;
+- a reset button triggers `reset`: the app clears its data, and the form clears the errors.
+
+```vue
+<script setup lang="ts">
+import { ref } from 'vue'
+import { email, minLength, required } from '@smalt-ui/core'
+
+const address = ref('')
+const password = ref('')
+
+function send() {
+  // Every field has passed its rules here.
+}
+</script>
+
+<template>
+  <SForm @submit="send">
+    <SInput
+      v-model="address"
+      label="Email"
+      autocomplete="username"
+      :rules="[required(), email()]"
+    />
+    <SInput
+      v-model="password"
+      label="Password"
+      type="password"
+      autocomplete="current-password"
+      :rules="[required(), minLength(8)]"
+    />
+    <SButton type="submit"> Sign in </SButton>
+  </SForm>
+</template>
+```
+
+Live examples of submission, reset, validity and methods are on the [Form](/components/form)
+page.
+
+## VeeValidate
+
+Smalt UI rules check one field at a time. When the whole form is described by one schema, or when
+fields depend on each other ("the passwords match"), a form library such as
+[VeeValidate](https://vee-validate.logaretm.com) can own the validation instead. The fields then
+take its errors through the `error` prop, and a plain `<form>` replaces `SForm`, since VeeValidate
+decides when the form is valid. The example uses VeeValidate 4 with `@vee-validate/zod`, which
+requires Zod 3 (its peer dependency is `zod ^3.24`), so the schema is written in Zod 3 syntax:
+
+```vue
+<script setup lang="ts">
+import { useForm } from 'vee-validate'
+import { toTypedSchema } from '@vee-validate/zod'
+import { z } from 'zod'
+
+const { defineField, errors, handleSubmit } = useForm({
+  validationSchema: toTypedSchema(
+    z
+      .object({
+        email: z.string().email('Enter a valid email address'),
+        password: z.string().min(8, 'At least 8 characters'),
+        confirm: z.string(),
+      })
+      .refine((data) => data.password === data.confirm, {
+        message: 'The passwords do not match',
+        path: ['confirm'],
+      }),
+  ),
+})
+
+const [address, addressAttrs] = defineField('email')
+const [password, passwordAttrs] = defineField('password')
+const [confirm, confirmAttrs] = defineField('confirm')
+
+const onSubmit = handleSubmit((values) => {
+  // values is typed from the schema
+})
+</script>
+
+<template>
+  <form
+    novalidate
+    @submit="onSubmit"
+  >
+    <SInput
+      v-model="address"
+      v-bind="addressAttrs"
+      label="Email"
+      autocomplete="email"
+      :error="errors.email"
+    />
+    <SInput
+      v-model="password"
+      v-bind="passwordAttrs"
+      label="Password"
+      type="password"
+      autocomplete="new-password"
+      :error="errors.password"
+    />
+    <SInput
+      v-model="confirm"
+      v-bind="confirmAttrs"
+      label="Repeat the password"
+      type="password"
+      autocomplete="new-password"
+      :error="errors.confirm"
+    />
+    <SButton type="submit"> Sign up </SButton>
+  </form>
+</template>
+```
+
+The fields get no `rules` here: the `error` prop alone shows the message with the same
+accessibility wiring, and VeeValidate decides when to validate. `defineField` returns the value
+and the attributes VeeValidate needs on the control (its event listeners); `v-bind` passes them
+to `SInput`, which forwards them to its input.
+
+VeeValidate 5 (in beta at the time of writing) accepts a Standard Schema, such as a Zod 4 or
+Valibot schema, as `validationSchema` directly, without `toTypedSchema`; see its
+[migration guide](https://vee-validate.logaretm.com/v5/guide/migration/).
+
 ## Custom fields
 
 The `useValidation` composable gives your own control the same behavior as the library fields:
-rules, `validate-on`, a manual `error`, async checks and, inside `SForm`, taking part in the form.
+rules, `validate-on`, a manual `error`, async checks and, inside [`SForm`](/components/form),
+taking part in the form.
 Library fields use it internally.
 
 The usual way is to wrap the control in `SFormField` and pass it the error from `useValidation`:
@@ -879,6 +1322,70 @@ const deMessages: Partial<SMessages> = {
 </template>
 ```
 
+In the demo the toggle switches the dictionary of the field between English and German. Leave the
+field empty and move focus away, switch the language, then type one letter: the error on screen
+changes its language at the next check.
+
+<Demo>
+  <ClientOnly>
+    <div style="display: grid; gap: 12px; width: 100%; max-width: 360px">
+      <SToggleGroup
+        v-model="lang"
+        type="single"
+        aria-label="Language of the messages"
+        :options="[
+          { value: 'en', label: 'English' },
+          { value: 'de', label: 'Deutsch' },
+        ]"
+      />
+      <ConfigProvider :messages="lang === 'de' ? deMessages : {}">
+        <SInput
+          v-model="localized"
+          label="Name"
+          :rules="[required(), minLength(3)]"
+        />
+      </ConfigProvider>
+    </div>
+  </ClientOnly>
+
+<template #code>
+
+```vue
+<script setup lang="ts">
+import { ref } from 'vue'
+import { ConfigProvider, minLength, required, type SMessages } from '@smalt-ui/core'
+
+const lang = ref('en')
+const name = ref('')
+const deMessages: Partial<SMessages> = {
+  ruleRequired: 'Pflichtfeld',
+  ruleMinLength: 'Mindestens {min} Zeichen',
+}
+</script>
+
+<template>
+  <SToggleGroup
+    v-model="lang"
+    type="single"
+    aria-label="Language of the messages"
+    :options="[
+      { value: 'en', label: 'English' },
+      { value: 'de', label: 'Deutsch' },
+    ]"
+  />
+  <ConfigProvider :messages="lang === 'de' ? deMessages : {}">
+    <SInput
+      v-model="name"
+      label="Name"
+      :rules="[required(), minLength(3)]"
+    />
+  </ConfigProvider>
+</template>
+```
+
+  </template>
+</Demo>
+
 The text is taken from the dictionary when the check runs, not when the rule is created, so
 `required()` in a module-level array follows the current locale. An error already on screen keeps
 its text until the field checks again.
@@ -896,8 +1403,8 @@ Fields show rule errors through `SFormField`, so a rule error gets the same wiri
   `aria-describedby`, so a screen reader reads it together with the field;
 - the text is rendered into a live region (`aria-live="polite"`), so a new error is announced
   without moving focus;
-- on submit, `SForm` moves focus to the first invalid field in page order, so a keyboard or
-  screen reader user lands on the problem.
+- on submit, [`SForm`](/components/form) moves focus to the first invalid field in page order,
+  so a keyboard or screen reader user lands on the problem.
 
 The live region stays in the page while the field has no error: a region is announced only if it
 exists before its content appears.

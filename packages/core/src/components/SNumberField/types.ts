@@ -1,6 +1,8 @@
+import type { SValidationProps } from '../../composables/useValidation'
+
 export type SNumberFieldSize = 'sm' | 'md' | 'lg'
 
-export interface SNumberFieldProps {
+export interface SNumberFieldProps extends SValidationProps<number | null> {
   /** Control id. Generated automatically (SSR-safe) when not set. */
   id?: string
   /** Field label. */

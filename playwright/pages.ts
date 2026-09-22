@@ -9,6 +9,7 @@ export const COMPONENT_PAGES = [
   { name: 'dialog', path: '/components/dialog' },
   { name: 'select', path: '/components/select' },
   { name: 'form-field', path: '/components/form-field' },
+  { name: 'form', path: '/components/form' },
   { name: 'textarea', path: '/components/textarea' },
   { name: 'checkbox', path: '/components/checkbox' },
   { name: 'switch', path: '/components/switch' },

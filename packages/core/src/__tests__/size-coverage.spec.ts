@@ -13,7 +13,7 @@ const NO_FIELD_HEIGHT = ['SCheckbox', 'SRadioGroup', 'SSlider']
 const fields = readdirSync(root, { withFileTypes: true })
   .filter((entry) => entry.isDirectory() && entry.name !== 'SFormField')
   .map((entry) => entry.name)
-  .filter((name) => readFileSync(`${root}/${name}/${name}.vue`, 'utf8').includes('<SFormField'))
+  .filter((name) => /<SFormField\b/.test(readFileSync(`${root}/${name}/${name}.vue`, 'utf8')))
   .filter((name) => !NO_FIELD_HEIGHT.includes(name))
 
 describe('field size coverage', () => {

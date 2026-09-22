@@ -16,7 +16,7 @@ const wrappers = readdirSync(root, { withFileTypes: true })
     name: entry.name,
     source: readFileSync(`${root}/${entry.name}/${entry.name}.vue`, 'utf8'),
   }))
-  .filter(({ source }) => source.includes('<SFormField'))
+  .filter(({ source }) => /<SFormField\b/.test(source))
 
 describe('SFormField wrappers', () => {
   it('finds the wrappers', () => {

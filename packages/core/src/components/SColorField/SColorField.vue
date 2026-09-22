@@ -6,6 +6,8 @@ import { SFormField } from '../SFormField'
 import ColorFieldEmptyText from './ColorFieldEmptyText'
 import { useDefaults } from '../../composables'
 import { useFieldAttrs } from '../../internal/useFieldAttrs'
+import { useFieldFocus } from '../../internal/useFieldFocus'
+import { useFieldValidation } from '../../internal/useFieldValidation'
 import type { SColorFieldProps } from './types'
 
 defineOptions({ inheritAttrs: false })
@@ -66,6 +68,9 @@ function onEnter(event: KeyboardEvent) {
 }
 
 const root = useTemplateRef<ComponentPublicInstance>('root')
+const { errorMessage, onBlur: onLeave, expose } = useFieldValidation(p, () => model.value, root)
+const { onFocusIn, onFocusOut } = useFieldFocus(root, () => {}, undefined, onLeave)
+defineExpose(expose)
 
 // Native validation focuses the hidden input on submit; the user needs the visible one.
 function focusInput() {
@@ -84,12 +89,14 @@ const filled = computed(() => !!model.value)
     :style="rootStyle"
     :label="p.label"
     :hint="p.hint"
-    :error="p.error"
+    :error="errorMessage"
     :invalid="p.invalid"
     :required="p.required"
     :size="p.size"
     :floating-label="floating"
     :square="p.square"
+    @focusin="onFocusIn"
+    @focusout="onFocusOut"
   >
     <template
       #default="{ id: fieldId, labelId, describedBy, invalid: fieldInvalid, label: fieldLabel }"

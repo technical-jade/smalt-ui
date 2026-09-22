@@ -1,8 +1,9 @@
 /* eslint-disable vue/one-component-per-file -- test stubs: the harness component and a form/field pair */
-import { describe, expect, it, vi } from 'vitest'
-import { computed, defineComponent, h, nextTick, provide, ref } from 'vue'
+import { describe, expect, it, onTestFinished, vi } from 'vitest'
+import { computed, defineComponent, h, nextTick, provide, ref, type PropType } from 'vue'
 import { mount, flushPromises } from '@vue/test-utils'
-import { required, useValidation, type SRule, type SValidateOn } from '../index'
+import { required, useDefaults, useValidation, type SRule, type SValidateOn } from '../index'
+import { SForm } from '../../components/SForm'
 import { formContextKey, type SFormContext } from '../../internal/formContext'
 
 function harness(opts: {
@@ -239,5 +240,53 @@ describe('useValidation', () => {
     wrapper.unmount()
     expect(unregister).toHaveBeenCalledTimes(2)
     expect(unregister.mock.calls[1]?.[0]).toBe(entry)
+  })
+
+  it('a form around a re-rendering control does not loop on new rules and a proxied name', async () => {
+    const Field = defineComponent({
+      props: { rules: Array as PropType<SRule<string>[]>, name: String },
+      setup(props) {
+        const p = useDefaults(props, 'CustomField')
+        const { errorMessage } = useValidation({
+          value: ref(''),
+          rules: () => p.rules,
+          name: () => p.name,
+        })
+        return () => h('div', { class: 'error' }, errorMessage.value)
+      },
+    })
+    const tick = ref(0)
+    const errors: unknown[] = []
+    const onRejection = (error: unknown) => errors.push(error)
+    process.on('unhandledRejection', onRejection)
+    onTestFinished(() => {
+      process.off('unhandledRejection', onRejection)
+    })
+    const onInvalid = vi.fn()
+    const wrapper = mount(
+      defineComponent({
+        setup: () => () =>
+          h(
+            SForm,
+            { onInvalid },
+            {
+              // A new rules array on every render of the slot.
+              default: () =>
+                h(Field, { rules: [() => 'E'], name: 'field', 'data-tick': tick.value }),
+            },
+          ),
+      }),
+      { global: { config: { errorHandler: (error) => errors.push(error) } } },
+    )
+    await wrapper.find('form').trigger('submit')
+    await flushPromises()
+    tick.value++
+    await flushPromises()
+    await new Promise((resolve) => setTimeout(resolve))
+    expect(errors).toEqual([])
+    expect(wrapper.find('.error').text()).toBe('E')
+    expect(onInvalid).toHaveBeenCalledWith([
+      { id: expect.any(String), name: 'field', messages: ['E'] },
+    ])
   })
 })

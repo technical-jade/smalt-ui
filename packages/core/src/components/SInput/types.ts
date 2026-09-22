@@ -1,3 +1,5 @@
+import type { SValidationProps } from '../../composables/useValidation'
+
 export type SInputSize = 'sm' | 'md' | 'lg'
 
 /**
@@ -20,7 +22,7 @@ export interface SInputNumeric {
   locale?: string
 }
 
-export interface SInputProps {
+export interface SInputProps extends SValidationProps<string | string[]> {
   /** Input id. Generated automatically when not set (SSR-safe). */
   id?: string
   /**

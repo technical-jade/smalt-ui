@@ -1,9 +1,11 @@
 <script setup lang="ts">
-import { computed, ref } from 'vue'
+import { computed, ref, useTemplateRef, type ComponentPublicInstance } from 'vue'
 import { SliderRange, SliderRoot, SliderThumb, SliderTrack } from 'reka-ui'
 import { SFormField } from '../SFormField'
 import { useColorProp, useDefaults, useMessages } from '../../composables'
 import { useFieldAttrs } from '../../internal/useFieldAttrs'
+import { useFieldFocus } from '../../internal/useFieldFocus'
+import { useFieldValidation } from '../../internal/useFieldValidation'
 import type { SSliderProps } from './types'
 
 defineOptions({ inheritAttrs: false })
@@ -62,6 +64,16 @@ const arrayValue = computed({
   },
 })
 
+const root = useTemplateRef<ComponentPublicInstance>('root')
+// Rules see the value the thumb shows: a single slider without a value sits at `min`.
+const {
+  errorMessage,
+  onBlur: onLeave,
+  expose,
+} = useFieldValidation(p, () => (isRange.value ? arrayValue.value : arrayValue.value[0]), root)
+const { onFocusIn, onFocusOut } = useFieldFocus(root, () => {}, undefined, onLeave)
+defineExpose(expose)
+
 /**
  * The value bubble sits above the active thumb, so its visibility is derived from the control's
  * own state: hover, focus, and drag (Reka exposes no DOM attribute for dragging that plain CSS
@@ -94,15 +106,18 @@ defineSlots<{
 <template>
   <SFormField
     :id="p.id"
+    ref="root"
     :floating-label="false"
     class="s-slider"
     :class="rootClass"
     :style="[colorStyle, rootStyle]"
     :label="p.label"
     :hint="p.hint"
-    :error="p.error"
+    :error="errorMessage"
     :invalid="p.invalid"
     :required="p.required"
+    @focusin="onFocusIn"
+    @focusout="onFocusOut"
   >
     <template #default="{ id: fieldId, describedBy, invalid: fieldInvalid }">
       <SliderRoot

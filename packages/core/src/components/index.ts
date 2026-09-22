@@ -1,5 +1,6 @@
 export * from './SIcon'
 export * from './SFormField'
+export * from './SForm'
 export * from './SButton'
 export * from './SInput'
 export * from './STextarea'

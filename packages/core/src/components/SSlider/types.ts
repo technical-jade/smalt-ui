@@ -1,6 +1,7 @@
 import type { SColorName } from '../../composables/useColorProp'
+import type { SValidationProps } from '../../composables/useValidation'
 
-export interface SSliderProps {
+export interface SSliderProps extends SValidationProps<number | number[]> {
   /**
    * Accent color (fill/thumb): a name from the [palette](/style/palette)
    * (`primary`/`teal`/`teal-10`).

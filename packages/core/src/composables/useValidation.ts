@@ -117,6 +117,13 @@ export function useValidation<T>(options: UseValidationOptions<T>): UseValidatio
     () => toValue(options.validateOn) ?? form?.validateOn.value ?? 'blur',
   )
   const errorMessage = computed(() => toValue(options.error) || ruleError.value)
+  /**
+   * Cached for the form: its computeds read these, and a getter over props re-runs on every
+   * render of the field (inline `:rules` are a new array each time), which re-renders the form,
+   * which re-renders the field. A computed notifies only when the result changes.
+   */
+  const name = computed(() => toValue(options.name))
+  const hasRules = computed(() => rules().length > 0)
   const invalid = computed(() => Boolean(errorMessage.value))
 
   async function runRules(id: number): Promise<boolean> {
@@ -215,13 +222,13 @@ export function useValidation<T>(options: UseValidationOptions<T>): UseValidatio
   if (form) {
     const entry: SFormFieldEntry = {
       id: useId(),
-      name: () => toValue(options.name),
+      name: () => name.value,
       el: () => options.el?.() ?? null,
       validate,
       resetValidation,
       focus: () => options.focus?.(),
       errorMessage: () => errorMessage.value,
-      hasRules: () => rules().length > 0,
+      hasRules: () => hasRules.value,
       checked: () => checked.value,
       validating: () => validating.value,
     }

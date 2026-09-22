@@ -113,3 +113,36 @@ on floating panels (dropdown lists, menus, popovers, calendars), `size` on all c
 by interface density. `floatingLabel` in `global` turns on the floating label only for fields that
 can render it (`SInput`, `STextarea`, `SSelect`, date and time fields and pickers, `SColorField`).
 The rest (`SNumberField`, `SAutocomplete`, `SPinInput`, `SSlider`, groups) keep their label on top.
+
+## Validation mode
+
+`validateOn` sets when the fields check their [rules](/guide/validation#when-fields-check). It can
+be set for the form, for one kind of field or for everything:
+
+```ts
+app.use(
+  createSUI({
+    defaults: {
+      // every SForm checks its fields while the user types
+      SForm: { validateOn: 'input' },
+    },
+  }),
+)
+```
+
+```ts
+// every form and every single field
+app.use(createSUI({ defaults: { global: { validateOn: 'input' } } }))
+```
+
+Here the order differs from the general [priority](#priority), so that a field's default does not
+override the form it is placed in. From strongest to weakest:
+
+1. `validate-on` passed to the field;
+2. the mode of the enclosing `SForm`: its `validate-on` prop, then `SForm` defaults, then `global`;
+3. the field's own defaults (`SInput: { validateOn: 'submit' }`, then `global`);
+4. `blur`.
+
+So `SInput: { validateOn: 'submit' }` applies to `SInput` fields outside a form, and inside a form
+only while the form has no mode of its own. With `global: { validateOn }` set, every `SForm` has a
+mode, so a default for one kind of field applies only outside forms.

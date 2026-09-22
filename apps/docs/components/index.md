@@ -21,7 +21,8 @@ Basic building blocks reused by other components.
 
 Inputs on the shared `SFormField` frame (label, hint, error message, a11y relationships).
 
-- Base: [Form Field](/components/form-field)
+- Base: [Form](/components/form) (validation of the fields on submit, see
+  [Validation](/guide/validation)), [Form Field](/components/form-field)
 - Text: [Input](/components/input) (the `numeric` prop for numeric input, `use-tags` for tag input),
   [Textarea](/components/textarea)
 - Numbers and codes: [Number Field](/components/number-field) (a stepper with buttons),
