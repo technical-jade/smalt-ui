@@ -50,7 +50,7 @@ export function useToast() {
       )
       return id
     }
-    toasts.value.push({ variant: 'info', ...options, id })
+    toasts.value.push({ ...options, id })
     return id
   }
 

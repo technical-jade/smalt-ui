@@ -7,7 +7,6 @@ import { TOGGLE_GROUP_KEY } from './context'
 import type { SToggleGroupProps } from './types'
 
 const props = withDefaults(defineProps<SToggleGroupProps>(), {
-  type: 'single',
   size: 'md',
   mandatory: false,
 })
@@ -24,14 +23,17 @@ provideDefaults(() => ({ SToggle: { size: p.size } }))
  */
 const model = defineModel<string | string[]>()
 
+// Resolved here rather than by Reka: the value below is never undefined, so Reka could not tell.
+const mode = computed(() => p.type ?? (Array.isArray(model.value) ? 'multiple' : 'single'))
+
 /**
  * Reka keeps its own copy of the value while `modelValue` is undefined and would clear it before
  * `mandatory` can refuse, so the root always gets a defined value.
  */
-const rootValue = computed(() => model.value ?? (p.type === 'multiple' ? [] : null))
+const rootValue = computed(() => model.value ?? (mode.value === 'multiple' ? [] : null))
 
 function update(next: string | string[] | undefined) {
-  if (next === undefined && p.mandatory && p.type === 'single') return
+  if (next === undefined && p.mandatory && mode.value === 'single') return
   model.value = next
 }
 
@@ -45,7 +47,7 @@ defineSlots<{
   <ToggleGroupRoot
     :model-value="rootValue"
     class="s-toggle-group"
-    :type="p.type"
+    :type="mode"
     :disabled="p.disabled"
     :aria-label="p.ariaLabel"
     @update:model-value="update($event as string | string[] | undefined)"

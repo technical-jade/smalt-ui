@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, ref, useTemplateRef } from 'vue'
+import { computed, nextTick, ref, useTemplateRef } from 'vue'
 import type { ComponentPublicInstance } from 'vue'
 import { ColorFieldRoot, ColorFieldInput } from 'reka-ui'
 import { SFormField } from '../SFormField'
@@ -50,9 +50,19 @@ const floating = computed(() => p.floatingLabel && !!p.label)
 const editing = ref(false)
 
 // Reka restores the last color when the text is erased; erased text means "no color" here.
+const isErased = (event: Event) => !(event.target as HTMLInputElement).value.trim()
+
 function onBlur(event: FocusEvent) {
   editing.value = false
-  if (!(event.target as HTMLInputElement).value.trim()) model.value = ''
+  if (isErased(event)) model.value = ''
+}
+
+const emptyText = useTemplateRef<{ clearText: () => void }>('emptyText')
+function onEnter(event: KeyboardEvent) {
+  if (!isErased(event)) return
+  model.value = ''
+  // After Reka's own commit of the same key press.
+  nextTick(() => emptyText.value?.clearText())
 }
 
 const root = useTemplateRef<ComponentPublicInstance>('root')
@@ -118,8 +128,10 @@ const filled = computed(() => !!model.value)
           :aria-describedby="describedBy"
           @focus="editing = true"
           @blur="onBlur"
+          @keydown.enter="onEnter"
         />
         <ColorFieldEmptyText
+          ref="emptyText"
           :empty="!model"
           :editing="editing"
         />

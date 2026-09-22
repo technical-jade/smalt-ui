@@ -12,7 +12,10 @@ export interface SToggleGroupOption {
 }
 
 export interface SToggleGroupProps {
-  /** Selection mode: `single` allows one active item, `multiple` any subset. */
+  /**
+   * Selection mode: `single` allows one active item, `multiple` any subset. Without it the mode
+   * follows `v-model`: an array means `multiple`.
+   */
   type?: SToggleGroupType
   /** Size of the toggles in the group. */
   size?: SToggleSize

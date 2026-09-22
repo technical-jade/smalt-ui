@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { useTemplateRef } from 'vue'
+import { computed, useTemplateRef, watch } from 'vue'
 import type { ComponentPublicInstance } from 'vue'
 import { PinInputInput, PinInputRoot } from 'reka-ui'
 import { SFormField } from '../SFormField'
@@ -47,11 +47,35 @@ defineSlots<{
 }>()
 
 /**
- * The entered code as an array of characters, one per cell. Two-way bound via `v-model`.
- * With `type="number"`, Reka puts numbers into the elements at runtime, so convert values to the
- * type you need when reading them (`String(v)` / `Number(v)`).
+ * The entered code as an array of characters, one per cell, strings also with `type="number"`.
+ * Two-way bound via `v-model`.
  */
 const model = defineModel<string[]>({ default: () => [] })
+
+// Reka stores numbers with type="number"; the model promises strings, so they are converted back.
+const toStrings = (value: unknown[]) => value.map((v) => (v == null ? '' : String(v)))
+const cells = computed({
+  get: () => model.value,
+  set: (value: unknown[]) => {
+    model.value = toStrings(value)
+  },
+})
+
+/**
+ * Reka reports `complete` on every change of a full model, and the conversion above changes it
+ * once more, so the same code would be reported twice.
+ */
+let reported: string | undefined
+watch(model, (value) => {
+  if (value.filter(Boolean).length < p.length) reported = undefined
+})
+function onComplete(value: unknown[]) {
+  const code = toStrings(value)
+  const key = code.join('\u0000')
+  if (key === reported) return
+  reported = key
+  emit('complete', code)
+}
 </script>
 
 <template>
@@ -80,7 +104,7 @@ const model = defineModel<string[]>({ default: () => [] })
           <slot name="prepend" />
         </span>
         <PinInputRoot
-          v-model="model"
+          v-model="cells"
           class="s-pin-input__control"
           :aria-labelledby="labelId"
           :type="p.type"
@@ -90,7 +114,7 @@ const model = defineModel<string[]>({ default: () => [] })
           :disabled="p.disabled"
           :name="p.name"
           :required="p.required"
-          @complete="emit('complete', $event)"
+          @complete="onComplete"
         >
           <!-- aria-describedby/aria-invalid go on the cell inputs themselves: PinInputRoot is a
                div, and screen readers do not announce its attributes when a cell is focused. -->

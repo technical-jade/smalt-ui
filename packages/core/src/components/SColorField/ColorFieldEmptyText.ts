@@ -12,10 +12,16 @@ export default defineComponent({
     empty: { type: Boolean, required: true },
     editing: { type: Boolean, required: true },
   },
-  setup(props) {
+  setup(props, { expose }) {
     const context = injectColorFieldRootContext()!
     watchEffect(() => {
       if (props.empty && !props.editing && context.inputValue.value) context.inputValue.value = ''
+    })
+    // Enter commits an erased text back to the last color while the field keeps focus.
+    expose({
+      clearText() {
+        context.inputValue.value = ''
+      },
     })
     return () => null
   },

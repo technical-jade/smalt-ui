@@ -28,4 +28,25 @@ describe('SSplitter · browser', () => {
     await userEvent.keyboard('{Enter}')
     expect(size()).toBe('30')
   })
+
+  it('removing a middle panel keeps the state of the panels after it', async () => {
+    const panels = [
+      { name: 'a', defaultSize: 20 },
+      { name: 'b', defaultSize: 30 },
+      { name: 'c', defaultSize: 50 },
+    ]
+    const { container, rerender } = render(SSplitter, {
+      props: { panels },
+      slots: { a: 'A', b: 'B', c: 'C' },
+      attrs: { style: 'width: 600px; height: 200px' },
+    })
+    const panelOf = (text: string) =>
+      [...container.querySelectorAll('.s-splitter__panel')].find((el) => el.textContent === text)
+    const before = panelOf('C')!
+    const id = before.getAttribute('data-panel-id')
+    await rerender({ panels: [panels[0], panels[2]] })
+    const after = panelOf('C')!
+    expect(after).toBe(before)
+    expect(after.getAttribute('data-panel-id')).toBe(id)
+  })
 })

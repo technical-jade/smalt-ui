@@ -2,6 +2,7 @@ import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 import { fireEvent, render, screen } from '@testing-library/vue'
 import { useConfirm } from '../../../composables/useConfirm'
 import { ConfirmProvider } from '../index'
+import { resetDevWarnings } from '../../../internal/dev'
 
 beforeEach(() => {
   useConfirm().clear()
@@ -91,6 +92,7 @@ describe('ConfirmProvider', () => {
   })
 
   it('a second provider is a usage error: the queue is shared', async () => {
+    resetDevWarnings()
     const warn = vi.spyOn(console, 'warn').mockImplementation(() => {})
     try {
       render(ConfirmProvider)

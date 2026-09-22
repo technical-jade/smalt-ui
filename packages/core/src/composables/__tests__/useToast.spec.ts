@@ -12,7 +12,9 @@ describe('useToast', () => {
     const { toast, toasts } = useToast()
     const id = toast({ title: 'Done' })
     expect(typeof id).toBe('number')
-    expect(toasts.value.at(-1)).toMatchObject({ title: 'Done', variant: 'info' })
+    expect(toasts.value.at(-1)).toMatchObject({ title: 'Done' })
+    // Left to the SToast defaults, which the provider applies when it renders the entry.
+    expect(toasts.value.at(-1)?.variant).toBeUndefined()
   })
 
   it('overrides the variant and description', () => {

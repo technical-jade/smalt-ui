@@ -39,9 +39,11 @@ function toggleCollapse(index: number) {
     class="s-splitter"
     :class="`s-splitter--${p.direction}`"
   >
+    <!-- Keyed by name: with an index key, removing a panel would hand its Reka state (the
+         registered size) to the next one. -->
     <template
       v-for="(panel, index) in p.panels"
-      :key="index"
+      :key="slotName(index)"
     >
       <SplitterResizeHandle
         v-if="index > 0"
@@ -62,6 +64,7 @@ function toggleCollapse(index: number) {
         :min-size="panel.minSize"
         :max-size="panel.maxSize"
         :collapsible="panel.collapsible"
+        :order="index"
         class="s-splitter__panel"
       >
         <slot :name="slotName(index)" />

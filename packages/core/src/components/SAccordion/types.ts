@@ -14,7 +14,10 @@ export interface SAccordionOption {
 }
 
 export interface SAccordionProps {
-  /** Mode: `single` expands one section at a time, `multiple` expands any number. */
+  /**
+   * Mode: `single` expands one section at a time, `multiple` expands any number. Without it the
+   * mode follows `v-model`: an array means `multiple`.
+   */
   type?: SAccordionType
   /** In `single` mode, allows collapsing the open section (closing all). Ignored in `multiple`. */
   collapsible?: boolean

@@ -33,6 +33,16 @@ describe('developer warnings', () => {
     expect(offenders, 'use devWarn from internal/dev').toEqual([])
   })
 
+  // A direct console.warn would reach the production console of the consumer.
+  it('go through devWarn', () => {
+    const offenders = sourceFiles(srcDir)
+      .filter((path) => !path.endsWith(join('internal', 'dev.ts')))
+      .filter((path) => /console\.warn\(/.test(readFileSync(path, 'utf8')))
+      .map((path) => path.slice(srcDir.length + 1))
+
+    expect(offenders, 'use devWarn from internal/dev').toEqual([])
+  })
+
   it('prints a warning once per message', () => {
     const warn = vi.spyOn(console, 'warn').mockImplementation(() => {})
     devWarn('[SIcon] icon "cart" is not registered')

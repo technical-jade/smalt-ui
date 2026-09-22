@@ -76,6 +76,19 @@ describe('SColorField', () => {
     expect(input).toHaveValue('')
   })
 
+  it('erasing the text and pressing Enter clears the value', async () => {
+    const { emitted } = render(SColorField, {
+      props: { label: 'Brand color', modelValue: '#3b82f6' },
+    })
+    const input = screen.getByLabelText('Brand color')
+    await fireEvent.focus(input)
+    await fireEvent.update(input, '')
+    await fireEvent.keyDown(input, { key: 'Enter' })
+    await nextTick()
+    expect(emitted()['update:modelValue']?.at(-1)).toEqual([''])
+    expect(input).toHaveValue('')
+  })
+
   it('clearing the value from outside empties the input', async () => {
     const { rerender } = render(SColorField, {
       props: { label: 'Brand color', modelValue: '#3b82f6' },

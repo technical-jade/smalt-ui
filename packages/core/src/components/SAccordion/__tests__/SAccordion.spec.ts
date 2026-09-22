@@ -58,4 +58,16 @@ describe('SAccordion', () => {
       'true',
     )
   })
+
+  it('an array v-model without type expands several sections', async () => {
+    const { emitted } = render(SAccordion, { props: { items, modelValue: ['a'] } })
+    await fireEvent.click(screen.getByRole('button', { name: 'Section B' }))
+    expect(emitted()['update:modelValue']?.at(-1)).toEqual([['a', 'b']])
+  })
+
+  it('a string v-model without type stays single', async () => {
+    const { emitted } = render(SAccordion, { props: { items, modelValue: 'a' } })
+    await fireEvent.click(screen.getByRole('button', { name: 'Section B' }))
+    expect(emitted()['update:modelValue']?.at(-1)).toEqual(['b'])
+  })
 })

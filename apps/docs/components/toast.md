@@ -141,8 +141,9 @@ createSUI({ defaults: { ToastProvider: { position: 'top-right' } } })
 The composable returns:
 
 - `toast(options)` — shows a notification and returns its `id`. Options: `title`
-  (required), `description`, `variant` (`info` · `success` · `warning` · `danger`),
-  `duration` (ms).
+  (required), `description`, `variant` (`info` · `positive` · `warning` · `negative`),
+  `color`, `duration` (ms). An option left out comes from the `ToastProvider` `duration` and then
+  from the `SToast` [defaults](/guide/defaults).
 - `dismiss(id)` — removes a notification manually.
 - `toasts` — the reactive (read-only) queue of current notifications.
 

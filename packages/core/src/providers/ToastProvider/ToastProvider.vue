@@ -11,11 +11,12 @@ import { computed, onMounted, onUnmounted } from 'vue'
 import { ToastPortal, ToastProvider as RekaToastProvider, ToastViewport } from 'reka-ui'
 import { useToast } from '../../composables/useToast'
 import { useDefaults, useMessages } from '../../composables'
+import { devWarn } from '../../internal/dev'
 import { SToast } from '../../components/SToast'
 import type { SToastPosition, ToastProviderProps } from './types'
 
+// No own duration default: an unset one leaves the choice to the defaults of SToast.
 const props = withDefaults(defineProps<ToastProviderProps>(), {
-  duration: 5000,
   position: 'bottom-right',
 })
 
@@ -41,7 +42,7 @@ const swipeDirection = computed(() => SWIPE_DIRECTIONS[p.position])
 onMounted(() => {
   activeProviders += 1
   if (activeProviders > 1) {
-    console.warn(
+    devWarn(
       '[smalt] Several <ToastProvider> instances are mounted. The toast queue is shared, ' +
         'so notifications will be duplicated. Keep one provider at the app root.',
     )

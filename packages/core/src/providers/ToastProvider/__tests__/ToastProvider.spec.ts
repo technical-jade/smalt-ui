@@ -1,10 +1,16 @@
-import { beforeEach, describe, expect, it, vi } from 'vitest'
-import { nextTick } from 'vue'
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
+import { defineComponent, h, nextTick } from 'vue'
 import { render, screen } from '@testing-library/vue'
-import { mount } from '@vue/test-utils'
+import { enableAutoUnmount, mount } from '@vue/test-utils'
 import { ToastProvider as RekaToastProvider } from 'reka-ui'
 import { useToast } from '../../../composables/useToast'
 import { ToastProvider } from '../index'
+import { provideDefaults } from '../../../composables'
+import type { SDefaults } from '../../../composables'
+import { resetDevWarnings } from '../../../internal/dev'
+
+// A provider left mounted would render the queue of the next tests as well.
+enableAutoUnmount(afterEach)
 
 beforeEach(() => {
   const { toasts, dismiss } = useToast()
@@ -81,6 +87,67 @@ describe('ToastProvider', () => {
       expect(toasts.value.some((t) => t.title === 'Vanishing')).toBe(false)
     } finally {
       vi.useRealTimers()
+    }
+  })
+
+  describe('SToast defaults', () => {
+    // Reka repeats the text in a hidden live region, so the toast itself is picked by its class.
+    async function toastByTitle(title: string) {
+      const matches = await screen.findAllByText(title)
+      return matches.map((el) => el.closest('.s-toast')).find(Boolean)
+    }
+
+    function renderWithDefaults(defaults: SDefaults, providerProps = {}) {
+      const Host = defineComponent(() => {
+        provideDefaults(() => defaults)
+        return () => h(ToastProvider, providerProps)
+      })
+      return render(Host)
+    }
+
+    it('reach notifications from the queue', async () => {
+      renderWithDefaults({ SToast: { variant: 'positive' } })
+      useToast().toast({ title: 'Saved' })
+      const toast = await toastByTitle('Saved')
+      expect(toast).toHaveClass('s-toast--positive')
+    })
+
+    it('an option of the call still wins', async () => {
+      renderWithDefaults({ SToast: { variant: 'positive' } })
+      useToast().toast({ title: 'Failed', variant: 'negative' })
+      const toast = await toastByTitle('Failed')
+      expect(toast).toHaveClass('s-toast--negative')
+    })
+
+    it.each([
+      ['the SToast default', {}, 1000],
+      ['the provider duration over it', { duration: 3000 }, 3000],
+    ])('duration: %s', async (_, providerProps, expected) => {
+      vi.useFakeTimers()
+      try {
+        const { toast, toasts } = useToast()
+        renderWithDefaults({ SToast: { duration: 1000 } }, providerProps)
+        toast({ title: 'Vanishing' })
+        await nextTick()
+        await vi.advanceTimersByTimeAsync(expected - 200)
+        expect(toasts.value).toHaveLength(1)
+        await vi.advanceTimersByTimeAsync(400)
+        expect(toasts.value).toHaveLength(0)
+      } finally {
+        vi.useRealTimers()
+      }
+    })
+  })
+
+  it('a second provider is a usage error: the queue is shared', () => {
+    resetDevWarnings()
+    const warn = vi.spyOn(console, 'warn').mockImplementation(() => {})
+    try {
+      render(ToastProvider)
+      render(ToastProvider)
+      expect(warn).toHaveBeenCalledWith(expect.stringContaining('ToastProvider'))
+    } finally {
+      warn.mockRestore()
     }
   })
 })

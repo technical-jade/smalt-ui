@@ -68,4 +68,28 @@ describe('SToggleGroup', () => {
     expect(emitted()['update:modelValue']).toEqual([['center']])
     expect(center).toHaveAttribute('data-state', 'on')
   })
+
+  it('an array v-model without type selects several items', async () => {
+    const { emitted } = render(SToggleGroup, {
+      props: {
+        modelValue: ['bold'],
+        ariaLabel: 'Format',
+        options: [{ value: 'bold' }, { value: 'italic' }],
+      },
+    })
+    await fireEvent.click(screen.getByRole('button', { name: 'italic' }))
+    expect(emitted()['update:modelValue']?.at(-1)).toEqual([['bold', 'italic']])
+  })
+
+  it('a string v-model without type stays single', async () => {
+    const { emitted } = render(SToggleGroup, {
+      props: {
+        modelValue: 'bold',
+        ariaLabel: 'Format',
+        options: [{ value: 'bold' }, { value: 'italic' }],
+      },
+    })
+    await fireEvent.click(screen.getByRole('button', { name: 'italic' }))
+    expect(emitted()['update:modelValue']?.at(-1)).toEqual(['italic'])
+  })
 })

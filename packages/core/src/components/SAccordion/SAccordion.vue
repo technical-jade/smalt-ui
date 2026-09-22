@@ -7,7 +7,6 @@ import { useDefaults } from '../../composables'
 import type { SAccordionProps } from './types'
 
 const props = withDefaults(defineProps<SAccordionProps>(), {
-  type: 'single',
   collapsible: true,
   unmountOnHide: true,
   headingLevel: 3,

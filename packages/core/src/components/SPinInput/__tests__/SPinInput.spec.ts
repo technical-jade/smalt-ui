@@ -70,4 +70,13 @@ describe('SPinInput', () => {
     await fireEvent.input(cells[1]!, { target: { value: '2' } })
     expect(emitted().complete).toEqual([[['1', '2']]])
   })
+
+  it('type="number" keeps the model and complete as strings', async () => {
+    const { container, emitted } = render(SPinInput, { props: { length: 2, type: 'number' } })
+    const cells = container.querySelectorAll('.s-pin-input__cell')
+    await fireEvent.input(cells[0]!, { target: { value: '0' } })
+    await fireEvent.input(cells[1]!, { target: { value: '7' } })
+    expect(emitted()['update:modelValue']?.at(-1)).toEqual([['0', '7']])
+    expect(emitted().complete).toEqual([[['0', '7']]])
+  })
 })

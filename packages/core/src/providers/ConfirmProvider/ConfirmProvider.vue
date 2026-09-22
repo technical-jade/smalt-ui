@@ -8,6 +8,7 @@
 <script setup lang="ts">
 import { computed, onMounted, onUnmounted } from 'vue'
 import { SAlertDialog } from '../../components/SAlertDialog'
+import { devWarn } from '../../internal/dev'
 import {
   registerConfirmProvider,
   unregisterConfirmProvider,
@@ -24,7 +25,7 @@ const current = computed(() => queue.value[0])
 
 onMounted(() => {
   if (registerConfirmProvider() > 1) {
-    console.warn(
+    devWarn(
       '[smalt] Several <ConfirmProvider> instances are mounted. The confirmation queue is ' +
         'shared, so the dialog will be duplicated. Keep one provider at the app root.',
     )
