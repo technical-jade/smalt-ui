@@ -2,10 +2,15 @@
 
 .s-aspect-ratio {
   @include tools.reset-inherited;
-  overflow: hidden;
-  border-radius: var(--s-radius-md);
 
-  &--square {
+  // The shape belongs to the ratio box, not the root: in a grid or flex row the root stretches to
+  // the tallest item, and a clip on it would leave the content's bottom corners square.
+  &__content {
+    overflow: hidden;
+    border-radius: var(--s-radius-md);
+  }
+
+  &--square &__content {
     border-radius: 0;
   }
 
