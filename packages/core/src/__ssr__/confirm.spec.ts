@@ -3,6 +3,7 @@
  */
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 import { useConfirm } from '../composables/useConfirm'
+import { confirmQueue } from '../internal/confirmQueue'
 
 /**
  * The confirmation queue is a module singleton shared by all server requests. An entry would
@@ -20,10 +21,10 @@ describe('useConfirm · SSR', () => {
   })
 
   it('declines on the server and does not grow the queue', async () => {
-    const { confirm, queue } = useConfirm()
+    const { confirm } = useConfirm()
 
     await expect(confirm({ title: 'Delete the project?' })).resolves.toBe(false)
-    expect(queue.value).toHaveLength(0)
+    expect(confirmQueue.value).toHaveLength(0)
     expect(warn).toHaveBeenCalledWith(expect.stringContaining('during server rendering'))
   })
 })

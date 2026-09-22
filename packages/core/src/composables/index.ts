@@ -14,7 +14,7 @@ export {
   type CreateThemeOptions,
 } from './createTheme'
 
-export { useConfirm, type SConfirmOptions, type SConfirmEntry } from './useConfirm'
+export { useConfirm, type SConfirmOptions } from './useConfirm'
 
 export { useToast, type SToastVariant, type SToastOptions, type SToastEntry } from './useToast'
 

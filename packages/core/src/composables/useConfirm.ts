@@ -1,5 +1,5 @@
-import { readonly, ref } from 'vue'
 import type { SAlertDialogProps } from '../components/SAlertDialog/types'
+import { enqueueConfirm, hasConfirmProvider } from '../internal/confirmQueue'
 import { devWarn } from '../internal/dev'
 
 /** What the confirmation dialog shows: a subset of `SAlertDialog` props. */
@@ -7,23 +7,6 @@ export type SConfirmOptions = Pick<
   SAlertDialogProps,
   'title' | 'description' | 'confirmLabel' | 'cancelLabel' | 'danger' | 'square' | 'initialFocus'
 >
-
-export interface SConfirmEntry extends SConfirmOptions {
-  /** Unique id in the queue. */
-  id: number
-}
-
-// One app-wide queue: the provider renders its first entry, callers append to it.
-const queue = ref<SConfirmEntry[]>([])
-let seq = 0
-
-/**
- * Resolve functions are kept outside reactivity: in a `ref` they would be deeply proxied for no
- * benefit. The key is the queue entry id.
- */
-const pending = new Map<number, (answer: boolean) => void>()
-
-let activeProviders = 0
 
 /**
  * Confirmation is a client-side mechanism (the provider mounts in the browser). On the server the
@@ -51,45 +34,14 @@ export function useConfirm() {
           'requests. Ask for confirmation from onMounted or a client-side handler.',
       )
     }
-    if (activeProviders === 0) {
+    if (!hasConfirmProvider()) {
       return answerImmediately(
         '[useConfirm] the app has no <ConfirmProvider>, so nothing can show the dialog; ' +
           'the confirmation is treated as declined. Mount the provider at the app root.',
       )
     }
-
-    const id = ++seq
-    queue.value.push({ ...options, id })
-    return new Promise<boolean>((resolve) => pending.set(id, resolve))
+    return enqueueConfirm(options)
   }
 
-  /** Answer a request and remove it from the queue. Called by the provider. */
-  function settle(id: number, answer: boolean): void {
-    pending.get(id)?.(answer)
-    pending.delete(id)
-    const index = queue.value.findIndex((entry) => entry.id === id)
-    if (index !== -1) queue.value.splice(index, 1)
-  }
-
-  /**
-   * Clear the queue, declining everything left: otherwise `await confirm()` in consumer code
-   * would never return (e.g. after the provider unmounts).
-   */
-  function clear(): void {
-    pending.forEach((resolve) => resolve(false))
-    pending.clear()
-    queue.value.splice(0)
-  }
-
-  return { confirm, settle, clear, queue: readonly(queue) }
-}
-
-/** Mounted provider tracking, for `ConfirmProvider` only. */
-export function registerConfirmProvider(): number {
-  return ++activeProviders
-}
-
-export function unregisterConfirmProvider(): number {
-  activeProviders = Math.max(0, activeProviders - 1)
-  return activeProviders
+  return { confirm }
 }

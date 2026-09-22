@@ -1,15 +1,16 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 import { fireEvent, render, screen } from '@testing-library/vue'
 import { useConfirm } from '../../../composables/useConfirm'
+import { clearConfirms } from '../../../internal/confirmQueue'
 import { ConfirmProvider } from '../index'
 import { resetDevWarnings } from '../../../internal/dev'
 
 beforeEach(() => {
-  useConfirm().clear()
+  clearConfirms()
 })
 
 afterEach(() => {
-  useConfirm().clear()
+  clearConfirms()
 })
 
 const click = (name: string) => fireEvent.click(screen.getByRole('button', { name }))

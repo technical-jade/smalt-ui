@@ -1,27 +1,20 @@
-<script lang="ts">
-/**
- * Module scope (shared by all instances): the mounted provider counter lives in `useConfirm`,
- * which uses it to decline a call made without a provider instead of leaving a hanging promise.
- */
-</script>
-
 <script setup lang="ts">
 import { computed, onMounted, onUnmounted } from 'vue'
 import { SAlertDialog } from '../../components/SAlertDialog'
 import { devWarn } from '../../internal/dev'
 import {
+  clearConfirms,
+  confirmQueue,
   registerConfirmProvider,
+  settleConfirm,
   unregisterConfirmProvider,
-  useConfirm,
-} from '../../composables/useConfirm'
-
-const { queue, settle, clear } = useConfirm()
+} from '../../internal/confirmQueue'
 
 /**
  * Only the first queued request is on screen: the confirmation dialog is modal, so there is no
  * room for several at once; the next one opens once the current one is answered.
  */
-const current = computed(() => queue.value[0])
+const current = computed(() => confirmQueue.value[0])
 
 onMounted(() => {
   if (registerConfirmProvider() > 1) {
@@ -34,7 +27,7 @@ onMounted(() => {
 
 onUnmounted(() => {
   // Pending promises would otherwise never settle, so they are declined.
-  if (unregisterConfirmProvider() === 0) clear()
+  if (unregisterConfirmProvider() === 0) clearConfirms()
 })
 
 defineSlots<{
@@ -57,7 +50,7 @@ defineSlots<{
     :danger="current.danger"
     :square="current.square"
     :initial-focus="current.initialFocus"
-    @confirm="settle(current.id, true)"
-    @cancel="settle(current.id, false)"
+    @confirm="settleConfirm(current.id, true)"
+    @cancel="settleConfirm(current.id, false)"
   />
 </template>

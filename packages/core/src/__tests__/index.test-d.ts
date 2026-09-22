@@ -1,6 +1,6 @@
 import { describe, expectTypeOf, it } from 'vitest'
 import type { ComputedRef } from 'vue'
-import { createTheme, useColorMode, useMessages } from '../index'
+import { createTheme, useColorMode, useConfirm, useMessages } from '../index'
 import type {
   ColorMode,
   ColorScheme,
@@ -8,6 +8,7 @@ import type {
   SBadgeVariant,
   SCardProps,
   SCheckboxProps,
+  SConfirmOptions,
   SElevation,
   SFormFieldSlotProps,
   SInputProps,
@@ -87,6 +88,12 @@ describe('@smalt-ui/core public types', () => {
     expectTypeOf(useMessages).returns.toEqualTypeOf<ComputedRef<SMessages>>()
     expectTypeOf<ConfigProviderProps['messages']>().toEqualTypeOf<Partial<SMessages> | undefined>()
     expectTypeOf<ConfigProviderProps['locale']>().toEqualTypeOf<SLocale | undefined>()
+  })
+
+  it('useConfirm exposes only confirm: the queue belongs to ConfirmProvider', () => {
+    expectTypeOf(useConfirm()).toEqualTypeOf<{
+      confirm: (options: SConfirmOptions) => Promise<boolean>
+    }>()
   })
 
   it('SElevation is the shadow level scale', () => {

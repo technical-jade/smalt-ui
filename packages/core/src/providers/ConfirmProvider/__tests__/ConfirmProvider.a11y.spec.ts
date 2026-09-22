@@ -2,10 +2,11 @@ import { afterEach, describe, expect, it } from 'vitest'
 import { render, screen } from '@testing-library/vue'
 import { axe } from 'vitest-axe'
 import { useConfirm } from '../../../composables/useConfirm'
+import { clearConfirms } from '../../../internal/confirmQueue'
 import { ConfirmProvider } from '../index'
 
 afterEach(() => {
-  useConfirm().clear()
+  clearConfirms()
 })
 
 describe('ConfirmProvider · a11y', () => {
