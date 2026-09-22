@@ -59,10 +59,9 @@ $variants: (
   }
 
   &__close {
+    display: inline-flex;
     flex-shrink: 0;
-    padding: 0 var(--s-space-1);
-    font-size: var(--s-font-size-lg);
-    line-height: 1;
+    padding: 1px;
     color: var(--s-color-text-subtle);
     cursor: pointer;
     background: none;

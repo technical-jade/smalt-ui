@@ -24,7 +24,7 @@ defineSlots<{
   default?: (props: Record<string, never>) => unknown
   /** Footer, usually action buttons. */
   footer?: (props: Record<string, never>) => unknown
-  /** Close button content (`×` by default). */
+  /** Close button content (an `x` icon by default). */
   close?: (props: Record<string, never>) => unknown
 }>()
 </script>

@@ -90,7 +90,10 @@ const statusIcon = computed(() => p.icon ?? STATUS_ICONS[p.variant])
       :aria-label="p.closeLabel ?? m.close"
       @click="onClose"
     >
-      ×
+      <SIcon
+        icon="x"
+        :size="16"
+      />
     </button>
   </div>
 </template>

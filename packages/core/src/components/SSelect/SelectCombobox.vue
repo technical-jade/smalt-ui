@@ -218,8 +218,12 @@ const removeValue = (v: string) => {
               <ComboboxItemIndicator
                 class="s-select__indicator"
                 aria-hidden="true"
-                >✓</ComboboxItemIndicator
               >
+                <SIcon
+                  icon="check"
+                  :size="16"
+                />
+              </ComboboxItemIndicator>
               <SIcon
                 v-if="option.icon"
                 class="s-select__item-icon"
@@ -239,8 +243,12 @@ const removeValue = (v: string) => {
             <ComboboxItemIndicator
               class="s-select__indicator"
               aria-hidden="true"
-              >✓</ComboboxItemIndicator
             >
+              <SIcon
+                icon="check"
+                :size="16"
+              />
+            </ComboboxItemIndicator>
             <SIcon
               v-if="option.icon"
               class="s-select__item-icon"

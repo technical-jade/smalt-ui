@@ -229,8 +229,12 @@ const removeValue = (v: string) => {
             <SelectItemIndicator
               class="s-select__indicator"
               aria-hidden="true"
-              >✓</SelectItemIndicator
             >
+              <SIcon
+                icon="check"
+                :size="16"
+              />
+            </SelectItemIndicator>
             <SIcon
               v-if="option.icon"
               class="s-select__item-icon"

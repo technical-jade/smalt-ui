@@ -70,8 +70,12 @@ function onOpenChange(open: boolean) {
     <ToastClose
       class="s-toast__close"
       :aria-label="p.closeLabel ?? m.close"
-      >×</ToastClose
     >
+      <SIcon
+        icon="x"
+        :size="16"
+      />
+    </ToastClose>
   </ToastRoot>
 </template>
 

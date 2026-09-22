@@ -9,6 +9,7 @@ import {
   DialogTitle,
   DialogTrigger,
 } from 'reka-ui'
+import { SIcon } from '../../components/SIcon'
 import { SVisuallyHidden } from '../SVisuallyHidden'
 import { useMessages } from '../../composables'
 import type { SDialogShellProps } from './types'
@@ -102,7 +103,12 @@ defineSlots<{
           :class="`s-${props.name}__close`"
           :aria-label="closeLabel ?? m.close"
         >
-          <slot name="close">×</slot>
+          <slot name="close">
+            <SIcon
+              icon="x"
+              :size="20"
+            />
+          </slot>
         </DialogClose>
       </DialogContent>
     </DialogPortal>
