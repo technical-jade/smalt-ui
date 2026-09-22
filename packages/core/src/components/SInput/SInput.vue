@@ -25,6 +25,9 @@ const props = withDefaults(defineProps<SInputProps>(), {
   floatingLabel: true,
   clearable: false,
   clearIcon: 'x',
+  revealable: false,
+  revealIcon: 'eye',
+  hideIcon: 'eye-off',
   unmaskedValue: false,
   useTags: false,
   duplicate: false,
@@ -165,6 +168,11 @@ const tags = computed<string[]>({
         :clearable="p.clearable"
         :clear-icon="p.clearIcon"
         :clear-label="p.clearLabel"
+        :revealable="p.revealable"
+        :reveal-icon="p.revealIcon"
+        :hide-icon="p.hideIcon"
+        :show-password-label="p.showPasswordLabel"
+        :hide-password-label="p.hidePasswordLabel"
         :mask="p.mask"
         :unmasked-value="p.unmaskedValue"
         :fill-mask="p.fillMask"

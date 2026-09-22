@@ -1,0 +1,202 @@
+@use 'sass:map';
+@use '../../styles/tools';
+
+// Accent of an item: its own color wins over the timeline color, which in turn falls back to
+// the primary role.
+$accent: var(--s-timeline-item-c, var(--s-timeline-c, var(--s-color-primary)));
+
+$sizes: (
+  sm: (
+    dot: 1.25rem,
+    gap: var(--s-space-2),
+    run: var(--s-space-5),
+    title: 'title-sm',
+    description: 'body-sm',
+    date: 'label-sm',
+  ),
+  md: (
+    dot: 1.5rem,
+    gap: var(--s-space-3),
+    run: var(--s-space-6),
+    title: 'title-sm',
+    description: 'body-md',
+    date: 'label-sm',
+  ),
+  lg: (
+    dot: 2rem,
+    gap: var(--s-space-4),
+    run: var(--s-space-8),
+    title: 'title-md',
+    description: 'body-lg',
+    date: 'label-md',
+  ),
+);
+
+.s-timeline {
+  @include tools.reset-inherited;
+  display: flex;
+  color: var(--s-color-text);
+
+  &--vertical {
+    flex-direction: column;
+  }
+
+  &--horizontal {
+    flex-direction: row;
+    align-items: flex-start;
+    // The rail spans the container: as a flex item the timeline would shrink to its content and
+    // the segments would lose their even rhythm.
+    inline-size: 100%;
+  }
+
+  // The item is a grid so that the rail segment can run past the indicator alongside the
+  // content: as flex children the three parts would sit on one line and the segment would have
+  // nothing to stretch against.
+  &__item {
+    display: grid;
+    min-inline-size: 0;
+    @include tools.disabled-state;
+  }
+
+  &--vertical &__item {
+    grid-template-columns: auto 1fr;
+    grid-template-rows: auto 1fr;
+  }
+
+  &--horizontal &__item {
+    grid-template-columns: auto 1fr;
+    grid-template-rows: auto auto;
+    // Only items with a segment grow: the last one keeps its content width, otherwise its text
+    // would hang at the left edge of the leftover space.
+    flex: 0 1 auto;
+  }
+
+  &--horizontal &__item:has(> .s-timeline__line) {
+    flex: 1 1 auto;
+  }
+
+  &__indicator {
+    grid-area: 1 / 1;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    // An item without its own color stays muted until the model marks it as reached.
+    color: var(--s-timeline-item-c, var(--s-color-text-muted));
+    background-color: var(--s-color-surface);
+    border: 2px solid var(--s-timeline-item-c, var(--s-color-border));
+    border-radius: var(--s-radius-full);
+    @include tools.transition(background-color, border-color, color);
+  }
+
+  &__line {
+    background-color: var(--s-color-border);
+    border-radius: var(--s-radius-full);
+    @include tools.transition(background-color);
+  }
+
+  &--vertical &__line {
+    grid-area: 2 / 1;
+    justify-self: center;
+    inline-size: 2px;
+  }
+
+  &--horizontal &__line {
+    grid-area: 1 / 2;
+    align-self: center;
+    block-size: 2px;
+  }
+
+  &__content {
+    min-inline-size: 0;
+  }
+
+  &--vertical &__content {
+    grid-area: 1 / 2 / 3 / 3;
+  }
+
+  &--horizontal &__content {
+    grid-area: 2 / 1 / 3 / 3;
+  }
+
+  &__date {
+    color: var(--s-color-text-subtle);
+  }
+
+  &__title {
+    font-family: var(--s-font-heading);
+    color: var(--s-color-text);
+  }
+
+  &__description {
+    color: var(--s-color-text-muted);
+  }
+
+  // An item before the current one: filled indicator and filled segment behind it.
+  &__item--completed &__indicator {
+    color: var(--s-timeline-c-on, var(--s-color-primary-contrast));
+    background-color: $accent;
+    border-color: $accent;
+  }
+
+  &__item--completed &__line {
+    background-color: $accent;
+  }
+
+  // The current item keeps the accent on the outline only: a filled dot would make it read as
+  // one more finished event.
+  &__item--active &__indicator {
+    color: $accent;
+    background-color: color-mix(in srgb, #{$accent} 14%, var(--s-color-surface));
+    border-color: $accent;
+  }
+
+  &__item--active &__title {
+    color: var(--s-timeline-item-c, var(--s-timeline-c, var(--s-color-primary-text)));
+  }
+
+  @each $name, $cfg in $sizes {
+    &--#{$name} &__indicator {
+      inline-size: map.get($cfg, dot);
+      block-size: map.get($cfg, dot);
+    }
+
+    &--#{$name} &__title {
+      @include tools.typescale(map.get($cfg, title));
+    }
+
+    &--#{$name} &__description {
+      @include tools.typescale(map.get($cfg, description));
+    }
+
+    &--#{$name} &__date {
+      @include tools.typescale(map.get($cfg, date));
+    }
+
+    &--#{$name}.s-timeline--vertical &__content {
+      padding-inline-start: map.get($cfg, gap);
+      padding-block-end: map.get($cfg, run);
+    }
+
+    &--#{$name}.s-timeline--vertical &__item:last-child &__content {
+      padding-block-end: 0;
+    }
+
+    &--#{$name}.s-timeline--vertical &__line {
+      // The segment starts under the dot and reaches the next one; the minimum keeps a rail
+      // visible even for an item with a single line of text.
+      margin-block: var(--s-space-1);
+      min-block-size: map.get($cfg, gap);
+    }
+
+    &--#{$name}.s-timeline--horizontal &__line {
+      margin-inline: var(--s-space-1);
+      min-inline-size: map.get($cfg, run);
+    }
+
+    &--#{$name}.s-timeline--horizontal &__content {
+      padding-block-start: map.get($cfg, gap);
+      padding-inline-end: map.get($cfg, run);
+    }
+  }
+}

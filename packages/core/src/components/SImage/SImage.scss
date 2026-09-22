@@ -1,0 +1,34 @@
+@use '../../styles/tools';
+
+.s-image {
+  @include tools.reset-inherited;
+  position: relative;
+  display: block;
+  overflow: hidden;
+  border-radius: var(--s-radius-md);
+
+  &--square {
+    border-radius: 0;
+  }
+
+  &__img {
+    display: block;
+    width: 100%;
+    height: 100%;
+  }
+
+  // Both layers cover the frame: with `ratio` that frame is the absolutely positioned ratio box,
+  // without it the root itself, which is why the root is a positioning context.
+  &__placeholder,
+  &__error {
+    position: absolute;
+    inset: 0;
+  }
+
+  &__error {
+    display: grid;
+    place-items: center;
+    background-color: var(--s-color-bg-muted);
+    color: var(--s-color-text-muted);
+  }
+}

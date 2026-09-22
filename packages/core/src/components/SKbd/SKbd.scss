@@ -1,0 +1,62 @@
+@use 'sass:map';
+@use '../../styles/tools';
+
+// A kbd is not an interactive control, so control-size does not apply: the box only has to stay
+// square enough around a single glyph. min-width keeps that square, padding handles longer names.
+$sizes: (
+  sm: (
+    height: 1.125rem,
+    font: xs,
+    pad: 1,
+  ),
+  md: (
+    height: 1.375rem,
+    font: sm,
+    pad: 2,
+  ),
+  lg: (
+    height: 1.625rem,
+    font: base,
+    pad: 2,
+  ),
+);
+
+.s-kbd {
+  // typescale sets its own line-height/letter-spacing, so the reset skips them (no duplicate).
+  @include tools.reset-inherited($typography: false);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--s-font-mono);
+  @include tools.typescale('label-md');
+  white-space: nowrap;
+  border: 1px solid transparent;
+  border-radius: var(--s-radius-sm);
+  // The thicker bottom edge is what makes the box read as a physical key.
+  box-shadow: inset 0 -1px 0 var(--s-color-border-strong);
+
+  @each $name, $cfg in $sizes {
+    &--#{$name} {
+      height: map.get($cfg, height);
+      min-width: map.get($cfg, height);
+      padding: 0 var(--s-space-#{map.get($cfg, pad)});
+      font-size: var(--s-font-size-#{map.get($cfg, font)});
+    }
+  }
+
+  &--outline {
+    color: var(--s-color-text);
+    background-color: var(--s-color-surface);
+    border-color: var(--s-color-border);
+  }
+
+  &--solid {
+    color: var(--s-color-text);
+    background-color: var(--s-color-surface-variant);
+  }
+
+  &--subtle {
+    color: var(--s-color-text-muted);
+    background-color: var(--s-color-bg-muted);
+  }
+}

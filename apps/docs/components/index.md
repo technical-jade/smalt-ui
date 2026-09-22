@@ -12,10 +12,12 @@ Components are named with the `S` prefix (`SButton`, `SInput`, …) and grouped 
 Basic building blocks reused by other components.
 
 - [Button](/components/button) — a button with variants, sizes, and icon slots
+- [Button Group](/components/button-group) — buttons joined into a single control
 - [Icon](/components/icon) — an SVG icon from a name registry (Lucide)
 - [Badge](/components/badge) — a compact label or counter
 - [Tag](/components/tag) — a removable chip tag (also used in `use-tags` fields)
 - [Avatar](/components/avatar) — an avatar with a fallback
+- [Kbd](/components/kbd) — a keyboard shortcut key
 
 ## Forms
 
@@ -52,6 +54,7 @@ Moving between sections and contextual action menus.
   [Navigation Menu](/components/navigation-menu)
 - Menus: [Dropdown Menu](/components/dropdown-menu), [Context Menu](/components/context-menu),
   [Menubar](/components/menubar), [Toolbar](/components/toolbar)
+- Scrolling: [Back to Top](/components/back-top)
 
 ## Overlays
 
@@ -66,13 +69,16 @@ Popup surfaces and dialogs (portals, focus management).
 Messages and status indicators.
 
 - [Alert](/components/alert), [Toast](/components/toast), [Progress](/components/progress),
-  [Spinner](/components/spinner), [Skeleton](/components/skeleton)
+  [Spinner](/components/spinner), [Skeleton](/components/skeleton),
+  [Empty State](/components/empty-state)
 
 ## Other
 
 Layout, containers, and expandable content.
 
 - Layout: [Card](/components/card), [Separator](/components/separator),
-  [Aspect Ratio](/components/aspect-ratio), [Splitter](/components/splitter)
+  [Aspect Ratio](/components/aspect-ratio), [Image](/components/image),
+  [Splitter](/components/splitter), [Scroll Area](/components/scroll-area)
 - Disclosure: [Accordion](/components/accordion), [Collapsible](/components/collapsible),
   [Tree](/components/tree)
+- Data: [Timeline](/components/timeline)

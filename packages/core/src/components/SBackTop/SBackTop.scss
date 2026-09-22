@@ -1,0 +1,34 @@
+@use '../../styles/tools';
+
+.s-back-top {
+  @include tools.reset-inherited;
+  position: fixed;
+  // Logical insets keep the button by the trailing edge in right-to-left layouts; the public
+  // knobs stay named after the visual corner.
+  inset-inline-end: var(--s-back-top-right, var(--s-space-6));
+  inset-block-end: var(--s-back-top-bottom, var(--s-space-6));
+  z-index: var(--s-z-sticky);
+}
+
+.s-back-top-fade-enter-active,
+.s-back-top-fade-leave-active {
+  @include tools.transition(opacity, transform);
+}
+
+.s-back-top-fade-enter-from,
+.s-back-top-fade-leave-to {
+  opacity: 0;
+  transform: translateY(var(--s-space-2));
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .s-back-top-fade-enter-active,
+  .s-back-top-fade-leave-active {
+    transition: none;
+  }
+
+  .s-back-top-fade-enter-from,
+  .s-back-top-fade-leave-to {
+    transform: none;
+  }
+}

@@ -1,0 +1,95 @@
+@use 'sass:map';
+@use '../../styles/tools';
+
+$sizes: (
+  sm: (
+    gap: var(--s-space-2),
+    padding: var(--s-space-4),
+    title: 'title-sm',
+    description: 'body-sm',
+    image: 4rem,
+  ),
+  md: (
+    gap: var(--s-space-3),
+    padding: var(--s-space-6),
+    title: 'title-md',
+    description: 'body-md',
+    image: 6rem,
+  ),
+  lg: (
+    gap: var(--s-space-4),
+    padding: var(--s-space-8),
+    title: 'title-lg',
+    description: 'body-lg',
+    image: 9rem,
+  ),
+);
+
+.s-empty-state {
+  @include tools.reset-inherited;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  color: var(--s-color-text);
+
+  &__media {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    // Without the color prop the media stays quieter than the title: the block reports absence,
+    // it does not ask for attention.
+    color: var(--s-empty-state-c, var(--s-color-text-subtle));
+  }
+
+  &__image {
+    display: block;
+    max-inline-size: 100%;
+    object-fit: contain;
+  }
+
+  &__title {
+    font-family: var(--s-font-heading);
+    color: var(--s-color-text);
+  }
+
+  &__description {
+    // The line stays readable in a wide container: the block is centered, and a long line would
+    // make the eye travel back across the whole page.
+    max-inline-size: 48ch;
+    color: var(--s-color-text-muted);
+  }
+
+  &__body {
+    color: var(--s-color-text-muted);
+  }
+
+  &__actions {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: center;
+    gap: var(--s-space-2);
+    margin-block-start: var(--s-space-1);
+  }
+
+  @each $name, $cfg in $sizes {
+    &--#{$name} {
+      gap: map.get($cfg, gap);
+      padding: map.get($cfg, padding);
+    }
+
+    &--#{$name} &__title {
+      @include tools.typescale(map.get($cfg, title));
+    }
+
+    &--#{$name} &__description,
+    &--#{$name} &__body {
+      @include tools.typescale(map.get($cfg, description));
+    }
+
+    &--#{$name} &__image {
+      max-block-size: map.get($cfg, image);
+    }
+  }
+}

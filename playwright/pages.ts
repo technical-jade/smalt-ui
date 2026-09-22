@@ -62,4 +62,11 @@ export const COMPONENT_PAGES = [
   { name: 'shape', path: '/style/shape' },
   { name: 'elevation', path: '/style/elevation' },
   { name: 'autocomplete', path: '/components/autocomplete' },
+  { name: 'button-group', path: '/components/button-group' },
+  { name: 'kbd', path: '/components/kbd' },
+  { name: 'empty-state', path: '/components/empty-state' },
+  { name: 'timeline', path: '/components/timeline' },
+  { name: 'scroll-area', path: '/components/scroll-area' },
+  { name: 'image', path: '/components/image' },
+  { name: 'back-top', path: '/components/back-top' },
 ]

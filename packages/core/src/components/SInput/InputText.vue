@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, useAttrs, useTemplateRef } from 'vue'
+import { computed, ref, useAttrs, useTemplateRef } from 'vue'
 import { type MaskaDetail, type MaskInputOptions } from 'maska'
 import { vMaska } from 'maska/vue'
 import { SIcon } from '../SIcon'
@@ -45,6 +45,11 @@ const props = defineProps<{
   clearable?: boolean
   clearIcon?: string
   clearLabel?: string
+  revealable?: boolean
+  revealIcon?: string
+  hideIcon?: string
+  showPasswordLabel?: string
+  hidePasswordLabel?: string
   mask?: string
   unmaskedValue?: boolean
   fillMask?: boolean | string
@@ -68,6 +73,34 @@ const field = useTemplateRef<HTMLInputElement>('field')
 const clear = () => {
   model.value = ''
   field.value?.focus()
+}
+
+// Local on purpose: nothing outside drives the toggle, it only swaps the type of the same input.
+const revealed = ref(false)
+/**
+ * Revealing is not an edit, so a readonly field keeps the toggle; a disabled one offers no
+ * actions at all, like the clear button.
+ */
+const showReveal = computed(() => props.revealable && props.type === 'password' && !props.disabled)
+const inputType = computed(() => (showReveal.value && revealed.value ? 'text' : props.type))
+const revealLabel = computed(() =>
+  revealed.value
+    ? (props.hidePasswordLabel ?? m.value.hidePassword)
+    : (props.showPasswordLabel ?? m.value.showPassword),
+)
+
+/**
+ * The caret is put back a frame later: the browser drops the input selection when the type
+ * switches between `password` and `text`, and it does so after the current microtask.
+ */
+const toggleReveal = () => {
+  const input = field.value
+  const start = input?.selectionStart ?? null
+  const end = input?.selectionEnd ?? null
+  revealed.value = !revealed.value
+  if (input && start !== null) {
+    requestAnimationFrame(() => input.setSelectionRange(start, end ?? start))
+  }
 }
 
 // Mask: Maska handles the caret, paste and IME; this only wires it to the model.
@@ -235,7 +268,7 @@ const maskedAttrs = computed(() =>
       ref="field"
       v-model="model"
       class="s-input__field"
-      :type="type"
+      :type="inputType"
       v-bind="fieldAttrs"
     />
     <span
@@ -272,6 +305,21 @@ const maskedAttrs = computed(() =>
     >
       <SIcon
         :icon="clearIcon"
+        :size="16"
+      />
+    </button>
+    <!-- A prevented mousedown keeps focus, and with it the caret, in the field on a click. -->
+    <button
+      v-if="showReveal"
+      type="button"
+      class="s-input__reveal"
+      :aria-label="revealLabel"
+      :aria-pressed="revealed"
+      @mousedown.prevent
+      @click="toggleReveal"
+    >
+      <SIcon
+        :icon="revealed ? hideIcon : revealIcon"
         :size="16"
       />
     </button>

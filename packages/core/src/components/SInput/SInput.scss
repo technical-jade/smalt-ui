@@ -108,11 +108,13 @@ $sizes: sm, md, lg;
     @include tools.field-affix;
   }
 
-  &__affix + &__clear {
+  &__affix + &__clear,
+  &__affix + &__reveal {
     margin-inline-start: calc(var(--s-space-1) * -1);
   }
 
-  &__clear {
+  &__clear,
+  &__reveal {
     display: inline-flex;
     flex: none;
     align-items: center;

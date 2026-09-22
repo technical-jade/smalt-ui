@@ -16,6 +16,7 @@ const birth = ref('')
 const license = ref('')
 const fillPhone = ref('')
 const fillCard = ref('')
+const secret = ref('correct horse')
 const workEmail = ref('')
 const skills = ref([])
 </script>
@@ -311,6 +312,45 @@ On intermediate invalid input, a native number field hands the browser an empty 
 `12,75` can turn into `5` while the field stays empty — the value gets corrupted silently. That is
 why `type="number"` enables numeric mode (see below) and renders as `text`.
 :::
+
+## Password reveal
+
+`revealable` adds a button at the end of a `type="password"` field that switches the value between
+hidden and visible. It applies to password fields only: with any other `type` nothing is rendered.
+
+The toggle is a `<button type="button">`, so it never submits the surrounding form. It takes no
+focus of its own — the field keeps the caret and typing continues where it stopped. Its accessible
+name comes from the locale dictionary (`Show password` / `Hide password`) and follows the state
+together with `aria-pressed`; `show-password-label` and `hide-password-label` override it for a
+single field, `reveal-icon` and `hide-icon` replace the icons. With `clearable` on as well, the
+clear button comes first and the reveal button sits after it, before anything in the `append` slot.
+
+<Demo>
+  <SInput label="Password" type="password" revealable placeholder="••••••••" />
+  <SInput label="Current password" type="password" revealable clearable v-model="secret" />
+
+<template #code>
+
+```vue
+<template>
+  <SInput
+    v-model="password"
+    label="Password"
+    type="password"
+    revealable
+  />
+  <SInput
+    v-model="password"
+    label="Current password"
+    type="password"
+    revealable
+    clearable
+  />
+</template>
+```
+
+  </template>
+</Demo>
 
 ## Numeric mode
 

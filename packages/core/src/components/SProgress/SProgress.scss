@@ -46,6 +46,63 @@ $variants: (
     width: 40%;
     animation: s-progress-indeterminate 1.2s var(--s-ease-standard) infinite;
   }
+
+  // Circular form: the ring is an svg inside the same Reka root, so the bar rules above are
+  // undone here. The modifier comes last so it outweighs the size and indeterminate rules.
+  &--circular {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: auto;
+    height: auto;
+    overflow: visible;
+    background-color: transparent;
+    border-radius: 0;
+
+    .s-progress__svg {
+      // Progress starts at 12 o'clock and runs clockwise.
+      transform: rotate(-90deg);
+    }
+
+    .s-progress__track,
+    .s-progress__indicator {
+      fill: none;
+    }
+
+    .s-progress__track {
+      stroke: var(--s-color-bg-muted);
+    }
+
+    .s-progress__indicator {
+      stroke-linecap: round;
+      transition: stroke-dashoffset var(--s-duration-base) var(--s-ease-standard);
+    }
+
+    .s-progress__value {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--s-color-text);
+      @include tools.typescale('label-md');
+    }
+
+    &.s-progress--sm .s-progress__value {
+      @include tools.typescale('label-sm');
+    }
+
+    @each $name, $var in $variants {
+      &.s-progress--#{$name} .s-progress__indicator {
+        stroke: var(--s-progress-c, var(#{$var}));
+      }
+    }
+
+    &[data-state='indeterminate'] .s-progress__indicator {
+      // The default origin is the viewBox center, which the circle shares.
+      animation: s-progress-ring-spin 1s linear infinite;
+    }
+  }
 }
 
 // Slower, not stopped: a frozen bar would look like a stalled determinate one.
@@ -61,5 +118,11 @@ $variants: (
   }
   100% {
     transform: translateX(350%);
+  }
+}
+
+@keyframes s-progress-ring-spin {
+  to {
+    transform: rotate(360deg);
   }
 }

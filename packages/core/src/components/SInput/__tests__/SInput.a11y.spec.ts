@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { render } from '@testing-library/vue'
+import { fireEvent, render } from '@testing-library/vue'
 import { axe } from 'vitest-axe'
 import { SInput } from '../index'
 
@@ -20,6 +20,21 @@ describe('SInput · a11y', () => {
     const { container } = render(SInput, {
       props: { useTags: true, modelValue: ['vue', 'nuxt'], label: 'Technologies' },
     })
+    expect(await axe(container)).toHaveNoViolations()
+  })
+
+  it('has no violations with a revealable password field', async () => {
+    const { container } = render(SInput, {
+      props: {
+        label: 'Password',
+        type: 'password',
+        revealable: true,
+        clearable: true,
+        modelValue: 'secret',
+      },
+    })
+    expect(await axe(container)).toHaveNoViolations()
+    await fireEvent.click(container.querySelector('.s-input__reveal')!)
     expect(await axe(container)).toHaveNoViolations()
   })
 

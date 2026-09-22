@@ -89,10 +89,12 @@ export default defineConfig({
           text: 'Basics',
           items: [
             { text: 'Button', link: '/components/button' },
+            { text: 'Button Group', link: '/components/button-group' },
             { text: 'Icon', link: '/components/icon' },
             { text: 'Badge', link: '/components/badge' },
             { text: 'Tag', link: '/components/tag' },
             { text: 'Avatar', link: '/components/avatar' },
+            { text: 'Kbd', link: '/components/kbd' },
           ],
         },
         {
@@ -138,6 +140,7 @@ export default defineConfig({
             { text: 'Context Menu', link: '/components/context-menu' },
             { text: 'Menubar', link: '/components/menubar' },
             { text: 'Toolbar', link: '/components/toolbar' },
+            { text: 'Back to Top', link: '/components/back-top' },
           ],
         },
         {
@@ -159,6 +162,7 @@ export default defineConfig({
             { text: 'Progress', link: '/components/progress' },
             { text: 'Spinner', link: '/components/spinner' },
             { text: 'Skeleton', link: '/components/skeleton' },
+            { text: 'Empty State', link: '/components/empty-state' },
           ],
         },
         {
@@ -167,10 +171,13 @@ export default defineConfig({
             { text: 'Card', link: '/components/card' },
             { text: 'Separator', link: '/components/separator' },
             { text: 'Aspect Ratio', link: '/components/aspect-ratio' },
+            { text: 'Image', link: '/components/image' },
             { text: 'Splitter', link: '/components/splitter' },
+            { text: 'Scroll Area', link: '/components/scroll-area' },
             { text: 'Accordion', link: '/components/accordion' },
             { text: 'Collapsible', link: '/components/collapsible' },
             { text: 'Tree', link: '/components/tree' },
+            { text: 'Timeline', link: '/components/timeline' },
           ],
         },
       ],

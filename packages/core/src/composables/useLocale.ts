@@ -87,6 +87,14 @@ export interface SMessages {
   autocompleteEmpty: string
   /** Hidden label of a loading state (`SAutocomplete` suggestions, indeterminate `SProgress`). */
   loading: string
+  /** Accessible name of the button that scrolls back to the top (`SBackTop`). */
+  backToTop: string
+  /** Default title of an `SEmptyState` without its own text. */
+  noData: string
+  /** Button that reveals the value of a password `SInput`. */
+  showPassword: string
+  /** Button that hides the value of a password `SInput`. */
+  hidePassword: string
   /** Error of the `required()` rule. */
   ruleRequired: string
   /** Error of `minLength()` for text; `{min}` is the limit. */
@@ -145,6 +153,10 @@ export const enMessages: SMessages = {
   rangeEnd: 'end',
   autocompleteEmpty: 'Nothing found',
   loading: 'Loading',
+  backToTop: 'Back to top',
+  noData: 'No data',
+  showPassword: 'Show password',
+  hidePassword: 'Hide password',
   ruleRequired: 'This field is required',
   ruleMinLength: 'Enter at least {min} characters',
   ruleMaxLength: 'Enter no more than {max} characters',

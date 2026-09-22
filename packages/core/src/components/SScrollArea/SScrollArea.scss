@@ -1,0 +1,71 @@
+@use '../../styles/tools';
+
+// Scrollbar thickness. Not tools.control-size: that map sizes interactive controls (height,
+// padding, font) and has nothing to say about a decorative bar.
+$bar-sizes: (
+  sm: 8px,
+  md: 10px,
+  lg: 14px,
+);
+$bar-padding: 2px;
+
+.s-scroll-area {
+  @include tools.reset-inherited;
+  position: relative;
+  overflow: hidden;
+  color: var(--s-color-text);
+
+  @each $name, $value in $bar-sizes {
+    &--#{$name} {
+      --s-scroll-area-bar-size: #{$value};
+    }
+  }
+
+  &__viewport {
+    inline-size: 100%;
+    block-size: 100%;
+  }
+
+  // Overlay bar: it sits above the content instead of taking layout space, so the area keeps the
+  // same width in every browser.
+  &__scrollbar {
+    display: flex;
+    padding: $bar-padding;
+    background: transparent;
+    // The pointer owns the bar while dragging; without this touch scrolling steals the gesture.
+    touch-action: none;
+    user-select: none;
+    @include tools.transition(opacity);
+
+    // Reka sizes the thumb along the scrolling axis with an inline length, so `flex: 1` on the
+    // thumb has to grow the OTHER axis — hence the direction flips per orientation.
+    &[data-orientation='vertical'] {
+      flex-direction: row;
+      inline-size: var(--s-scroll-area-bar-size);
+    }
+
+    &[data-orientation='horizontal'] {
+      flex-direction: column;
+      block-size: var(--s-scroll-area-bar-size);
+    }
+
+    &[data-state='hidden'] {
+      opacity: 0;
+    }
+  }
+
+  &__thumb {
+    flex: 1;
+    background: var(--s-color-border-strong);
+    border-radius: var(--s-radius-full);
+    @include tools.transition(background-color);
+  }
+
+  &__scrollbar:hover &__thumb {
+    background: var(--s-color-text-subtle);
+  }
+
+  &__corner {
+    background: transparent;
+  }
+}

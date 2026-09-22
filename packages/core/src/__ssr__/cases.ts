@@ -50,6 +50,15 @@ export const SSR_CASES: Record<string, () => VNode> = {
     h(ToastProvider, null, {
       default: () => h(components.SToast, { title: 'Title' }),
     }),
+  SImage: () =>
+    h(components.SImage, { src: '/media/cover.jpg', alt: 'Mountain lake', ratio: 16 / 9 }),
+  STimeline: () =>
+    h(components.STimeline, {
+      items: [
+        { title: 'Order created', date: 'March 3' },
+        { title: 'Shipped', date: 'March 5' },
+      ],
+    }),
 }
 
 /**

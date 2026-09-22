@@ -72,6 +72,25 @@ export interface SInputProps extends SValidationProps<string | string[]> {
   /** Accessible name of the clear button (defaults to the locale dictionary). */
   clearLabel?: string
   /**
+   * Shows a button that toggles the value between hidden and visible. Applies to
+   * `type="password"` only: with any other type the prop has no effect.
+   */
+  revealable?: boolean
+  /** Registry name or raw path of the reveal button icon, shown while the value is hidden. */
+  revealIcon?: string
+  /** Registry name or raw path of the reveal button icon, shown while the value is visible. */
+  hideIcon?: string
+  /**
+   * Accessible name of the reveal button while the value is hidden (defaults to the locale
+   * dictionary).
+   */
+  showPasswordLabel?: string
+  /**
+   * Accessible name of the reveal button while the value is visible (defaults to the locale
+   * dictionary).
+   */
+  hidePasswordLabel?: string
+  /**
    * Input mask (plain mode only, not `use-tags`). A pattern of tokens: `#` is a digit, `S` a
    * letter, `N` alphanumeric, `A`/`a` an upper/lowercase letter, `X`/`x` upper/lowercase
    * alphanumeric; any other character is a literal separator. Escape a literal with `\`

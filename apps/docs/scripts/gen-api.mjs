@@ -161,15 +161,24 @@ function readEventDescriptions(file) {
   return descriptions
 }
 
+/**
+ * SColorName (the color/text-color prop) expands into ~290 palette values, a useless wall of
+ * text. It is shown as string; the explanation and the palette link are in the JSDoc. The
+ * marker is a literal unique to the palette union. The union is collapsed in place rather than
+ * in the whole type, because the palette also appears nested inside item types
+ * (`STimelineItem[]`), where replacing everything would hide the item's own fields.
+ */
+const PALETTE_MARKER = '"blue-grey-14"'
+const LITERAL_UNION = /"[^"]+"(?:\s*\|\s*"[^"]+")+/g
+
+function collapsePalette(type) {
+  if (!type || !type.includes(PALETTE_MARKER)) return type
+  return type.replace(LITERAL_UNION, (union) => (union.includes(PALETTE_MARKER) ? 'string' : union))
+}
+
 function renderType(prop) {
   const type = normalizeDateTypes(expandType(prop.schema) ?? stripUndefined(clean(prop.type)))
-  /**
-   * SColorName (the color/text-color prop) expands into ~290 palette values, a useless wall of
-   * text. It is shown as string; the explanation and the palette link are in the JSDoc.
-   * The marker is a literal unique to the palette union.
-   */
-  if (type && type.includes('"blue-grey-14"')) return 'string'
-  return type
+  return collapsePalette(type)
 }
 
 function describeEvent(name) {

@@ -64,6 +64,112 @@ describe('SInput', () => {
   })
 })
 
+describe('SInput · password reveal (revealable)', () => {
+  it('renders the toggle for a password field', () => {
+    render(SInput, { props: { label: 'Password', type: 'password', revealable: true } })
+    expect(screen.getByRole('button', { name: 'Show password' })).toBeInTheDocument()
+  })
+
+  it('renders no toggle when the type is not password', () => {
+    const { container } = render(SInput, {
+      props: { label: 'Name', type: 'text', revealable: true },
+    })
+    expect(container.querySelector('.s-input__reveal')).toBeNull()
+  })
+
+  it('renders no toggle without revealable', () => {
+    const { container } = render(SInput, { props: { label: 'Password', type: 'password' } })
+    expect(container.querySelector('.s-input__reveal')).toBeNull()
+  })
+
+  it('renders no toggle when the field is disabled', () => {
+    const { container } = render(SInput, {
+      props: { label: 'Password', type: 'password', revealable: true, disabled: true },
+    })
+    expect(container.querySelector('.s-input__reveal')).toBeNull()
+  })
+
+  it('click switches the input type and flips aria-pressed', async () => {
+    const { container } = render(SInput, {
+      props: { label: 'Password', type: 'password', revealable: true, modelValue: 'secret' },
+    })
+    const input = container.querySelector('.s-input__field') as HTMLInputElement
+    const toggle = container.querySelector('.s-input__reveal') as HTMLElement
+    expect(input).toHaveAttribute('type', 'password')
+    expect(toggle).toHaveAttribute('aria-pressed', 'false')
+
+    await fireEvent.click(toggle)
+    expect(input).toHaveAttribute('type', 'text')
+    expect(toggle).toHaveAttribute('aria-pressed', 'true')
+
+    await fireEvent.click(toggle)
+    expect(input).toHaveAttribute('type', 'password')
+    expect(toggle).toHaveAttribute('aria-pressed', 'false')
+  })
+
+  it('the accessible name switches with the state', async () => {
+    render(SInput, { props: { label: 'Password', type: 'password', revealable: true } })
+    await fireEvent.click(screen.getByRole('button', { name: 'Show password' }))
+    expect(screen.getByRole('button', { name: 'Hide password' })).toBeInTheDocument()
+  })
+
+  it('the label props override the dictionary strings', async () => {
+    render(SInput, {
+      props: {
+        label: 'Password',
+        type: 'password',
+        revealable: true,
+        showPasswordLabel: 'Unmask',
+        hidePasswordLabel: 'Mask',
+      },
+    })
+    await fireEvent.click(screen.getByRole('button', { name: 'Unmask' }))
+    expect(screen.getByRole('button', { name: 'Mask' })).toBeInTheDocument()
+  })
+
+  it('custom icons are used for both states', async () => {
+    const { container } = render(SInput, {
+      props: {
+        label: 'Password',
+        type: 'password',
+        revealable: true,
+        revealIcon: 'star',
+        hideIcon: 'calendar',
+      },
+    })
+    const toggle = container.querySelector('.s-input__reveal') as HTMLElement
+    expect(toggle.querySelector('.s-icon')).not.toBeNull()
+    await fireEvent.click(toggle)
+    expect(toggle.querySelector('.s-icon')).not.toBeNull()
+  })
+
+  it('the toggle does not submit the surrounding form', () => {
+    const { container } = render(SInput, {
+      props: { label: 'Password', type: 'password', revealable: true },
+    })
+    expect(container.querySelector('.s-input__reveal')).toHaveAttribute('type', 'button')
+  })
+
+  it('clear and reveal coexist: clear comes first, the value survives the toggle', async () => {
+    const { container } = render(SInput, {
+      props: {
+        label: 'Password',
+        type: 'password',
+        revealable: true,
+        clearable: true,
+        modelValue: 'secret',
+      },
+    })
+    const buttons = [...container.querySelectorAll('.s-input__wrap button')].map((b) => b.className)
+    expect(buttons).toEqual(['s-input__clear', 's-input__reveal'])
+
+    const input = container.querySelector('.s-input__field') as HTMLInputElement
+    await fireEvent.click(container.querySelector('.s-input__reveal')!)
+    expect(input).toHaveAttribute('type', 'text')
+    expect(input.value).toBe('secret')
+  })
+})
+
 describe('SInput · floating label', () => {
   it('renders the label inside the border by default and keeps it linked to the field', () => {
     const { container } = render(SInput, { props: { label: 'Name' } })

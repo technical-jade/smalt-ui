@@ -12,6 +12,16 @@ export interface SProgressProps {
   size?: SProgressSize
   /** Fill color variant. */
   variant?: SProgressVariant
+  // A separate prop, not a `variant` value: `variant` is the color axis and serves both forms.
+  /** Draw a ring instead of a linear bar. */
+  circular?: boolean
+  /** Ring stroke width in px. Defaults to a width derived from `size`. Circular form only. */
+  thickness?: number
+  /**
+   * Show the percentage in the middle of the ring. Ignored while indeterminate and when the
+   * default slot is filled. Circular form only.
+   */
+  showValue?: boolean
   /**
    * Accent color: a name from the [palette](/style/palette) (`primary`/`teal`/`teal-10`).
    * Overrides the variant color.

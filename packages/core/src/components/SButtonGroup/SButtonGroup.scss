@@ -1,0 +1,58 @@
+@use '../../styles/tools';
+
+.s-button-group {
+  @include tools.reset-inherited;
+  display: inline-flex;
+  align-items: center;
+
+  &--vertical {
+    flex-direction: column;
+    // Stacked buttons are as wide as the widest one, otherwise the shared edges do not line up.
+    align-items: stretch;
+  }
+
+  &--detached {
+    gap: var(--s-space-2);
+  }
+
+  &--attached > .s-button {
+    // The focus ring is drawn outside the button and the next one would paint over it. The same
+    // stacking keeps a hovered border above its neighbour.
+    position: relative;
+
+    &:hover,
+    &:focus-visible,
+    &:active {
+      z-index: 1;
+    }
+  }
+
+  // Inner corners are flattened and the neighbour is pulled onto the shared border, so the two
+  // 1px lines read as one. Outer corners keep the radius the button has — including the pill of
+  // --round and the flat corners of --square.
+  &--attached.s-button-group--horizontal > .s-button {
+    &:not(:last-child) {
+      border-start-end-radius: 0;
+      border-end-end-radius: 0;
+    }
+
+    &:not(:first-child) {
+      border-start-start-radius: 0;
+      border-end-start-radius: 0;
+      margin-inline-start: -1px;
+    }
+  }
+
+  &--attached.s-button-group--vertical > .s-button {
+    &:not(:last-child) {
+      border-end-start-radius: 0;
+      border-end-end-radius: 0;
+    }
+
+    &:not(:first-child) {
+      border-start-start-radius: 0;
+      border-start-end-radius: 0;
+      margin-block-start: -1px;
+    }
+  }
+}
