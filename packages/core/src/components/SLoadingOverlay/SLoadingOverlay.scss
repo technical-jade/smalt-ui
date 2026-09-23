@@ -8,8 +8,7 @@
 
 .s-loading-overlay {
   @include tools.reset-inherited;
-  // Dim enough that the covered text stops competing with the label: at 0.72 the two overlap
-  // and both become hard to read.
+  // Dim enough that the covered text stops competing with the label.
   --s-loading-overlay-opacity: 0.9;
   position: absolute;
   inset: 0;

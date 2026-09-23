@@ -1,8 +1,7 @@
 @use '../../styles/tools';
 
-// Default column widths. SPage.scss repeats them: a sibling cannot read a custom property
-// declared here, so a custom width reaches the page through the shell (internal/shellVars.ts)
-// and these literals only cover the default.
+// Default column widths; SPage.scss repeats them, because a custom one reaches the page only
+// through the shell variable (internal/shellVars.ts).
 $width: 16rem;
 $collapsed-width: 4rem;
 
@@ -82,8 +81,7 @@ $collapsed-width: 4rem;
     justify-content: flex-end;
   }
 
-  // The rail only has room for icons: the helper class marks the text a navigation item hides,
-  // and the slot prop `collapsed` covers items that need more than hiding a label.
+  // The rail only has room for icons: the helper class marks the text a navigation item hides.
   &--collapsed &__label {
     display: none;
   }

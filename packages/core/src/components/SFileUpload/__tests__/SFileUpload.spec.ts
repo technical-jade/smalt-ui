@@ -8,8 +8,8 @@ const file = (name: string, bytes = 4, type = 'image/png') =>
   new File(['x'.repeat(bytes)], name, { type })
 
 /**
- * A file dialog cannot be driven from a test: the selection is put on the input the way the
- * browser would, then the `change` the browser would fire is dispatched.
+ * A file dialog cannot be driven from a test: the files are put on the input, then the `change`
+ * the browser would fire is dispatched.
  */
 function pick(input: HTMLInputElement, files: File[]) {
   Object.defineProperty(input, 'files', { value: files, configurable: true })

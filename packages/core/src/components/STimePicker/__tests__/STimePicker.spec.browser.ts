@@ -60,7 +60,6 @@ describe('STimePicker · browser', () => {
     expect(document.activeElement?.textContent?.trim()).toBe('23')
     await userEvent.keyboard('{Home}')
     expect(document.activeElement?.textContent?.trim()).toBe('00')
-    // The moves stay inside the column they started in.
     expect(document.activeElement?.closest('[role="listbox"]')).toBe(hours())
   })
 

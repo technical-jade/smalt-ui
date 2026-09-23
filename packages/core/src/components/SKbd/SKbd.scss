@@ -2,7 +2,7 @@
 @use '../../styles/tools';
 
 // A kbd is not an interactive control, so control-size does not apply: the box only has to stay
-// square enough around a single glyph. min-width keeps that square, padding handles longer names.
+// square enough around a single glyph.
 $sizes: (
   sm: (
     height: 1.125rem,
@@ -22,7 +22,6 @@ $sizes: (
 );
 
 .s-kbd {
-  // typescale sets its own line-height/letter-spacing, so the reset skips them (no duplicate).
   @include tools.reset-inherited($typography: false);
   display: inline-flex;
   align-items: center;

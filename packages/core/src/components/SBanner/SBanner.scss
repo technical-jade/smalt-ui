@@ -2,7 +2,7 @@
 @use '../../styles/tools';
 
 // The status colors are the ones SAlert uses, so a banner and an alert about the same thing read
-// as one system: the -subtle tint fills the strip, the -text role carries the icon and the border.
+// as one system.
 $variants: (
   neutral: (
     bg: var(--s-banner-c-subtle, var(--s-color-bg-subtle)),

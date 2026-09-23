@@ -3,8 +3,7 @@ import { SButton } from '../SButton'
 
 /**
  * Inner layout of `SSidebar`, shared by its two renderings: the fixed column on wide screens and
- * the drawer below the breakpoint. Styles live in `SSidebar.scss`; the props arrive already
- * resolved against the prop defaults.
+ * the drawer below the breakpoint. The props arrive already resolved against the prop defaults.
  */
 // Several root nodes: without this Vue warns about attributes it cannot place.
 defineOptions({ inheritAttrs: false })

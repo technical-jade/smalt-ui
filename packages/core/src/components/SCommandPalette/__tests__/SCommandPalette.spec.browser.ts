@@ -6,8 +6,8 @@ import { SCommandPalette } from '../index'
 import type { SCommandGroup } from '../types'
 
 /**
- * The portal, the global shortcut, focus on open and back on close, the roving highlight driven
- * by aria-activedescendant and scrolling the active row into view: happy-dom fakes all of it.
+ * The portal, the global shortcut, focus around open and close, and the highlight that travels
+ * through aria-activedescendant: happy-dom reproduces none of it.
  */
 const groups: SCommandGroup[] = [
   {

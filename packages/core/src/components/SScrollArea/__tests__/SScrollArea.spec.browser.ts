@@ -27,11 +27,7 @@ describe('SScrollArea · browser', () => {
     expect(viewport.scrollTop).toBe(120)
   })
 
-  /**
-   * `maxHeight` caps the viewport rather than the root: a root that is only capped has no definite
-   * height to hand down, so the viewport would grow with the content and get clipped without ever
-   * scrolling.
-   */
+  /** A root that is only capped hands no definite height down, so the cap lands on the viewport. */
   it('scrolls when the size comes from maxHeight', async () => {
     const { container } = render(SScrollArea, {
       props: { maxHeight: 96, type: 'always' },
@@ -82,8 +78,8 @@ describe('SScrollArea · browser', () => {
   })
 
   /**
-   * Reka wraps the slot in a content element of its own. A shrink-to-fit wrapper (Radix used
-   * `display: table` here) would collapse full-width children, so the width is asserted rather
+   * Reka wraps the slot in a content element of its own. A shrink-to-fit wrapper (Radix's
+   * `display: table` trick) would collapse full-width children, so the width is asserted rather
    * than assumed.
    */
   it('keeps a full-width child as wide as the viewport', async () => {

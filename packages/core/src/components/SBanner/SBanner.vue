@@ -51,15 +51,10 @@ defineSlots<{
 
 const colorStyle = useColorProp(p, 's-banner')
 
-/**
- * Same live-region rule as SAlert: `negative` interrupts the queue (role=alert + assertive),
- * everything else is announced politely. The pair role=alert + aria-live=polite is contradictory
- * and screen readers interpret it differently.
- */
+// Live-region rule shared with SAlert: only `negative` interrupts (role=alert + assertive).
 const live = computed(() => (p.variant === 'negative' ? 'assertive' : 'polite'))
 const role = computed(() => (p.variant === 'negative' ? 'alert' : 'status'))
 
-// Priority: `icon` slot → `icon` prop → the variant's status icon. `neutral` reports no status.
 const STATUS_ICONS: Record<SBannerVariant, string | undefined> = {
   neutral: undefined,
   info: 'info',

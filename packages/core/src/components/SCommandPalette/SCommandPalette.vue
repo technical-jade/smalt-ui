@@ -72,9 +72,8 @@ const hasItems = computed(() => groups.value.some((group) => group.items.length 
 const listId = useId()
 
 /**
- * The highlighted command, for the `active` slot prop. Reka keeps the highlight on the element
- * and announces it through `aria-activedescendant`; the value is what a custom row can compare
- * itself against.
+ * Reka keeps the highlight on the element and announces it through `aria-activedescendant`
+ * without exposing the value, so the `active` slot prop is served from a copy of it.
  */
 const highlighted = ref<string>()
 const onHighlight = (payload?: { value?: unknown }) => {
@@ -82,9 +81,8 @@ const onHighlight = (payload?: { value?: unknown }) => {
 }
 
 /**
- * Closing comes first and the event second: an application that wants the palette to stay open
- * sets `open` back in its own handler, and that decision is the last one applied — which is why
- * there is no `keepOpen` prop.
+ * Closing comes first and the event second, so an application that wants the palette to stay
+ * open sets `open` back in its own handler — which is why there is no `keepOpen` prop.
  */
 function onSelect(item: SCommandItem) {
   // Reka emits `select` before it looks at `disabled`, so a click on a dimmed row reaches here.
@@ -98,11 +96,7 @@ onMounted(() => {
   mounted.value = true
 })
 
-/**
- * The listener is bound after mount (the server has no document) and re-bound when the key
- * changes, which is what releases the previous one. The watcher is stopped on unmount, so the
- * cleanup below also runs there.
- */
+// Bound after mount: the server has no document.
 watchEffect((onCleanup) => {
   if (!mounted.value || p.shortcutKey === false) return
   const key = p.shortcutKey
@@ -117,7 +111,6 @@ watchEffect((onCleanup) => {
 
 const elevationStyle = useElevationProp(p, 's-command-palette')
 
-/** A number means pixels, as width/height do in Vue bindings. */
 const listMaxHeight = computed(() => {
   const value = p.maxHeight == null ? '22rem' : p.maxHeight
   const length = typeof value === 'number' ? `${value}px` : value

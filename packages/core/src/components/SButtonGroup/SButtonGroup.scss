@@ -27,9 +27,8 @@
     }
   }
 
-  // Inner corners are flattened and the neighbour is pulled onto the shared border, so the two
-  // 1px lines read as one. Outer corners keep the radius the button has — including the pill of
-  // --round and the flat corners of --square.
+  // The neighbour is pulled onto the shared border, so the two 1px lines read as one. Outer
+  // corners keep the button's own radius — the pill of --round, the flat corners of --square.
   &--attached.s-button-group--horizontal > .s-button {
     &:not(:last-child) {
       border-start-end-radius: 0;

@@ -33,9 +33,9 @@ const isEdgeStart = computed(() => p.position === 'bottom-start' || p.position =
 const isVertical = computed(() => p.direction === 'up' || p.direction === 'down')
 
 /**
- * A fan turns the button into a disclosure: it no longer acts on its own, so it is named after
- * what it opens. An extended FAB keeps its visible text as the name — an `aria-label` would hide
- * the words the visitor can read (WCAG "Label in Name").
+ * A fan turns the button into a disclosure: it opens the actions instead of performing one, so it
+ * is named after what it opens. An extended FAB keeps its visible text as the name — an
+ * `aria-label` would hide the words the visitor can read (WCAG "Label in Name").
  */
 const fanName = computed(() => p.actionsLabel ?? m.value.showActions)
 const toggleName = computed(() => {
@@ -44,14 +44,12 @@ const toggleName = computed(() => {
   return hasActions.value ? fanName.value : undefined
 })
 
-// An icon alone says nothing to a screen reader.
 watchEffect(() => {
   if (!isExtended.value && !toggleName.value) {
     devWarn('[SFab] a circular FAB without an accessible name — set the `ariaLabel` prop.')
   }
 })
 
-// MD sizing: the FAB is larger than a regular control, and so is its icon.
 const ICON_SIZES = { sm: 20, md: 24, lg: 28 } as const
 const iconSize = computed(() => ICON_SIZES[p.size] ?? ICON_SIZES.md)
 

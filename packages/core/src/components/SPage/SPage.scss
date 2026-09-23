@@ -10,7 +10,7 @@ $sidebar-collapsed-width: 4rem;
   @include tools.reset-inherited;
   box-sizing: border-box;
   inline-size: 100%;
-  // The offsets come from the neighbours below, never from a measurement.
+  // The offsets are set by the sibling rules at the end of this file.
   padding-block-start: var(--s-page-block-start, 0px);
   padding-inline-start: var(--s-page-inline-start, 0px);
   padding-inline-end: var(--s-page-inline-end, 0px);

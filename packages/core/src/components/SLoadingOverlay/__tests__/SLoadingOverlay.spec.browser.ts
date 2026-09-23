@@ -4,9 +4,8 @@ import { h, ref } from 'vue'
 import { SLoadingOverlay } from '../index'
 
 /**
- * The whole point of the overlay is geometric: it has to fill its host and swallow the clicks
- * aimed at what it covers. happy-dom has no layout and no hit testing, so neither can be checked
- * in the unit project.
+ * The overlay has to fill its host and swallow the clicks aimed at what it covers; happy-dom has
+ * neither layout nor hit testing.
  */
 describe('SLoadingOverlay · browser', () => {
   const clicks = ref(0)

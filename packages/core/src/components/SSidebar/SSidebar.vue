@@ -58,10 +58,7 @@ const sizeVars = computed(() => {
   return vars
 })
 
-/**
- * The page reserves the column's width with padding, and a sibling cannot read a property
- * declared here — so custom widths are mirrored onto the shell.
- */
+// SPage reserves the column's width with padding, which it can only read from the shell.
 usePublishShellVars(root, () => sizeVars.value)
 
 /** The rail is a wide-screen state: inside the drawer the labels are always visible. */

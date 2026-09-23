@@ -6,10 +6,8 @@ import { SPage } from '../../SPage'
 import { SSidebar } from '../index'
 
 /**
- * The shell is geometry: the column is taken out of the flow and the page pays for it with
- * padding, the rail narrows through a media-query-scoped rule, and the drawer traps focus. None of
- * that exists in happy-dom. The browser viewport is 1280×800, so `sm` keeps the column and `xl`
- * forces the drawer.
+ * The shell is geometry, and happy-dom has none of it. The browser viewport is 1280×800, so
+ * `sm` keeps the column and `xl` forces the drawer.
  */
 describe('app shell · browser', () => {
   function mount(props = '') {

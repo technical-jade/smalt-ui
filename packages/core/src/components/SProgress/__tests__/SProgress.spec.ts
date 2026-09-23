@@ -49,7 +49,7 @@ describe('SProgress', () => {
   })
 })
 
-/** Ring geometry the component draws: the stroke straddles the path, hence the halved thickness. */
+/** Ring geometry the component draws, recomputed so the expectations are not magic numbers. */
 function ring(diameter: number, thickness: number) {
   const radius = (diameter - thickness) / 2
   return { radius, circumference: 2 * Math.PI * radius }

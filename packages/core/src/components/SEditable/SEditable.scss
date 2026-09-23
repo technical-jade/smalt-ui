@@ -3,7 +3,6 @@
 $sizes: sm, md, lg;
 
 .s-editable {
-  // The value and the optional buttons share a row.
   &__root {
     display: flex;
     align-items: center;
@@ -28,7 +27,6 @@ $sizes: sm, md, lg;
       max-inline-size: 100%;
     }
 
-    // At rest the box is plain text with a state layer as the only affordance.
     &:not([data-focus]) {
       @include tools.state-layer;
     }
@@ -50,7 +48,6 @@ $sizes: sm, md, lg;
     }
   }
 
-  // Both states share the type scale of the box; the frame is drawn by the area alone.
   &__preview,
   &__input {
     flex: 1;

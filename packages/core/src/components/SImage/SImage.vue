@@ -32,10 +32,8 @@ type SImageStatus = 'loading' | 'loaded' | 'error'
 const status = ref<SImageStatus>('loading')
 const usingFallback = ref(false)
 
-/** The URL the `<img>` actually requests: `fallback` takes over once `src` has failed. */
 const currentSrc = computed(() => (usingFallback.value ? (p.fallback ?? p.src) : p.src))
 
-// A new src is a new request: without the reset it would keep the previous image's status.
 watch(
   () => p.src,
   () => {
@@ -50,7 +48,6 @@ function markLoaded() {
   status.value = 'loaded'
 }
 
-/** The first failure retries with `fallback`; a failing fallback ends in the error state. */
 function markError() {
   if (p.fallback && !usingFallback.value) {
     usingFallback.value = true
@@ -80,7 +77,6 @@ onMounted(() => {
   if (img?.complete && img.naturalWidth > 0) markLoaded()
 })
 
-// `ratio` swaps the plain box for a ratio box; the rest of the frame is identical.
 const frame = computed(() => (p.ratio === undefined ? 'div' : SAspectRatio))
 const frameProps = computed(() =>
   p.ratio === undefined ? {} : { ratio: p.ratio, square: p.square },

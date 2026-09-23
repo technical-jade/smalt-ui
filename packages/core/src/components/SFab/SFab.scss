@@ -2,8 +2,8 @@
 @use '../../styles/settings';
 @use '../../styles/tools';
 
-// MD floating action button: small / standard / large. The fan actions keep the regular control
-// size of the same name, so they read as secondary next to the main button.
+// The fan actions keep the regular control size of the same name, so they read as secondary
+// next to the main button.
 $fab-sizes: (
   sm: 2.5rem,
   md: 3.5rem,
@@ -141,7 +141,6 @@ $fab-sizes: (
   height: var(--s-fab-toggle-size);
 }
 
-// Extended FAB: an icon and text in one pill, MD's wider padding.
 .s-fab .s-fab__toggle--extended {
   padding-inline: var(--s-space-5);
 }

@@ -32,7 +32,7 @@ defineSlots<{
 
 const label = computed(() => p.label ?? m.value.loading)
 
-// The prop wins over both the base value and the one `--blur` lowers it to, because it lands inline.
+// Inline, so the prop wins over both the base value and the lower one `--blur` sets.
 const opacityStyle = computed(() =>
   p.opacity == null ? undefined : { '--s-loading-overlay-opacity': String(p.opacity) },
 )

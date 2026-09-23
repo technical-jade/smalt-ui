@@ -1,11 +1,9 @@
 import { onBeforeUnmount, onMounted, watchEffect, type Ref } from 'vue'
 
 /**
- * Publishes layout custom properties onto the shell — the element that wraps the app bar, the
- * sidebar and the page. Siblings cannot read a custom property declared on one another, so a size
- * a neighbour has to reserve (a custom bar height, a custom rail width) is written one level up,
- * where every part of the shell inherits it. Nothing is measured: the values come from props, and
- * the stylesheets carry the defaults for the server-rendered frame.
+ * Publishes layout custom properties onto the wrapping shell element: siblings cannot read a
+ * custom property declared on one another, so a size a neighbour reserves goes one level up.
+ * The values come from props, never from measurement — defaults live in the stylesheets.
  */
 export function usePublishShellVars(
   el: Ref<HTMLElement | null>,

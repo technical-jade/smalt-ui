@@ -26,11 +26,7 @@ const heightVars = computed(() => {
   return vars
 })
 
-/**
- * The bar sizes itself from its own variable, but the page and the sidebar have to reserve the
- * same height, and a sibling cannot read a property declared here — so a custom height is mirrored
- * onto the shell.
- */
+// SPage and SSidebar offset by the bar height, which they can only read from the shell.
 usePublishShellVars(root, () => heightVars.value)
 
 const scrolled = ref(false)

@@ -37,8 +37,6 @@ $sizes: (
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    // Without the color prop the media stays quieter than the title: the block reports absence,
-    // it does not ask for attention.
     color: var(--s-empty-state-c, var(--s-color-text-subtle));
   }
 
@@ -54,8 +52,8 @@ $sizes: (
   }
 
   &__description {
-    // The line stays readable in a wide container: the block is centered, and a long line would
-    // make the eye travel back across the whole page.
+    // Caps the measure: the block is centered, and in a wide container a full-width line would
+    // send the eye back across the whole page.
     max-inline-size: 48ch;
     color: var(--s-color-text-muted);
   }

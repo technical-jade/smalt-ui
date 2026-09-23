@@ -16,10 +16,7 @@ const groups: SCommandGroup[] = [
 ]
 
 describe('SCommandPalette · a11y', () => {
-  /**
-   * The dialog is teleported and hides the page behind focus guards, so the scan runs on the
-   * panel subtree: on the whole body axe reports the guards as aria-hidden-focus.
-   */
+  // Scanned on the panel, not the body: Reka's focus guards trip the `aria-hidden-focus` rule.
   it('has no violations when open', async () => {
     render(SCommandPalette, { props: { open: true, groups } })
     expect(await axe(await screen.findByRole('dialog'))).toHaveNoViolations()

@@ -75,7 +75,6 @@ const clear = () => {
   field.value?.focus()
 }
 
-// Local on purpose: nothing outside drives the toggle, it only swaps the type of the same input.
 const revealed = ref(false)
 /**
  * Revealing is not an edit, so a readonly field keeps the toggle; a disabled one offers no

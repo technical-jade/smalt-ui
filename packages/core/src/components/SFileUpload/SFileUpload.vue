@@ -67,7 +67,6 @@ defineExpose(expose)
 
 const { rootClass, rootStyle, controlAttrs } = useFieldAttrs()
 
-// The suffixes read the same in every locale the library ships, so only the number is formatted.
 const UNITS = ['B', 'KB', 'MB', 'GB', 'TB']
 
 function formatSize(bytes: number): string {
@@ -103,7 +102,6 @@ function matchesAccept(file: File): boolean {
   })
 }
 
-// The message of the last selection, shown only while the app supplies no `error` of its own.
 const rejection = ref<string>()
 const shownError = computed(() => p.error || rejection.value || errorMessage.value)
 
@@ -196,10 +194,10 @@ const iconSize = computed(() => (p.dropzone ? 24 : 16))
     @focusout="onFocusOut"
   >
     <template #default="{ id: fieldId, labelId, describedBy, invalid: fieldInvalid }">
-      <!-- The zone is the input's own label, so a click and the keyboard both open the dialog;
-           the input stays focusable (never display: none) and the zone shows its focus ring.
-           `required` is announced through ARIA only: a native one on a hidden control leaves the
-           browser with nothing to point its validation bubble at, and the submit stalls. -->
+      <!-- The zone is the input's own label, so a click and the keyboard both open the dialog,
+           and the zone shows the focus ring of the input inside it. `required` is announced
+           through ARIA only: a native one on a hidden control leaves the browser with nothing to
+           point its validation bubble at, and the submit stalls. -->
       <label
         class="s-file-upload__zone"
         :class="{

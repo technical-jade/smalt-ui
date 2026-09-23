@@ -2,13 +2,12 @@
 
 .s-app-bar {
   @include tools.reset-inherited;
-  // Height fallback, repeated in SPage.scss and SSidebar.scss: those files offset by the same
-  // value, and a custom height only reaches them through the shell variable.
   display: flex;
   box-sizing: border-box;
   align-items: center;
   gap: var(--s-space-3);
   inline-size: 100%;
+  // The fallback is repeated in SPage.scss and SSidebar.scss, which offset by the same height.
   block-size: var(--s-app-bar-height, 3.5rem);
   padding-inline: var(--s-space-4);
   color: var(--s-app-bar-c-on, var(--s-color-text));

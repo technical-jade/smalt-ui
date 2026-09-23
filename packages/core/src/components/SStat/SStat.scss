@@ -31,8 +31,6 @@ $sizes: (
   flex-direction: column;
   color: var(--s-color-text);
 
-  // The plain tile carries no surface of its own: it is meant to sit inside a card or a grid
-  // cell that already draws one.
   &--card {
     padding: var(--s-stat-padding, var(--s-space-4));
     background-color: var(--s-color-surface);

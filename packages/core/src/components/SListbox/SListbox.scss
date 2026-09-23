@@ -6,8 +6,7 @@
   background-color: var(--s-color-surface);
   border: 1px solid var(--s-color-border);
   border-radius: var(--s-radius-md);
-  // The scroll area is flush with the frame, so its content has to be clipped by the same
-  // rounding. No shadow: the list is an inline surface, not a floating panel.
+  // The scroll area is flush with the frame, so its content is clipped by the same rounding.
   overflow: hidden;
 
   &--square {

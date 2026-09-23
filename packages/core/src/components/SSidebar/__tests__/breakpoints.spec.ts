@@ -3,11 +3,6 @@ import { resolve } from 'node:path'
 import { describe, expect, it } from 'vitest'
 import { SIDEBAR_BREAKPOINTS } from '../breakpoints'
 
-/**
- * The drawer switch reads the breakpoint in JavaScript while the stylesheet reads it from the
- * SCSS map, so the two copies have to agree; otherwise the column would disappear at one width
- * and the drawer appear at another.
- */
 describe('sidebar breakpoints', () => {
   const source = readFileSync(resolve(process.cwd(), 'src/styles/settings/_variables.scss'), 'utf8')
   const map = source.match(/\$breakpoints:\s*\(([^)]*)\)/)![1]

@@ -23,7 +23,6 @@ defineSlots<{
   default?: (props: Record<string, never>) => unknown
 }>()
 
-/** A number means pixels, as width/height do in Vue bindings. */
 const toLength = (value: string | number | undefined) =>
   typeof value === 'number' ? `${value}px` : value
 
@@ -51,8 +50,8 @@ const viewportStyle = computed(() => {
     :type="p.type"
     :scroll-hide-delay="p.scrollHideDelay"
   >
-    <!-- The viewport is the scrolling element; Reka hides its native scrollbars and makes it
-         focusable, which keeps arrow keys, Page Up/Down and Home/End working. -->
+    <!-- Reka makes the viewport the scrolling element and focusable, so arrow keys, Page Up/Down
+         and Home/End work without extra wiring. -->
     <ScrollAreaViewport
       class="s-scroll-area__viewport"
       :style="viewportStyle"

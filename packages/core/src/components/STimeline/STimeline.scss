@@ -1,8 +1,6 @@
 @use 'sass:map';
 @use '../../styles/tools';
 
-// Accent of an item: its own color wins over the timeline color, which in turn falls back to
-// the primary role.
 $accent: var(--s-timeline-item-c, var(--s-timeline-c, var(--s-color-primary)));
 
 $sizes: (
@@ -81,7 +79,6 @@ $sizes: (
     align-items: center;
     justify-content: center;
     flex-shrink: 0;
-    // An item without its own color stays muted until the model marks it as reached.
     color: var(--s-timeline-item-c, var(--s-color-text-muted));
     background-color: var(--s-color-surface);
     border: 2px solid var(--s-timeline-item-c, var(--s-color-border));
@@ -132,7 +129,6 @@ $sizes: (
     color: var(--s-color-text-muted);
   }
 
-  // An item before the current one: filled indicator and filled segment behind it.
   &__item--completed &__indicator {
     color: var(--s-timeline-c-on, var(--s-color-primary-contrast));
     background-color: $accent;
@@ -183,9 +179,8 @@ $sizes: (
     }
 
     &--#{$name}.s-timeline--vertical &__line {
-      // The segment starts under the dot and reaches the next one; the minimum keeps a rail
-      // visible even for an item with a single line of text.
       margin-block: var(--s-space-1);
+      // Without the minimum, an item with a single line of text leaves no visible rail.
       min-block-size: map.get($cfg, gap);
     }
 
