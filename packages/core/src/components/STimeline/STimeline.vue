@@ -54,7 +54,10 @@ const rows = computed<STimelineSlotProps[]>(() =>
  * that is already completed.
  */
 function itemStyle(item: STimelineItem) {
-  return item.color ? { '--s-timeline-item-c': `var(--s-${item.color})` } : undefined
+  const vars: Record<string, string> = {}
+  if (item.color) vars['--s-timeline-item-c'] = `var(--s-${item.color})`
+  if (item.textColor) vars['--s-timeline-item-c-on'] = `var(--s-${item.textColor})`
+  return Object.keys(vars).length ? vars : undefined
 }
 </script>
 

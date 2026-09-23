@@ -1297,8 +1297,11 @@ A rule receives the field's `v-model` value as is. Write custom rules and schema
 | `SPinInput`        | `string[]`, one character per cell                                                                                 | `[]`                   |
 | `SSlider`          | `number`; `number[]` for a range (not checked by `min`/`max`)                                                      | never                  |
 | `SColorField`      | `string` in hex (`'#3B82F6'`)                                                                                      | `''`                   |
+| `SEditable`        | `string`                                                                                                           | `''`                   |
+| `SFileUpload`      | `File[]`, in the order they were added                                                                             | `[]`                   |
 | `SDateField`       | `DateValue`                                                                                                        | no date                |
 | `STimeField`       | `STimeValue` (`Time`, `CalendarDateTime` or `ZonedDateTime`)                                                       | no time                |
+| `STimePicker`      | `STimeValue`, as in `STimeField`: the rules run on the field inside the picker                                     | no time                |
 | `SDatePicker`      | `DateValue`                                                                                                        | no date                |
 | `SDateRangePicker` | `SDateRange`: `{ start, end }`                                                                                     | both ends missing      |
 | `SCheckbox`        | `boolean \| 'indeterminate'`                                                                                       | `false`                |
@@ -1308,9 +1311,9 @@ A rule receives the field's `v-model` value as is. Write custom rules and schema
 | `SRating`          | `number`, `0` without a rating                                                                                     | never: use `min(1)`    |
 
 Fields whose model has no default of its own (every field above except `SNumberField`,
-`SPinInput`, `SCheckbox`, `SSwitch`, `SRating` and `SSlider`) pass `undefined` while their
-`v-model` holds nothing. Rules typed for a string should allow that: `(v?: string) => …`. The
-built-in factories handle `undefined` already.
+`SPinInput`, `SCheckbox`, `SSwitch`, `SRating`, `SSlider`, `SEditable` and `SFileUpload`) pass
+`undefined` while their `v-model` holds nothing. Rules typed for a string should allow that:
+`(v?: string) => …`. The built-in factories handle `undefined` already.
 
 Some consequences worth knowing:
 

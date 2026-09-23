@@ -34,7 +34,8 @@ Inputs on the shared `SFormField` frame (label, hint, error message, a11y relati
   multiple selection), [Autocomplete](/components/autocomplete) (suggestions from server-side
   search results)
 - Color: [Color Field](/components/color-field), [Color Picker](/components/color-picker)
-- Files: [File Upload](/components/file-upload) (drop zone, per-file progress and rejections)
+- Files: [File Upload](/components/file-upload) (drop zone, accept/size/count limits and
+  rejections)
 - Lists: [Listbox](/components/listbox) (a selectable list surface),
   [Editable](/components/editable) (editing text in place)
 - Toggles: [Checkbox](/components/checkbox), [Radio](/components/radio),

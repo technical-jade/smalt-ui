@@ -20,6 +20,12 @@ export interface STimelineItem {
    * (`primary`/`teal`/`teal-10`). Overrides the timeline color.
    */
   color?: SColorName
+  /**
+   * Color of the content on this item's own accent — the check or the icon inside a completed
+   * indicator. Defaults to the timeline's `text-color`, which a light item accent may need to
+   * override.
+   */
+  textColor?: SColorName
   /** Dims the item: the event is cancelled or not applicable. */
   disabled?: boolean
 }

@@ -108,7 +108,10 @@ const items = [
 
 `item.icon` replaces the dot with an icon from the registry, `item.color` accents a single event
 with a name from the [palette](/style/palette), and `disabled` dims an event that did not happen.
-The timeline-wide `color` sets the accent of the completed part.
+The timeline-wide `color` sets the accent of the completed part, and `text-color` the content on
+it — the check or the icon inside a completed indicator. An item that brings a light accent of its
+own overrides that content color with `item.textColor`; without it the item falls back to the
+timeline's.
 
 <Demo>
   <STimeline model-value="review" color="teal" :items="[

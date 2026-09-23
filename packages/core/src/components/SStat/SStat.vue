@@ -40,12 +40,11 @@ const ICON_SIZES: Record<SStatSize, number> = { sm: 16, md: 20, lg: 24 }
 const iconSize = computed(() => ICON_SIZES[p.size])
 
 const formattedValue = computed(() => {
-  const { value, formatValue } = p
-  if (typeof value !== 'number' || formatValue === false) return String(value)
+  if (typeof p.value !== 'number' || p.formatValue === false) return String(p.value)
   return new Intl.NumberFormat(
     formatLocale.value,
-    typeof formatValue === 'object' ? formatValue : undefined,
-  ).format(value)
+    typeof p.formatValue === 'object' ? p.formatValue : undefined,
+  ).format(p.value)
 })
 
 const trendDirection = computed(() => {

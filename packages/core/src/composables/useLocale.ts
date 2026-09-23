@@ -23,6 +23,8 @@ export interface SMessages {
   showOptions: string
   /** Placeholder shown when a searchable `SSelect` has no matches. */
   selectEmpty: string
+  /** Placeholder shown when `SListbox` has no options. */
+  listboxEmpty: string
   /** Decrement button in `SNumberField`. */
   decrement: string
   /** Increment button in `SNumberField`. */
@@ -153,6 +155,7 @@ export const enMessages: SMessages = {
   clear: 'Clear',
   showOptions: 'Show options',
   selectEmpty: 'No results found',
+  listboxEmpty: 'No options',
   decrement: 'Decrease',
   increment: 'Increase',
   openCalendar: 'Open calendar',

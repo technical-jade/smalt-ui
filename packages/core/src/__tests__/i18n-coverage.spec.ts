@@ -1,6 +1,7 @@
 import { readFileSync, readdirSync } from 'node:fs'
 import { resolve } from 'node:path'
 import { describe, expect, it } from 'vitest'
+import { enMessages } from '../composables/useLocale'
 
 /**
  * Visible strings (labels, `aria-label`, placeholders) come from the `SMessages` dictionary,
@@ -43,6 +44,28 @@ describe('locale dictionary coverage', () => {
     it(`${name} has no hardcoded interface strings`, () => {
       const literals = stripNoise(readFileSync(path, 'utf8')).match(CYRILLIC_LITERAL) ?? []
       expect(literals, `${name}: strings must come from SMessages`).toEqual([])
+    })
+  }
+})
+
+/**
+ * The guide table is the only place a translator sees the whole dictionary, so a key added to
+ * `SMessages` without a row there ships untranslatable.
+ */
+describe('dictionary table in the i18n guide', () => {
+  const guide = readFileSync(resolve(root, '../../../apps/docs/guide/i18n.md'), 'utf8')
+  const table = guide.slice(guide.indexOf('## Dictionary keys'))
+  const rows = new Map(
+    [...table.matchAll(/^\|\s*`(\w+)`\s*\|\s*(.*?)\s*\|/gm)].map(([, key, value]) => [key, value]),
+  )
+
+  it('lists every key of the dictionary', () => {
+    expect([...rows.keys()].sort()).toEqual(Object.keys(enMessages).sort())
+  })
+
+  for (const [key, value] of Object.entries(enMessages)) {
+    it(`${key} matches its default`, () => {
+      expect(rows.get(key)).toBe(value)
     })
   }
 })

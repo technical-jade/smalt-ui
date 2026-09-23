@@ -66,8 +66,21 @@ describe('SListbox', () => {
 
   it('shows the dictionary message when there are no options', () => {
     renderListbox({ options: [] })
-    expect(screen.getByText('No results found')).toBeInTheDocument()
+    expect(screen.getByText('No options')).toBeInTheDocument()
     expect(screen.queryAllByRole('option')).toHaveLength(0)
+  })
+
+  /** The range is a keyboard gesture (see the browser spec); a modifier held on a click is not. */
+  it('replaces the selection on a Shift-click instead of extending it', async () => {
+    const { emitted } = renderListbox({
+      multiple: true,
+      selectionBehavior: 'replace',
+      modelValue: ['nyc'],
+    })
+
+    await fireEvent.click(screen.getByRole('option', { name: 'London' }), { shiftKey: true })
+
+    expect(emitted('update:modelValue')?.at(-1)).toEqual([['lon']])
   })
 
   it('overrides the empty message with emptyText', () => {

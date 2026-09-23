@@ -298,7 +298,7 @@ window moves.
 
 <Demo>
   <div class="s-root s-root--app" :style="shell + '; block-size: 260px'">
-    <SAppBar elevate-on-scroll>
+    <SAppBar position="fixed" elevate-on-scroll>
       <span class="s-text-h6">Documentation</span>
     </SAppBar>
     <SPage container max-width="34rem">

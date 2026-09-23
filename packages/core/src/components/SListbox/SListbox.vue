@@ -106,7 +106,7 @@ const isSelected = (value: string) => selectedValues.value.includes(value)
         v-if="!p.options.length"
         class="s-listbox__empty"
       >
-        <slot name="empty">{{ p.emptyText ?? m.selectEmpty }}</slot>
+        <slot name="empty">{{ p.emptyText ?? m.listboxEmpty }}</slot>
       </div>
     </SScrollArea>
   </ListboxRoot>

@@ -27,7 +27,8 @@ export interface SListboxProps {
    * How picking an option changes the selection. `toggle` (the default) flips the option:
    * picking a selected one clears it, which is how checkbox-like lists behave. `replace` keeps
    * exactly one pick per action — a click always wins over the previous selection, and with
-   * `multiple` a Shift-click extends the range from the last pick.
+   * `multiple` Shift with the arrow keys, `Home` or `End` extends the range from the last pick.
+   * The range is a keyboard gesture only: a Shift-click is an ordinary click.
    */
   selectionBehavior?: SListboxSelectionBehavior
   /**

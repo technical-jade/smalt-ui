@@ -19,6 +19,12 @@
     border-block-end: 1px solid var(--s-color-border);
   }
 
+  // Spelled out even though it matches the initial value: the modifier is the public hook a
+  // consumer overrides, and SPage keys its offsets off the sibling's position modifier.
+  &--static {
+    position: static;
+  }
+
   &--sticky {
     position: sticky;
     inset-block-start: 0;

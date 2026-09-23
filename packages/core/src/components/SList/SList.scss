@@ -19,6 +19,8 @@
     --s-list-row-font-size: var(--s-font-size-xs);
   }
 
+  // Density moves the vertical metrics only: the horizontal gutter stops growing at md, so the
+  // content column stays put when the size changes. Dense rows may narrow it, wide rows may not.
   &--lg {
     --s-list-row-min-height: 3.5rem;
     --s-list-row-pad-y: var(--s-space-3);

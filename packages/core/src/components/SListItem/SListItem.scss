@@ -34,6 +34,13 @@
     @include tools.interactive-item;
     @include tools.transition(background-color, color);
 
+    // The wrapper already dims the whole item, so the row keeps only the cursor from
+    // `disabled-state`: two layers of 0.38 would multiply into 0.14.
+    &:disabled,
+    &[data-disabled] {
+      opacity: 1;
+    }
+
     &:focus-visible {
       @include tools.focus-ring;
       // A bordered list clips its overflow, so an outset ring would be cut off at the edges.
@@ -42,7 +49,7 @@
   }
 
   &[data-active] {
-    color: var(--s-color-primary);
+    color: var(--s-color-primary-text);
     background-color: var(--s-color-primary-subtle);
   }
 }

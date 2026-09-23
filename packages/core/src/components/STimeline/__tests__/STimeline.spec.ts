@@ -123,4 +123,24 @@ describe('STimeline', () => {
       '--s-timeline-item-c: var(--s-negative)',
     )
   })
+
+  it('an item carries its own content color for a completed indicator', () => {
+    const { container } = render(STimeline, {
+      props: { items: [{ title: 'Shipped', color: 'amber', textColor: 'gray-900' }] },
+    })
+
+    const style = container.querySelector<HTMLElement>('.s-timeline__item')?.style.cssText
+    expect(style).toContain('--s-timeline-item-c: var(--s-amber)')
+    expect(style).toContain('--s-timeline-item-c-on: var(--s-gray-900)')
+  })
+
+  it('leaves the content color to the timeline when the item has none', () => {
+    const { container } = render(STimeline, {
+      props: { items: [{ title: 'Shipped', color: 'amber' }] },
+    })
+
+    expect(container.querySelector<HTMLElement>('.s-timeline__item')?.style.cssText).not.toContain(
+      '--s-timeline-item-c-on',
+    )
+  })
 })

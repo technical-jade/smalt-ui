@@ -228,6 +228,7 @@ function onState(state: 'edit' | 'submit' | 'cancel') {
             :aria-label="inputLabel"
             :aria-describedby="describedBy"
             :aria-invalid="fieldInvalid || undefined"
+            :aria-required="p.required || undefined"
           />
         </EditableArea>
 

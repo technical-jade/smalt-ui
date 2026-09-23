@@ -132,12 +132,13 @@ registry name or a raw path).
 
 ## Required checkbox
 
-The `required` prop adds the `*` marker to the label and marks the checkbox as required for form
-submission: the browser will not submit the form until it is checked.
+The `required` prop adds the `*` marker to the label and `aria-required` for screen readers. Native
+validation needs `name` as well: the hidden input that carries `required` into the form is only
+rendered for a named checkbox, and without it the browser has nothing to block the submit on.
 
 <ClientOnly>
 <Demo>
-  <SCheckbox label="I accept the data processing terms" required />
+  <SCheckbox label="I accept the data processing terms" name="terms" required />
 
 <template #code>
 
@@ -146,6 +147,7 @@ submission: the browser will not submit the form until it is checked.
   <SCheckbox
     v-model="accept"
     label="I accept the data processing terms"
+    name="terms"
     required
   />
 </template>

@@ -1,8 +1,19 @@
-import { describe, expect, it } from 'vitest'
+import { afterEach, describe, expect, it, vi } from 'vitest'
 import { render, screen } from '@testing-library/vue'
+import { nextTick } from 'vue'
 import { SAppBar } from '../index'
 
 const bar = (container: Element) => container.querySelector<HTMLElement>('.s-app-bar')!
+
+async function scrollTo(y: number) {
+  Object.defineProperty(window, 'scrollY', { value: y, configurable: true })
+  window.dispatchEvent(new Event('scroll'))
+  await nextTick()
+}
+
+afterEach(async () => {
+  await scrollTo(0)
+})
 
 describe('SAppBar', () => {
   it('is the banner landmark and holds the three areas', () => {
@@ -62,6 +73,33 @@ describe('SAppBar', () => {
   it('stays flat until the window is scrolled', () => {
     const { container } = render(SAppBar, { props: { elevateOnScroll: true } })
     expect(bar(container)).not.toHaveClass('s-app-bar--elevated')
+  })
+
+  it('takes the shadow on scroll and drops it back at the top', async () => {
+    const { container } = render(SAppBar, { props: { elevateOnScroll: true } })
+
+    await scrollTo(10)
+    expect(bar(container)).toHaveClass('s-app-bar--elevated')
+
+    await scrollTo(0)
+    expect(bar(container)).not.toHaveClass('s-app-bar--elevated')
+  })
+
+  it('ignores the scroll without elevateOnScroll', async () => {
+    const { container } = render(SAppBar)
+
+    await scrollTo(10)
+    expect(bar(container)).not.toHaveClass('s-app-bar--elevated')
+  })
+
+  it('drops the scroll listener when the bar goes away', async () => {
+    const remove = vi.spyOn(window, 'removeEventListener')
+    const { unmount } = render(SAppBar, { props: { elevateOnScroll: true } })
+
+    unmount()
+    await nextTick()
+    expect(remove).toHaveBeenCalledWith('scroll', expect.any(Function))
+    remove.mockRestore()
   })
 
   it('turns the shadow props into the elevation variable', () => {

@@ -130,7 +130,7 @@ $sizes: (
   }
 
   &__item--completed &__indicator {
-    color: var(--s-timeline-c-on, var(--s-color-primary-contrast));
+    color: var(--s-timeline-item-c-on, var(--s-timeline-c-on, var(--s-color-primary-contrast)));
     background-color: $accent;
     border-color: $accent;
   }

@@ -19,7 +19,12 @@ export interface SEditableProps extends SValidationProps<string> {
   error?: string
   /** Explicitly marks the field invalid (in addition to `error`). */
   invalid?: boolean
-  /** Marks the field as required: adds `*` to the label and to the hidden form input. */
+  /**
+   * Marks the field as required: adds `*` to the label, `aria-required` to the input and
+   * `required` to the hidden form input (rendered inside a `<form>` when `name` is set). The
+   * input itself carries no native `required`: it is hidden outside the edit view, and a hidden
+   * invalid control would stall the submit instead of pointing at anything.
+   */
   required?: boolean
   /**
    * Text shown instead of an empty value, in the preview and as the input placeholder. Consumer

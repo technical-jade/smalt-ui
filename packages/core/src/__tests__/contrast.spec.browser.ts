@@ -8,6 +8,9 @@ import { SBadge } from '../components/SBadge'
 import { SButton } from '../components/SButton'
 import { SCalendar } from '../components/SCalendar'
 import { SInput } from '../components/SInput'
+import { SList } from '../components/SList'
+import { SListItem } from '../components/SListItem'
+import { SStat } from '../components/SStat'
 
 /**
  * Contrast can only be measured with layout and computed styles: in happy-dom axe silently
@@ -155,6 +158,23 @@ describe.each(['light', 'dark'] as const)('text contrast · theme %s', (theme) =
     const selected = container.querySelectorAll('[data-selected]')
     expect(selected.length).toBeGreaterThan(1)
     selected.forEach((day) => expect(contrastOf(day)).toBeGreaterThanOrEqual(AA_NORMAL))
+  })
+
+  it('active list row on its own tint', () => {
+    const { container } = mount(
+      h(SList, () => h(SListItem, { title: 'Inbox', active: true })),
+      theme,
+    )
+    expect(contrastOf(container.querySelector('.s-list-item__row')!)).toBeGreaterThanOrEqual(
+      AA_NORMAL,
+    )
+  })
+
+  it.each([12, -12])('stat trend %d', (trend) => {
+    const { container } = mount(h(SStat, { label: 'Revenue', value: 128, trend }), theme)
+    expect(contrastOf(container.querySelector('.s-stat__trend-value')!)).toBeGreaterThanOrEqual(
+      AA_NORMAL,
+    )
   })
 
   it('avatar fallback initials', () => {

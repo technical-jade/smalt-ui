@@ -90,7 +90,9 @@ const cities = [
 </Demo>
 
 Picking the selected option clears it, the way a checkbox does. Set `selection-behavior="replace"`
-to keep exactly one option picked at all times.
+to keep exactly one option picked at all times. With `multiple`, `replace` also gives the keyboard a
+range: `Shift` with the arrow keys, `Home` or `End` extends the selection from the last pick. The
+range is a keyboard gesture — `Shift` with a click is an ordinary click.
 
 ## Multiple selection
 
@@ -228,8 +230,9 @@ keeps the active option in view.
 
 ## Empty state
 
-With an empty `options` array the list shows a message from the locale dictionary. Override it with
-`empty-text`, or replace it entirely with the `empty` slot.
+With an empty `options` array the list shows a message from the locale dictionary — the
+`listboxEmpty` key, "No options". Override it with `empty-text`, or replace it entirely with the
+`empty` slot.
 
 <Demo>
   <ClientOnly>

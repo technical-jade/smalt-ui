@@ -100,6 +100,34 @@ describe('SListbox · browser', () => {
     await vi.waitFor(() => expect(emitted()['update:modelValue']?.at(-1)).toEqual([['ams', 'chi']]))
   })
 
+  it('replaces the selection on every pick with selectionBehavior="replace"', async () => {
+    const { emitted } = renderListbox({ selectionBehavior: 'replace', modelValue: 'ams' })
+
+    await userEvent.click(option('Chicago'))
+    await vi.waitFor(() => expect(emitted()['update:modelValue']?.at(-1)).toEqual(['chi']))
+
+    // toggle would clear the option here; replace keeps exactly one pick.
+    await userEvent.click(option('Chicago'))
+    await vi.waitFor(() => expect(emitted()['update:modelValue']?.at(-1)).toEqual(['chi']))
+  })
+
+  it('extends the selection with Shift and the arrow keys', async () => {
+    const { emitted } = renderListbox({ multiple: true, selectionBehavior: 'replace' })
+    await enterList()
+
+    // The range grows from the last pick, so the anchor has to be chosen first.
+    await userEvent.keyboard('{Enter}')
+    await vi.waitFor(() => expect(emitted()['update:modelValue']?.at(-1)).toEqual([['ams']]))
+
+    await userEvent.keyboard('{Shift>}{ArrowDown}{/Shift}')
+    await vi.waitFor(() => expect(emitted()['update:modelValue']?.at(-1)).toEqual([['ams', 'chi']]))
+
+    await userEvent.keyboard('{Shift>}{End}{/Shift}')
+    await vi.waitFor(() =>
+      expect(emitted()['update:modelValue']?.at(-1)).toEqual([['ams', 'chi', 'del', 'lon']]),
+    )
+  })
+
   it('scrolls the active option into view past maxHeight', async () => {
     renderListbox({ maxHeight: 96 })
     const viewport = document.querySelector<HTMLElement>('.s-scroll-area__viewport')!

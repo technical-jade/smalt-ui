@@ -84,11 +84,11 @@ $sizes: (
     color: var(--s-color-text-muted);
 
     &--up {
-      color: var(--s-color-positive);
+      color: var(--s-color-positive-text);
     }
 
     &--down {
-      color: var(--s-color-negative);
+      color: var(--s-color-negative-text);
     }
   }
 

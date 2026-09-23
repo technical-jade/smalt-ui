@@ -83,6 +83,18 @@ describe('native form submission', () => {
     expect(form.checkValidity()).toBe(false)
   })
 
+  /**
+   * The hidden input that carries `required` into the form is only rendered for a named field,
+   * so an unnamed one is required for assistive technology alone — the docs say so, and the
+   * consumer who needs the browser to block the submit has to pass a name.
+   */
+  it('SCheckbox: required without a name leaves native validation alone', async () => {
+    const { form } = await submit(SCheckbox, { required: true })
+
+    expect(form.checkValidity()).toBe(true)
+    expect(form.querySelector('[role="checkbox"]')).toHaveAttribute('aria-required', 'true')
+  })
+
   it('SDateRangePicker leaves the value empty until both bounds are picked', async () => {
     const { data } = await submit(SDateRangePicker, {
       name: 'period',
