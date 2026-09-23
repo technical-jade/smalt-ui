@@ -117,6 +117,14 @@ export interface SMessages {
   trendUp: string
   /** Hidden label of a downward trend (`SStat`). */
   trendDown: string
+  /** Placeholder of the `SCommandPalette` search field. */
+  searchCommands: string
+  /** Button that expands a collapsed `SSidebar`. */
+  expandSidebar: string
+  /** Button that collapses an expanded `SSidebar`. */
+  collapseSidebar: string
+  /** Button that opens the fan of actions of an `SFab`. */
+  showActions: string
   /** Error of the `required()` rule. */
   ruleRequired: string
   /** Error of `minLength()` for text; `{min}` is the limit. */
@@ -190,6 +198,10 @@ export const enMessages: SMessages = {
   openTimePicker: 'Open time picker',
   trendUp: 'Up',
   trendDown: 'Down',
+  searchCommands: 'Search commands',
+  expandSidebar: 'Expand sidebar',
+  collapseSidebar: 'Collapse sidebar',
+  showActions: 'Show actions',
   ruleRequired: 'This field is required',
   ruleMinLength: 'Enter at least {min} characters',
   ruleMaxLength: 'Enter no more than {max} characters',

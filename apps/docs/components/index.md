@@ -18,6 +18,7 @@ Basic building blocks reused by other components.
 - [Tag](/components/tag) — a removable chip tag (also used in `use-tags` fields)
 - [Avatar](/components/avatar) — an avatar with a fallback
 - [Kbd](/components/kbd) — a keyboard shortcut key
+- [Fab](/components/fab) — a floating action button, on its own or with a fan of actions
 
 ## Forms
 
@@ -66,7 +67,8 @@ Popup surfaces and dialogs (portals, focus management).
 
 - [Dialog](/components/dialog), [Alert Dialog](/components/alert-dialog),
   [Drawer](/components/drawer), [Popover](/components/popover),
-  [Hover Card](/components/hover-card), [Tooltip](/components/tooltip)
+  [Hover Card](/components/hover-card), [Tooltip](/components/tooltip),
+  [Command Palette](/components/command-palette)
 
 ## Feedback
 
@@ -74,12 +76,14 @@ Messages and status indicators.
 
 - [Alert](/components/alert), [Toast](/components/toast), [Progress](/components/progress),
   [Spinner](/components/spinner), [Skeleton](/components/skeleton),
-  [Empty State](/components/empty-state)
+  [Empty State](/components/empty-state), [Banner](/components/banner),
+  [Loading Overlay](/components/loading-overlay)
 
 ## Other
 
 Layout, containers, and expandable content.
 
+- App shell: [App Bar, Sidebar and Page](/components/app-shell)
 - Layout: [Card](/components/card), [Separator](/components/separator),
   [Aspect Ratio](/components/aspect-ratio), [Image](/components/image),
   [Splitter](/components/splitter), [Scroll Area](/components/scroll-area)

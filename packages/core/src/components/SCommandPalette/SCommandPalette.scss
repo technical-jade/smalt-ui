@@ -1,0 +1,196 @@
+@use '../../styles/tools';
+
+// The markup has no root .s-command-palette element: the panel is teleported to body, so the
+// block name serves only as the Sass parent for `&__x` = `.s-command-palette__x`.
+.s-command-palette {
+  // The close button spans the search row and is centered in it, so the row needs a fixed height.
+  --s-command-palette-search-height: 3.25rem;
+
+  &__overlay {
+    @include tools.reset-inherited;
+    position: fixed;
+    inset: 0;
+    z-index: var(--s-z-overlay);
+    background-color: var(--s-color-overlay);
+  }
+
+  // Near the top rather than centered: the panel grows downwards as results come in, and a
+  // centered one would slide under the pointer while the user types.
+  &__content {
+    @include tools.reset-inherited;
+    position: fixed;
+    top: 12vh;
+    left: 50%;
+    z-index: var(--s-z-modal);
+    transform: translateX(-50%);
+    display: flex;
+    flex-direction: column;
+    width: min(92vw, var(--s-command-palette-width, 36rem));
+    overflow: hidden;
+    color: var(--s-color-text);
+    background-color: var(--s-color-surface);
+    border-radius: var(--s-radius-md);
+    box-shadow: var(--s-command-palette-elevation, var(--s-elevation-3));
+  }
+
+  &__content--square {
+    border-radius: 0;
+  }
+
+  &__body {
+    display: flex;
+    flex-direction: column;
+    min-height: 0;
+  }
+
+  &__listbox {
+    display: flex;
+    flex-direction: column;
+    min-height: 0;
+  }
+
+  &__search {
+    display: flex;
+    align-items: center;
+    gap: var(--s-space-3);
+    height: var(--s-command-palette-search-height);
+    // Room on the right for the close button, which is positioned over this row.
+    padding: 0 calc(var(--s-space-3) + 2rem) 0 var(--s-space-4);
+    border-bottom: 1px solid var(--s-color-border);
+  }
+
+  &__search-icon {
+    flex: none;
+    color: var(--s-color-text-muted);
+  }
+
+  &__input {
+    flex: 1;
+    min-inline-size: 0;
+    padding: 0;
+    color: inherit;
+    background: transparent;
+    border: none;
+    outline: none;
+    @include tools.typescale('body-lg');
+
+    &::placeholder {
+      color: var(--s-color-text-subtle);
+    }
+  }
+
+  &__spinner {
+    flex: none;
+  }
+
+  &__list {
+    min-height: 0;
+  }
+
+  &__options {
+    padding: var(--s-space-2);
+    outline: none;
+  }
+
+  &__group + &__group {
+    margin-top: var(--s-space-1);
+  }
+
+  &__group-label {
+    padding: var(--s-space-2) var(--s-space-2) var(--s-space-1);
+    color: var(--s-color-text-muted);
+    @include tools.typescale('label-sm');
+    text-transform: uppercase;
+  }
+
+  &__item {
+    display: flex;
+    align-items: center;
+    gap: var(--s-space-3);
+    border-radius: var(--s-radius-sm);
+    cursor: pointer;
+    user-select: none;
+    @include tools.control-size(md);
+    @include tools.interactive-item;
+    @include tools.transition(background-color, color);
+  }
+
+  &__item-icon {
+    flex: none;
+    color: var(--s-color-text-muted);
+  }
+
+  &__item-text {
+    flex: 1;
+    min-inline-size: 0;
+    display: flex;
+    align-items: baseline;
+    gap: var(--s-space-2);
+    overflow: hidden;
+  }
+
+  &__item-label {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  &__item-description {
+    min-inline-size: 0;
+    color: var(--s-color-text-muted);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    @include tools.typescale('body-sm');
+  }
+
+  &__item-shortcut {
+    flex: none;
+    display: inline-flex;
+    align-items: center;
+    gap: var(--s-space-1);
+  }
+
+  &__empty {
+    padding: var(--s-space-4) var(--s-space-3);
+  }
+
+  &__status {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--s-space-2);
+    color: var(--s-color-text-muted);
+    @include tools.typescale('body-sm');
+  }
+
+  &__footer {
+    display: flex;
+    align-items: center;
+    gap: var(--s-space-3);
+    padding: var(--s-space-2) var(--s-space-4);
+    color: var(--s-color-text-muted);
+    border-top: 1px solid var(--s-color-border);
+    @include tools.typescale('label-sm');
+  }
+
+  &__close {
+    position: absolute;
+    top: 0;
+    right: var(--s-space-3);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 2rem;
+    height: var(--s-command-palette-search-height);
+    color: var(--s-color-text-muted);
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    @include tools.transition(color);
+
+    &:hover {
+      color: var(--s-color-text);
+    }
+  }
+}

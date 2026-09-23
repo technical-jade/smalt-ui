@@ -1,0 +1,57 @@
+@use '../../styles/tools';
+
+// Defaults repeated from SAppBar.scss and SSidebar.scss: the page reserves the same sizes, and a
+// custom one only reaches it through the shell variables (internal/shellVars.ts).
+$app-bar-height: 3.5rem;
+$sidebar-width: 16rem;
+$sidebar-collapsed-width: 4rem;
+
+.s-page {
+  @include tools.reset-inherited;
+  box-sizing: border-box;
+  inline-size: 100%;
+  // The offsets come from the neighbours below, never from a measurement.
+  padding-block-start: var(--s-page-block-start, 0px);
+  padding-inline-start: var(--s-page-inline-start, 0px);
+  padding-inline-end: var(--s-page-inline-end, 0px);
+
+  &__content {
+    max-inline-size: var(--s-page-max-width, none);
+    margin-inline: auto;
+  }
+
+  // With `container` the side padding comes from `.s-container` instead: it sits in the utilities
+  // layer and wins over this shorthand for the inline sides.
+  &--padded &__content {
+    padding: var(--s-space-6);
+  }
+}
+
+// A sticky bar keeps its place in the flow; only a fixed one has to be paid for with padding.
+.s-app-bar--fixed ~ .s-page {
+  --s-page-block-start: var(--s-app-bar-height, #{$app-bar-height});
+}
+
+// The column is out of the flow, so the page reserves its width. The breakpoint is part of the
+// selector because the column itself only exists from there upwards.
+@each $bp in (sm, md, lg, xl) {
+  @include tools.respond-to($bp) {
+    .s-sidebar--fixed.s-sidebar--bp-#{$bp} {
+      &.s-sidebar--start ~ .s-page {
+        --s-page-inline-start: var(--s-sidebar-width, #{$sidebar-width});
+      }
+
+      &.s-sidebar--end ~ .s-page {
+        --s-page-inline-end: var(--s-sidebar-width, #{$sidebar-width});
+      }
+
+      &.s-sidebar--collapsed.s-sidebar--start ~ .s-page {
+        --s-page-inline-start: var(--s-sidebar-collapsed-width, #{$sidebar-collapsed-width});
+      }
+
+      &.s-sidebar--collapsed.s-sidebar--end ~ .s-page {
+        --s-page-inline-end: var(--s-sidebar-collapsed-width, #{$sidebar-collapsed-width});
+      }
+    }
+  }
+}

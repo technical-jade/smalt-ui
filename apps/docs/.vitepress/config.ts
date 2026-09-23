@@ -95,6 +95,7 @@ export default defineConfig({
             { text: 'Tag', link: '/components/tag' },
             { text: 'Avatar', link: '/components/avatar' },
             { text: 'Kbd', link: '/components/kbd' },
+            { text: 'Fab', link: '/components/fab' },
           ],
         },
         {
@@ -156,6 +157,7 @@ export default defineConfig({
             { text: 'Popover', link: '/components/popover' },
             { text: 'Hover Card', link: '/components/hover-card' },
             { text: 'Tooltip', link: '/components/tooltip' },
+            { text: 'Command Palette', link: '/components/command-palette' },
           ],
         },
         {
@@ -167,11 +169,14 @@ export default defineConfig({
             { text: 'Spinner', link: '/components/spinner' },
             { text: 'Skeleton', link: '/components/skeleton' },
             { text: 'Empty State', link: '/components/empty-state' },
+            { text: 'Banner', link: '/components/banner' },
+            { text: 'Loading Overlay', link: '/components/loading-overlay' },
           ],
         },
         {
           text: 'Other',
           items: [
+            { text: 'App Shell', link: '/components/app-shell' },
             { text: 'Card', link: '/components/card' },
             { text: 'Separator', link: '/components/separator' },
             { text: 'Aspect Ratio', link: '/components/aspect-ratio' },

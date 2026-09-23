@@ -1,0 +1,134 @@
+@use 'sass:map';
+@use '../../styles/tools';
+
+// The status colors are the ones SAlert uses, so a banner and an alert about the same thing read
+// as one system: the -subtle tint fills the strip, the -text role carries the icon and the border.
+$variants: (
+  neutral: (
+    bg: var(--s-banner-c-subtle, var(--s-color-bg-subtle)),
+    fg: var(--s-banner-c, var(--s-color-text-muted)),
+  ),
+  info: (
+    bg: var(--s-banner-c-subtle, var(--s-color-info-subtle)),
+    fg: var(--s-banner-c, var(--s-color-info-text)),
+  ),
+  positive: (
+    bg: var(--s-banner-c-subtle, var(--s-color-positive-subtle)),
+    fg: var(--s-banner-c, var(--s-color-positive-text)),
+  ),
+  warning: (
+    bg: var(--s-banner-c-subtle, var(--s-color-warning-subtle)),
+    fg: var(--s-banner-c, var(--s-color-warning-text)),
+  ),
+  negative: (
+    bg: var(--s-banner-c-subtle, var(--s-color-negative-subtle)),
+    fg: var(--s-banner-c, var(--s-color-negative-text)),
+  ),
+);
+
+.s-banner {
+  @include tools.reset-inherited;
+  display: flex;
+  align-items: flex-start;
+  gap: var(--s-space-3);
+  padding: var(--s-space-3) var(--s-space-4);
+  color: var(--s-color-text);
+  // The transparent border is always there: toggling `bordered` then changes the color only and
+  // never shifts the content by a pixel.
+  border: 1px solid transparent;
+  border-radius: var(--s-radius-md);
+
+  &--square {
+    border-radius: 0;
+  }
+
+  &--sticky {
+    position: sticky;
+    inset-block-start: 0;
+    z-index: var(--s-z-sticky);
+  }
+
+  @each $name, $c in $variants {
+    &--#{$name} {
+      background-color: map.get($c, bg);
+    }
+
+    &--#{$name} .s-banner__icon {
+      color: map.get($c, fg);
+    }
+
+    &--#{$name}.s-banner--bordered {
+      border-color: map.get($c, fg);
+    }
+  }
+
+  &__icon {
+    display: inline-flex;
+    flex-shrink: 0;
+    padding-block-start: 0.1rem;
+  }
+
+  // Message and actions share a row on a wide screen; below the sm breakpoint the actions move
+  // under the message, where a full-width row of buttons is easier to hit than a squeezed one.
+  &__main {
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+    gap: var(--s-space-2);
+    min-inline-size: 0;
+
+    @include tools.respond-to(sm) {
+      flex-direction: row;
+      align-items: center;
+      gap: var(--s-space-4);
+    }
+  }
+
+  &__content {
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+    gap: var(--s-space-1);
+    min-inline-size: 0;
+  }
+
+  &__title {
+    font-family: var(--s-font-heading);
+    font-weight: var(--s-font-weight-semibold);
+  }
+
+  &__body {
+    font-size: var(--s-font-size-sm);
+    color: var(--s-color-text-muted);
+  }
+
+  &__actions {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--s-space-2);
+
+    @include tools.respond-to(sm) {
+      flex-shrink: 0;
+      margin-inline-start: auto;
+    }
+  }
+
+  &__close {
+    display: inline-flex;
+    flex-shrink: 0;
+    align-self: flex-start;
+    padding: 1px;
+    color: var(--s-color-text-muted);
+    background: none;
+    border: none;
+    border-radius: var(--s-radius-full);
+    cursor: pointer;
+    @include tools.transition(color);
+    @include tools.state-layer;
+
+    &:hover {
+      color: var(--s-color-text);
+    }
+  }
+}

@@ -53,6 +53,8 @@ export const SSR_CASES: Record<string, () => VNode> = {
   SImage: () =>
     h(components.SImage, { src: '/media/cover.jpg', alt: 'Mountain lake', ratio: 16 / 9 }),
   SStat: () => h(components.SStat, { label: 'Revenue', value: 1234567, trend: 12.4 }),
+  SLoadingOverlay: () => h(components.SLoadingOverlay, { open: true }),
+  SFab: () => h(components.SFab, { icon: 'plus', ariaLabel: 'New item' }),
   SListbox: () =>
     h(components.SListbox, {
       options: [
@@ -60,6 +62,12 @@ export const SSR_CASES: Record<string, () => VNode> = {
         { label: 'London', value: 'lon' },
       ],
       label: 'City',
+    }),
+  SCommandPalette: () =>
+    h(components.SCommandPalette, {
+      groups: [
+        { label: 'Files', items: [{ id: 'new', label: 'New file', shortcut: ['meta', 'n'] }] },
+      ],
     }),
   STimeline: () =>
     h(components.STimeline, {
@@ -81,6 +89,11 @@ export const SSR_SKIP: Record<string, string> = {}
  * not exist on the server.
  */
 export const SSR_OPEN_CASES: Record<string, () => VNode> = {
+  SCommandPalette: () =>
+    h(components.SCommandPalette, {
+      open: true,
+      groups: [{ label: 'Files', items: [{ id: 'new', label: 'New file' }] }],
+    }),
   SDialog: () =>
     h(components.SDialog, { open: true, title: 'Title' }, { default: () => 'Content' }),
   SDrawer: () =>

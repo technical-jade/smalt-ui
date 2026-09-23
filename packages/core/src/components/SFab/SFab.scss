@@ -1,0 +1,189 @@
+@use 'sass:map';
+@use '../../styles/settings';
+@use '../../styles/tools';
+
+// MD floating action button: small / standard / large. The fan actions keep the regular control
+// size of the same name, so they read as secondary next to the main button.
+$fab-sizes: (
+  sm: 2.5rem,
+  md: 3.5rem,
+  lg: 4.5rem,
+);
+
+.s-fab {
+  @include tools.reset-inherited;
+  position: relative;
+  display: inline-flex;
+
+  @each $name, $size in $fab-sizes {
+    &--#{$name} {
+      --s-fab-toggle-size: #{$size};
+      --s-fab-action-size: #{map.get(map.get(settings.$control-sizes, $name), height)};
+    }
+  }
+
+  &--fixed {
+    position: fixed;
+    z-index: var(--s-z-sticky);
+  }
+
+  // Logical insets keep the button by the trailing edge in right-to-left layouts; the public
+  // knobs stay named after the visual corner.
+  &--bottom-end,
+  &--top-end {
+    inset-inline-end: var(--s-fab-right, var(--s-space-6));
+  }
+
+  &--bottom-start,
+  &--top-start {
+    inset-inline-start: var(--s-fab-left, var(--s-space-6));
+  }
+
+  &--bottom-end,
+  &--bottom-start {
+    inset-block-end: var(--s-fab-bottom, var(--s-space-6));
+  }
+
+  &--top-end,
+  &--top-start {
+    inset-block-start: var(--s-fab-top, var(--s-space-6));
+  }
+
+  &__actions {
+    position: absolute;
+    display: flex;
+    gap: var(--s-space-3);
+  }
+
+  // The fan is centered on the button: the row is exactly one action wide, because the chips are
+  // taken out of the flow.
+  &--fan-up &__actions,
+  &--fan-down &__actions {
+    inset-inline-start: calc((100% - var(--s-fab-action-size)) / 2);
+  }
+
+  // A horizontal fan is aligned by the top of its buttons: the chips underneath make the items
+  // taller than a button, and stretching them would pull the buttons off the button's axis.
+  &--fan-start &__actions,
+  &--fan-end &__actions {
+    align-items: flex-start;
+    inset-block-start: calc((100% - var(--s-fab-action-size)) / 2);
+  }
+
+  // column-reverse and row-reverse keep the first action next to the button, whichever way the
+  // fan unfolds.
+  &--fan-up &__actions {
+    flex-direction: column-reverse;
+    inset-block-end: calc(100% + var(--s-space-3));
+  }
+
+  &--fan-down &__actions {
+    flex-direction: column;
+    inset-block-start: calc(100% + var(--s-space-3));
+  }
+
+  &--fan-start &__actions {
+    flex-direction: row-reverse;
+    inset-inline-end: calc(100% + var(--s-space-3));
+  }
+
+  &--fan-end &__actions {
+    flex-direction: row;
+    inset-inline-start: calc(100% + var(--s-space-3));
+  }
+
+  &__action {
+    position: relative;
+    display: flex;
+  }
+
+  &__action-label {
+    position: absolute;
+    inset-block-start: 50%;
+    inset-inline-end: calc(100% + var(--s-space-2));
+    transform: translateY(-50%);
+    padding: var(--s-space-1) var(--s-space-2);
+    white-space: nowrap;
+    color: var(--s-color-text);
+    background-color: var(--s-color-surface);
+    border: 1px solid var(--s-color-border);
+    border-radius: var(--s-radius-sm);
+    // The chip only repeats the button name, so it never swallows a click aimed at the button.
+    pointer-events: none;
+    @include tools.typescale('label-md');
+  }
+
+  // A button pinned to the start edge has no room on its inline start — the chips flip outward.
+  &--edge-start &__action-label {
+    inset-inline-start: calc(100% + var(--s-space-2));
+    inset-inline-end: auto;
+  }
+
+  // A horizontal fan has no room beside the buttons: the chips go underneath, and they stay in
+  // the flow so that neighboring labels push each other apart instead of overlapping.
+  &--fan-start &__action,
+  &--fan-end &__action {
+    flex-direction: column-reverse;
+    align-items: center;
+    gap: var(--s-space-2);
+  }
+
+  &--fan-start &__action-label,
+  &--fan-end &__action-label {
+    position: static;
+    transform: none;
+  }
+}
+
+// The FAB is taller than a regular control, so the height from control-size has to give way; two
+// classes win over the button's own modifier whichever order the CSS chunks land in.
+.s-fab .s-fab__toggle {
+  height: var(--s-fab-toggle-size);
+}
+
+// Extended FAB: an icon and text in one pill, MD's wider padding.
+.s-fab .s-fab__toggle--extended {
+  padding-inline: var(--s-space-5);
+}
+
+.s-fab-fan-enter-active,
+.s-fab-fan-leave-active {
+  @include tools.transition(opacity, transform);
+}
+
+.s-fab-fan-enter-from,
+.s-fab-fan-leave-to {
+  opacity: 0;
+}
+
+.s-fab--fan-up .s-fab-fan-enter-from,
+.s-fab--fan-up .s-fab-fan-leave-to {
+  transform: translateY(var(--s-space-2));
+}
+
+.s-fab--fan-down .s-fab-fan-enter-from,
+.s-fab--fan-down .s-fab-fan-leave-to {
+  transform: translateY(calc(var(--s-space-2) * -1));
+}
+
+.s-fab--fan-start .s-fab-fan-enter-from,
+.s-fab--fan-start .s-fab-fan-leave-to {
+  transform: translateX(var(--s-space-2));
+}
+
+.s-fab--fan-end .s-fab-fan-enter-from,
+.s-fab--fan-end .s-fab-fan-leave-to {
+  transform: translateX(calc(var(--s-space-2) * -1));
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .s-fab-fan-enter-active,
+  .s-fab-fan-leave-active {
+    transition: none;
+  }
+
+  .s-fab-fan-enter-from,
+  .s-fab-fan-leave-to {
+    transform: none;
+  }
+}

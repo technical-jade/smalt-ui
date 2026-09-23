@@ -1,0 +1,119 @@
+@use '../../styles/tools';
+
+// Default column widths. SPage.scss repeats them: a sibling cannot read a custom property
+// declared here, so a custom width reaches the page through the shell (internal/shellVars.ts)
+// and these literals only cover the default.
+$width: 16rem;
+$collapsed-width: 4rem;
+
+.s-sidebar {
+  @include tools.reset-inherited;
+  display: flex;
+  box-sizing: border-box;
+  flex-direction: column;
+  gap: var(--s-space-2);
+  padding: var(--s-space-3);
+  color: var(--s-color-text);
+  background: var(--s-color-surface);
+
+  // Wide screens: a column pinned to the viewport edge. Fixed rather than in flow, so the page
+  // keeps the shell's normal block flow and only reserves the width with padding.
+  &--fixed {
+    position: fixed;
+    inset-block: 0;
+    z-index: calc(var(--s-z-sticky) - 1);
+    inline-size: var(--s-sidebar-width, #{$width});
+    overflow-y: auto;
+    @include tools.transition(inline-size);
+  }
+
+  &--fixed.s-sidebar--collapsed {
+    inline-size: var(--s-sidebar-collapsed-width, #{$collapsed-width});
+  }
+
+  &--fixed.s-sidebar--start {
+    inset-inline-start: 0;
+  }
+
+  &--fixed.s-sidebar--end {
+    inset-inline-end: 0;
+  }
+
+  &--fixed.s-sidebar--bordered.s-sidebar--start {
+    border-inline-end: 1px solid var(--s-color-border);
+  }
+
+  &--fixed.s-sidebar--bordered.s-sidebar--end {
+    border-inline-start: 1px solid var(--s-color-border);
+  }
+
+  // Inside the drawer the panel already carries the surface, the padding and the shadow.
+  &--drawer {
+    block-size: 100%;
+    padding: 0;
+    background: transparent;
+  }
+
+  &__header {
+    display: flex;
+    align-items: center;
+    gap: var(--s-space-2);
+    min-block-size: 2rem;
+  }
+
+  &__nav {
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+    gap: var(--s-space-1);
+    min-block-size: 0;
+  }
+
+  &__footer {
+    display: flex;
+    flex-direction: column;
+    gap: var(--s-space-1);
+    padding-block-start: var(--s-space-2);
+    border-block-start: 1px solid var(--s-color-border);
+  }
+
+  &__toggle {
+    display: flex;
+    justify-content: flex-end;
+  }
+
+  // The rail only has room for icons: the helper class marks the text a navigation item hides,
+  // and the slot prop `collapsed` covers items that need more than hiding a label.
+  &--collapsed &__label {
+    display: none;
+  }
+
+  &--collapsed &__header,
+  &--collapsed &__toggle {
+    justify-content: center;
+  }
+
+  &--collapsed &__nav,
+  &--collapsed &__footer {
+    align-items: center;
+  }
+}
+
+// A bar pinned to the top of the viewport takes the column's starting edge with it; a static bar
+// scrolls away, so the column starts at the top.
+.s-app-bar--sticky ~ .s-sidebar--fixed,
+.s-app-bar--fixed ~ .s-sidebar--fixed {
+  inset-block-start: var(--s-app-bar-height, 3.5rem);
+}
+
+// The column only exists from its breakpoint upwards. The rule matters before hydration: the
+// server renders the column, and the drawer replaces it once `matchMedia` has run.
+@each $bp in (sm, md, lg, xl) {
+  .s-sidebar--fixed.s-sidebar--bp-#{$bp} {
+    display: none;
+
+    @include tools.respond-to($bp) {
+      display: flex;
+    }
+  }
+}

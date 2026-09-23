@@ -75,4 +75,9 @@ export const COMPONENT_PAGES = [
   { name: 'list', path: '/components/list' },
   { name: 'editable', path: '/components/editable' },
   { name: 'stat', path: '/components/stat' },
+  { name: 'app-shell', path: '/components/app-shell' },
+  { name: 'command-palette', path: '/components/command-palette' },
+  { name: 'loading-overlay', path: '/components/loading-overlay' },
+  { name: 'fab', path: '/components/fab' },
+  { name: 'banner', path: '/components/banner' },
 ]

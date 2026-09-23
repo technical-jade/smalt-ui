@@ -1,0 +1,91 @@
+@use '../../styles/tools';
+
+// The covered region only needs a positioning context, so the library ships it as a class
+// instead of asking every consumer for a rule of their own.
+.s-loading-overlay-host {
+  position: relative;
+}
+
+.s-loading-overlay {
+  @include tools.reset-inherited;
+  // Dim enough that the covered text stops competing with the label: at 0.72 the two overlap
+  // and both become hard to read.
+  --s-loading-overlay-opacity: 0.9;
+  position: absolute;
+  inset: 0;
+  z-index: var(--s-z-overlay);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--s-color-text);
+
+  &--fullscreen {
+    position: fixed;
+  }
+
+  // Blurred content is already unreadable, so less dimming keeps the region recognizable.
+  &--blur {
+    --s-loading-overlay-opacity: 0.4;
+  }
+
+  &__backdrop {
+    position: absolute;
+    inset: 0;
+    background-color: var(--s-color-bg);
+    opacity: var(--s-loading-overlay-opacity);
+  }
+
+  &--blur &__backdrop {
+    backdrop-filter: blur(var(--s-loading-overlay-blur, 2px));
+  }
+
+  &__content {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: var(--s-space-3);
+    text-align: center;
+  }
+
+  &__label {
+    @include tools.typescale('body-md');
+  }
+
+  &__label--hidden {
+    @include tools.visually-hidden;
+  }
+
+  &--sm &__content {
+    gap: var(--s-space-2);
+  }
+
+  &--sm &__label {
+    @include tools.typescale('label-md');
+  }
+
+  &--lg &__content {
+    gap: var(--s-space-4);
+  }
+
+  &--lg &__label {
+    @include tools.typescale('title-md');
+  }
+}
+
+.s-loading-overlay-fade-enter-active,
+.s-loading-overlay-fade-leave-active {
+  @include tools.transition(opacity);
+}
+
+.s-loading-overlay-fade-enter-from,
+.s-loading-overlay-fade-leave-to {
+  opacity: 0;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .s-loading-overlay-fade-enter-active,
+  .s-loading-overlay-fade-leave-active {
+    transition: none;
+  }
+}

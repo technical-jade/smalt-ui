@@ -1,0 +1,55 @@
+@use '../../styles/tools';
+
+.s-app-bar {
+  @include tools.reset-inherited;
+  // Height fallback, repeated in SPage.scss and SSidebar.scss: those files offset by the same
+  // value, and a custom height only reaches them through the shell variable.
+  display: flex;
+  box-sizing: border-box;
+  align-items: center;
+  gap: var(--s-space-3);
+  inline-size: 100%;
+  block-size: var(--s-app-bar-height, 3.5rem);
+  padding-inline: var(--s-space-4);
+  color: var(--s-app-bar-c-on, var(--s-color-text));
+  background: var(--s-app-bar-c, var(--s-color-surface));
+  box-shadow: var(--s-app-bar-elevation, none);
+  @include tools.transition(box-shadow, background-color);
+
+  &--bordered {
+    border-block-end: 1px solid var(--s-color-border);
+  }
+
+  &--sticky {
+    position: sticky;
+    inset-block-start: 0;
+    z-index: var(--s-z-sticky);
+  }
+
+  // A fixed bar is out of the flow, so the page reserves the height itself (see SPage.scss).
+  &--fixed {
+    position: fixed;
+    inset-block-start: 0;
+    inset-inline: 0;
+    z-index: var(--s-z-sticky);
+  }
+
+  &--elevated {
+    box-shadow: var(--s-app-bar-elevation, var(--s-elevation-2));
+  }
+
+  &__content {
+    display: flex;
+    flex: 1;
+    align-items: center;
+    gap: var(--s-space-2);
+    min-inline-size: 0;
+  }
+
+  &__prepend,
+  &__append {
+    display: flex;
+    align-items: center;
+    gap: var(--s-space-2);
+  }
+}
