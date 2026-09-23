@@ -63,6 +63,7 @@ const opacityStyle = computed(() =>
             v-if="p.spinner"
             class="s-loading-overlay__spinner"
             :size="p.size"
+            :color="p.color"
           />
           <span
             class="s-loading-overlay__label"

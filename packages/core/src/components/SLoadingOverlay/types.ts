@@ -1,3 +1,5 @@
+import type { SColorName } from '../../composables/useColorProp'
+
 export type SLoadingOverlaySize = 'sm' | 'md' | 'lg'
 
 export interface SLoadingOverlayProps {
@@ -20,6 +22,12 @@ export interface SLoadingOverlayProps {
   spinner?: boolean
   /** Size of the spinner, the label and the gap between them: `sm`, `md` or `lg`. */
   size?: SLoadingOverlaySize
+  /**
+   * Spinner color: a name from the [palette](/style/palette) (`primary`/`teal`/`teal-10`). The
+   * label keeps the text color — the overlay covers content, and a tinted sentence on a
+   * near-opaque backdrop reads worse than a plain one.
+   */
+  color?: SColorName
   /** Blur the covered content behind the backdrop. */
   blur?: boolean
   /**

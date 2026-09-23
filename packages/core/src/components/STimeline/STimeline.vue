@@ -1,14 +1,38 @@
 <script setup lang="ts">
-import { computed } from 'vue'
+import { computed, ref } from 'vue'
 import { SIcon } from '../SIcon'
 import { useColorProp, useDefaults } from '../../composables'
-import type { STimelineItem, STimelineProps, STimelineSize, STimelineSlotProps } from './types'
+import { useStackAt } from '../../internal/useStackAt'
+import type {
+  STimelineItem,
+  STimelineLabelPlacement,
+  STimelineProps,
+  STimelineSize,
+  STimelineSlotProps,
+} from './types'
 
 const props = withDefaults(defineProps<STimelineProps>(), {
   orientation: 'vertical',
   size: 'md',
+  narrowOrientation: 'vertical',
 })
 const p = useDefaults(props, 'STimeline')
+
+const root = ref<HTMLElement | null>(null)
+const orientation = useStackAt(root, {
+  stackAt: () => p.stackAt,
+  wide: () => p.orientation,
+  narrow: () => p.narrowOrientation,
+})
+
+/**
+ * The default depends on the orientation: a vertical timeline puts the text beside the dot, a
+ * horizontal one below it. A shared value is impossible here — it would move the text when the
+ * orientation changes.
+ */
+const placement = computed<STimelineLabelPlacement>(
+  () => p.labelPlacement ?? (orientation.value === 'vertical' ? 'end' : 'bottom'),
+)
 
 const colorStyle = useColorProp(p, 's-timeline')
 
@@ -63,8 +87,13 @@ function itemStyle(item: STimelineItem) {
 
 <template>
   <div
+    ref="root"
     class="s-timeline"
-    :class="[`s-timeline--${p.orientation}`, `s-timeline--${p.size}`]"
+    :class="[
+      `s-timeline--${orientation}`,
+      `s-timeline--${p.size}`,
+      `s-timeline--label-${placement}`,
+    ]"
     :style="colorStyle"
     role="list"
   >

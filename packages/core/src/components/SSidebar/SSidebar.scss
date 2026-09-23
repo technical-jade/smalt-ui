@@ -23,6 +23,9 @@ $collapsed-width: 4rem;
     z-index: calc(var(--s-z-sticky) - 1);
     inline-size: var(--s-sidebar-width, #{$width});
     overflow-y: auto;
+    // The column narrows to the rail faster than its content does — during the width transition
+    // above all — and anything sticking out would hand the panel a horizontal scrollbar.
+    overflow-x: hidden;
     @include tools.transition(inline-size);
   }
 
@@ -94,6 +97,25 @@ $collapsed-width: 4rem;
   &--collapsed &__nav,
   &--collapsed &__footer {
     align-items: center;
+  }
+
+  // A list row is the usual navigation item, and the rail has room for neither its text nor its
+  // side padding: the row would outgrow the column and get clipped mid-word. The text leaves the
+  // flow instead, so the consumer marks nothing for the common case — `__label` stays the escape
+  // hatch for markup of their own.
+  &--collapsed .s-list-item__content {
+    display: none;
+  }
+
+  // The list keeps the width of the rail, so the icon gets the whole column as its hit target
+  // rather than its own twenty pixels.
+  &--collapsed .s-list {
+    align-self: stretch;
+  }
+
+  &--collapsed .s-list-item__row {
+    justify-content: center;
+    padding-inline: 0;
   }
 }
 

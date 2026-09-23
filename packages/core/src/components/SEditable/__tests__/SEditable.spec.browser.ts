@@ -70,6 +70,29 @@ describe('SEditable · browser', () => {
   })
 })
 
+describe('SEditable · empty value · browser', () => {
+  /**
+   * The preview is the only way back into the editor, so an empty value must not take its line
+   * box away — the field would still look clickable while nothing could be hit.
+   */
+  it('keeps the preview clickable once the value is cleared', async () => {
+    const { container, preview } = renderEditable({ modelValue: '' })
+
+    expect(preview.getBoundingClientRect().height).toBeGreaterThan(0)
+
+    await userEvent.click(preview)
+    const input = container.querySelector<HTMLInputElement>('.s-editable__input')!
+    await vi.waitFor(() => expect(document.activeElement).toBe(input))
+  })
+
+  it('keeps the preview as tall as it is with a value', () => {
+    const filled = renderEditable().preview.getBoundingClientRect().height
+    const empty = renderEditable({ modelValue: '' }).preview.getBoundingClientRect().height
+
+    expect(empty).toBeCloseTo(filled, 1)
+  })
+})
+
 describe('SEditable · controls · browser', () => {
   it('opens the editor from the edit control', async () => {
     const { container, preview } = renderEditable({

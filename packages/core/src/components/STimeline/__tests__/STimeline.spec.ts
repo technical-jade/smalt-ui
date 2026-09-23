@@ -124,6 +124,29 @@ describe('STimeline', () => {
     )
   })
 
+  /** A shared default would move the text as soon as the orientation changed. */
+  it.each([
+    ['vertical', 's-timeline--label-end'],
+    ['horizontal', 's-timeline--label-bottom'],
+  ] as const)('places the text beside the dot by default (%s)', (orientation, expected) => {
+    const { container } = render(STimeline, {
+      props: { items: [{ title: 'Shipped' }], orientation },
+    })
+
+    expect(container.querySelector('.s-timeline')).toHaveClass(expected)
+  })
+
+  it.each(['top', 'bottom', 'start', 'end'] as const)(
+    'takes the label placement from the prop (%s)',
+    (placement) => {
+      const { container } = render(STimeline, {
+        props: { items: [{ title: 'Shipped' }], labelPlacement: placement },
+      })
+
+      expect(container.querySelector('.s-timeline')).toHaveClass(`s-timeline--label-${placement}`)
+    },
+  )
+
   it('an item carries its own content color for a completed indicator', () => {
     const { container } = render(STimeline, {
       props: { items: [{ title: 'Shipped', color: 'amber', textColor: 'gray-900' }] },

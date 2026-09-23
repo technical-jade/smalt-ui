@@ -163,11 +163,154 @@ the indicator, the spacing and the type scale.
 <template #code>
 
 ```vue
+<script setup lang="ts">
+import { ref } from 'vue'
+
+const current = ref(2)
+const items = [
+  { title: 'Ordered', date: 'Mon' },
+  { title: 'Packed', date: 'Tue' },
+  { title: 'Shipped', date: 'Wed' },
+  { title: 'Delivered', date: 'Fri' },
+]
+</script>
+
 <template>
   <STimeline
     v-model="current"
     orientation="horizontal"
     size="sm"
+    :items="items"
+  />
+</template>
+```
+
+  </template>
+</Demo>
+
+## Label placement
+
+`label-placement` picks the side of the dot the event text goes to. `start` and `end` put it
+beside the dot, `top` and `bottom` above or below it — and there the event becomes a centred
+column, so the text lines up with the middle of the dot instead of starting at its edge. Without
+the prop the text is beside the dot in a vertical timeline and below it in a horizontal one:
+a shared default would move the text as soon as the orientation changed.
+
+In a vertical timeline the text takes the column beside the dots, so the block is as wide as you
+let it be: cap it with `max-width` to keep the rail close to the text instead of stretched across
+the page.
+
+<Demo>
+  <STimeline style="max-width: 280px" label-placement="start" model-value="packed" :items="[
+    { value: 'created', title: 'Order created', date: 'March 3' },
+    { value: 'packed', title: 'Packed', date: 'March 4' },
+    { value: 'shipped', title: 'Shipped', date: 'March 5' },
+  ]" />
+
+<template #code>
+
+```vue
+<script setup lang="ts">
+import { ref } from 'vue'
+
+const current = ref('packed')
+const items = [
+  { value: 'created', title: 'Order created', date: 'March 3' },
+  { value: 'packed', title: 'Packed', date: 'March 4' },
+  { value: 'shipped', title: 'Shipped', date: 'March 5' },
+]
+</script>
+
+<template>
+  <STimeline
+    v-model="current"
+    label-placement="start"
+    style="max-width: 280px"
+    :items="items"
+  />
+</template>
+```
+
+  </template>
+</Demo>
+
+A horizontal timeline spans its container instead: the rail needs the width to space the events
+evenly, and `top` or `bottom` centres each caption on its own dot.
+
+<Demo>
+  <STimeline orientation="horizontal" size="sm" label-placement="top" :model-value="2" :items="[
+    { title: 'Ordered', date: 'Mon' },
+    { title: 'Packed', date: 'Tue' },
+    { title: 'Shipped', date: 'Wed' },
+    { title: 'Delivered', date: 'Fri' },
+  ]" />
+
+<template #code>
+
+```vue
+<script setup lang="ts">
+import { ref } from 'vue'
+
+const current = ref(2)
+const items = [
+  { title: 'Ordered', date: 'Mon' },
+  { title: 'Packed', date: 'Tue' },
+  { title: 'Shipped', date: 'Wed' },
+  { title: 'Delivered', date: 'Fri' },
+]
+</script>
+
+<template>
+  <STimeline
+    v-model="current"
+    orientation="horizontal"
+    size="sm"
+    label-placement="top"
+    :items="items"
+  />
+</template>
+```
+
+  </template>
+</Demo>
+
+## Collapsing on a narrow container
+
+`stack-at` is the width in pixels below which a horizontal timeline turns into a vertical one. It
+is compared with the width available to the timeline, not the window: inside a narrow column or a
+modal the rail runs out of room long before the screen does. `narrow-orientation` sets what the
+layout collapses to — `vertical` by default, or `horizontal` to get the reverse. Resize the window
+to see the demo switch.
+
+<Demo>
+  <STimeline orientation="horizontal" size="sm" :stack-at="560" :model-value="2" :items="[
+    { title: 'Ordered', date: 'Mon' },
+    { title: 'Packed', date: 'Tue' },
+    { title: 'Shipped', date: 'Wed' },
+    { title: 'Delivered', date: 'Fri' },
+  ]" />
+
+<template #code>
+
+```vue
+<script setup lang="ts">
+import { ref } from 'vue'
+
+const current = ref(2)
+const items = [
+  { title: 'Ordered', date: 'Mon' },
+  { title: 'Packed', date: 'Tue' },
+  { title: 'Shipped', date: 'Wed' },
+  { title: 'Delivered', date: 'Fri' },
+]
+</script>
+
+<template>
+  <STimeline
+    v-model="current"
+    orientation="horizontal"
+    size="sm"
+    :stack-at="560"
     :items="items"
   />
 </template>
@@ -198,6 +341,17 @@ the indicator, the spacing and the type scale.
 <template #code>
 
 ```vue
+<script setup lang="ts">
+import { ref } from 'vue'
+
+const current = ref('build')
+const items = [
+  { value: 'commit', title: 'Commit', date: '10:02' },
+  { value: 'build', title: 'Build', date: '10:04' },
+  { value: 'deploy', title: 'Deploy' },
+]
+</script>
+
 <template>
   <STimeline
     v-model="current"

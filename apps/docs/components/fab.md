@@ -30,8 +30,8 @@ the action and closes the fan. The open state is available as `v-model:open`.
   <div style="display: flex; gap: 16px; align-items: center; flex-wrap: wrap">
     <SFab position="static" icon="plus" aria-label="New item" />
     <SFab position="static" icon="pencil" label="Compose" />
-    <SFab position="static" icon="plus" aria-label="New item" size="sm" variant="secondary" />
-    <SFab position="static" icon="plus" aria-label="New item" size="lg" color="teal" />
+    <SFab position="static" icon="plus" aria-label="New item" variant="secondary" />
+    <SFab position="static" icon="plus" aria-label="New item" color="teal" />
   </div>
 
 <template #code>
@@ -52,14 +52,12 @@ the action and closes the fan. The open state is available as `v-model:open`.
     position="static"
     icon="plus"
     aria-label="New item"
-    size="sm"
     variant="secondary"
   />
   <SFab
     position="static"
     icon="plus"
     aria-label="New item"
-    size="lg"
     color="teal"
   />
 </template>
@@ -68,9 +66,50 @@ the action and closes the fan. The open state is available as `v-model:open`.
   </template>
 </Demo>
 
+`variant` and `color` are the same knobs as on [SButton](./button), and the actions of the fan
+follow them.
+
+## Sizes
+
 The sizes follow the Material scale — `sm` 40px, `md` 56px and `lg` 72px — so the button stands out
-from the regular controls around it. `variant` and `color` are the same knobs as on
-[SButton](./button), and the actions of the fan follow them.
+from the regular controls around it. The scale carries the icon, the label and the fan with it: an
+`sm` fab opens `sm` actions.
+
+<Demo>
+  <div style="display: grid; gap: 24px; width: 100%">
+    <div style="display: flex; gap: 16px; align-items: center; flex-wrap: wrap">
+      <SFab position="static" icon="plus" aria-label="New item, small" size="sm" />
+      <SFab position="static" icon="plus" aria-label="New item, medium" size="md" />
+      <SFab position="static" icon="plus" aria-label="New item, large" size="lg" />
+    </div>
+    <div style="display: flex; gap: 16px; align-items: center; flex-wrap: wrap">
+      <SFab position="static" icon="pencil" label="Compose" size="sm" />
+      <SFab position="static" icon="pencil" label="Compose" size="md" />
+      <SFab position="static" icon="pencil" label="Compose" size="lg" />
+    </div>
+  </div>
+
+<template #code>
+
+```vue
+<template>
+  <SFab
+    position="static"
+    icon="plus"
+    aria-label="New item"
+    size="sm"
+  />
+  <SFab
+    position="static"
+    icon="pencil"
+    label="Compose"
+    size="lg"
+  />
+</template>
+```
+
+  </template>
+</Demo>
 
 ## A fan of actions
 

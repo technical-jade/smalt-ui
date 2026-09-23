@@ -93,6 +93,41 @@ describe('STimePicker · browser', () => {
     expect(trigger().closest('.s-time-picker')).not.toBeNull()
   })
 
+  /**
+   * The scrollbar is an overlay, painted on top of the column: without a gutter of its own it
+   * crosses the filled background of the selected option.
+   */
+  it('keeps the options clear of the overlay scrollbar', async () => {
+    setup({}, new Time(9, 30))
+    await userEvent.click(trigger())
+    await expect.poll(panel).not.toBeNull()
+
+    const column = hours().closest('.s-scroll-area')!
+    const viewport = column.querySelector<HTMLElement>('[data-reka-scroll-area-viewport]')!
+    const options = [...column.querySelectorAll<HTMLElement>('.s-time-picker__option')]
+    const widest = Math.max(...options.map((o) => o.getBoundingClientRect().right))
+
+    // The bar hugs the viewport's trailing edge, so the gutter is what is left beyond the options.
+    expect(viewport.getBoundingClientRect().right - widest).toBeGreaterThan(8)
+  })
+
+  /**
+   * The gutter belongs to the trailing edge of every column, so without repeating it once on the
+   * leading edge the columns would sit against the left border of the panel.
+   */
+  it('keeps the same gap on both sides of the panel', async () => {
+    setup({}, new Time(9, 30))
+    await userEvent.click(trigger())
+    await expect.poll(panel).not.toBeNull()
+
+    const box = panel()!.getBoundingClientRect()
+    const columns = [...panel()!.querySelectorAll<HTMLElement>('.s-time-picker__option')]
+    const leading = Math.min(...columns.map((o) => o.getBoundingClientRect().left)) - box.left
+    const trailing = box.right - Math.max(...columns.map((o) => o.getBoundingClientRect().right))
+
+    expect(leading).toBeCloseTo(trailing, 0)
+  })
+
   it('scrolls the selected value into view when the panel opens', async () => {
     setup({}, new Time(21, 45))
     await userEvent.click(trigger())

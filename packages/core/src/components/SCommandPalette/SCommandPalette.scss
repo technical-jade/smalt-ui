@@ -3,9 +3,6 @@
 // The markup has no root .s-command-palette element: the panel is teleported to body, so the
 // block name serves only as the Sass parent for `&__x` = `.s-command-palette__x`.
 .s-command-palette {
-  // The close button spans the search row and is centered in it, so the row needs a fixed height.
-  --s-command-palette-search-height: 3.25rem;
-
   &__overlay {
     @include tools.reset-inherited;
     position: fixed;
@@ -17,6 +14,10 @@
   // Near the top rather than centered: the panel grows downwards as results come in, and a
   // centered one would slide under the pointer while the user types.
   &__content {
+    // The close button spans the search row and is centred in it, so the row needs a fixed
+    // height. It is declared here, on the panel itself: there is no `.s-command-palette` element
+    // to inherit from, so a variable set on the block name would never reach anything.
+    --s-command-palette-search-height: 3.75rem;
     @include tools.reset-inherited;
     position: fixed;
     top: 12vh;

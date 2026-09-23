@@ -2,6 +2,8 @@ import type { SColorName } from '../../composables/useColorProp'
 
 export type STimelineOrientation = 'vertical' | 'horizontal'
 
+export type STimelineLabelPlacement = 'top' | 'bottom' | 'start' | 'end'
+
 export type STimelineSize = 'sm' | 'md' | 'lg'
 
 export interface STimelineItem {
@@ -50,6 +52,27 @@ export interface STimelineProps {
    * @defaultValue 'vertical'
    */
   orientation?: STimelineOrientation
+  /**
+   * Side of the indicator where the event text goes: `top` and `bottom` are above and below the
+   * dot, `start` and `end` are before and after it (left and right in a left-to-right layout).
+   * Alongside the dot the text is centred on it; above or below it the event becomes a centred
+   * column. Works in both orientations. Without a value the text is beside the dot in the
+   * vertical layout and below it in the horizontal one — there is no shared default, otherwise
+   * changing the orientation would move the text.
+   */
+  labelPlacement?: STimelineLabelPlacement
+  /**
+   * Width in pixels below which a horizontal timeline switches to vertical. It is compared with
+   * the width available to the timeline, not the window: in a narrow column or a modal the rail
+   * breaks even on a wide screen. Without the prop the layout never changes.
+   */
+  stackAt?: number
+  /**
+   * Orientation below the `stack-at` threshold. `vertical` by default; `horizontal` together
+   * with `orientation="vertical"` gives the reverse: a column when wide and a row when narrow.
+   * @defaultValue 'vertical'
+   */
+  narrowOrientation?: STimelineOrientation
   /**
    * Size: scales the indicator, the spacing and the type scale.
    * @defaultValue 'md'

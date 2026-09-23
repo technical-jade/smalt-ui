@@ -153,9 +153,12 @@ the documentation page.
 
 ## The collapsed rail
 
-`v-model:collapsed` narrows the column to `collapsedWidth`, and the page follows. Labels go away
-with the `.s-sidebar__label` class; anything that needs more than a hidden label reads the
-`collapsed` slot prop. The toggle's accessible name comes from the locale dictionary
+`v-model:collapsed` narrows the column to `collapsedWidth`, and the page follows. A navigation
+built from [`SList`](/components/list) needs nothing else: in the rail a row drops its text and its
+side padding, so the icon is centred and keeps the whole column as its hit target. For markup of
+your own, `.s-sidebar__label` marks the text that goes away, and anything that needs more than a
+hidden label reads the `collapsed` slot prop. The column never scrolls sideways, however wide the
+content is. The toggle's accessible name comes from the locale dictionary
 (`expandSidebar` / `collapseSidebar`); replace it per instance with `expandLabel` and
 `collapseLabel`, or everywhere through [i18n](/guide/i18n).
 

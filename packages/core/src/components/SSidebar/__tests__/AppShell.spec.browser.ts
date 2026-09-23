@@ -3,6 +3,8 @@ import { describe, expect, it, vi } from 'vitest'
 import { render, screen } from '@testing-library/vue'
 import { SAppBar } from '../../SAppBar'
 import { SPage } from '../../SPage'
+import { SList } from '../../SList'
+import { SListItem } from '../../SListItem'
 import { SSidebar } from '../index'
 
 /**
@@ -69,6 +71,45 @@ describe('app shell · browser', () => {
 
     expect(parseFloat(getComputedStyle(page).paddingLeft)).toBeLessThan(expandedPadding)
     expect(getComputedStyle(screen.getByText('Reports')).display).toBe('none')
+  })
+
+  /**
+   * The rail is narrower than a navigation row, so without dropping the text and the side padding
+   * the row keeps its full width and the column gets a horizontal scrollbar with a label clipped
+   * mid-word behind it.
+   */
+  it('fits the navigation into the rail instead of scrolling it sideways', async () => {
+    const collapsed = ref(false)
+    const { container } = render({
+      components: { SSidebar, SList, SListItem },
+      setup: () => ({ collapsed }),
+      template: `
+        <div class="s-root s-root--app" style="position: relative; transform: translateZ(0)">
+          <SSidebar
+            v-model:collapsed="collapsed"
+            breakpoint="sm"
+            aria-label="Main"
+          >
+            <SList>
+              <SListItem clickable icon="home" title="Overview" />
+              <SListItem clickable icon="users" title="Customers" />
+            </SList>
+          </SSidebar>
+        </div>
+      `,
+    })
+    const column = () => container.querySelector<HTMLElement>('.s-sidebar--fixed')!
+    await vi.waitFor(() => expect(column()).not.toBeNull())
+
+    collapsed.value = true
+    await vi.waitFor(() => expect(column().className).toContain('s-sidebar--collapsed'))
+
+    expect(column().scrollWidth).toBeLessThanOrEqual(column().clientWidth)
+    expect(screen.getByText('Overview')).not.toBeVisible()
+
+    const row = container.querySelector<HTMLElement>('.s-list-item__row')!
+    const nav = container.querySelector<HTMLElement>('.s-sidebar__nav')!
+    expect(row.getBoundingClientRect().width).toBeCloseTo(nav.getBoundingClientRect().width, 0)
   })
 
   it('becomes a focus-trapping drawer below the breakpoint', async () => {

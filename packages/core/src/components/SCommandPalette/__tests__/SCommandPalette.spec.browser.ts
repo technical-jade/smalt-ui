@@ -117,6 +117,24 @@ describe('SCommandPalette · browser', () => {
     await vi.waitFor(() => expect(trigger).toHaveFocus())
   })
 
+  /** A height that fails to resolve costs no error: the row just collapses onto the text. */
+  it('gives the search row its own height, not the height of the input', async () => {
+    render(Harness)
+    await userEvent.keyboard('{Meta>}k{/Meta}')
+    await screen.findByRole('dialog')
+
+    const row = document.querySelector<HTMLElement>('.s-command-palette__search')!
+    const input = document.querySelector<HTMLElement>('.s-command-palette__input')!
+    const close = document.querySelector<HTMLElement>('.s-command-palette__close')!
+
+    const rowBox = row.getBoundingClientRect()
+    const inputBox = input.getBoundingClientRect()
+    expect(rowBox.height).toBeGreaterThan(inputBox.height + 16)
+    expect(inputBox.top - rowBox.top).toBeGreaterThan(8)
+    // The close button spans the row, so it stays centred against the input.
+    expect(close.getBoundingClientRect().height).toBeCloseTo(rowBox.height, 0)
+  })
+
   it('scrolls the active command into view', async () => {
     render(Harness, { props: { maxHeight: 96 } })
     await userEvent.keyboard('{Meta>}k{/Meta}')

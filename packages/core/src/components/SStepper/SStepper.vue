@@ -8,9 +8,10 @@ import {
   StepperDescription,
   StepperSeparator,
 } from 'reka-ui'
-import { computed, onBeforeUnmount, onMounted, ref, watch } from 'vue'
+import { computed, ref } from 'vue'
 import { SIcon } from '../SIcon'
 import { useColorProp, useDefaults, useMessages } from '../../composables'
+import { useStackAt } from '../../internal/useStackAt'
 import type { SStepperLabelPlacement, SStepperProps } from './types'
 
 const props = withDefaults(defineProps<SStepperProps>(), {
@@ -26,50 +27,11 @@ const colorStyle = useColorProp(p, 's-stepper')
 const m = useMessages()
 
 const root = ref<HTMLElement | null>(null)
-const width = ref<number>()
-
-/**
- * The width is taken from the parent, not the window or the stepper itself: in a narrow column
- * steps overlap even on a wide screen, and a collapsed stepper in a flex container shrinks to its
- * content — its own width would stop reflecting the available space, and it would never expand
- * back. The observer is created only when the prop is set.
- */
-let observer: ResizeObserver | undefined
-
-function watchWidth() {
-  observer?.disconnect()
-  observer = undefined
-  width.value = undefined
-  if (!root.value || p.stackAt === undefined) return
-
-  const container = root.value.parentElement ?? root.value
-
-  observer = new ResizeObserver(([entry]) => {
-    /**
-     * The measurement is deferred by a frame: an orientation change alters the layout right from
-     * the callback, and the browser logs an unfinished observer loop to the app console.
-     */
-    requestAnimationFrame(() => {
-      width.value = entry.contentRect.width
-    })
-  })
-  observer.observe(container)
-}
-
-onMounted(watchWidth)
-watch(() => p.stackAt, watchWidth)
-onBeforeUnmount(() => observer?.disconnect())
-
-/**
- * Orientation after collapsing. Until the first measurement (server, first frame) the declared
- * one is kept: the server has nothing to guess the width from, and a wrong guess would cost a
- * hydration mismatch.
- */
-const orientation = computed(() =>
-  p.stackAt !== undefined && width.value !== undefined && width.value < p.stackAt
-    ? p.narrowOrientation
-    : p.orientation,
-)
+const orientation = useStackAt(root, {
+  stackAt: () => p.stackAt,
+  wide: () => p.orientation,
+  narrow: () => p.narrowOrientation,
+})
 
 /**
  * The default depends on the orientation: a horizontal stepper labels steps below, a vertical

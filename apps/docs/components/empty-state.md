@@ -11,7 +11,7 @@ on its own. The icon and the image are decorative — the meaning is carried by 
 ## Basic usage
 
 <Demo>
-  <SEmptyState icon="folder" title="No invoices yet" description="New invoices will appear here as soon as the first order is paid." />
+  <SEmptyState style="width: 100%" icon="folder" title="No invoices yet" description="New invoices will appear here as soon as the first order is paid." />
 
 <template #code>
 
@@ -34,7 +34,7 @@ The `actions` slot holds the buttons that resolve the empty state. The default s
 extra under the description.
 
 <Demo>
-  <SEmptyState icon="search" title="Nothing found" description="No orders match the current filters.">
+  <SEmptyState style="width: 100%" icon="search" title="Nothing found" description="No orders match the current filters.">
     <template #actions>
       <SButton variant="outline">Reset filters</SButton>
       <SButton>New order</SButton>
@@ -99,7 +99,7 @@ from the [palette](/style/palette).
 `image` replaces the icon with a picture; the `icon` slot replaces both with any markup.
 
 <Demo>
-  <SEmptyState title="Inbox zero" description="Every message has been handled.">
+  <SEmptyState style="width: 100%" title="Inbox zero" description="Every message has been handled.">
     <template #icon>
       <SIcon icon="mail" :size="40" color="positive" />
     </template>

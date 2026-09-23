@@ -35,7 +35,7 @@
   @include tools.reset-inherited;
   @include tools.floating-surface;
   z-index: var(--s-z-popover);
-  padding: var(--s-space-1);
+  padding: var(--s-space-2);
   color: var(--s-color-text);
 
   .s-time-picker__columns {
@@ -51,8 +51,16 @@
     display: flex;
     flex-direction: column;
     gap: 1px;
-    // Room for the overlay scrollbar, which is painted on top of the options.
+    // The block padding holds the ends of the scroll off the panel border, so a half-scrolled
+    // option is not sliced. The inline one is the gutter the overlay scrollbar is painted in.
+    padding-block: var(--s-space-1);
     padding-inline-end: var(--s-space-3);
+  }
+
+  // The gutter repeats once on the leading edge of the panel: without it the columns would hug
+  // the left border while the trailing gutter held them off the right one.
+  .s-time-picker__column:first-child .s-time-picker__list {
+    padding-inline-start: var(--s-space-3);
   }
 
   .s-time-picker__option {

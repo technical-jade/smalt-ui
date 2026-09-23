@@ -185,7 +185,10 @@ blocks a submission that fails and focuses the first segment of the first invali
 
 <Demo>
   <ClientOnly>
-    <SForm @submit="onSubmit">
+    <SForm
+      style="display: grid; gap: 16px; width: 100%; max-width: 320px"
+      @submit="onSubmit"
+    >
       <STimePicker
         v-model="booking"
         label="Booking time"
@@ -193,10 +196,10 @@ blocks a submission that fails and focuses the first segment of the first invali
         :minute-step="30"
         :rules="[required()]"
       />
-      <SButton type="submit">
-        Book
-      </SButton>
-      <div v-if="submitted">Submitted: {{ submitted }}</div>
+      <div style="display: flex; align-items: center; gap: 8px">
+        <SButton type="submit">Book</SButton>
+        <span v-if="submitted">Submitted: {{ submitted }}</span>
+      </div>
     </SForm>
   </ClientOnly>
 

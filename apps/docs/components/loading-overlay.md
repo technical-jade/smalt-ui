@@ -216,6 +216,43 @@ async function publish() {
   </template>
 </Demo>
 
+## Spinner color
+
+`color` tints the spinner with a name from the [palette](/style/palette) — for an overlay that
+sits inside a themed area, or one that should read as a warning rather than routine work. The
+label keeps the text color: a tinted sentence on a near-opaque backdrop reads worse than a plain
+one.
+
+<Demo>
+  <div style="display: flex; gap: 16px; flex-wrap: wrap">
+    <div class="s-loading-overlay-host" style="width: 180px; padding: 12px; border: 1px solid var(--s-color-border); border-radius: 8px">
+      <div inert>Invoice #4021 — 8 items, paid on 12 May.</div>
+      <SLoadingOverlay open label="Default" />
+    </div>
+    <div class="s-loading-overlay-host" style="width: 180px; padding: 12px; border: 1px solid var(--s-color-border); border-radius: 8px">
+      <div inert>Invoice #4021 — 8 items, paid on 12 May.</div>
+      <SLoadingOverlay open color="teal" label="Teal" />
+    </div>
+    <div class="s-loading-overlay-host" style="width: 180px; padding: 12px; border: 1px solid var(--s-color-border); border-radius: 8px">
+      <div inert>Invoice #4021 — 8 items, paid on 12 May.</div>
+      <SLoadingOverlay open color="warning" label="Warning" />
+    </div>
+  </div>
+
+<template #code>
+
+```vue
+<template>
+  <SLoadingOverlay
+    :open="loading"
+    color="teal"
+  />
+</template>
+```
+
+  </template>
+</Demo>
+
 ## Backdrop
 
 `blur` frosts the covered content with `backdrop-filter` and lowers the dimming to `0.4`, since

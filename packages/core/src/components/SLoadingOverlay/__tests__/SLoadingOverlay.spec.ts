@@ -39,6 +39,22 @@ describe('SLoadingOverlay', () => {
     expect(screen.getByRole('status')).toBeInTheDocument()
   })
 
+  it('tints the spinner with the color prop and leaves the label alone', () => {
+    render(SLoadingOverlay, { props: { open: true, color: 'teal' } })
+
+    const spinner = document.querySelector<HTMLElement>('.s-spinner')!
+    expect(spinner.style.cssText).toContain('--s-spinner-c: var(--s-teal)')
+    expect(document.querySelector<HTMLElement>('.s-loading-overlay__label')!.style.cssText).toBe('')
+  })
+
+  it('leaves the spinner on its own color without the prop', () => {
+    render(SLoadingOverlay, { props: { open: true } })
+
+    expect(document.querySelector<HTMLElement>('.s-spinner')!.style.cssText).not.toContain(
+      '--s-spinner-c',
+    )
+  })
+
   it('lets the default slot replace the spinner and the label', () => {
     render(SLoadingOverlay, {
       props: { open: true },

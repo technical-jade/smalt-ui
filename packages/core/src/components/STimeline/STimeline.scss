@@ -56,14 +56,7 @@ $sizes: (
     @include tools.disabled-state;
   }
 
-  &--vertical &__item {
-    grid-template-columns: auto 1fr;
-    grid-template-rows: auto 1fr;
-  }
-
   &--horizontal &__item {
-    grid-template-columns: auto 1fr;
-    grid-template-rows: auto auto;
     // Only items with a segment grow: the last one keeps its content width, otherwise its text
     // would hang at the left edge of the leftover space.
     flex: 0 1 auto;
@@ -73,8 +66,48 @@ $sizes: (
     flex: 1 1 auto;
   }
 
+  &--vertical#{&}--label-end &__item {
+    grid-template-columns: auto 1fr;
+    grid-template-rows: auto 1fr;
+  }
+
+  &--vertical#{&}--label-start &__item {
+    grid-template-columns: 1fr auto;
+    grid-template-rows: auto 1fr;
+    text-align: end;
+  }
+
+  // Text above or below the dot: the event becomes a centred column, so the rail passes between
+  // the text blocks instead of alongside them.
+  &--vertical#{&}--label-top &__item,
+  &--vertical#{&}--label-bottom &__item {
+    grid-template-columns: 1fr;
+    grid-template-rows: auto auto auto;
+    justify-items: center;
+    text-align: center;
+  }
+
+  &--horizontal#{&}--label-top &__item,
+  &--horizontal#{&}--label-bottom &__item {
+    // The dot column grows to the width of the text, which is what centres the text on the dot;
+    // the rail takes whatever is left of the row.
+    grid-template-columns: auto 1fr;
+    grid-template-rows: auto auto;
+    text-align: center;
+  }
+
+  &--horizontal#{&}--label-start &__item,
+  &--horizontal#{&}--label-end &__item {
+    grid-template-columns: auto auto 1fr;
+    grid-template-rows: auto;
+    align-items: center;
+  }
+
+  &--horizontal#{&}--label-start &__item {
+    text-align: end;
+  }
+
   &__indicator {
-    grid-area: 1 / 1;
     display: inline-flex;
     align-items: center;
     justify-content: center;
@@ -93,13 +126,11 @@ $sizes: (
   }
 
   &--vertical &__line {
-    grid-area: 2 / 1;
     justify-self: center;
     inline-size: 2px;
   }
 
   &--horizontal &__line {
-    grid-area: 1 / 2;
     align-self: center;
     block-size: 2px;
   }
@@ -108,12 +139,122 @@ $sizes: (
     min-inline-size: 0;
   }
 
-  &--vertical &__content {
-    grid-area: 1 / 2 / 3 / 3;
+  // The three parts swap cells per placement, but the rail segment always follows the
+  // orientation, so the events stay strung on one line whichever side the text takes.
+  &--vertical#{&}--label-end {
+    .s-timeline__indicator {
+      grid-area: 1 / 1;
+    }
+
+    .s-timeline__line {
+      grid-area: 2 / 1;
+    }
+
+    .s-timeline__content {
+      grid-area: 1 / 2 / 3 / 3;
+    }
   }
 
-  &--horizontal &__content {
-    grid-area: 2 / 1 / 3 / 3;
+  &--vertical#{&}--label-start {
+    .s-timeline__indicator {
+      grid-area: 1 / 2;
+    }
+
+    .s-timeline__line {
+      grid-area: 2 / 2;
+    }
+
+    .s-timeline__content {
+      grid-area: 1 / 1 / 3 / 2;
+    }
+  }
+
+  &--vertical#{&}--label-bottom {
+    .s-timeline__indicator {
+      grid-area: 1 / 1;
+    }
+
+    .s-timeline__content {
+      grid-area: 2 / 1;
+    }
+
+    .s-timeline__line {
+      grid-area: 3 / 1;
+    }
+  }
+
+  &--vertical#{&}--label-top {
+    .s-timeline__content {
+      grid-area: 1 / 1;
+    }
+
+    .s-timeline__indicator {
+      grid-area: 2 / 1;
+    }
+
+    .s-timeline__line {
+      grid-area: 3 / 1;
+    }
+  }
+
+  &--horizontal#{&}--label-bottom {
+    .s-timeline__indicator {
+      grid-area: 1 / 1;
+      justify-self: center;
+    }
+
+    .s-timeline__line {
+      grid-area: 1 / 2;
+    }
+
+    .s-timeline__content {
+      grid-area: 2 / 1 / 3 / 2;
+      justify-self: center;
+    }
+  }
+
+  &--horizontal#{&}--label-top {
+    .s-timeline__content {
+      grid-area: 1 / 1 / 2 / 2;
+      justify-self: center;
+    }
+
+    .s-timeline__indicator {
+      grid-area: 2 / 1;
+      justify-self: center;
+    }
+
+    .s-timeline__line {
+      grid-area: 2 / 2;
+    }
+  }
+
+  &--horizontal#{&}--label-end {
+    .s-timeline__indicator {
+      grid-area: 1 / 1;
+    }
+
+    .s-timeline__content {
+      grid-area: 1 / 2;
+    }
+
+    .s-timeline__line {
+      grid-area: 1 / 3;
+    }
+  }
+
+  &--horizontal#{&}--label-start {
+    .s-timeline__content {
+      grid-area: 1 / 1;
+    }
+
+    .s-timeline__indicator {
+      grid-area: 1 / 2;
+    }
+
+    .s-timeline__line {
+      grid-area: 1 / 3;
+    }
   }
 
   &__date {
@@ -152,6 +293,13 @@ $sizes: (
   }
 
   @each $name, $cfg in $sizes {
+    &--#{$name} {
+      // The metrics become variables so the placement rules can spend them on whichever side the
+      // text ends up on, instead of every size repeating every placement.
+      --s-timeline-gap: #{map.get($cfg, gap)};
+      --s-timeline-run: #{map.get($cfg, run)};
+    }
+
     &--#{$name} &__indicator {
       inline-size: map.get($cfg, dot);
       block-size: map.get($cfg, dot);
@@ -168,30 +316,52 @@ $sizes: (
     &--#{$name} &__date {
       @include tools.typescale(map.get($cfg, date));
     }
+  }
 
-    &--#{$name}.s-timeline--vertical &__content {
-      padding-inline-start: map.get($cfg, gap);
-      padding-block-end: map.get($cfg, run);
-    }
+  &--label-end &__content {
+    padding-inline-start: var(--s-timeline-gap);
+  }
 
-    &--#{$name}.s-timeline--vertical &__item:last-child &__content {
-      padding-block-end: 0;
-    }
+  &--label-start &__content {
+    padding-inline-end: var(--s-timeline-gap);
+  }
 
-    &--#{$name}.s-timeline--vertical &__line {
-      margin-block: var(--s-space-1);
-      // Without the minimum, an item with a single line of text leaves no visible rail.
-      min-block-size: map.get($cfg, gap);
-    }
+  &--label-bottom &__content {
+    padding-block-start: var(--s-timeline-gap);
+  }
 
-    &--#{$name}.s-timeline--horizontal &__line {
-      margin-inline: var(--s-space-1);
-      min-inline-size: map.get($cfg, run);
-    }
+  &--label-top &__content {
+    padding-block-end: var(--s-timeline-gap);
+  }
 
-    &--#{$name}.s-timeline--horizontal &__content {
-      padding-block-start: map.get($cfg, gap);
-      padding-inline-end: map.get($cfg, run);
-    }
+  &--vertical &__line {
+    margin-block: var(--s-space-1);
+    // Without the minimum, an item with a single line of text leaves no visible rail.
+    min-block-size: var(--s-timeline-gap);
+  }
+
+  &--horizontal &__line {
+    margin-inline: var(--s-space-1);
+    min-inline-size: var(--s-timeline-run);
+  }
+
+  // Beside the dot the text spans the rail's row, so the gap to the next event is its own
+  // padding; stacked, the rail segment owns that space and stretches to it.
+  &--vertical#{&}--label-end &__item:not(:last-child) &__content,
+  &--vertical#{&}--label-start &__item:not(:last-child) &__content {
+    padding-block-end: var(--s-timeline-run);
+  }
+
+  &--vertical#{&}--label-top &__line,
+  &--vertical#{&}--label-bottom &__line {
+    min-block-size: var(--s-timeline-run);
+  }
+
+  // Centred text would otherwise stretch the dot's column across the whole rail.
+  &--horizontal#{&}--label-top &__content,
+  &--horizontal#{&}--label-bottom &__content,
+  &--vertical#{&}--label-top &__content,
+  &--vertical#{&}--label-bottom &__content {
+    max-inline-size: 14rem;
   }
 }

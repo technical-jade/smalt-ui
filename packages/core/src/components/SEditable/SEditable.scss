@@ -61,14 +61,14 @@ $sizes: sm, md, lg;
   }
 
   &__preview {
+    // An empty value leaves the preview without a line box, and the only way back into the editor
+    // collapses to a zero-height strip: the box still looks clickable, but there is nothing to hit.
+    min-block-size: calc(1em * var(--s-line-height-normal));
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
-
-    &:focus-visible {
-      @include tools.focus-ring;
-      border-radius: var(--s-radius-sm);
-    }
+    // The frame around the field marks focus, as in every other field; a ring on the value as
+    // well would sit inside that frame as a second outline.
   }
 
   &__input::placeholder {
