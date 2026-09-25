@@ -3,7 +3,9 @@
 `SCalendar` is an interactive date grid with month navigation. It is fully keyboard accessible
 (arrows move between days, `PageUp`/`PageDown` between months), localized, and marks today, the
 selected date, and unavailable dates. The value is a `DateValue` from `@internationalized/date`;
-the navigation is built on `SIcon`. To pick a date in a form, use `SDatePicker`, which opens the
+the navigation is built on `SIcon`. The grid is named "Calendar" followed by the visible month;
+the `calendar-label` prop overrides the first part (the same prop exists on `SDatePicker` and
+`SDateRangePicker`). To pick a date in a form, use `SDatePicker`, which opens the
 calendar in a popover. Keep the value in a [`shallowRef`](./date-field#value-and-shallowref), not
 a `ref`: a regular `ref` unwraps the date class, and type checking no longer recognizes it as a
 `DateValue`.

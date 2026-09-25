@@ -21,7 +21,10 @@ politely, without interrupting.
 
 ## Setup
 
-Mount `ToastProvider` once at the root of the app (for example, in `App.vue`):
+Mount `ToastProvider` once at the root of the app (for example, in `App.vue`). The queue is shared,
+so a second mounted provider would duplicate every notification — in development it warns about
+that. The `label` prop names the notification region for screen readers (defaults to the locale
+dictionary).
 
 ```vue
 <template>

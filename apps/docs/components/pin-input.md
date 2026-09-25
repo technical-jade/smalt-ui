@@ -12,7 +12,9 @@ on Reka UI (auto-advance between cells, pasting the whole code, keyboard control
 `SFormField` for the label, hint, error message and a11y wiring. The value is an array of
 characters bound with `v-model`, strings also with `type="number"`.
 `complete` fires once every cell is filled; `size` matches the height of the other fields. Focus
-moving between the cells does not emit `blur`.
+moving between the cells does not emit `blur`. Each cell is named "Character 1 of 4" and so on;
+the `cell-label` prop overrides the template, where `{index}` and `{length}` are replaced with the
+cell number and the cell count.
 
 ## Basic usage
 

@@ -66,7 +66,8 @@ transliteration, and index search get through.
 
 It is built on Reka UI Combobox: `combobox`/`listbox`/`option` roles, keyboard navigation, and a
 portaled panel. The label, hint and error message come from [`SFormField`](/components/form-field).
-The clear button returns focus to the input. Inside a `<form>` the field submits the chosen
+`required` adds the `*` marker to the label and `aria-required` to the input. The clear button
+returns focus to the input. Inside a `<form>` the field submits the chosen
 suggestion's `value` under `name`, not the typed text (in [`free-text`](#free-text) mode, the
 text).
 

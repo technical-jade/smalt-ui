@@ -65,7 +65,8 @@
 
 By default the last item is the current page when it has no `href`. A last item with `href` stays
 a link and is not marked, for a trail that ends at a parent page. Set `current` to mark an item
-explicitly; it keeps its link to the page itself.
+explicitly; it keeps its link to the page itself. Other items without `href` render as muted
+plain text (`s-breadcrumb__text`), not as the current page.
 
 <Demo>
   <SBreadcrumb

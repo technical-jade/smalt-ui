@@ -132,7 +132,8 @@ registry name or a raw path).
 
 ## Required checkbox
 
-The `required` prop adds the `*` marker to the label and `aria-required` for screen readers. Native
+The `required` prop adds the `*` marker to the label and `aria-required` for screen readers. The
+marker is hidden from assistive technology, so the accessible name stays the plain label text. Native
 validation needs `name` as well: the hidden input that carries `required` into the form is only
 rendered for a named checkbox, and without it the browser has nothing to block the submit on.
 

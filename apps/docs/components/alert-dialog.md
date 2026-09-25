@@ -188,7 +188,9 @@ Worth knowing:
   `cancelLabel`, `danger`, `square`, `initialFocus`), so the dialog looks the same as the declarative version;
 - without a mounted `ConfirmProvider` the call resolves to `false` and warns in development — the
   promise never hangs. On the server (SSR) it also resolves to a refusal: the queue is shared by
-  all requests.
+  all requests;
+- mount one `ConfirmProvider`: the queue is shared, so a second instance would duplicate the
+  dialog, and in development it warns about that.
 
 ::: tip The `confirm` name
 The local variable shadows the global `window.confirm` only inside its own module, and that is

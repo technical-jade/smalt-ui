@@ -246,7 +246,8 @@ control), as in the other form fields.
 ## Label, hint and error
 
 `SSelect` is built on `SFormField`: `label` renders a label above the field, `hint` a hint below
-it, `error` an error message (the field is marked invalid), `required` adds the `*` marker, and
+it, `error` an error message (the field is marked invalid), `required` adds the `*` marker and
+announces the field as required through `aria-required`, and
 `invalid` marks the field invalid explicitly.
 
 <Demo>

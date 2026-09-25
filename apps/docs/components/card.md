@@ -207,7 +207,8 @@ clickability comes from `as`: a `label` around a native radio is the most reliab
 arrow keys, toggling, and screen reader announcements work without a custom keyboard handler.
 To make an option unavailable, put `disabled` on both the card and its radio: the card only dims
 and swallows clicks, while the radio itself has to leave the tab order and be announced as
-disabled.
+disabled. A disabled card rendered as a `label` around an enabled control warns about it in
+development.
 
 <Demo>
   <div class="s-row s-col-gutter-3" role="radiogroup" aria-label="Parcel size" style="width: 100%">
