@@ -1,6 +1,6 @@
 {
   "name": "@smalt-ui/core",
-  "version": "1.0.1",
+  "version": "2.0.0",
   "description": "UI library for Vue 3 and Nuxt built on Reka UI and design tokens",
   "license": "MIT",
   "author": "Stanislav Dyachenko",

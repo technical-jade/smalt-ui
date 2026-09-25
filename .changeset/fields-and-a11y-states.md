@@ -1,5 +1,0 @@
----
-'@smalt-ui/core': minor
----
-
-Accessibility and form fixes. `SAccordionItem` headers are headings (`role="heading"`, new `headingLevel` prop on the item and on `SAccordion`, level 3 by default), and the open section of a non-collapsible single accordion is marked `aria-disabled`. A loading `SButton` keeps focus: it is blocked through `aria-disabled` instead of native `disabled`. `SDropdownMenu`'s `ariaLabel` now names the menu. `SInput` with `use-tags` submits the tags under `name` (`name[0]`, `name[1]`, …) and validates `required` against them rather than the typing buffer. `SSelect` and `SAutocomplete` announce `required` through `aria-required`. `SProgress` without `label` is named by its percentage, or by the `loading` message while indeterminate. `SRadioGroup` and `SSlider` pass fallthrough attributes to the radio group and the first thumb, keeping `class`/`style` on the field. Across fields, consumer attributes override the component's own ones except the bindings built by `SFormField` (`id`, `aria-describedby`, `aria-labelledby`, `aria-invalid`). A disabled `SCard` rendered as a label warns in development when the control inside is not disabled.
