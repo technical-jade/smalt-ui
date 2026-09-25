@@ -1,6 +1,6 @@
 {
   "name": "@smalt-ui/nuxt",
-  "version": "1.0.1",
+  "version": "2.0.0",
   "description": "Nuxt module for @smalt-ui/core: component auto-import, styles, color mode",
   "license": "MIT",
   "author": "Stanislav Dyachenko",
