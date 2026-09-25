@@ -19,6 +19,13 @@ export interface SAutocompleteProps extends SValidationProps<string> {
    */
   options: readonly SAutocompleteOption[]
   /**
+   * Free-text mode: `v-model` is the input text itself, and suggestions only help complete it
+   * (an address, an email, a search string). Picking a suggestion puts its `label` into the input
+   * and passes the option in the `select` event. `v-model:search` and `selected-label` are not
+   * needed in this mode.
+   */
+  freeText?: boolean
+  /**
    * Label of the selected value. A separate prop, because after a selection the suggestion list
    * is usually empty and the label cannot be taken from it.
    */
@@ -35,7 +42,10 @@ export interface SAutocompleteProps extends SValidationProps<string> {
   error?: string
   /** Explicitly marks the field invalid (in addition to `error`). */
   invalid?: boolean
-  /** Field name in native form submission: the value is sent in a hidden input. */
+  /**
+   * Field name in native form submission: the value is sent in a hidden input, and with
+   * `free-text` the input text is sent.
+   */
   name?: string
   /** Required field: a `*` marker next to the label. */
   required?: boolean

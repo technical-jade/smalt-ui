@@ -1,6 +1,6 @@
-import { describe, expect, it, vi } from 'vitest'
+import { describe, expect, it } from 'vitest'
 import { fireEvent, render, screen } from '@testing-library/vue'
-import { nextTick } from 'vue'
+import { defineComponent, h, nextTick, ref } from 'vue'
 import { SAutocomplete } from '../index'
 import type { SAutocompleteOption } from '../types'
 
@@ -146,17 +146,33 @@ describe('SAutocomplete', () => {
   })
 
   it('blur is not passed out while focus stays inside the component', async () => {
-    const onBlur = vi.fn()
-    render(SAutocomplete, { props: { options, label: 'City' }, attrs: { onBlur } })
+    const { emitted } = render(SAutocomplete, { props: { options, label: 'City' } })
     const input = screen.getByLabelText('City')
+    await fireEvent.focusIn(input)
     await fireEvent.keyDown(input, { key: 'ArrowDown' })
     const option = await screen.findByRole('option', { name: 'New York' })
 
-    await fireEvent.blur(input, { relatedTarget: option })
-    expect(onBlur).not.toHaveBeenCalled()
+    await fireEvent.focusOut(input, { relatedTarget: option })
+    expect(emitted().blur).toBeUndefined()
 
-    await fireEvent.blur(input, { relatedTarget: document.body })
-    expect(onBlur).toHaveBeenCalledTimes(1)
+    await fireEvent.focusOut(input, { relatedTarget: document.body })
+    expect(emitted().blur).toHaveLength(1)
+  })
+
+  it('blur fires when focus leaves the component through the clear button', async () => {
+    const { emitted } = render(SAutocomplete, {
+      props: { options, label: 'City', search: 'new' },
+    })
+    const input = screen.getByLabelText('City')
+    const clear = screen.getByRole('button', { name: 'Clear' })
+    await fireEvent.focusIn(input)
+    await fireEvent.focusOut(input, { relatedTarget: clear })
+    await fireEvent.focusIn(clear)
+    expect(emitted().blur).toBeUndefined()
+
+    await fireEvent.focusOut(clear, { relatedTarget: document.body })
+    expect(emitted().blur).toHaveLength(1)
+    expect(emitted().focus).toHaveLength(1)
   })
 
   it('the clear button resets both the value and the query text', async () => {
@@ -240,5 +256,102 @@ describe('SAutocomplete', () => {
   it('required is announced on the input', () => {
     render(SAutocomplete, { props: { options, label: 'City', required: true } })
     expect(screen.getByRole('combobox')).toHaveAttribute('aria-required', 'true')
+  })
+
+  describe('free-text', () => {
+    const base = { options, label: 'Email', freeText: true }
+
+    it('typing updates v-model right away and leaves v-model:search alone', async () => {
+      const { emitted } = render(SAutocomplete, { props: base })
+      await fireEvent.update(screen.getByLabelText('Email'), 'john@')
+      expect(emitted()['update:modelValue']?.at(-1)).toEqual(['john@'])
+      expect(emitted()['update:search']).toBeUndefined()
+    })
+
+    it('v-model is shown in the input and updates it from outside', async () => {
+      const { rerender } = render(SAutocomplete, { props: { ...base, modelValue: '1 Main St' } })
+      const input = screen.getByLabelText('Email')
+      expect(input).toHaveValue('1 Main St')
+      await rerender({ ...base, modelValue: '2 Main St' })
+      expect(input).toHaveValue('2 Main St')
+    })
+
+    it('picking a suggestion puts its label into v-model and passes the option to select', async () => {
+      const { emitted } = render(SAutocomplete, { props: base })
+      const input = screen.getByLabelText('Email')
+      await fireEvent.update(input, 'san')
+      await fireEvent.keyDown(input, { key: 'ArrowDown' })
+      await fireEvent.click(await screen.findByRole('option', { name: 'San Francisco' }))
+      expect(emitted()['update:modelValue']?.at(-1)).toEqual(['San Francisco'])
+      expect(emitted().select).toEqual([[options[1]]])
+      expect(input).toHaveValue('San Francisco')
+    })
+
+    it('text set by the application in the select handler stays in the input', async () => {
+      const Harness = defineComponent(() => {
+        const text = ref('san')
+        return () =>
+          h(SAutocomplete, {
+            ...base,
+            modelValue: text.value,
+            'onUpdate:modelValue': (v?: string) => (text.value = v ?? ''),
+            onSelect: () => (text.value = 'san'),
+          })
+      })
+      render(Harness)
+      const input = screen.getByLabelText('Email')
+      await fireEvent.keyDown(input, { key: 'ArrowDown' })
+      await fireEvent.click(await screen.findByRole('option', { name: 'New York' }))
+      await nextTick()
+      expect(input).toHaveValue('san')
+    })
+
+    it('closing the panel and leaving the field keep the text', async () => {
+      const { emitted } = render(SAutocomplete, { props: { ...base, modelValue: 'new' } })
+      const input = screen.getByLabelText('Email')
+      await fireEvent.focusIn(input)
+      await fireEvent.keyDown(input, { key: 'ArrowDown' })
+      await screen.findByRole('option', { name: 'New York' })
+      await fireEvent.keyDown(input, { key: 'Escape' })
+      await fireEvent.focusOut(input, { relatedTarget: document.body })
+      await new Promise((resolve) => setTimeout(resolve, 10))
+      expect(input).toHaveValue('new')
+      expect(emitted()['update:modelValue']).toBeUndefined()
+    })
+
+    it('the clear button makes the text an empty string', async () => {
+      const { emitted } = render(SAutocomplete, { props: { ...base, modelValue: 'new' } })
+      await fireEvent.click(screen.getByRole('button', { name: 'Clear' }))
+      expect(emitted()['update:modelValue']?.at(-1)).toEqual([''])
+      expect(screen.getByLabelText('Email')).toHaveValue('')
+    })
+
+    it('the panel stays closed without suggestions and opens when they arrive', async () => {
+      const { rerender } = render(SAutocomplete, { props: { ...base, options: [] } })
+      const input = screen.getByLabelText('Email')
+      await fireEvent.update(input, 'ne')
+      await new Promise((resolve) => setTimeout(resolve, 10))
+      expect(screen.queryByText('Nothing found')).toBeNull()
+      expect(input).toHaveAttribute('aria-expanded', 'false')
+
+      await rerender({ ...base, options })
+      expect(await screen.findByRole('option', { name: 'New York' })).toBeInTheDocument()
+    })
+
+    it('suggestions arriving after a selection do not open the panel', async () => {
+      const { rerender } = render(SAutocomplete, { props: base })
+      const input = screen.getByLabelText('Email')
+      await fireEvent.update(input, 'ne')
+      await fireEvent.click(await screen.findByRole('option', { name: 'New York' }))
+      await rerender({ ...base, options: [] })
+      await rerender({ ...base, options })
+      await new Promise((resolve) => setTimeout(resolve, 10))
+      expect(screen.queryByRole('listbox')).toBeNull()
+    })
+
+    it('name submits the input text', () => {
+      render(SAutocomplete, { props: { ...base, modelValue: 'new', name: 'email' } })
+      expect(screen.getByLabelText('Email')).toHaveAttribute('name', 'email')
+    })
   })
 })

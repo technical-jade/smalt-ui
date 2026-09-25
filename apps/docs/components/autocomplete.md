@@ -34,6 +34,27 @@ const pickedFound = computed(() =>
     : ALL,
 )
 const pickedLabel = computed(() => ALL.find((c) => c.value === pickedCity.value)?.label)
+
+const touchedQuery = ref('')
+const touchedCity = ref()
+const touched = ref(false)
+const touchedFound = computed(() =>
+  touchedQuery.value
+    ? ALL.filter((c) => c.label.toLowerCase().includes(touchedQuery.value.toLowerCase()))
+    : ALL,
+)
+const touchedLabel = computed(() => ALL.find((c) => c.value === touchedCity.value)?.label)
+
+const DOMAINS = ['gmail.com', 'outlook.com', 'yahoo.com', 'icloud.com']
+const email = ref('')
+const emailOptions = computed(() => {
+  const [name, domain] = email.value.split('@')
+  if (!name || domain === undefined) return []
+  return DOMAINS.filter((d) => d.startsWith(domain) && d !== domain).map((d) => ({
+    label: `${name}@${d}`,
+    value: d,
+  }))
+})
 </script>
 
 # Autocomplete
@@ -46,7 +67,8 @@ transliteration, and index search get through.
 It is built on Reka UI Combobox: `combobox`/`listbox`/`option` roles, keyboard navigation, and a
 portaled panel. The label, hint and error message come from [`SFormField`](/components/form-field).
 The clear button returns focus to the input. Inside a `<form>` the field submits the chosen
-suggestion's `value` under `name`, not the typed text.
+suggestion's `value` under `name`, not the typed text (in [`free-text`](#free-text) mode, the
+text).
 
 ## Two v-models
 
@@ -72,8 +94,14 @@ suggestion list. The arrow keys navigate the list.
 ::: tip Focus inside the component is not leaving the field
 Clicking a suggestion does not fire `blur`: a "left the field without picking" handler would run
 before the selection, and if it changed the list, the item would vanish between mouse down and
-mouse up. `blur` is emitted only when focus leaves the component.
+mouse up. Moving with Tab from the input to the clear button is not leaving either. `blur` is
+emitted when focus leaves the component by any path, including the next Tab from the clear
+button; `focus` is emitted when focus enters it.
 :::
+
+`@focus` and `@blur` are events of the component, not of the input: they mark entering and leaving
+the component. Other attributes that are not props (`autocomplete`, `maxlength`, `inputmode`) go
+to the input itself; only `class` and `style` stay on the frame.
 
 <Demo>
   <ClientOnly>
@@ -114,6 +142,74 @@ watch(query, search)
     :selected-label="selectedLabel"
     label="City"
     placeholder="Start typing"
+  />
+</template>
+```
+
+  </template>
+</Demo>
+
+## Free text
+
+In `free-text` mode the value is the input text itself, and suggestions help complete it: an
+address, an email with its domain, a search string with history. `v-model` receives the text on
+every keystroke; `v-model:search` and `selected-label` are not needed. The app searches for
+suggestions by the same `v-model`.
+
+Picking a suggestion puts its `label` into the input and passes the whole option in the `select`
+event: from there the app takes the option's data (say, the coordinates of an address) and may
+write its own text into `v-model` — that text is what stays in the input. Otherwise the component
+never changes the text on its own: neither when the panel closes nor when focus leaves the field.
+The clear button makes the text an empty string.
+
+While there are no suggestions, the panel is closed and there is no "Nothing found" placeholder:
+in free text an empty result is a normal state. When suggestions for the typed text arrive, the
+panel opens by itself, unless the user closed it with `Esc` or left the field. The `loading`
+indicator is shown as usual. Enter picks the highlighted suggestion; if the panel opened while
+typing, the first one is highlighted.
+
+<Demo>
+  <ClientOnly>
+    <SAutocomplete
+      v-model="email"
+      free-text
+      :options="emailOptions"
+      label="Email"
+      placeholder="name@example.com"
+    />
+  </ClientOnly>
+
+<template #code>
+
+```vue
+<script setup>
+import { computed, ref } from 'vue'
+
+const DOMAINS = ['gmail.com', 'outlook.com', 'yahoo.com', 'icloud.com']
+const email = ref('')
+
+const suggestions = computed(() => {
+  const [name, domain] = email.value.split('@')
+  if (!name || domain === undefined) return []
+  return DOMAINS.filter((d) => d.startsWith(domain) && d !== domain).map((d) => ({
+    label: `${name}@${d}`,
+    value: d,
+  }))
+})
+
+function onSelect(option) {
+  console.log('Picked domain', option.value)
+}
+</script>
+
+<template>
+  <SAutocomplete
+    v-model="email"
+    free-text
+    :options="suggestions"
+    label="Email"
+    placeholder="name@example.com"
+    @select="onSelect"
   />
 </template>
 ```
@@ -241,13 +337,14 @@ sets its markup.
 | Many options, search over a ready list                     | `SSelect` with `searchable` |
 | Options come from the server and change on every keystroke | `SAutocomplete`             |
 | Fuzzy search, transliteration, or index search is needed   | `SAutocomplete`             |
+| The value is free text that suggestions help complete      | `SAutocomplete free-text`   |
 
 ## Validation
 
 `rules` checks the value when focus leaves the field; picking a suggestion with the mouse is not
 leaving it. The rules receive the `v-model` value: the `value` of the chosen suggestion, not the
 typed query, so `required()` fails on text that matches no suggestion. The value stays
-`undefined` until a suggestion is picked. See the [Validation](/guide/validation) guide for the
+`undefined` until a suggestion is picked. In `free-text` mode the rules check the input text. See the [Validation](/guide/validation) guide for the
 details.
 
 Type "chi" and move focus out of the field without picking a suggestion: the typed text is not a
@@ -297,6 +394,51 @@ const selectedLabel = computed(() => cities.find((c) => c.value === city.value)?
     label="City"
     placeholder="Start typing"
     :rules="[required('Pick a city from the list')]"
+  />
+</template>
+```
+
+  </template>
+</Demo>
+
+If a form checks its fields itself, without `rules`, mark the field as touched on `@blur`. The
+event arrives however focus leaves the component: by clicking elsewhere or with Tab, including
+through the clear button. Type "chi" and leave the field with two Tab presses — the error shows up
+right away, not after the form is submitted.
+
+<Demo>
+  <ClientOnly>
+    <SAutocomplete
+      v-model="touchedCity"
+      v-model:search="touchedQuery"
+      :options="touchedFound"
+      :selected-label="touchedLabel"
+      label="Departure city"
+      placeholder="Start typing"
+      :error="touched && !touchedCity ? 'Enter the departure city' : undefined"
+      @blur="touched = true"
+    />
+  </ClientOnly>
+
+<template #code>
+
+```vue
+<script setup lang="ts">
+import { ref } from 'vue'
+
+const city = ref<string>()
+const touched = ref(false)
+</script>
+
+<template>
+  <SAutocomplete
+    v-model="city"
+    v-model:search="query"
+    :options="options"
+    :selected-label="selectedLabel"
+    label="Departure city"
+    :error="touched && !city ? 'Enter the departure city' : undefined"
+    @blur="touched = true"
   />
 </template>
 ```

@@ -181,4 +181,54 @@ describe('SAutocomplete · browser', () => {
     await userEvent.keyboard('{End}')
     expect(input.selectionStart).toBe('New York'.length)
   })
+
+  it('blur fires when Tab moves focus out of the component through the clear button', async () => {
+    const onBlur = vi.fn()
+    const Harness = defineComponent(() => {
+      return () => [
+        h(SAutocomplete, { label: 'City', options, search: 'new', onBlur }),
+        h('button', { type: 'button' }, 'Next'),
+      ]
+    })
+    render(Harness)
+    await userEvent.click(screen.getByLabelText('City'))
+    await userEvent.keyboard('{Escape}')
+    await userEvent.tab()
+    expect(document.activeElement).toBe(screen.getByRole('button', { name: 'Clear' }))
+    expect(onBlur).not.toHaveBeenCalled()
+
+    await userEvent.tab()
+    expect(document.activeElement).toBe(screen.getByRole('button', { name: 'Next' }))
+    expect(onBlur).toHaveBeenCalledTimes(1)
+  })
+
+  it('free-text: a pick leaves its label in the input, leaving the field keeps the text', async () => {
+    const text = ref('')
+    const Harness = defineComponent(() => {
+      return () => [
+        h(SAutocomplete, {
+          label: 'Address',
+          options,
+          freeText: true,
+          modelValue: text.value,
+          'onUpdate:modelValue': (v?: string) => (text.value = v ?? ''),
+        }),
+        h('button', { type: 'button' }, 'Next'),
+      ]
+    })
+    render(Harness)
+    const input = screen.getByLabelText('Address') as HTMLInputElement
+    await userEvent.click(input)
+    await userEvent.keyboard('bo')
+    await screen.findByRole('listbox')
+    await userEvent.click(screen.getByRole('option', { name: 'Boston' }))
+    await expect.poll(() => input.value).toBe('Boston')
+    expect(text.value).toBe('Boston')
+
+    await userEvent.keyboard(', MA')
+    screen.getByRole('button', { name: 'Next' }).focus()
+    await new Promise((resolve) => setTimeout(resolve, 50))
+    expect(input.value).toBe('Boston, MA')
+    expect(text.value).toBe('Boston, MA')
+  })
 })

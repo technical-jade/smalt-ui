@@ -1,5 +1,13 @@
 <script setup lang="ts">
-import { computed, onMounted, ref, useTemplateRef, watch, type ComponentPublicInstance } from 'vue'
+import {
+  computed,
+  nextTick,
+  onMounted,
+  ref,
+  useTemplateRef,
+  watch,
+  type ComponentPublicInstance,
+} from 'vue'
 import {
   ComboboxAnchor,
   ComboboxContent,
@@ -20,11 +28,7 @@ import { useFieldValidation } from '../../internal/useFieldValidation'
 import { useKeepCaretKeys } from '../../internal/useKeepCaretKeys'
 import type { SAutocompleteOption, SAutocompleteProps } from './types'
 
-/**
- * The component root is `SFormField`, the input sits inside it. If the root inherited attributes,
- * `maxlength` and a `@blur` handler would land on the outer `div`: blur does not bubble, so that
- * handler would silently never fire.
- */
+// The component root is `SFormField`; `maxlength` and `autocomplete` belong on the input inside it.
 defineOptions({ inheritAttrs: false })
 
 const props = withDefaults(defineProps<SAutocompleteProps>(), {
@@ -33,6 +37,7 @@ const props = withDefaults(defineProps<SAutocompleteProps>(), {
   invalid: false,
   disabled: false,
   loading: false,
+  freeText: false,
   clearable: true,
   clearIcon: 'x',
 })
@@ -40,34 +45,45 @@ const p = useDefaults(props, 'SAutocomplete')
 
 const m = useMessages()
 
-const { attrs, rootClass, rootStyle, controlAttrs } = useFieldAttrs()
-// onBlur goes through the filter below.
-const fieldAttrs = computed(() =>
-  Object.fromEntries(Object.entries(controlAttrs.value).filter(([key]) => key !== 'onBlur')),
-)
+const { rootClass, rootStyle, controlAttrs } = useFieldAttrs()
 
 /**
- * A click on a suggestion is a selection inside the component, not leaving the field. List items
- * are focusable, so a mouse press first takes focus off the input: the application handler runs
- * before the selection, and if it changes the list, the item disappears between mousedown and
- * mouseup, so no click happens at all. Blur is passed out only when focus leaves the component.
+ * Field value: usually the `value` of the selected suggestion; with `free-text`, the input text
+ * itself. Two-way binding via `v-model`.
  */
-function onBlur(event: FocusEvent) {
-  const next = event.relatedTarget
-  if (next instanceof Element && next.closest('.s-autocomplete__root, .s-autocomplete__content')) {
-    return
-  }
-  const handler = attrs.onBlur as ((event: FocusEvent) => void) | undefined
-  const handlers = Array.isArray(handler) ? handler : [handler]
-  handlers.forEach((fn) => fn?.(event))
-}
-
-/** Selected value: the suggestion's `value`. Two-way binding via `v-model`. */
 const model = defineModel<string>()
+
+const emit = defineEmits<{
+  /**
+   * Focus entered the component. Moves inside it (into the panel, to the clear button) do not
+   * count.
+   */
+  focus: [event: FocusEvent]
+  /** Focus left the component. Moves inside it (into the panel, to the clear button) do not count. */
+  blur: [event: FocusEvent]
+  /** The value and the query text were cleared with the clear button. */
+  clear: []
+  /**
+   * The user selected a suggestion with the mouse or keyboard. Fires on every selection,
+   * including re-selecting the same suggestion, when `update:modelValue` stays silent because
+   * the value did not change.
+   */
+  select: [option: SAutocompleteOption]
+}>()
 
 const root = useTemplateRef<ComponentPublicInstance>('root')
 const { errorMessage, onBlur: onLeave, expose } = useFieldValidation(p, () => model.value, root)
-const { onFocusIn, onFocusOut } = useFieldFocus(root, () => {}, '.s-autocomplete__content', onLeave)
+/**
+ * A click on a suggestion is a selection inside the component, not leaving the field: otherwise
+ * the application's `blur` handler would run before the selection, and if it changed the list,
+ * the item would vanish between mousedown and mouseup. So `blur` is tracked on the root and the
+ * panel rather than on the input: Tab from the input to the clear button is not leaving either,
+ * but the next Tab is.
+ */
+const { onFocusIn, onFocusOut } = useFieldFocus(root, emit, '.s-autocomplete__content', () => {
+  awaitingOptions = false
+  onLeave()
+})
 defineExpose(expose)
 
 /**
@@ -83,7 +99,7 @@ const search = defineModel<string>('search', { default: '' })
  * Text in the input. Kept apart from the query: it also receives the selected label, which the
  * application does not need to see in `search`.
  */
-const text = ref(search.value)
+const text = ref(p.freeText ? (model.value ?? '') : search.value)
 
 /**
  * What the input shows right now: the label of the selected value, put there by the component, or
@@ -93,6 +109,7 @@ const text = ref(search.value)
 const showsLabel = ref(!!model.value)
 
 watch(search, (value) => {
+  if (p.freeText) return
   // Emptying the query is how the component announces the label it just put in: the label stays.
   if (showsLabel.value && value === '') return
   if (value !== text.value) {
@@ -101,21 +118,49 @@ watch(search, (value) => {
   }
 })
 
+function syncText() {
+  if (p.freeText && (model.value ?? '') !== text.value) text.value = model.value ?? ''
+}
+
+watch(model, syncText)
+
 function onInput(event: Event) {
-  search.value = (event.target as HTMLInputElement).value
+  const value = (event.target as HTMLInputElement).value
+  if (p.freeText) {
+    awaitingOptions = true
+    model.value = value
+    return
+  }
+  search.value = value
   showsLabel.value = false
 }
 
-const emit = defineEmits<{
-  /** The value and the query text were cleared with the clear button. */
-  clear: []
-  /**
-   * The user selected a suggestion with the mouse or keyboard. Fires on every selection,
-   * including re-selecting the same suggestion, when `update:modelValue` stays silent because
-   * the value did not change.
-   */
-  select: [option: SAutocompleteOption]
-}>()
+/**
+ * In free-text the input shows `v-model`, so after a selection it holds whatever the application
+ * left there: its own text from the `select` handler or the suggestion label. The check runs after
+ * the prop update, because `watch(model)` stays silent when the application puts back the same
+ * value it had before the selection.
+ */
+function onSelect(option: SAutocompleteOption) {
+  if (p.freeText) {
+    model.value = option.label
+    text.value = option.label
+  }
+  emit('select', option)
+  void nextTick(syncText)
+}
+
+/**
+ * Reka's value. In free-text the component value is the text and a selection goes out as an
+ * event, so Reka gets `null`: no suggestion is marked selected, and picking the same one again
+ * does not turn into deselecting it.
+ */
+const rootModel = computed({
+  get: () => (p.freeText ? null : model.value),
+  set: (value) => {
+    if (!p.freeText) model.value = value ?? undefined
+  },
+})
 
 defineSlots<{
   /** Content at the start of the field, inside the frame (icon, country flag, button). */
@@ -159,6 +204,7 @@ onMounted(() => {
  * value gets no label, even if the prop has not been updated yet.
  */
 const displayValue = () => {
+  if (p.freeText) return text.value
   if (model.value) return p.selectedLabel ?? ''
   return mounted.value ? '' : search.value
 }
@@ -173,7 +219,7 @@ const open = ref(false)
  * again on close, which also catches a value that disappeared meanwhile.
  */
 watch([model, () => p.selectedLabel, open], () => {
-  if (open.value) return
+  if (p.freeText || open.value) return
   // Only the label the component put in is taken back; text the user typed stays in the input.
   if (!model.value && !showsLabel.value) return
   takeOverText(model.value ? (p.selectedLabel ?? '') : '')
@@ -191,15 +237,36 @@ function takeOverText(label: string) {
 
 const showClear = computed(() => p.clearable && !p.disabled && (!!model.value || !!text.value))
 
+/**
+ * In free-text an empty result is normal, and a "Nothing found" placeholder would get in the way
+ * of typing: the panel stays closed without suggestions. Suggestions for the typed text arrive
+ * after the input, so the panel also opens when they come — unless the user closed it or left
+ * the field.
+ */
+const showContent = computed(() => !p.freeText || p.loading || p.options.length > 0)
+let awaitingOptions = false
+
+function onOpenChange(value: boolean) {
+  if (!value) awaitingOptions = false
+  open.value = value && showContent.value
+}
+
+watch(showContent, (value) => {
+  if (!p.freeText) return
+  if (!value) open.value = false
+  else if (awaitingOptions) open.value = true
+})
+
 const anchor = ref<{ $el: Element }>()
 useKeepCaretKeys(anchor)
 
 const input = ref<{ $el: HTMLInputElement }>()
 
 function clear() {
-  model.value = undefined
+  model.value = p.freeText ? '' : undefined
   text.value = ''
-  search.value = ''
+  awaitingOptions = false
+  if (!p.freeText) search.value = ''
   input.value?.$el.focus()
   emit('clear')
 }
@@ -228,16 +295,20 @@ function clear() {
            them again by substring, fuzzy, transliterated and index search results would vanish
            from the list even though the server returned them.
            reset-search-term-on-blur: leaving the field without a choice is not a reason to throw
-           the typed text away — it stays in the input, as it does in `v-model:search`. -->
+           the typed text away — it stays in the input, as it does in `v-model:search`.
+           reset-search-term-on-select: in free-text the input text is driven by `v-model`, not
+           by Reka. -->
       <ComboboxRoot
-        v-model="model"
-        v-model:open="open"
+        v-model="rootModel"
+        :open="open"
         class="s-autocomplete__root"
         ignore-filter
         :reset-search-term-on-blur="false"
+        :reset-search-term-on-select="!p.freeText"
         :disabled="p.disabled"
-        :name="p.name"
-        :required="p.required"
+        :name="p.freeText ? undefined : p.name"
+        :required="p.freeText ? undefined : p.required"
+        @update:open="onOpenChange"
       >
         <ComboboxAnchor
           ref="anchor"
@@ -258,19 +329,20 @@ function clear() {
           />
 
           <ComboboxInput
-            v-bind="fieldAttrs"
+            v-bind="controlAttrs"
             :id="fieldId"
             ref="input"
             v-model="text"
             class="s-autocomplete__field"
             :placeholder="p.placeholder"
+            :name="p.freeText ? p.name : undefined"
+            :required="(p.freeText && p.required) || undefined"
             :display-value="displayValue"
             :aria-label="p.label ? undefined : p.ariaLabel"
             :aria-describedby="describedBy"
             :aria-invalid="fieldInvalid || undefined"
             :aria-required="p.required || undefined"
             @input="onInput"
-            @blur="onBlur"
           />
 
           <SSpinner
@@ -333,7 +405,7 @@ function clear() {
                 class="s-autocomplete__item"
                 :value="option.value"
                 :disabled="option.disabled"
-                @select="emit('select', option)"
+                @select="onSelect(option)"
               >
                 <slot
                   name="option"
