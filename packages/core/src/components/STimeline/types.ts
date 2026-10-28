@@ -28,7 +28,7 @@ export interface STimelineItem {
    * override.
    */
   textColor?: SColorName
-  /** Dims the item: the event is cancelled or not applicable. */
+  /** Dims the item (the event is cancelled or not applicable) and sets its `aria-disabled`. */
   disabled?: boolean
 }
 

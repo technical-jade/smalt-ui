@@ -16,6 +16,11 @@ moving between the cells does not emit `blur`. Each cell is named "Character 1 o
 the `cell-label` prop overrides the template, where `{index}` and `{length}` are replaced with the
 cell number and the cell count.
 
+The cells form a group (`role="group"`) named by `label` through `aria-labelledby`, so a screen
+reader announces the label on entering the field. Without a visible label, name the group with
+`aria-label`. The other `aria-*` and `data-*` attributes and listeners go to the group as well;
+`class` and `style` stay on the field wrapper.
+
 ## Basic usage
 
 <ClientOnly>

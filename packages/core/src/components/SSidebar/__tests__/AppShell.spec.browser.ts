@@ -70,7 +70,10 @@ describe('app shell · browser', () => {
     await vi.waitFor(() => expect(column()!.getBoundingClientRect().width).toBeLessThan(expanded))
 
     expect(parseFloat(getComputedStyle(page).paddingLeft)).toBeLessThan(expandedPadding)
-    expect(getComputedStyle(screen.getByText('Reports')).display).toBe('none')
+    // The label leaves the view but not the accessibility tree: an icon-only row needs its name.
+    const label = screen.getByText('Reports')
+    expect(label.getBoundingClientRect().width).toBeLessThanOrEqual(1)
+    expect(getComputedStyle(label).display).not.toBe('none')
   })
 
   /**
@@ -105,7 +108,8 @@ describe('app shell · browser', () => {
     await vi.waitFor(() => expect(column().className).toContain('s-sidebar--collapsed'))
 
     expect(column().scrollWidth).toBeLessThanOrEqual(column().clientWidth)
-    expect(screen.getByText('Overview')).not.toBeVisible()
+    expect(screen.getByText('Overview').getBoundingClientRect().width).toBeLessThanOrEqual(1)
+    expect(screen.getByRole('button', { name: 'Overview' })).toBeInTheDocument()
 
     const row = container.querySelector<HTMLElement>('.s-list-item__row')!
     const nav = container.querySelector<HTMLElement>('.s-sidebar__nav')!

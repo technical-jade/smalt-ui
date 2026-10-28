@@ -52,4 +52,31 @@ describe('SCheckbox · browser', () => {
     await userEvent.click(screen.getByText('I accept the terms'))
     expect(emitted()['update:modelValue']).toContainEqual([true])
   })
+
+  it('an indeterminate checkbox is not submitted with the form as checked', async () => {
+    const { container, rerender } = render(
+      {
+        components: { SCheckbox },
+        props: ['state'],
+        template: `<form><SCheckbox :model-value="state" name="agree" label="I agree" /></form>`,
+      },
+      { props: { state: 'indeterminate' } },
+    )
+    const form = container.querySelector('form')!
+    await nextTick()
+    expect(new FormData(form).get('agree')).toBeNull()
+    expect(form.querySelectorAll('input[name="agree"]')).toHaveLength(1)
+
+    await rerender({ state: true })
+    expect(new FormData(form).get('agree')).toBe('on')
+  })
+
+  it('a required indeterminate checkbox blocks native submission', async () => {
+    const { container } = render({
+      components: { SCheckbox },
+      template: `<form><SCheckbox model-value="indeterminate" name="agree" label="I agree" required /></form>`,
+    })
+    await nextTick()
+    expect(container.querySelector('form')!.checkValidity()).toBe(false)
+  })
 })

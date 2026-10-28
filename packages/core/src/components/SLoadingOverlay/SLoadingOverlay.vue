@@ -24,8 +24,7 @@ const m = useMessages()
 defineSlots<{
   /**
    * Replaces the spinner and the label — a place for a circular `SProgress` with a percentage.
-   * The overlay keeps announcing itself as busy, but the replacement has to carry its own
-   * accessible name.
+   * The replacement has to carry its own accessible name.
    */
   default?: (props: Record<string, never>) => unknown
 }>()
@@ -51,7 +50,6 @@ const opacityStyle = computed(() =>
         },
       ]"
       :style="opacityStyle"
-      aria-busy="true"
       v-bind="$attrs"
     >
       <!-- The dimming lives on its own layer: opacity on the overlay would fade the spinner and

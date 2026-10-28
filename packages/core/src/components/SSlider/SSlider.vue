@@ -149,7 +149,7 @@ defineSlots<{
           :key="i"
           class="s-slider__thumb"
           :aria-label="thumbLabel(i, arrayValue.length)"
-          :aria-describedby="i === 0 ? describedBy : undefined"
+          :aria-describedby="describedBy"
           :aria-invalid="fieldInvalid || undefined"
         >
           <span

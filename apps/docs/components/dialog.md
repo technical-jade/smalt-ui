@@ -2,7 +2,8 @@
 
 `SDialog` is a modal window built on Reka UI: focus trap, closing on `Esc` and on an outside click,
 a portal, and correct ARIA relationships. It is controlled with `v-model:open`; the trigger is
-passed through a slot.
+passed through a slot. After closing, focus returns to the trigger, or, when the dialog is opened
+from code without a `#trigger` slot, to the element that had focus when it opened.
 Long content scrolls in the body while the title, the footer actions and the close button stay in
 view.
 

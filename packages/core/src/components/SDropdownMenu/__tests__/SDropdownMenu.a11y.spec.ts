@@ -1,6 +1,7 @@
 import { describe, expect, it } from 'vitest'
 import { render, screen } from '@testing-library/vue'
 import { axe } from 'vitest-axe'
+import { DropdownMenuItem } from 'reka-ui'
 import { SDropdownMenu } from '../index'
 
 const triggerBtn = '<button type="button">Menu</button>'
@@ -65,5 +66,21 @@ describe('SDropdownMenu · a11y', () => {
       slots: { trigger: triggerBtn },
     })
     expect(await screen.findByRole('menu')).toHaveAccessibleName('Menu')
+  })
+
+  it('has no violations with a slot of Reka items', async () => {
+    render({
+      components: { SDropdownMenu, DropdownMenuItem },
+      template: `
+        <SDropdownMenu
+          open
+          aria-label="Actions"
+        >
+          <template #trigger>${triggerBtn}</template>
+          <DropdownMenuItem class="s-dropdown-menu__item">Share</DropdownMenuItem>
+        </SDropdownMenu>`,
+    })
+    await screen.findByRole('menuitem', { name: 'Share' })
+    expect(await axe(await screen.findByRole('menu'))).toHaveNoViolations()
   })
 })

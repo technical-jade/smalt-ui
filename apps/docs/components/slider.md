@@ -6,7 +6,8 @@ hint, error message and a11y wiring. `v-model` takes a number (a single thumb) o
 (a range).
 `v-model` updates on every step of a drag; `value-commit` fires once the user releases the thumb
 or presses a key. Without a visible `label`, name the slider with `aria-label`: in a range the
-thumbs are announced as its start and end.
+thumbs are announced as its start and end. The hint and the error are linked to every thumb
+through `aria-describedby`, and `aria-invalid` is set on each of them.
 
 <script setup>
 import { ref } from 'vue'

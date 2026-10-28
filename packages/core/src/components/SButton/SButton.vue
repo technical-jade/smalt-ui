@@ -1,10 +1,11 @@
 <script setup lang="ts">
-import { computed, useSlots, watchEffect } from 'vue'
+import { computed, ref, useSlots, watchEffect } from 'vue'
 import { Primitive } from 'reka-ui'
 import { SIcon } from '../SIcon'
 import { useColorProp, useDefaults, useElevationProp } from '../../composables'
 import type { SButtonProps } from './types'
 import { devWarn } from '../../internal/dev'
+import { useToolbarItem } from '../SToolbar/context'
 
 const props = withDefaults(defineProps<SButtonProps>(), {
   as: 'button',
@@ -48,6 +49,13 @@ function onClick(event: MouseEvent) {
   }
 }
 
+const rootRef = ref<{ $el?: HTMLElement }>()
+// Inside SToolbar the button is an item of its roving focus; the arrows skip a disabled one.
+const toolbarItem = useToolbarItem(
+  () => rootRef.value?.$el,
+  () => p.disabled,
+)
+
 const ICON_SIZES = { sm: 16, md: 18, lg: 20 } as const
 const iconSize = computed(() => ICON_SIZES[p.size] ?? ICON_SIZES.md)
 
@@ -68,6 +76,8 @@ watchEffect(() => {
 
 <template>
   <Primitive
+    ref="rootRef"
+    v-bind="toolbarItem"
     :as="p.as"
     :type="isNativeButton ? p.type : undefined"
     :disabled="isNativeButton ? p.disabled : undefined"

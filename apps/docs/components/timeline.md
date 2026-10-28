@@ -4,7 +4,10 @@
 The component is data-driven — the events come from `items`, there is no separate item component.
 
 The feed is exposed as `role="list"` with `role="listitem"` items rather than `ul`/`li`: library
-markup stays neutral so host styles cannot reach it through tag selectors.
+markup stays neutral so host styles cannot reach it through tag selectors. The current event is
+marked with `aria-current="step"`, a disabled one with `aria-disabled="true"`. Completion is shown
+only by the styling, and the check mark and the icons are hidden from screen readers: when it
+matters, say it in the text, in `description` or through the slots.
 
 ## Basic usage
 

@@ -79,6 +79,14 @@ const toggleIcon = computed(() => {
 
 const drawerSide = computed(() => (p.side === 'start' ? 'left' : 'right'))
 
+/**
+ * The sidebar name names the drawer too, or the dialog is announced by the generic dictionary
+ * label. Reka's reference to the hidden title is dropped: it would override `aria-label`.
+ */
+const drawerName = computed(() =>
+  p.ariaLabel ? { 'aria-label': p.ariaLabel, 'aria-labelledby': undefined } : {},
+)
+
 const toggle = () => (collapsed.value = !collapsed.value)
 
 defineSlots<{
@@ -152,6 +160,7 @@ defineSlots<{
     v-else
     v-model:open="open"
     :side="drawerSide"
+    v-bind="drawerName"
   >
     <div class="s-sidebar s-sidebar--drawer">
       <SidebarBody

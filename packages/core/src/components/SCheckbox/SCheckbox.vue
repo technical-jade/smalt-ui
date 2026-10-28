@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { useTemplateRef, type ComponentPublicInstance } from 'vue'
-import { CheckboxIndicator, CheckboxRoot } from 'reka-ui'
+import { CheckboxIndicator, CheckboxRoot, VisuallyHidden } from 'reka-ui'
 import { SIcon } from '../SIcon'
 import { SFormField } from '../SFormField'
 import { SLabel } from '../../internal/SLabel'
@@ -66,7 +66,7 @@ defineSlots<{
           v-model="model"
           class="s-checkbox__box"
           :value="p.value"
-          :name="p.name"
+          :name="model === 'indeterminate' ? undefined : p.name"
           :disabled="p.disabled"
           :required="p.required"
           :aria-label="p.ariaLabel"
@@ -90,6 +90,19 @@ defineSlots<{
             />
           </CheckboxIndicator>
         </CheckboxRoot>
+        <!-- Reka's hidden input sets `checked: !!state`, so an indeterminate checkbox would be
+             submitted as checked. A native indeterminate checkbox stays unchecked: here it is not
+             checked either, while `required` still blocks the form. -->
+        <VisuallyHidden
+          v-if="p.name && model === 'indeterminate'"
+          as="input"
+          feature="fully-hidden"
+          type="checkbox"
+          :name="p.name"
+          :value="p.value"
+          :required="p.required"
+          :disabled="p.disabled"
+        />
 
         <!-- Reka reads its own aria-label fallback from `[for=id]`'s `innerText`, which does not
              skip aria-hidden content and would pull the required marker into it. An explicit

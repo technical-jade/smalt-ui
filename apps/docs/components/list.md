@@ -101,8 +101,10 @@ layer, the pointer cursor and a focus ring. `active` marks the current row — o
 `aria-current`. `disabled` dims the row and takes it out of the tab order.
 
 The `as` prop overrides the tag when the shorthands do not fit — `as="label"` for a row that wraps
-a checkbox, for instance. Anything else you pass (`target`, `rel`, `@click`) lands on the row, not
-on the `listitem` wrapper.
+a checkbox, for instance. With `clickable` on a tag that has no interactivity of its own
+(`as="div"`), the row becomes a button itself: `role="button"`, a place in the tab order and
+activation by Enter and Space. Anything else you pass (`target`, `rel`, `@click`) lands on the row,
+not on the `listitem` wrapper.
 
 <Demo>
   <SList variant="bordered" label="Account">

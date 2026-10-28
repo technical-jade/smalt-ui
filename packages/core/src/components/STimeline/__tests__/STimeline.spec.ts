@@ -33,6 +33,14 @@ describe('STimeline', () => {
     expect(rendered[2]).not.toHaveClass('s-timeline__item--active')
   })
 
+  it('announces the current item through aria-current', () => {
+    render(STimeline, { props: { items, modelValue: 'packed' } })
+    const rendered = screen.getAllByRole('listitem')
+    expect(rendered[1]).toHaveAttribute('aria-current', 'step')
+    expect(rendered[0]).not.toHaveAttribute('aria-current')
+    expect(rendered[2]).not.toHaveAttribute('aria-current')
+  })
+
   it('addresses items without a value by index', () => {
     const { container } = render(STimeline, {
       props: { items: [{ title: 'First' }, { title: 'Second' }], modelValue: 1 },
@@ -109,7 +117,9 @@ describe('STimeline', () => {
     })
     const rendered = container.querySelectorAll('.s-timeline__item')
     expect(rendered[0]).toHaveAttribute('data-disabled')
+    expect(rendered[0]).toHaveAttribute('aria-disabled', 'true')
     expect(rendered[1]).not.toHaveAttribute('data-disabled')
+    expect(rendered[1]).not.toHaveAttribute('aria-disabled')
   })
 
   it('an item accent overrides the timeline color', () => {

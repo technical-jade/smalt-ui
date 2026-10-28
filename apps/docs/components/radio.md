@@ -18,6 +18,11 @@ const TARIFFS = [
 key navigation). The group **composes** `SRadio` — a single option that reuses `SLabel`. Options
 are set with the `options` prop or with `SRadio` in the slot.
 
+An option is named by its label (`label` or the slot content); name an option without a visible
+label, such as a color swatch, with the `aria-label` prop. As on the group, `class` and `style` of
+`SRadio` stay on the `.s-radio` wrapper, and the other attributes (`data-*`, `aria-*`, listeners)
+go to the `role="radio"` element itself.
+
 ## With options
 
 <ClientOnly>

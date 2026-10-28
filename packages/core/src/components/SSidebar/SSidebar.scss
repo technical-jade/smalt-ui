@@ -85,8 +85,9 @@ $collapsed-width: 4rem;
   }
 
   // The rail only has room for icons: the helper class marks the text a navigation item hides.
+  // Hidden visually rather than with `display: none`, or an icon-only row would lose its name.
   &--collapsed &__label {
-    display: none;
+    @include tools.visually-hidden;
   }
 
   &--collapsed &__header,
@@ -104,7 +105,7 @@ $collapsed-width: 4rem;
   // flow instead, so the consumer marks nothing for the common case — `__label` stays the escape
   // hatch for markup of their own.
   &--collapsed .s-list-item__content {
-    display: none;
+    @include tools.visually-hidden;
   }
 
   // The list keeps the width of the rail, so the icon gets the whole column as its hit target

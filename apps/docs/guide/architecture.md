@@ -53,12 +53,15 @@ they are useful rather than to the outermost element:
   `SDialog`, `SDrawer`, `SAlertDialog`) put them on the panel itself: the teleported element with
   the component's `__content` class.
 - **Fields with a single control** (`SInput`, `STextarea`, `SAutocomplete`, `SSelect`,
-  `SCheckbox`, `SSwitch`, `SColorField`, `SNumberField`, `SRadioGroup`, `SSlider`) keep
-  `class`/`style` on the outer field and pass everything else to the control (the radio group,
-  the first slider thumb), so `aria-*`, `data-testid` and `@keydown` reach the element that uses
-  them. They override the control's own attributes such as `inputmode` or `placeholder`, but not
+  `SCheckbox`, `SCheckboxGroup`, `SSwitch`, `SColorField`, `SNumberField`, `SRadio`,
+  `SRadioGroup`, `SSlider`, `SRating`, `SListbox`, `SEditable`, `SFileUpload`, `SPinInput`) keep
+  `class`/`style` on the outer field and pass everything else to the control (the group of radios,
+  checkboxes or code cells, the first slider thumb, the hidden `<input type="file">`), so
+  `aria-*`, `data-testid` and `@keydown` reach the element that uses them. They override the control's own attributes such as `inputmode` or `placeholder`, but not
   the links `SFormField` builds (`id`, `aria-describedby`, `aria-labelledby`, `aria-invalid`):
   those keep the control tied to its label, hint and error, and the name is set with `ariaLabel`.
+- **`SScrollArea`** passes `aria-*` and `role` to its focusable viewport and keeps the rest on the
+  root, so a name and a role describe the tab stop that receives focus.
 - Other components keep them on their root element.
 
 Composite fields (`SSelect`, `SNumberField`, `SPinInput`, the date and time fields) emit `focus`

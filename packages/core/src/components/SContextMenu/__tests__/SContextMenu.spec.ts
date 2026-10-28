@@ -1,5 +1,6 @@
-import { describe, expect, it } from 'vitest'
-import { fireEvent, render, screen } from '@testing-library/vue'
+import { describe, expect, it, vi } from 'vitest'
+import { fireEvent, render, screen, waitFor } from '@testing-library/vue'
+import { ContextMenuItem } from 'reka-ui'
 import { SContextMenu } from '../index'
 
 const area = '<div>area</div>'
@@ -52,5 +53,24 @@ describe('SContextMenu', () => {
     const menu = await screen.findByRole('menu')
     expect(menu).toHaveClass('s-context-menu__content', 'file-menu')
     expect(menu).toHaveAttribute('data-testid', 'file')
+  })
+
+  it('a menu slot of Reka items is a real menu: menuitem role, selecting closes it', async () => {
+    const onSelect = vi.fn()
+    render({
+      components: { SContextMenu, ContextMenuItem },
+      setup: () => ({ onSelect }),
+      template: `
+        <SContextMenu aria-label="Actions">
+          <div>area</div>
+          <template #menu>
+            <ContextMenuItem class="s-context-menu__item" @select="onSelect">Share</ContextMenuItem>
+          </template>
+        </SContextMenu>`,
+    })
+    await fireEvent.contextMenu(screen.getByText('area'))
+    await fireEvent.click(await screen.findByRole('menuitem', { name: 'Share' }))
+    expect(onSelect).toHaveBeenCalledOnce()
+    await waitFor(() => expect(screen.queryByRole('menu')).toBeNull())
   })
 })

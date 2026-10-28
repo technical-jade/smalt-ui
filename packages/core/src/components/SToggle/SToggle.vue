@@ -1,8 +1,9 @@
 <script setup lang="ts">
-import { computed, inject, watchEffect } from 'vue'
+import { computed, inject, ref, watchEffect } from 'vue'
 import { Toggle, ToggleGroupItem } from 'reka-ui'
 import { useColorProp, useDefaults } from '../../composables'
 import { TOGGLE_GROUP_KEY } from '../SToggleGroup/context'
+import { useToolbarItem } from '../SToolbar/context'
 import type { SToggleProps } from './types'
 import { devWarn } from '../../internal/dev'
 
@@ -20,6 +21,16 @@ const colorStyle = useColorProp(p, 's-toggle')
  */
 const inGroup = inject(TOGGLE_GROUP_KEY, false)
 const isGroupItem = computed(() => inGroup && p.value !== undefined)
+
+/**
+ * Inside SToolbar a standalone toggle is an item of its roving focus. A group item stays in the
+ * roving focus of the group itself, with its own arrows and its own tab stop.
+ */
+const toggleRef = ref<{ $el?: HTMLElement }>()
+const toolbarItem = useToolbarItem(
+  () => toggleRef.value?.$el,
+  () => p.disabled,
+)
 
 watchEffect(() => {
   if (p.value !== undefined && !inGroup) {
@@ -57,7 +68,9 @@ defineSlots<{
   </ToggleGroupItem>
   <Toggle
     v-else
+    ref="toggleRef"
     v-model="model"
+    v-bind="toolbarItem"
     class="s-toggle"
     :class="[`s-toggle--${p.size}`, { 's-toggle--square': p.square }]"
     :style="colorStyle"

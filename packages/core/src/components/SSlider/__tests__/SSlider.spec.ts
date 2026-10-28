@@ -128,4 +128,17 @@ describe('SSlider', () => {
     expect(field).toHaveStyle({ margin: '4px' })
     expect(field).not.toHaveAttribute('data-testid')
   })
+
+  it('links the hint and the error to both thumbs of a range', async () => {
+    const { container, rerender } = render(SSlider, {
+      props: { modelValue: [20, 60], label: 'Price', hint: 'In dollars' },
+    })
+    const thumbs = () => [...container.querySelectorAll('.s-slider__thumb')]
+    const hintId = container.querySelector('.s-field__hint')!.id
+    expect(thumbs().map((t) => t.getAttribute('aria-describedby'))).toEqual([hintId, hintId])
+
+    await rerender({ error: 'Too expensive' })
+    const errorId = container.querySelector('.s-field__error')!.id
+    expect(thumbs().map((t) => t.getAttribute('aria-describedby'))).toEqual([errorId, errorId])
+  })
 })

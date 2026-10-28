@@ -246,6 +246,47 @@ const open = ref(false)
 </Demo>
 </ClientOnly>
 
+## Custom content
+
+The default slot replaces the list from `items`. Only Reka UI primitives become menu items:
+`DropdownMenuItem`, `DropdownMenuSeparator` and `DropdownMenuLabel` from `reka-ui`, a peer
+dependency of `@smalt-ui/core`. They get `role="menuitem"` and arrow-key navigation, and picking
+one closes the menu. The classes `s-dropdown-menu__item`, `__separator`, `__label` and `__icon`
+give them the look of the built-in entries, and `s-dropdown-menu__item--danger` the accent of a
+destructive action. The component's `select` event does not fire for these items: listen to
+`@select` on the item itself. Do not put plain buttons or links in the slot: inside `role="menu"`
+they stay without an item role, and the arrow keys skip them.
+
+```vue
+<script setup lang="ts">
+import { DropdownMenuItem, DropdownMenuSeparator } from 'reka-ui'
+
+function openProfile() {}
+function signOut() {}
+</script>
+
+<template>
+  <SDropdownMenu aria-label="Account">
+    <template #trigger>
+      <SButton variant="outline">Account</SButton>
+    </template>
+    <DropdownMenuItem
+      class="s-dropdown-menu__item"
+      @select="openProfile"
+    >
+      Profile
+    </DropdownMenuItem>
+    <DropdownMenuSeparator class="s-dropdown-menu__separator" />
+    <DropdownMenuItem
+      class="s-dropdown-menu__item s-dropdown-menu__item--danger"
+      @select="signOut"
+    >
+      Sign out
+    </DropdownMenuItem>
+  </SDropdownMenu>
+</template>
+```
+
 ## API
 
 <ApiTable name="SDropdownMenu" />

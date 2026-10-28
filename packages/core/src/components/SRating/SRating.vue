@@ -59,6 +59,30 @@ const value = computed<number>({
   },
 })
 
+const ARROW_KEYS = ['ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight']
+
+/**
+ * Reka selects a star by arrow key only while the key is held, so a quick press moves focus
+ * without selecting. As in `SRadioGroup`, the focused star is clicked; the second timer runs after
+ * Reka's delayed click, or a held key would click twice and `clearable` would reset the rating.
+ */
+function selectFocused(event: KeyboardEvent) {
+  if (!ARROW_KEYS.includes(event.key)) return
+  const group = event.currentTarget as HTMLElement
+  setTimeout(() =>
+    setTimeout(() => {
+      const active = document.activeElement
+      if (
+        active instanceof HTMLElement &&
+        group.contains(active) &&
+        active.getAttribute('aria-checked') === 'false'
+      ) {
+        active.click()
+      }
+    }),
+  )
+}
+
 /**
  * Fill ratio of star `i` (0 | 0.5 | 1). Unlike `Math.round(model)`, it shows fractional ratings
  * correctly: a half with `allowHalf` and read-only averages (e.g. 3.7).
@@ -100,6 +124,7 @@ function fillRatio(i: number): number {
         :aria-invalid="invalid || undefined"
         :aria-describedby="describedBy"
         @mouseleave="hovered = 0"
+        @keydown="selectFocused"
       >
         <RatingItem
           v-for="i in p.length"

@@ -10,10 +10,19 @@ describe('SLoadingOverlay', () => {
     expect(overlay()).toBeNull()
   })
 
-  it('covers the region and announces the busy state when open', () => {
+  it('covers the region and announces the loading when open', () => {
     render(SLoadingOverlay, { props: { open: true } })
-    expect(overlay()).toHaveAttribute('aria-busy', 'true')
+    expect(overlay()).not.toBeNull()
     expect(screen.getByRole('status')).toHaveTextContent('Loading')
+  })
+
+  /**
+   * A screen reader holds back announcements inside `aria-busy` until it is cleared, and by then
+   * the overlay is gone: a label marked busy together with the overlay would never be read.
+   */
+  it('does not mark itself busy together with the live region', () => {
+    render(SLoadingOverlay, { props: { open: true } })
+    expect(screen.getByRole('status').closest('[aria-busy="true"]')).toBeNull()
   })
 
   it('takes the label from the dictionary and from the prop', async () => {

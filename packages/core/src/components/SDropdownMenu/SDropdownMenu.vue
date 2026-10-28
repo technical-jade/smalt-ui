@@ -45,7 +45,11 @@ const emit = defineEmits<{
 defineSlots<{
   /** Trigger element that opens the menu on click. */
   trigger?: (props: Record<string, never>) => unknown
-  /** Custom menu content (instead of the `items` prop). */
+  /**
+   * Menu content instead of the `items` prop. Only Reka primitives become menu items
+   * (`DropdownMenuItem`, `DropdownMenuSeparator`, `DropdownMenuLabel` from `reka-ui`); other
+   * markup lands in `role="menu"` without an item role and without arrow-key navigation.
+   */
   default?: (props: Record<string, never>) => unknown
 }>()
 

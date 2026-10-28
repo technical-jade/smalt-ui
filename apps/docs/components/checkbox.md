@@ -137,6 +137,10 @@ marker is hidden from assistive technology, so the accessible name stays the pla
 validation needs `name` as well: the hidden input that carries `required` into the form is only
 rendered for a named checkbox, and without it the browser has nothing to block the submit on.
 
+A named checkbox is submitted as `name=on` (or its `value`) when checked. The mixed state, like a
+native `indeterminate` checkbox, does not count as checked: it is left out of `FormData`, and with
+`required` it keeps the browser from submitting the form.
+
 <ClientOnly>
 <Demo>
   <SCheckbox label="I accept the data processing terms" name="terms" required />

@@ -30,9 +30,16 @@ const emit = defineEmits<{
 }>()
 
 defineSlots<{
-  /** Area that opens the menu on right-click. */
+  /**
+   * Area that opens the menu on right-click. From the keyboard (Shift+F10, the menu key) the menu
+   * opens only when this element is focusable.
+   */
   default?: (props: Record<string, never>) => unknown
-  /** Custom menu content (instead of the `items` prop). */
+  /**
+   * Menu content instead of the `items` prop. Only Reka primitives become menu items
+   * (`ContextMenuItem`, `ContextMenuSeparator`, `ContextMenuLabel` from `reka-ui`); other markup
+   * lands in `role="menu"` without an item role and without arrow-key navigation.
+   */
   menu?: (props: Record<string, never>) => unknown
 }>()
 

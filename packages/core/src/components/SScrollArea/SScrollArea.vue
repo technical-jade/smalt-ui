@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed } from 'vue'
+import { computed, useAttrs } from 'vue'
 import {
   ScrollAreaCorner,
   ScrollAreaRoot,
@@ -17,6 +17,18 @@ const props = withDefaults(defineProps<SScrollAreaProps>(), {
   size: 'md',
 })
 const p = useDefaults(props, 'SScrollArea')
+
+/**
+ * The viewport, not the root, is the focusable element: a name and a role on the root would be
+ * announced for the wrong tab stop. So `aria-*` and `role` go to the viewport, and the rest to the
+ * root as usual.
+ */
+defineOptions({ inheritAttrs: false })
+const attrs = useAttrs()
+const isViewportAttr = (key: string) => key === 'role' || key.startsWith('aria-')
+// A function rather than a computed: `useAttrs()` is not reactive, and the template rereads it.
+const pickAttrs = (toViewport: boolean) =>
+  Object.fromEntries(Object.entries(attrs).filter(([key]) => isViewportAttr(key) === toViewport))
 
 defineSlots<{
   /** Content of the scrollable region. */
@@ -49,12 +61,14 @@ const viewportStyle = computed(() => {
     :style="rootStyle"
     :type="p.type"
     :scroll-hide-delay="p.scrollHideDelay"
+    v-bind="pickAttrs(false)"
   >
     <!-- Reka makes the viewport the scrolling element and focusable, so arrow keys, Page Up/Down
          and Home/End work without extra wiring. -->
     <ScrollAreaViewport
       class="s-scroll-area__viewport"
       :style="viewportStyle"
+      v-bind="pickAttrs(true)"
     >
       <slot />
     </ScrollAreaViewport>

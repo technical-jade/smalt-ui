@@ -39,6 +39,38 @@ describe('SRating · browser', () => {
     expect(document.activeElement).toBe(radios[2])
   })
 
+  it('an arrow key selects the rating, not only moves focus', async () => {
+    const { container, emitted } = render(SRating, {
+      props: { modelValue: 2, length: 5, ariaLabel: 'Rating' },
+    })
+    const radios = container.querySelectorAll<HTMLElement>('[role="radio"]')
+    radios[1].focus()
+    // Reka collects the roving focus items after mounting: without a pause the arrow goes nowhere.
+    await new Promise((resolve) => setTimeout(resolve))
+    /**
+     * keyup in the same tick as keydown is a quick press: the release beats Reka's delayed
+     * selection. userEvent waits for the driver between events and does not catch this case.
+     */
+    const key = { key: 'ArrowRight', bubbles: true }
+    radios[1].dispatchEvent(new KeyboardEvent('keydown', key))
+    radios[1].dispatchEvent(new KeyboardEvent('keyup', key))
+    await expect.poll(() => document.activeElement).toBe(radios[2])
+    await expect.poll(() => emitted('update:modelValue')?.at(-1)).toEqual([3])
+  })
+
+  it('with clearable a held arrow key does not reset the selected rating', async () => {
+    const { container, emitted } = render(SRating, {
+      props: { modelValue: 2, length: 5, clearable: true, ariaLabel: 'Rating' },
+    })
+    const radios = container.querySelectorAll<HTMLElement>('[role="radio"]')
+    radios[1].focus()
+    await new Promise((resolve) => setTimeout(resolve))
+    // A held key: both Reka and the workaround select; a second click on the star would clear it.
+    radios[1].dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowRight', bubbles: true }))
+    await new Promise((resolve) => setTimeout(resolve, 50))
+    expect(emitted('update:modelValue')).toEqual([[3]])
+  })
+
   it('readonly prevents changing the rating and does not dim the control', async () => {
     const { container, emitted } = render(SRating, {
       props: { modelValue: 3, length: 5, readonly: true, ariaLabel: 'Rating' },

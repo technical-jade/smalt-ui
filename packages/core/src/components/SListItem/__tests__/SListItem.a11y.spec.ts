@@ -28,4 +28,9 @@ describe('SListItem · a11y', () => {
     const { container } = renderInList('<SListItem clickable disabled title="Archive" />')
     expect(await axe(container)).toHaveNoViolations()
   })
+
+  it('a clickable row on a div has no violations', async () => {
+    const { container } = renderInList('<SListItem clickable as="div" title="Export" />')
+    expect(await axe(container)).toHaveNoViolations()
+  })
 })

@@ -135,4 +135,10 @@ describe('SSidebar', () => {
     expect(dialog.querySelector('.s-sidebar--drawer')).not.toBeNull()
     expect(within(dialog).getByRole('navigation', { name: 'Main' })).toHaveTextContent('Reports')
   })
+
+  it('gives its aria-label to the drawer as the dialog name', async () => {
+    await mount({ breakpoint: NARROW, open: true }, { default: 'Reports' })
+
+    expect(await screen.findByRole('dialog', { name: 'Main' })).toBeInTheDocument()
+  })
 })

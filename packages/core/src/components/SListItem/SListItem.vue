@@ -44,6 +44,31 @@ const isInteractive = computed(
   () => p.clickable || !!p.href || isLink.value || isNativeButton.value,
 )
 
+/**
+ * `clickable` on a tag without interactivity of its own (`as="div"`, `as="li"`) is a button the
+ * browser does not know about, so the row takes on the role, the tab stop and keyboard activation.
+ * `label` is left out: it hands activation to its own control.
+ */
+const isEmulatedButton = computed(
+  () => p.clickable && !isLink.value && !isNativeButton.value && tag.value !== 'label',
+)
+
+function onKeydown(event: KeyboardEvent) {
+  if (!isEmulatedButton.value || event.target !== event.currentTarget) return
+  if (event.key === 'Enter') {
+    event.preventDefault()
+    if (!p.disabled) (event.currentTarget as HTMLElement).click()
+  } else if (event.key === ' ') {
+    // A native button fires Space on release, and on press it would scroll the page.
+    event.preventDefault()
+  }
+}
+
+function onKeyup(event: KeyboardEvent) {
+  if (!isEmulatedButton.value || event.target !== event.currentTarget) return
+  if (event.key === ' ' && !p.disabled) (event.currentTarget as HTMLElement).click()
+}
+
 /** A disabled link still navigates on activation, and the click still reaches the ancestors. */
 function onClick(event: MouseEvent) {
   if (!p.disabled) return
@@ -82,11 +107,14 @@ defineSlots<{
       :disabled="isNativeButton && p.disabled ? true : undefined"
       :aria-disabled="!isNativeButton && p.disabled ? true : undefined"
       :aria-current="isLink && p.active ? 'true' : undefined"
-      :tabindex="isLink && p.disabled ? -1 : undefined"
+      :role="isEmulatedButton ? 'button' : undefined"
+      :tabindex="isEmulatedButton ? (p.disabled ? -1 : 0) : isLink && p.disabled ? -1 : undefined"
       :data-disabled="p.disabled || undefined"
       :data-active="p.active || undefined"
       v-bind="rowAttrs"
       @click.capture="onClick"
+      @keydown="onKeydown"
+      @keyup="onKeyup"
     >
       <span
         v-if="$slots.prepend || p.icon"

@@ -4,9 +4,12 @@ import type { ComponentPublicInstance } from 'vue'
 import { PinInputInput, PinInputRoot } from 'reka-ui'
 import { SFormField } from '../SFormField'
 import { useDefaults, useMessages } from '../../composables'
+import { useFieldAttrs } from '../../internal/useFieldAttrs'
 import { useFieldFocus } from '../../internal/useFieldFocus'
 import { useFieldValidation } from '../../internal/useFieldValidation'
 import type { SPinInputProps } from './types'
+
+defineOptions({ inheritAttrs: false })
 
 const props = withDefaults(defineProps<SPinInputProps>(), {
   size: 'md',
@@ -21,6 +24,7 @@ const props = withDefaults(defineProps<SPinInputProps>(), {
 const p = useDefaults(props, 'SPinInput')
 
 const m = useMessages()
+const { rootClass, rootStyle, controlAttrs } = useFieldAttrs()
 
 // Replaces Reka's own English "pin input 1 of 4".
 function cellLabel(index: number): string {
@@ -88,7 +92,8 @@ function onComplete(value: unknown[]) {
     ref="root"
     :floating-label="false"
     class="s-pin-input"
-    :class="`s-pin-input--${p.size}`"
+    :class="[`s-pin-input--${p.size}`, rootClass]"
+    :style="rootStyle"
     :label="p.label"
     :hint="p.hint"
     :error="errorMessage"
@@ -107,10 +112,15 @@ function onComplete(value: unknown[]) {
         >
           <slot name="prepend" />
         </span>
+        <!-- The label names the group: `<label for>` points at the first cell, but that cell's own
+             aria-label ("Character 1 of 4") would override it. -->
         <PinInputRoot
+          v-bind="controlAttrs"
           v-model="cells"
           class="s-pin-input__control"
+          role="group"
           :aria-labelledby="labelId"
+          :aria-label="labelId ? undefined : p.ariaLabel"
           :type="p.type"
           :mask="p.mask"
           :otp="p.otp"

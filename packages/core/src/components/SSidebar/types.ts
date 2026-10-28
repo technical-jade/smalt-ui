@@ -42,7 +42,8 @@ export interface SSidebarProps {
   collapsible?: boolean
   /**
    * Accessible name of the navigation landmark. Set it whenever a page holds more than one
-   * navigation region, so screen readers can tell them apart.
+   * navigation region, so screen readers can tell them apart. Below the breakpoint the drawer
+   * gets the same name.
    */
   ariaLabel?: string
   /**

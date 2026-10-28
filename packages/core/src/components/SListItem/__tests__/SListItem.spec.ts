@@ -100,6 +100,39 @@ describe('SListItem', () => {
     expect(onClick).not.toHaveBeenCalled()
   })
 
+  it('a clickable row on a non-interactive tag is a keyboard button', async () => {
+    const onClick = vi.fn()
+    render(SListItem, {
+      props: { title: 'Export', clickable: true, as: 'div' },
+      attrs: { onClick },
+    })
+
+    const row = screen.getByRole('button', { name: 'Export' })
+    expect(row.tagName).toBe('DIV')
+    expect(row).toHaveAttribute('tabindex', '0')
+
+    await fireEvent.keyDown(row, { key: 'Enter' })
+    expect(onClick).toHaveBeenCalledTimes(1)
+    await fireEvent.keyDown(row, { key: ' ' })
+    await fireEvent.keyUp(row, { key: ' ' })
+    expect(onClick).toHaveBeenCalledTimes(2)
+  })
+
+  it('a disabled clickable row on a non-interactive tag leaves the tab order', async () => {
+    const onClick = vi.fn()
+    render(SListItem, {
+      props: { title: 'Archive', clickable: true, disabled: true, as: 'div' },
+      attrs: { onClick },
+    })
+
+    const row = screen.getByRole('button', { name: 'Archive' })
+    expect(row).toHaveAttribute('tabindex', '-1')
+    expect(row).toHaveAttribute('aria-disabled', 'true')
+
+    await fireEvent.keyDown(row, { key: 'Enter' })
+    expect(onClick).not.toHaveBeenCalled()
+  })
+
   it('stays a listitem as a div, a link and a button', () => {
     for (const props of [{}, { href: '/x' }, { clickable: true }]) {
       const { container, unmount } = render(SListItem, { props: { title: 'Row', ...props } })

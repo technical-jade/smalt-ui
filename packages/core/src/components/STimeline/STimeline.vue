@@ -107,6 +107,8 @@ function itemStyle(item: STimelineItem) {
       }"
       :style="itemStyle(row.item)"
       :data-disabled="row.item.disabled || undefined"
+      :aria-current="row.active ? 'step' : undefined"
+      :aria-disabled="row.item.disabled || undefined"
       role="listitem"
     >
       <div class="s-timeline__indicator">

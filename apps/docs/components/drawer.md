@@ -3,7 +3,9 @@
 `SDrawer` is a panel that slides in from the side (or from the top or bottom). It is built on the
 modal Reka UI Dialog primitive (focus trap, `Esc`, overlay, portal) and attached to an edge with
 the `side` prop. It is controlled with `v-model:open`; the title and description come from props or
-slots, the body from the default slot, and the buttons from the `#footer` slot.
+slots, the body from the default slot, and the buttons from the `#footer` slot. After closing,
+focus returns to the trigger, or, without a `#trigger` slot, to the element that had focus when
+the drawer opened.
 
 ## Sides
 

@@ -111,55 +111,54 @@ The item's `icon` field renders a leading icon with `SIcon` (a registry name or 
 
 ## Custom menu
 
-The `menu` slot fully replaces the menu content (instead of the `items` prop), for example to add a
-group label and custom actions with arbitrary markup.
+The `menu` slot replaces the list from `items` when the entries need markup or handlers of their
+own. Only Reka UI primitives become menu items: `ContextMenuItem`, `ContextMenuSeparator` and
+`ContextMenuLabel` from `reka-ui`, which is already installed as a peer dependency of
+`@smalt-ui/core`. They get `role="menuitem"`, arrow-key and typeahead navigation, and picking one
+closes the menu. The classes `s-context-menu__item`, `__separator`, `__label` and `__icon` give them
+the look of the built-in entries, and `s-context-menu__item--danger` the accent of a destructive
+action. The component's `select` event does not fire for these items: listen to `@select` on the
+item itself.
 
-<ClientOnly>
-<Demo>
-  <SContextMenu aria-label="Quick actions">
-    <div style="display: grid; place-items: center; height: 120px; border: 1px dashed var(--s-color-outline); border-radius: var(--s-radius-md); color: var(--s-color-text-muted)">
-      Right-click here
-    </div>
-    <template #menu>
-      <div style="display: flex; flex-direction: column; gap: 4px; min-width: 180px">
-        <span style="display: inline-flex; align-items: center; gap: 8px; padding: 4px 8px; color: var(--s-color-text-muted); font-size: 12px">
-          <SIcon icon="star" :size="14" />
-          Quick actions
-        </span>
-        <SButton variant="ghost" size="sm">Add to favorites</SButton>
-        <SButton variant="ghost" size="sm">Share</SButton>
-      </div>
-    </template>
-  </SContextMenu>
-
-<template #code>
+Do not put plain buttons or links in this slot. They end up inside `role="menu"` without an item
+role: a screen reader announces an empty menu, and the arrow keys skip them. The area itself opens
+the menu from the keyboard (Shift+F10, the menu key) only when it is focusable, hence the
+`tabindex` below.
 
 ```vue
+<script setup lang="ts">
+import { ContextMenuItem, ContextMenuLabel } from 'reka-ui'
+
+function addToFavorites() {}
+function share() {}
+</script>
+
 <template>
   <SContextMenu aria-label="Quick actions">
-    <div>Right-click here</div>
+    <div tabindex="0">Right-click here</div>
     <template #menu>
-      <span>Quick actions</span>
-      <SButton
-        variant="ghost"
-        size="sm"
+      <ContextMenuLabel class="s-context-menu__label">Quick actions</ContextMenuLabel>
+      <ContextMenuItem
+        class="s-context-menu__item"
+        @select="addToFavorites"
       >
+        <SIcon
+          icon="star"
+          class="s-context-menu__icon"
+          :size="16"
+        />
         Add to favorites
-      </SButton>
-      <SButton
-        variant="ghost"
-        size="sm"
+      </ContextMenuItem>
+      <ContextMenuItem
+        class="s-context-menu__item"
+        @select="share"
       >
         Share
-      </SButton>
+      </ContextMenuItem>
     </template>
   </SContextMenu>
 </template>
 ```
-
-  </template>
-</Demo>
-</ClientOnly>
 
 ## API
 

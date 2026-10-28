@@ -22,7 +22,8 @@ async function askToRemove() {
 Reka UI AlertDialog (`alertdialog` role, focus trap, `Esc`, portal). Unlike `SDialog`, it requires
 an explicit choice between the confirm and cancel buttons: clicking the overlay does not close it.
 The buttons are reusable `SButton` components. Long content scrolls inside the dialog while the
-buttons stay in view.
+buttons stay in view. After closing, focus returns to the trigger, or, without a `#trigger` slot,
+to the element that had focus when the dialog opened.
 It is controlled with `v-model:open`; the choice emits `confirm` / `cancel`. When you need a
 confirmation in the middle of an async function, you can skip the markup and handlers entirely —
 see [Async confirmation](#async-confirmation).

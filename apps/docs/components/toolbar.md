@@ -1,8 +1,17 @@
 # Toolbar
 
 `SToolbar` groups related actions (buttons, toggles) into a single panel with the `toolbar` role.
-Arrow keys move focus between the items (roving focus), so the whole panel takes one Tab stop.
 Separate groups with `SSeparator`.
+
+The panel takes one Tab stop: focus lands on the item that had it last (the first one at the
+start), and the arrow keys move it between the `SButton` and `SToggle` items inside (roving
+focus). A horizontal toolbar uses <kbd>←</kbd>/<kbd>→</kbd> (mirrored in RTL), a vertical one
+<kbd>↑</kbd>/<kbd>↓</kbd>; <kbd>Home</kbd> and <kbd>End</kbd> go to the first and the last item.
+`loop` (on by default) wraps focus from the last item to the first and back. The arrows skip
+disabled buttons and separators. An `SToggleGroup` inside stays a tab stop of its own with its own
+arrows, and buttons inside popups (an `SPopover`, for example) are not toolbar items, while the
+popup trigger is. Other fields (`SInput`, `SSelect`) stay separate tab stops too: inside them the
+arrows move the caret and the selection.
 
 ## Basic usage
 

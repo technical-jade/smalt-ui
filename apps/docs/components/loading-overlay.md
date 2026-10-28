@@ -28,13 +28,12 @@ the request being waited on.
 
 ## Accessibility
 
-The overlay carries `aria-busy="true"`, and the label is a `role="status"` live region, so the
-busy state is announced rather than only seen. `hide-label` keeps that text for screen readers
-while leaving only the spinner visible.
+The label is a `role="status"` live region, so the loading is announced rather than only seen.
+`hide-label` keeps that text for screen readers while leaving only the spinner visible.
 
-What the overlay cannot do is stop the keyboard: the controls it covers stay in the tab order
-even though nobody can see them. Mark the covered content `inert` yourself — it is one attribute
-on the same flag:
+The overlay is a sibling of the content it covers, not its ancestor, so it can neither mark that
+content busy nor stop the keyboard: the controls it covers stay in the tab order even though nobody
+can see them. Give the content wrapper `aria-busy` and `inert` on the same flag:
 
 ```vue
 <script setup lang="ts">
@@ -45,7 +44,10 @@ const loading = ref(true)
 
 <template>
   <div class="s-loading-overlay-host">
-    <div :inert="loading">
+    <div
+      :aria-busy="loading"
+      :inert="loading"
+    >
       <!-- the content being covered -->
     </div>
     <SLoadingOverlay :open="loading" />
@@ -53,10 +55,11 @@ const loading = ref(true)
 </template>
 ```
 
-The component does not apply `inert` itself. It would have to guess which of its siblings counts
-as "the content", and putting `inert` on the shared parent would take the overlay's own live
-region out of the accessibility tree together with the content — the busy state would stop being
-announced. Keep `inert` on the content wrapper, never on the element that holds the overlay.
+The component sets neither attribute itself: it would have to guess which of its siblings counts as
+"the content". Keep them on the content wrapper, never on the element that holds the overlay:
+`inert` there would take the overlay's own live region out of the accessibility tree, and
+`aria-busy` would make a screen reader hold the announcement until the loading ends, when the label
+is already gone.
 
 ## Over a card
 
@@ -66,7 +69,7 @@ fills it edge to edge.
 <Demo>
   <SCard class="s-loading-overlay-host" style="max-width: 360px">
     <template #header>Monthly report</template>
-    <div inert>
+    <div aria-busy="true" inert>
       <div>Revenue — $128,400</div>
       <div>Orders — 312</div>
       <div>Refunds — 4</div>
@@ -86,7 +89,10 @@ const loading = ref(true)
 <template>
   <SCard class="s-loading-overlay-host">
     <template #header>Monthly report</template>
-    <div :inert="loading">
+    <div
+      :aria-busy="loading"
+      :inert="loading"
+    >
       <div>Revenue — $128,400</div>
       <div>Orders — 312</div>
     </div>

@@ -9,6 +9,8 @@ export interface SPinInputProps extends SValidationProps<string[]> {
   id?: string
   /** Field label. */
   label?: string
+  /** Accessible name of the cell group without a visible label; ignored when `label` is set. */
+  ariaLabel?: string
   /** Hint below the field. */
   hint?: string
   /** Error message. When set, the field is marked invalid. */

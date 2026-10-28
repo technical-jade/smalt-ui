@@ -72,4 +72,19 @@ describe('SScrollArea', () => {
     expect(root.style.height).toBe('')
     expect(viewport.style.maxHeight).toBe('')
   })
+
+  it('gives aria attributes and role to the focusable viewport, the rest to the root', () => {
+    const { container } = render(SScrollArea, {
+      attrs: { 'aria-label': 'Change log', role: 'region', class: 'log', 'data-testid': 'area' },
+      slots: { default: 'Release notes' },
+    })
+    const viewport = container.querySelector('.s-scroll-area__viewport')
+    expect(screen.getByRole('region', { name: 'Change log' })).toBe(viewport)
+    expect(viewport).toHaveAttribute('tabindex', '0')
+
+    const root = container.querySelector('.s-scroll-area')
+    expect(root).toHaveClass('log')
+    expect(root).toHaveAttribute('data-testid', 'area')
+    expect(root).not.toHaveAttribute('aria-label')
+  })
 })

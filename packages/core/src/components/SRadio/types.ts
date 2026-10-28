@@ -12,6 +12,8 @@ export interface SRadioProps {
   value: string
   /** Label text next to the radio (can be replaced with the default slot). */
   label?: string
+  /** Accessible name of the option without a visible label (a color swatch, for example). */
+  ariaLabel?: string
   /** Disables only this option. */
   disabled?: boolean
   /**

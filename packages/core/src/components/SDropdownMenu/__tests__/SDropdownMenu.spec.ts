@@ -1,5 +1,6 @@
-import { describe, expect, it } from 'vitest'
-import { fireEvent, render, screen } from '@testing-library/vue'
+import { describe, expect, it, vi } from 'vitest'
+import { fireEvent, render, screen, waitFor } from '@testing-library/vue'
+import { DropdownMenuItem } from 'reka-ui'
 import { SDropdownMenu } from '../index'
 
 const triggerBtn = '<button type="button">Menu</button>'
@@ -55,5 +56,22 @@ describe('SDropdownMenu', () => {
     const menu = await screen.findByRole('menu')
     expect(menu).toHaveClass('s-dropdown-menu__content', 'account-menu')
     expect(menu).toHaveAttribute('data-testid', 'account')
+  })
+
+  it('a slot of Reka items is a real menu: menuitem role, selecting closes it', async () => {
+    const onSelect = vi.fn()
+    render({
+      components: { SDropdownMenu, DropdownMenuItem },
+      setup: () => ({ onSelect }),
+      template: `
+        <SDropdownMenu aria-label="Actions">
+          <template #trigger><button type="button">Menu</button></template>
+          <DropdownMenuItem class="s-dropdown-menu__item" @select="onSelect">Share</DropdownMenuItem>
+        </SDropdownMenu>`,
+    })
+    await fireEvent.click(screen.getByRole('button', { name: 'Menu' }))
+    await fireEvent.click(await screen.findByRole('menuitem', { name: 'Share' }))
+    expect(onSelect).toHaveBeenCalledOnce()
+    await waitFor(() => expect(screen.queryByRole('menu')).toBeNull())
   })
 })

@@ -6,6 +6,10 @@ selection). The stars are a reused `SIcon`; filled ones are highlighted with the
 `v-model`.
 While the pointer moves over the stars, they preview the rating it would set.
 
+The rating is a single tab stop: Tab lands on the selected star (the first one without a rating),
+and the arrow keys move to the neighbouring star and set that rating at once, as in
+[`SRadioGroup`](./radio). Space sets the rating of the focused star.
+
 <script setup>
 import { ref } from 'vue'
 import { min } from '@smalt-ui/core'

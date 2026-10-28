@@ -8,7 +8,9 @@ keeps the same width everywhere and the bar follows the design tokens.
 
 Scrolling itself stays native: the region is focusable, so the arrow keys, Page Up/Page Down,
 Home/End, the mouse wheel and touch gestures all work as usual, and screen readers announce the
-region as scrollable.
+region as scrollable. `aria-*` attributes and `role` go to that focusable region rather than the
+root, so `aria-label="Change log"` with `role="region"` names the very tab stop that receives
+focus. Other attributes, `class` and `style` stay on the root.
 
 Give the area a height (`height` or `max-height`, or your own layout) — without one it is as tall
 as its content and never scrolls.

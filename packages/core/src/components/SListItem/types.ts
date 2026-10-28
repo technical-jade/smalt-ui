@@ -18,7 +18,8 @@ export interface SListItemProps {
   active?: boolean
   /**
    * Makes a plain row an action: it renders as a `button` and gets the interactive styling.
-   * A link row (`href`) is interactive without it.
+   * A link row (`href`) is interactive without it. With `as` set to a non-interactive tag (`div`,
+   * `li`) the row gets `role="button"`, `tabindex="0"` and activation by Enter and Space.
    */
   clickable?: boolean
   /**

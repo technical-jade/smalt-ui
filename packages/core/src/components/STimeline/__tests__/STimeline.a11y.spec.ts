@@ -7,6 +7,7 @@ const items = [
   { value: 'created', title: 'Order created', description: 'Paid by card', date: 'Mar 3' },
   { value: 'packed', title: 'Packed', date: 'Mar 4' },
   { value: 'shipped', title: 'Shipped', icon: 'package', date: 'Mar 5' },
+  { value: 'returned', title: 'Returned', disabled: true },
 ]
 
 describe('STimeline · a11y', () => {

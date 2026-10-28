@@ -79,4 +79,21 @@ describe('SPinInput', () => {
     expect(emitted()['update:modelValue']?.at(-1)).toEqual([['0', '7']])
     expect(emitted().complete).toEqual([[['0', '7']]])
   })
+
+  it('the field label names the group of cells', () => {
+    render(SPinInput, { props: { length: 4, label: 'Code from the SMS' } })
+    const group = screen.getByRole('group', { name: 'Code from the SMS' })
+    expect(group.querySelectorAll('.s-pin-input__cell')).toHaveLength(4)
+  })
+
+  it('aria-* and data-* go to the group of cells, class to the field wrapper', () => {
+    const { container } = render(SPinInput, {
+      props: { length: 4 },
+      attrs: { 'aria-label': 'Confirmation code', 'data-testid': 'pin', class: 'extra' },
+    })
+    const group = screen.getByRole('group', { name: 'Confirmation code' })
+    expect(group).toHaveAttribute('data-testid', 'pin')
+    expect(container.querySelector('.s-pin-input')).toHaveClass('extra')
+    expect(group).not.toHaveClass('extra')
+  })
 })
