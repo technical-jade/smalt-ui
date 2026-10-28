@@ -20,48 +20,90 @@
     background-color: var(--s-color-surface);
     box-shadow: var(--s-elevation-3);
 
-    // Horizontal sides: a full-height panel.
+    // The border on the page side. A border width takes no percentages, so the line is drawn by
+    // a layer over the panel: the layer offset can be computed from the panel size, and on a
+    // full-screen panel the layer moves 1px past the screen edge together with the line.
+    &::before {
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      content: '';
+      border: 0 solid var(--s-color-border);
+      border-radius: inherit;
+    }
+
+    // The size from the width/height props is capped by the screen: a panel never goes past it.
+    // A full-screen panel has no rounding and no border: --s-drawer-corner and --s-drawer-edge
+    // drop to zero once no space is left to the screen edge. A percentage in the radius and in
+    // the border layer offset is taken from the panel size along the same axis, and a corner with
+    // one zero radius is square, so the other radius is written as is.
     &--left,
     &--right {
+      --s-drawer-corner: clamp(0px, (100vw - 100% - 1px) * 1000, var(--s-radius-md));
+      --s-drawer-edge: clamp(0px, (100vw - 100% - 1px) * 1000, 1px);
       top: 0;
       bottom: 0;
-      width: min(90vw, 22rem);
+      width: var(--s-drawer-size, min(90vw, 22rem));
+      max-width: 100vw;
     }
 
     &--left {
       --s-drawer-offset: -100% 0;
       left: 0;
-      border-right: 1px solid var(--s-color-border);
-      border-radius: 0 var(--s-radius-md) var(--s-radius-md) 0;
+      border-radius: 0 var(--s-drawer-corner) var(--s-drawer-corner) 0 / 0 var(--s-radius-md)
+        var(--s-radius-md) 0;
+
+      &::before {
+        right: calc(var(--s-drawer-edge) - 1px);
+        border-right-width: 1px;
+      }
     }
 
     &--right {
       --s-drawer-offset: 100% 0;
       right: 0;
-      border-left: 1px solid var(--s-color-border);
-      border-radius: var(--s-radius-md) 0 0 var(--s-radius-md);
+      border-radius: var(--s-drawer-corner) 0 0 var(--s-drawer-corner) / var(--s-radius-md) 0 0
+        var(--s-radius-md);
+
+      &::before {
+        left: calc(var(--s-drawer-edge) - 1px);
+        border-left-width: 1px;
+      }
     }
 
-    // Vertical sides: a full-width panel.
+    // svh is the smallest window height on mobile: a panel that tall already fills the screen.
     &--top,
     &--bottom {
+      --s-drawer-corner: clamp(0px, (100svh - 100% - 1px) * 1000, var(--s-radius-md));
+      --s-drawer-edge: clamp(0px, (100svh - 100% - 1px) * 1000, 1px);
       left: 0;
       right: 0;
-      height: min(90vh, 20rem);
+      height: var(--s-drawer-size, min(90vh, 20rem));
+      max-height: 100vh;
     }
 
     &--top {
       --s-drawer-offset: 0 -100%;
       top: 0;
-      border-bottom: 1px solid var(--s-color-border);
-      border-radius: 0 0 var(--s-radius-md) var(--s-radius-md);
+      border-radius: 0 0 var(--s-radius-md) var(--s-radius-md) / 0 0 var(--s-drawer-corner)
+        var(--s-drawer-corner);
+
+      &::before {
+        bottom: calc(var(--s-drawer-edge) - 1px);
+        border-bottom-width: 1px;
+      }
     }
 
     &--bottom {
       --s-drawer-offset: 0 100%;
       bottom: 0;
-      border-top: 1px solid var(--s-color-border);
-      border-radius: var(--s-radius-md) var(--s-radius-md) 0 0;
+      border-radius: var(--s-radius-md) var(--s-radius-md) 0 0 / var(--s-drawer-corner)
+        var(--s-drawer-corner) 0 0;
+
+      &::before {
+        top: calc(var(--s-drawer-edge) - 1px);
+        border-top-width: 1px;
+      }
     }
   }
 

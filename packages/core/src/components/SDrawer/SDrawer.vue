@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { computed } from 'vue'
 import { SDialogShell } from '../../internal/SDialogShell'
 import { useDefaults, useMessages } from '../../composables'
 import type { SDrawerProps } from './types'
@@ -9,6 +10,12 @@ const props = withDefaults(defineProps<SDrawerProps>(), {
 const p = useDefaults(props, 'SDrawer')
 
 const m = useMessages()
+
+const sizeStyle = computed(() => {
+  const size = p.side === 'top' || p.side === 'bottom' ? p.height : p.width
+  if (size == null) return undefined
+  return { '--s-drawer-size': typeof size === 'number' ? `${size}px` : size }
+})
 
 /** Whether the drawer is open. Two-way binding via `v-model:open`. */
 const open = defineModel<boolean>('open')
@@ -39,6 +46,7 @@ defineSlots<{
     :description="p.description"
     :close-label="p.closeLabel"
     :square="p.square"
+    :style="sizeStyle"
   >
     <template
       v-if="$slots.trigger"

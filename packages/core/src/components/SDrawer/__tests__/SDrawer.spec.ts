@@ -1,6 +1,8 @@
 import { describe, expect, it } from 'vitest'
 import { fireEvent, render, screen } from '@testing-library/vue'
 import { SDrawer } from '../index'
+import { createSUI } from '../../../plugin'
+import { compact } from '../../../presets'
 
 const triggerBtn = '<button type="button">Open</button>'
 
@@ -25,6 +27,42 @@ describe('SDrawer', () => {
     render(SDrawer, { props: { open: true, title: 'X' }, slots: { default: 'body' } })
     await screen.findByRole('dialog')
     expect(document.querySelector('.s-drawer__content')).toHaveClass('s-drawer__content--right')
+  })
+
+  const content = () => document.querySelector<HTMLElement>('.s-drawer__content')!
+
+  it('width sizes a side drawer; a number means pixels', async () => {
+    const { rerender } = render(SDrawer, {
+      props: { open: true, title: 'Menu', width: 480, height: 160 },
+      slots: { default: 'Body' },
+    })
+    await screen.findByRole('dialog')
+    expect(content().style.getPropertyValue('--s-drawer-size')).toBe('480px')
+
+    await rerender({ open: true, title: 'Menu', width: '100%', height: 160 })
+    expect(content().style.getPropertyValue('--s-drawer-size')).toBe('100%')
+  })
+
+  it('height sizes a top or bottom drawer; width does not apply there', async () => {
+    const { rerender } = render(SDrawer, {
+      props: { open: true, title: 'Menu', side: 'bottom', width: 480 },
+      slots: { default: 'Body' },
+    })
+    await screen.findByRole('dialog')
+    expect(content().style.getPropertyValue('--s-drawer-size')).toBe('')
+
+    await rerender({ open: true, title: 'Menu', side: 'bottom', width: 480, height: '50vh' })
+    expect(content().style.getPropertyValue('--s-drawer-size')).toBe('50vh')
+  })
+
+  it('a density preset does not change the drawer size', async () => {
+    render(SDrawer, {
+      props: { open: true, title: 'Menu' },
+      slots: { default: 'Body' },
+      global: { plugins: [createSUI({ preset: compact })] },
+    })
+    await screen.findByRole('dialog')
+    expect(content().style.getPropertyValue('--s-drawer-size')).toBe('')
   })
 
   it('closes with the close button (v-model:open)', async () => {
