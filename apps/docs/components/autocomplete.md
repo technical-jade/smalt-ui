@@ -45,6 +45,18 @@ const touchedFound = computed(() =>
 )
 const touchedLabel = computed(() => ALL.find((c) => c.value === touchedCity.value)?.label)
 
+const ADDRESSES = [
+  '12 Harbor View Road, Building 4, Suite 210, Portland, Oregon 97201',
+  '480 Lakeshore Drive, North Tower, Floor 17, Chicago, Illinois 60611',
+  '75 Old Mill Lane, Riverside Business Park, Unit 3B, Austin, Texas 78701',
+].map((label, i) => ({ label, value: String(i) }))
+const addressQuery = ref('')
+const address = ref()
+const addressFound = computed(() =>
+  ADDRESSES.filter((a) => a.label.toLowerCase().includes(addressQuery.value.toLowerCase())),
+)
+const addressLabel = computed(() => ADDRESSES.find((a) => a.value === address.value)?.label)
+
 const DOMAINS = ['gmail.com', 'outlook.com', 'yahoo.com', 'icloud.com']
 const email = ref('')
 const emailOptions = computed(() => {
@@ -66,6 +78,9 @@ transliteration, and index search get through.
 
 It is built on Reka UI Combobox: `combobox`/`listbox`/`option` roles, keyboard navigation, and a
 portaled panel. The label, hint and error message come from [`SFormField`](/components/form-field).
+By default the label stands above the field. With `floating-label` it lies inside the frame and
+moves up onto its edge when the field is focused or holds text, as in [`SInput`](/components/input);
+a `floatingLabel` default in [`global`](/guide/defaults) turns it on here too.
 `required` adds the `*` marker to the label and `aria-required` to the input. The clear button
 returns focus to the input. Inside a `<form>` the field submits the chosen
 suggestion's `value` under `name`, not the typed text (in [`free-text`](#free-text) mode, the
@@ -323,6 +338,54 @@ sets its markup.
     :loading="pending"
     empty-text="No matching city"
     label="City"
+  />
+</template>
+```
+
+  </template>
+</Demo>
+
+## Panel width and opening
+
+The panel is as wide as the field, and long suggestions wrap onto the next line. `max-width` lets
+the panel grow with the longest suggestion up to the given limit (a CSS length or a number of
+pixels). The panel is never narrower than the field and never goes past the window edge.
+
+The panel opens as the user types or presses the arrow keys. `open-on-click` also opens it with a
+click on the field, and `open-on-focus` when focus enters the field, so the suggestions for the
+text already typed show up again without editing it. Focus moved by code (the clear button,
+[`SForm`](/components/form) moving to the first error) leaves the panel closed. In
+[`free-text`](#free-text) mode the panel stays closed while there are no suggestions anyway.
+
+<Demo>
+  <ClientOnly>
+    <div style="max-width: 320px">
+      <SAutocomplete
+        v-model="address"
+        v-model:search="addressQuery"
+        :options="addressFound"
+        :selected-label="addressLabel"
+        label="Delivery address"
+        floating-label
+        open-on-focus
+        max-width="28rem"
+      />
+    </div>
+  </ClientOnly>
+
+<template #code>
+
+```vue
+<template>
+  <SAutocomplete
+    v-model="address"
+    v-model:search="query"
+    :options="options"
+    :selected-label="selectedLabel"
+    label="Delivery address"
+    floating-label
+    open-on-focus
+    max-width="28rem"
   />
 </template>
 ```

@@ -36,6 +36,18 @@ export interface SAutocompleteProps extends SValidationProps<string> {
   emptyText?: string
   /** Field label (rendered via `SFormField`/`SLabel`). */
   label?: string
+  /**
+   * Floating label: it lies inside the frame and moves up onto its edge when the field is focused
+   * or holds text. Off by default: the label stands above the field.
+   */
+  floatingLabel?: boolean
+  /** A click on the field opens the panel with the current suggestions when it is closed. */
+  openOnClick?: boolean
+  /**
+   * Focus entering the field opens the panel with the current suggestions. Focus moved by code
+   * (the clear button, `SForm` moving to the first error, the exposed `focus()`) leaves it closed.
+   */
+  openOnFocus?: boolean
   /** Hint below the field. */
   hint?: string
   /** Error message. When set, the field is marked invalid. */
@@ -74,6 +86,13 @@ export interface SAutocompleteProps extends SValidationProps<string> {
    * also never grows past the free space to the window edge; the smaller of the two wins.
    */
   maxHeight?: string | number
+  /**
+   * Width limit of the suggestion panel. A number means pixels. By default the panel is as wide
+   * as the field; with the prop it grows with the longest suggestion up to this limit, and long
+   * suggestions wrap. The panel is never narrower than the field and never goes past the window
+   * edge.
+   */
+  maxWidth?: string | number
   /** Removes the shadow. Overridden by the `elevation` prop when it is set. */
   flat?: boolean
   /** Shadow level 0–5 ([scale](/style/elevation)); `0` means no shadow. Overrides `flat`. */

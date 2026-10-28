@@ -2,6 +2,8 @@ import { describe, expect, it } from 'vitest'
 import { fireEvent, render, screen } from '@testing-library/vue'
 import { defineComponent, h, nextTick, ref } from 'vue'
 import { SAutocomplete } from '../index'
+import { SForm } from '../../SForm'
+import { installDefaults, required } from '../../../composables'
 import type { SAutocompleteOption } from '../types'
 
 const options: SAutocompleteOption[] = [
@@ -13,6 +15,72 @@ describe('SAutocomplete', () => {
   it('associates the label with the input', () => {
     render(SAutocomplete, { props: { options, label: 'City' } })
     expect(screen.getByLabelText('City')).toHaveAttribute('role', 'combobox')
+  })
+
+  it('without open-on-click a click on the field leaves the panel closed', async () => {
+    render(SAutocomplete, { props: { options, label: 'City' } })
+    await fireEvent.click(screen.getByLabelText('City'))
+    expect(screen.getByLabelText('City')).toHaveAttribute('aria-expanded', 'false')
+  })
+
+  it('open-on-click opens the panel with a click on the field', async () => {
+    render(SAutocomplete, { props: { options, label: 'City', openOnClick: true } })
+    await fireEvent.click(screen.getByLabelText('City'))
+    expect(await screen.findByRole('option', { name: 'New York' })).toBeInTheDocument()
+  })
+
+  it('open-on-focus opens the panel when focus enters the field', async () => {
+    render(SAutocomplete, { props: { options, label: 'City', openOnFocus: true } })
+    await fireEvent.focus(screen.getByLabelText('City'))
+    expect(await screen.findByRole('option', { name: 'New York' })).toBeInTheDocument()
+  })
+
+  it('open-on-focus: the clear button returns focus without opening the panel', async () => {
+    render(SAutocomplete, {
+      props: {
+        options,
+        label: 'City',
+        openOnFocus: true,
+        modelValue: 'nyc',
+        selectedLabel: 'New York',
+      },
+    })
+    await fireEvent.click(screen.getByRole('button', { name: 'Clear' }))
+    await nextTick()
+    const input = screen.getByLabelText('City')
+    expect(input).toHaveFocus()
+    expect(input).toHaveAttribute('aria-expanded', 'false')
+  })
+
+  it('open-on-focus: SForm focusing the first error leaves the panel closed', async () => {
+    const { container } = render({
+      components: { SForm, SAutocomplete },
+      setup: () => ({ options, rules: [required('Pick a city')] }),
+      template: `<SForm>
+        <SAutocomplete :options="options" label="City" open-on-focus :rules="rules" />
+      </SForm>`,
+    })
+    await fireEvent.submit(container.querySelector('form')!)
+    await new Promise((resolve) => setTimeout(resolve, 10))
+    const input = screen.getByLabelText('City')
+    expect(input).toHaveFocus()
+    expect(input).toHaveAttribute('aria-expanded', 'false')
+  })
+
+  it('floating-label puts the label inside the field frame', () => {
+    render(SAutocomplete, { props: { options, label: 'City', floatingLabel: true } })
+    const label = document.querySelector('.s-autocomplete__label')!
+    expect(label.parentElement).toHaveClass('s-autocomplete__control--floating')
+    expect(screen.getByLabelText('City')).toHaveAttribute('role', 'combobox')
+    expect(document.querySelector('.s-field__label')).toBeNull()
+  })
+
+  it('a global floatingLabel default turns the floating label on', () => {
+    render(SAutocomplete, {
+      props: { options, label: 'City' },
+      global: { plugins: [(app) => installDefaults(app, { global: { floatingLabel: true } })] },
+    })
+    expect(document.querySelector('.s-autocomplete__label')).not.toBeNull()
   })
 
   it('typing updates v-model:search, which the application searches by', async () => {

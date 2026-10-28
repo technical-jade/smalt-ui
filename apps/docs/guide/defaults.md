@@ -111,8 +111,9 @@ app.use(
 `global` applies to every component that declares the prop: `square` exists on all controls and
 on floating panels (dropdown lists, menus, popovers, calendars), `size` on all components affected
 by interface density. `floatingLabel` in `global` turns on the floating label only for fields that
-can render it (`SInput`, `STextarea`, `SSelect`, date and time fields and pickers, `SColorField`).
-The rest (`SNumberField`, `SAutocomplete`, `SPinInput`, `SSlider`, groups) keep their label on top.
+can render it (`SInput`, `STextarea`, `SSelect`, `SAutocomplete`, `SNumberField`, date and time
+fields and pickers, `SColorField`). The rest (`SPinInput`, `SSlider`, groups) keep their label on
+top.
 
 ## Validation mode
 

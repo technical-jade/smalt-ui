@@ -9,12 +9,20 @@ describe('SNumberField', () => {
     expect(screen.getByRole('spinbutton', { name: 'Quantity' })).toBeInTheDocument()
   })
 
-  it('a global floatingLabel default does not remove the label', () => {
+  it('floating-label puts the label on the frame edge', () => {
+    render(SNumberField, { props: { modelValue: 5, label: 'Quantity', floatingLabel: true } })
+    expect(screen.getByRole('spinbutton', { name: 'Quantity' })).toBeInTheDocument()
+    expect(document.querySelector('.s-number-field__wrap > .s-number-field__label')).not.toBeNull()
+    expect(document.querySelector('.s-field__label')).toBeNull()
+  })
+
+  it('a global floatingLabel default turns the floating label on', () => {
     render(SNumberField, {
       props: { modelValue: 5, label: 'Quantity' },
       global: { plugins: [(app) => installDefaults(app, { global: { floatingLabel: true } })] },
     })
     expect(screen.getByRole('spinbutton', { name: 'Quantity' })).toBeInTheDocument()
+    expect(document.querySelector('.s-number-field__label')).not.toBeNull()
   })
 
   it('renders the step buttons', () => {

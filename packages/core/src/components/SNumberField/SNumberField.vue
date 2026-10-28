@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { useTemplateRef } from 'vue'
+import { computed, useTemplateRef } from 'vue'
 import type { ComponentPublicInstance } from 'vue'
 import {
   NumberFieldDecrement,
@@ -22,6 +22,7 @@ const props = withDefaults(defineProps<SNumberFieldProps>(), {
   invalid: false,
   required: false,
   disabled: false,
+  floatingLabel: false,
   step: 1,
 })
 const p = useDefaults(props, 'SNumberField')
@@ -45,13 +46,15 @@ const model = defineModel<number | null>({ default: null })
 const { errorMessage, onBlur: onLeave, expose } = useFieldValidation(p, () => model.value, root)
 const { onFocusIn, onFocusOut } = useFieldFocus(root, emit, undefined, onLeave)
 defineExpose(expose)
+
+const floating = computed(() => p.floatingLabel && !!p.label)
 </script>
 
 <template>
   <SFormField
     :id="p.id"
     ref="root"
-    :floating-label="false"
+    :floating-label="floating"
     class="s-number-field"
     :class="[`s-number-field--${p.size}`, rootClass]"
     :style="rootStyle"
@@ -65,50 +68,71 @@ defineExpose(expose)
     @focusin="onFocusIn"
     @focusout="onFocusOut"
   >
-    <template #default="{ id: fieldId, describedBy, invalid: fieldInvalid }">
-      <NumberFieldRoot
-        v-model="model"
-        class="s-number-field__control"
-        :class="{ 's-number-field__control--invalid': fieldInvalid }"
-        :min="p.min"
-        :max="p.max"
-        :step="p.step"
-        :disabled="p.disabled"
-        :name="p.name"
-        :required="p.required"
-        :locale="formatLocale"
+    <template #default="{ id: fieldId, labelId, describedBy, invalid: fieldInvalid }">
+      <!-- The label is a sibling of the frame, not its child: the frame clips its content to the
+           rounded corners. -->
+      <div
+        class="s-number-field__wrap"
+        :data-invalid="fieldInvalid || undefined"
       >
-        <NumberFieldDecrement
-          class="s-number-field__button"
-          :aria-label="p.decrementLabel ?? m.decrement"
-        >
-          <SIcon
-            icon="minus"
-            :size="16"
-          />
-        </NumberFieldDecrement>
-
-        <NumberFieldInput
-          v-bind="controlAttrs"
-          :id="fieldId"
-          class="s-number-field__input"
-          :placeholder="p.placeholder"
+        <NumberFieldRoot
+          v-model="model"
+          class="s-number-field__control"
+          :class="{ 's-number-field__control--invalid': fieldInvalid }"
+          :min="p.min"
+          :max="p.max"
+          :step="p.step"
+          :disabled="p.disabled"
+          :name="p.name"
           :required="p.required"
-          :aria-invalid="fieldInvalid || undefined"
-          :aria-describedby="describedBy"
-          :aria-roledescription="m.numberField"
-        />
-
-        <NumberFieldIncrement
-          class="s-number-field__button"
-          :aria-label="p.incrementLabel ?? m.increment"
+          :locale="formatLocale"
         >
-          <SIcon
-            icon="plus"
-            :size="16"
+          <NumberFieldDecrement
+            class="s-number-field__button"
+            :aria-label="p.decrementLabel ?? m.decrement"
+          >
+            <SIcon
+              icon="minus"
+              :size="16"
+            />
+          </NumberFieldDecrement>
+
+          <NumberFieldInput
+            v-bind="controlAttrs"
+            :id="fieldId"
+            class="s-number-field__input"
+            :placeholder="p.placeholder"
+            :required="p.required"
+            :aria-invalid="fieldInvalid || undefined"
+            :aria-describedby="describedBy"
+            :aria-roledescription="m.numberField"
           />
-        </NumberFieldIncrement>
-      </NumberFieldRoot>
+
+          <NumberFieldIncrement
+            class="s-number-field__button"
+            :aria-label="p.incrementLabel ?? m.increment"
+          >
+            <SIcon
+              icon="plus"
+              :size="16"
+            />
+          </NumberFieldIncrement>
+        </NumberFieldRoot>
+        <label
+          v-if="floating"
+          :id="labelId"
+          class="s-number-field__label"
+          :for="fieldId"
+        >
+          {{ p.label }}
+          <span
+            v-if="p.required"
+            class="s-number-field__label-required"
+            aria-hidden="true"
+            >*</span
+          >
+        </label>
+      </div>
     </template>
   </SFormField>
 </template>

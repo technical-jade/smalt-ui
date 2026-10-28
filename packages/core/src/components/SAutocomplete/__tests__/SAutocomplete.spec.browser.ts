@@ -27,6 +27,52 @@ describe('SAutocomplete · browser', () => {
     expect(panel.right).toBeGreaterThan(control.left)
   })
 
+  it('the panel is as wide as the field and a long suggestion wraps', async () => {
+    const long = [{ label: 'A very long suggestion '.repeat(8), value: 'long' }]
+    const { container } = render(SAutocomplete, {
+      props: { options: long, label: 'Address', style: 'width: 300px' },
+    })
+    await userEvent.click(screen.getByLabelText('Address'))
+    await userEvent.keyboard('{ArrowDown}')
+    const listbox = await screen.findByRole('listbox')
+    const control = container.querySelector('.s-autocomplete__control')!.getBoundingClientRect()
+    const panel = listbox.closest('.s-autocomplete__content')!.getBoundingClientRect()
+    expect(Math.round(panel.width)).toBe(Math.round(control.width))
+    const item = screen.getByRole('option').getBoundingClientRect()
+    expect(item.height).toBeGreaterThan(40)
+  })
+
+  it('max-width lets the panel grow wider than the field but not past the window', async () => {
+    const long = [{ label: 'A very long suggestion '.repeat(40), value: 'long' }]
+    const { container } = render(SAutocomplete, {
+      props: { options: long, label: 'Address', maxWidth: 10000, style: 'width: 300px' },
+    })
+    await userEvent.click(screen.getByLabelText('Address'))
+    await userEvent.keyboard('{ArrowDown}')
+    const listbox = await screen.findByRole('listbox')
+    const control = container.querySelector('.s-autocomplete__control')!.getBoundingClientRect()
+    const panel = listbox.closest('.s-autocomplete__content')!.getBoundingClientRect()
+    expect(panel.width).toBeGreaterThan(control.width)
+    expect(panel.right).toBeLessThanOrEqual(window.innerWidth)
+  })
+
+  it('open-on-focus: a click on the clear button leaves the panel closed', async () => {
+    render(SAutocomplete, {
+      props: {
+        options,
+        label: 'City',
+        openOnFocus: true,
+        modelValue: 'bos',
+        selectedLabel: 'Boston',
+      },
+    })
+    await userEvent.click(screen.getByRole('button', { name: 'Clear' }))
+    const input = screen.getByLabelText('City')
+    expect(document.activeElement).toBe(input)
+    await new Promise((resolve) => setTimeout(resolve, 50))
+    expect(screen.queryByRole('listbox')).toBeNull()
+  })
+
   it('a long suggestion list is height-limited and scrolls', async () => {
     const many = Array.from({ length: 200 }, (_, i) => ({
       label: `City ${i + 1}`,

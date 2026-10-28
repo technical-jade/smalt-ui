@@ -38,6 +38,9 @@ const props = withDefaults(defineProps<SAutocompleteProps>(), {
   disabled: false,
   loading: false,
   freeText: false,
+  floatingLabel: false,
+  openOnClick: false,
+  openOnFocus: false,
   clearable: true,
   clearIcon: 'x',
 })
@@ -72,7 +75,26 @@ const emit = defineEmits<{
 }>()
 
 const root = useTemplateRef<ComponentPublicInstance>('root')
-const { errorMessage, onBlur: onLeave, expose } = useFieldValidation(p, () => model.value, root)
+const input = ref<{ $el: HTMLInputElement }>()
+
+/**
+ * Focus moved by code (the clear button, `SForm` going to the first error) must not open the
+ * panel the way `open-on-focus` does for the user. Reka asks to open synchronously from the focus
+ * event, so the request is dropped while the flag is up.
+ */
+let focusingQuietly = false
+function focusInput() {
+  focusingQuietly = true
+  input.value?.$el.focus()
+  focusingQuietly = false
+}
+
+const { errorMessage, onBlur: onLeave, expose } = useFieldValidation(
+  p,
+  () => model.value,
+  root,
+  focusInput,
+)
 /**
  * A click on a suggestion is a selection inside the component, not leaving the field: otherwise
  * the application's `blur` handler would run before the selection, and if it changed the list,
@@ -162,7 +184,7 @@ const rootModel = computed({
   },
 })
 
-defineSlots<{
+const slots = defineSlots<{
   /** Content at the start of the field, inside the frame (icon, country flag, button). */
   prepend?: (props: Record<string, never>) => unknown
   /** Content at the end of the field, inside the frame. */
@@ -177,21 +199,21 @@ defineSlots<{
 
 const elevationStyle = useElevationProp(p, 's-surface')
 
+const toLength = (value: string | number) => (typeof value === 'number' ? `${value}px` : value)
+
 /**
  * Panel variables: the panel is teleported, so they travel with it rather than on the field root.
- * A number in maxHeight means pixels, as with width/height in Vue bindings.
+ * A number in maxHeight/maxWidth means pixels, as with width/height in Vue bindings.
  */
 const contentStyle = computed(() => {
-  const maxHeight =
-    p.maxHeight == null
-      ? undefined
-      : {
-          '--s-autocomplete-max-height':
-            typeof p.maxHeight === 'number' ? `${p.maxHeight}px` : p.maxHeight,
-        }
-  if (!maxHeight && !elevationStyle.value) return undefined
-  return { ...maxHeight, ...elevationStyle.value }
+  const style: Record<string, string> = { ...elevationStyle.value }
+  if (p.maxHeight != null) style['--s-autocomplete-max-height'] = toLength(p.maxHeight)
+  if (p.maxWidth != null) style['--s-autocomplete-max-width'] = toLength(p.maxWidth)
+  return Object.keys(style).length ? style : undefined
 })
+
+const floating = computed(() => p.floatingLabel && !!p.label)
+const hasLeading = computed(() => !!p.icon || !!slots.prepend)
 
 // Reka's first call comes before mount: an empty string would overwrite a preset search.
 const mounted = ref(false)
@@ -247,6 +269,7 @@ const showContent = computed(() => !p.freeText || p.loading || p.options.length 
 let awaitingOptions = false
 
 function onOpenChange(value: boolean) {
+  if (value && focusingQuietly) return
   if (!value) awaitingOptions = false
   open.value = value && showContent.value
 }
@@ -260,14 +283,12 @@ watch(showContent, (value) => {
 const anchor = ref<{ $el: Element }>()
 useKeepCaretKeys(anchor)
 
-const input = ref<{ $el: HTMLInputElement }>()
-
 function clear() {
   model.value = p.freeText ? '' : undefined
   text.value = ''
   awaitingOptions = false
   if (!p.freeText) search.value = ''
-  input.value?.$el.focus()
+  focusInput()
   emit('clear')
 }
 </script>
@@ -276,7 +297,7 @@ function clear() {
   <SFormField
     :id="p.id"
     ref="root"
-    :floating-label="false"
+    :floating-label="floating"
     class="s-autocomplete"
     :class="[`s-autocomplete--${p.size}`, rootClass]"
     :style="rootStyle"
@@ -290,7 +311,7 @@ function clear() {
     @focusin="onFocusIn"
     @focusout="onFocusOut"
   >
-    <template #default="{ id: fieldId, describedBy, invalid: fieldInvalid }">
+    <template #default="{ id: fieldId, labelId, describedBy, invalid: fieldInvalid }">
       <!-- ignore-filter: the application has already picked the suggestions. If Reka filtered
            them again by substring, fuzzy, transliterated and index search results would vanish
            from the list even though the server returned them.
@@ -305,6 +326,8 @@ function clear() {
         ignore-filter
         :reset-search-term-on-blur="false"
         :reset-search-term-on-select="!p.freeText"
+        :open-on-click="p.openOnClick"
+        :open-on-focus="p.openOnFocus"
         :disabled="p.disabled"
         :name="p.freeText ? undefined : p.name"
         :required="p.freeText ? undefined : p.required"
@@ -313,7 +336,13 @@ function clear() {
         <ComboboxAnchor
           ref="anchor"
           class="s-autocomplete__control"
-          :class="{ 's-autocomplete__control--invalid': fieldInvalid }"
+          :class="{
+            's-autocomplete__control--invalid': fieldInvalid,
+            's-autocomplete__control--floating': floating,
+            's-autocomplete__control--has-leading': floating && hasLeading,
+          }"
+          :data-filled="!!text || undefined"
+          :data-invalid="fieldInvalid || undefined"
         >
           <span
             v-if="$slots.prepend"
@@ -344,6 +373,20 @@ function clear() {
             :aria-required="p.required || undefined"
             @input="onInput"
           />
+          <label
+            v-if="floating"
+            :id="labelId"
+            class="s-autocomplete__label"
+            :for="fieldId"
+          >
+            {{ p.label }}
+            <span
+              v-if="p.required"
+              class="s-autocomplete__label-required"
+              aria-hidden="true"
+              >*</span
+            >
+          </label>
 
           <SSpinner
             v-if="p.loading"

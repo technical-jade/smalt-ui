@@ -3,7 +3,8 @@
 `SNumberField` is a number input with "plus"/"minus" buttons. It is built on Reka UI
 (the `spinbutton` role, arrow-key stepping, `min`/`max` bounds, formatting) and
 reuses `SFormField` (label, hint, error message, a11y), `SButton`-like step buttons
-and `SIcon`. The value is bound with `v-model`.
+and `SIcon`. The value is bound with `v-model`. The label stands above the field;
+[`floating-label`](#floating-label) puts it on the frame edge.
 `size` (`sm`/`md`/`lg`) matches the height of the other fields, so density presets reach it, and
 `invalid`/`error` turn the frame red. Focus moving between the input and the buttons does not
 emit `blur`.
@@ -137,6 +138,43 @@ invalid (explicit `invalid` does the same), `disabled` blocks the field and the 
     v-model="qty"
     label="Disabled"
     disabled
+  />
+</template>
+```
+
+  </template>
+</Demo>
+</ClientOnly>
+
+## Floating label
+
+By default the label stands above the field. With `floating-label` it sits on the top edge of the
+frame, so the field lines up with neighboring fields that have a
+[floating label](/components/input). The step buttons take the field edges, so the label is
+always raised rather than resting inside an empty frame. A `floatingLabel` default in
+[`global`](/guide/defaults) turns it on here too. The label and the frame
+(`.s-number-field__control`) sit in a shared `.s-number-field__wrap` wrapper.
+
+<ClientOnly>
+<Demo>
+  <div style="display: flex; flex-wrap: wrap; gap: 16px; align-items: flex-start">
+    <SInput label="Product" />
+    <SNumberField v-model="qty" label="Quantity" floating-label :min="0" />
+  </div>
+
+<template #code>
+
+```vue
+<template>
+  <SInput
+    v-model="product"
+    label="Product"
+  />
+  <SNumberField
+    v-model="qty"
+    label="Quantity"
+    floating-label
+    :min="0"
   />
 </template>
 ```

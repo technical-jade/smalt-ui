@@ -47,6 +47,27 @@ $sizes: sm, md, lg;
     @include tools.field-affix;
   }
 
+  &__label {
+    @include tools.floating-label;
+  }
+
+  &__label-required {
+    color: var(--s-color-negative-text);
+  }
+
+  &__control--has-leading {
+    @include tools.field-label-leading;
+  }
+
+  // At rest the floating label stands in for the placeholder, which shows only on focus.
+  &__control--floating &__field::placeholder {
+    color: transparent;
+  }
+
+  &__control--floating:focus-within &__field::placeholder {
+    color: var(--s-color-text-subtle);
+  }
+
   &__spinner {
     flex: none;
   }
@@ -87,7 +108,15 @@ $sizes: sm, md, lg;
   @include tools.reset-inherited;
   @include tools.floating-surface;
   z-index: var(--s-z-dropdown);
+  // The Reka wrapper sets min-width: max-content, so the panel's own limits hold the width: from
+  // the field width up to max-width from the prop, but not past the window edge. Long suggestions
+  // wrap.
+  inline-size: max-content;
   min-inline-size: var(--reka-combobox-trigger-width);
+  max-inline-size: min(
+    var(--s-autocomplete-max-width, var(--reka-combobox-trigger-width)),
+    var(--reka-combobox-content-available-width, 100vw)
+  );
   overflow: hidden;
 
   &--square {
@@ -114,6 +143,7 @@ $sizes: sm, md, lg;
   align-items: center;
   padding: var(--s-space-2) var(--s-space-3);
   font-size: var(--s-font-size-sm);
+  overflow-wrap: anywhere;
   cursor: pointer;
   border-radius: var(--s-radius-sm);
 }

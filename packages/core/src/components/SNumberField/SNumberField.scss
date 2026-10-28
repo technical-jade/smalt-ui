@@ -2,12 +2,17 @@
 @use '../../styles/settings';
 @use '../../styles/tools';
 
+.s-number-field__wrap {
+  position: relative;
+  display: inline-flex;
+  // SFormField is a flex column with align-items: stretch. Without align-self the field
+  // spans the full width (inline-flex has no effect on a flex item), leaving a gap after "+".
+  align-self: flex-start;
+}
+
 .s-number-field__control {
   display: inline-flex;
   align-items: center;
-  // SFormField is a flex column with align-items: stretch. Without align-self the control
-  // spans the full width (inline-flex has no effect on a flex item), leaving a gap after "+".
-  align-self: flex-start;
   overflow: hidden;
   background-color: var(--s-color-surface);
   border: 1px solid var(--s-color-outline);
@@ -61,6 +66,24 @@
       color: var(--s-color-text);
     }
   }
+}
+
+.s-number-field__label {
+  @include tools.floating-label;
+}
+
+// The field edges are taken by the step buttons, so the label has nowhere to rest: it always
+// sits on the frame.
+.s-number-field__wrap .s-number-field__label {
+  inset-block-start: 0;
+  inset-inline-start: var(--s-space-2);
+  padding-inline: 0.25rem;
+  background-color: var(--s-color-surface);
+  transform: translateY(-50%) scale(0.75);
+}
+
+.s-number-field__label-required {
+  color: var(--s-color-negative-text);
 }
 
 // Same heights as the other fields, so the density presets reach the control.
