@@ -13,6 +13,9 @@ const feedback = ref('')
 The label **floats** by default (at rest it sits on the first line, on focus or once filled it
 moves up onto the top border); turn it off with `:floating-label="false"`.
 
+The height is set by `rows` (3 by default). The user can drag the field taller by the resize grip
+in the bottom right corner of the frame; the height does not follow the text on its own.
+
 ## Basic usage
 
 <Demo>

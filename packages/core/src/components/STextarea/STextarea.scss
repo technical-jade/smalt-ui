@@ -28,7 +28,10 @@ $sizes: (
     --s-field-pad-x: var(--s-space-3);
     // The field is multi-line: the resting label sits at the first line, not the frame's center.
     --s-field-label-rest-y: calc(var(--s-space-2) + 0.5rem);
-    padding: var(--s-space-2) var(--s-field-pad-x);
+    // The textarea itself holds the end paddings: the native resize grip is drawn in the corner
+    // of its box, which then reaches the frame's corner.
+    padding-block: var(--s-space-2) 0;
+    padding-inline: var(--s-field-pad-x) 0;
   }
 
   @each $name, $cfg in $sizes {
@@ -64,7 +67,10 @@ $sizes: (
     // Minimum height: resizing (resize: vertical) respects min-height and cannot "squash" the
     // field below a sensible minimum (~2 lines + room for the floating label).
     min-height: 3rem;
-    padding: 0;
+    // Keeps the paddings out of min-height with the global reset (border-box) and without it.
+    box-sizing: content-box;
+    padding-block: 0 var(--s-space-2);
+    padding-inline: 0 var(--s-field-pad-x);
     font: inherit;
     color: var(--s-color-text);
     background: transparent;
@@ -92,6 +98,6 @@ $sizes: (
 
   // Reserves room on the right for append so the text does not run under the adornment.
   &__wrap--has-append &__field {
-    padding-inline-end: var(--s-space-10);
+    padding-inline-end: calc(var(--s-field-pad-x) + var(--s-space-10));
   }
 }
