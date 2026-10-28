@@ -90,12 +90,11 @@ function focusInput() {
   focusingQuietly = false
 }
 
-const { errorMessage, onBlur: onLeave, expose } = useFieldValidation(
-  p,
-  () => model.value,
-  root,
-  focusInput,
-)
+const {
+  errorMessage,
+  onBlur: onLeave,
+  expose,
+} = useFieldValidation(p, () => model.value, root, focusInput)
 /**
  * A click on a suggestion is a selection inside the component, not leaving the field: otherwise
  * the application's `blur` handler would run before the selection, and if it changed the list,

@@ -130,7 +130,9 @@ app.use(
 
 `global` applies to every component that declares the prop: `square` exists on all controls and
 on floating panels (dropdown lists, menus, popovers, calendars), `size` on all components affected
-by interface density. `floatingLabel` in `global` turns on the floating label only for fields that
+by interface density. A prop in `global` reaches every component that has a prop of that name:
+`global: { variant: 'outline' }` also changes `SToggle` and `STabs`, and `global: { color }` also
+tints `SSeparator`; the scoped form is `SButton: { variant: 'outline' }`. `floatingLabel` in `global` turns on the floating label only for fields that
 can render it (`SInput`, `STextarea`, `SSelect`, `SAutocomplete`, `SNumberField`, date and time
 fields and pickers, `SColorField`). The rest (`SPinInput`, `SSlider`, groups) keep their label on
 top. The value `'pinned'` pins the label to the border of all these fields at once (see

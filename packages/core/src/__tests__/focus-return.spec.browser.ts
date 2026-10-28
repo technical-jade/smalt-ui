@@ -109,25 +109,28 @@ describe('focus is not lost to body', () => {
     ['SDrawer', 'SDrawer title="Panel"', 'dialog'],
     ['SAlertDialog', 'SAlertDialog title="Delete?"', 'alertdialog'],
     ['SCommandPalette', 'SCommandPalette :groups="[]"', 'dialog'],
-  ])('%s without a trigger slot returns focus to where it was opened from', async (name, tag, role) => {
-    // Without DialogTrigger Reka remembers the element focused at mount time as the trigger.
-    render({
-      components: { SAlertDialog, SCommandPalette, SDialog, SDrawer },
-      data: () => ({ open: false }),
-      template: `
+  ])(
+    '%s without a trigger slot returns focus to where it was opened from',
+    async (name, tag, role) => {
+      // Without DialogTrigger Reka remembers the element focused at mount time as the trigger.
+      render({
+        components: { SAlertDialog, SCommandPalette, SDialog, SDrawer },
+        data: () => ({ open: false }),
+        template: `
           <button @click="open = true">Open</button>
           <button @click="open = true">Open again</button>
           <${tag} v-model:open="open" />`,
-    })
-    // The second opening comes from another button: focus has to return there, not to the first.
-    for (const label of ['Open', 'Open again']) {
-      const opener = screen.getByRole('button', { name: label })
-      await userEvent.click(opener)
-      const dialog = await screen.findByRole(role)
-      await expect.poll(() => dialog.contains(document.activeElement)).toBe(true)
-      await userEvent.keyboard('{Escape}')
-      await waitFor(() => expect(screen.queryByRole(role)).toBeNull())
-      await expect.poll(() => document.activeElement, { message: name }).toBe(opener)
-    }
-  })
+      })
+      // The second opening comes from another button: focus has to return there, not to the first.
+      for (const label of ['Open', 'Open again']) {
+        const opener = screen.getByRole('button', { name: label })
+        await userEvent.click(opener)
+        const dialog = await screen.findByRole(role)
+        await expect.poll(() => dialog.contains(document.activeElement)).toBe(true)
+        await userEvent.keyboard('{Escape}')
+        await waitFor(() => expect(screen.queryByRole(role)).toBeNull())
+        await expect.poll(() => document.activeElement, { message: name }).toBe(opener)
+      }
+    },
+  )
 })
