@@ -18,6 +18,8 @@ const qty = ref(3)
 const price = ref(50)
 const nfInvalid = ref(5)
 const amount = ref(1234.5)
+const weight = ref(1)
+const parcels = ref(2)
 </script>
 
 ## Basic usage
@@ -140,6 +142,63 @@ invalid (explicit `invalid` does the same), `disabled` blocks the field and the 
     disabled
   />
 </template>
+```
+
+  </template>
+</Demo>
+</ClientOnly>
+
+## Width
+
+By default the field is as wide as its content: a `4rem` input with the buttons at its edges.
+`stretch` spreads the field across the column, like [`SInput`](/components/input): the buttons
+stay at the edges and the input takes the free space. The `--s-number-field-input-width` CSS
+variable sets another fixed input width.
+
+<ClientOnly>
+<Demo>
+  <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px; width: 100%; max-width: 480px">
+    <SNumberField v-model="weight" label="Weight, kg" stretch :min="0" />
+    <SInput label="Contents" :floating-label="false" placeholder="Box" />
+    <SNumberField v-model="parcels" label="Parcels" :min="1" style="--s-number-field-input-width: 6rem" />
+  </div>
+
+<template #code>
+
+```vue
+<template>
+  <div class="row">
+    <SNumberField
+      v-model="weight"
+      label="Weight, kg"
+      stretch
+      :min="0"
+    />
+    <SInput
+      label="Contents"
+      :floating-label="false"
+      placeholder="Box"
+    />
+    <SNumberField
+      v-model="parcels"
+      class="parcels"
+      label="Parcels"
+      :min="1"
+    />
+  </div>
+</template>
+
+<style scoped>
+.row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+}
+
+.parcels {
+  --s-number-field-input-width: 6rem;
+}
+</style>
 ```
 
   </template>

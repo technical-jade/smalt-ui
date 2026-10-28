@@ -13,9 +13,13 @@
   }
 
   // Content-width field: the label/error align with the left edge of the control.
+  // vertical-align: top keeps the inline field off the baseline. A checkbox baseline depends on
+  // its state (the bottom edge of an empty box, the check mark of a checked one), so checking it
+  // would change the row height and shift everything below.
   &--inline {
     display: inline-flex;
     align-items: flex-start;
+    vertical-align: top;
   }
 
   // A regular (non-floating) field label uses normal weight and a smaller size (matching

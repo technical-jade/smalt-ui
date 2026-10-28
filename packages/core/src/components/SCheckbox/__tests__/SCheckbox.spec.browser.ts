@@ -79,4 +79,21 @@ describe('SCheckbox · browser', () => {
     await nextTick()
     expect(container.querySelector('form')!.checkValidity()).toBe(false)
   })
+
+  it('checking does not change the height of the row the checkbox stands in', async () => {
+    const { container, rerender } = render(
+      {
+        components: { SCheckbox },
+        props: ['checked'],
+        template: `<div style="font-size: 16px; line-height: 1.5"><SCheckbox :model-value="checked" label="I agree" /></div>`,
+      },
+      { props: { checked: false } },
+    )
+    const row = container.firstElementChild as HTMLElement
+    await nextTick()
+    const before = row.getBoundingClientRect().height
+    await rerender({ checked: true })
+    await nextTick()
+    expect(row.getBoundingClientRect().height).toBe(before)
+  })
 })

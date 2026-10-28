@@ -12,6 +12,11 @@ const backups = ref(false)
 The label renders through the reused `SLabel`. It works with `v-model` (boolean).
 Without a visible label, name the switch with `aria-label`.
 
+The switch is an inline element as wide as its content and aligned to the top of the line, not to
+the text baseline. When it stands right inside text rather than in a flex or grid container, the
+line takes its height from the parent's `line-height` and may come out slightly taller than the
+switch.
+
 ## Basic usage
 
 <ClientOnly>

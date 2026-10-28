@@ -25,6 +25,11 @@ describe('SNumberField', () => {
     expect(document.querySelector('.s-number-field__label')).not.toBeNull()
   })
 
+  it('stretch adds the stretch modifier', () => {
+    const { container } = render(SNumberField, { props: { label: 'Weight', stretch: true } })
+    expect(container.querySelector('.s-number-field')).toHaveClass('s-number-field--stretch')
+  })
+
   it('renders the step buttons', () => {
     render(SNumberField, { props: { modelValue: 5, label: 'Qty' } })
     expect(screen.getByRole('button', { name: 'Increase' })).toBeInTheDocument()

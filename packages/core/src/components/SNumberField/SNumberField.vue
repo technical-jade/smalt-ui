@@ -23,6 +23,7 @@ const props = withDefaults(defineProps<SNumberFieldProps>(), {
   required: false,
   disabled: false,
   floatingLabel: false,
+  stretch: false,
   step: 1,
 })
 const p = useDefaults(props, 'SNumberField')
@@ -56,7 +57,7 @@ const floating = computed(() => p.floatingLabel && !!p.label)
     ref="root"
     :floating-label="floating"
     class="s-number-field"
-    :class="[`s-number-field--${p.size}`, rootClass]"
+    :class="[`s-number-field--${p.size}`, { 's-number-field--stretch': p.stretch }, rootClass]"
     :style="rootStyle"
     :label="p.label"
     :hint="p.hint"

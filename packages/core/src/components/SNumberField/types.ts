@@ -23,6 +23,12 @@ export interface SNumberFieldProps extends SValidationProps<number | null> {
   size?: SNumberFieldSize
   /** Square corners: removes the field border rounding (rounded by default). */
   square?: boolean
+  /**
+   * Stretches the field across its container, like `SInput`: the step buttons stay at the edges
+   * and the input takes the free space. Without it the field is as wide as its content, and the
+   * `--s-number-field-input-width` CSS variable sets the input width (`4rem` by default).
+   */
+  stretch?: boolean
   /** Field name in native form submission: the value is sent in a hidden input. */
   name?: string
   /** Marks the field as required. */

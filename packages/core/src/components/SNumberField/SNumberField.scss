@@ -31,7 +31,7 @@
 }
 
 .s-number-field__input {
-  width: 4rem;
+  width: var(--s-number-field-input-width, 4rem);
   height: 100%;
   padding: 0 var(--s-space-2);
   font-family: var(--s-font-sans);
@@ -84,6 +84,24 @@
 
 .s-number-field__label-required {
   color: var(--s-color-negative-text);
+}
+
+.s-number-field--stretch {
+  .s-number-field__wrap {
+    display: flex;
+    align-self: stretch;
+  }
+
+  .s-number-field__control {
+    display: flex;
+    flex: 1;
+  }
+
+  // min-width: 0, or the flex item would not shrink below the intrinsic <input> width (~20 chars).
+  .s-number-field__input {
+    flex: 1;
+    min-width: 0;
+  }
 }
 
 // Same heights as the other fields, so the density presets reach the control.

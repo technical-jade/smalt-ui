@@ -233,6 +233,11 @@ You do not need to wrap the content in a single element.
 first line. `stretch` makes the checkbox fill the container width: the label takes the free space,
 and a click anywhere on the row toggles the checkbox.
 
+Without `stretch` the checkbox is an inline element as wide as its content and aligned to the top
+of the line. Checking it does not change the line height, so the content below does not move.
+When the checkbox stands right inside text rather than in a flex or grid container, the line takes
+its height from the parent's `line-height` and may come out slightly taller than the checkbox.
+
 <ClientOnly>
 <Demo>
   <div style="width: 100%; max-width: 420px; padding: 12px 16px; border: 1px solid var(--s-color-border); border-radius: var(--s-radius-md)">

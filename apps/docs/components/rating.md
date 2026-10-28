@@ -10,6 +10,11 @@ The rating is a single tab stop: Tab lands on the selected star (the first one w
 and the arrow keys move to the neighbouring star and set that rating at once, as in
 [`SRadioGroup`](./radio). Space sets the rating of the focused star.
 
+The rating is an inline element as wide as its stars and aligned to the top of the line, not to
+the text baseline. When it stands right inside text rather than in a flex or grid container, the
+line takes its height from the parent's `line-height` and may come out slightly taller than the
+stars.
+
 <script setup>
 import { ref } from 'vue'
 import { min } from '@smalt-ui/core'
