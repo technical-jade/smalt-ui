@@ -7,6 +7,10 @@ root carries `role="group"`; give it a `label` when the set of actions needs a n
 
 ## Attached buttons
 
+A long label wraps in a narrow container, and its button grows in height (see
+[Button sizes](/components/button#sizes)). In an attached row the other buttons take the same
+height, so the shared edges still meet.
+
 <Demo>
   <SButtonGroup label="Text actions">
     <SButton>Copy</SButton>

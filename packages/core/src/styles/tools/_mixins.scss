@@ -150,11 +150,23 @@
 // Interactive control size from the shared $control-sizes map.
 // The horizontal padding is exposed as --s-field-pad-x so the floating label
 // (floating-label) can align with the start of the field text without knowing the size.
-@mixin control-size($name) {
+// $grow is for controls whose label wraps (button, toggle): the size height becomes a minimum and
+// the vertical padding keeps the lines inside the frame. Fields keep the fixed height: their frame
+// is single-line, and the inner input stretches to it.
+@mixin control-size($name, $grow: false) {
   $cfg: map.get(settings.$control-sizes, $name);
-  height: map.get($cfg, height);
   --s-field-pad-x: var(--s-space-#{map.get($cfg, pad)});
-  padding: 0 var(--s-field-pad-x);
+  @if $grow {
+    min-height: map.get($cfg, height);
+    // Not auto: flex and grid stretch an auto-height item to the row, so the control would grow
+    // next to a taller neighbor. A group that wants equal heights sets auto on its items.
+    height: fit-content;
+    // pad-y is optional: a consumer's own map may not define it.
+    padding: var(--s-space-#{map.get($cfg, pad-y) or 0}) var(--s-field-pad-x);
+  } @else {
+    height: map.get($cfg, height);
+    padding: 0 var(--s-field-pad-x);
+  }
   font-size: var(--s-font-size-#{map.get($cfg, font)});
 }
 

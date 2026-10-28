@@ -3,4 +3,10 @@
   @include tools.reset-inherited;
   display: inline-flex;
   gap: var(--s-space-1);
+
+  // auto brings back the flex stretch that control-size turns off: when a label wraps, the other
+  // items take its height.
+  > .s-toggle {
+    height: auto;
+  }
 }

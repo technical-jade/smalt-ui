@@ -5,13 +5,59 @@ import { SButton } from '../index'
 
 /** Button geometry: happy-dom has neither sizes nor computed styles. */
 describe('SButton · browser', () => {
-  it('an icon button is square and no wider than its height', () => {
+  const heights = [
+    ['sm', 32],
+    ['md', 40],
+    ['lg', 48],
+  ] as const
+
+  it.each(heights)('a single-line %s button with icons keeps the size height', (size, height) => {
     const { container } = render(SButton, {
-      props: { icon: 'x', ariaLabel: 'Delete', size: 'md' },
+      props: { size, icon: 'star', iconRight: 'chevron-down' },
+      slots: { default: 'Save' },
+    })
+    expect(container.querySelector('.s-button')!.getBoundingClientRect().height).toBe(height)
+  })
+
+  it.each(heights)('an icon %s button is square and keeps the size height', (size, height) => {
+    const { container } = render(SButton, {
+      props: { size, icon: 'x', ariaLabel: 'Delete' },
     })
     const box = container.querySelector('.s-button')!.getBoundingClientRect()
-    expect(box.height).toBe(40)
-    expect(box.width).toBe(box.height)
+    expect(box.height).toBe(height)
+    expect(box.width).toBe(height)
+  })
+
+  it('a long label in a narrow container wraps, and the button grows in height', () => {
+    const { container } = render({
+      components: { SButton },
+      template: '<div style="width: 120px"><SButton>Save changes and go further</SButton></div>',
+    })
+    const button = container.querySelector('.s-button')!.getBoundingClientRect()
+    const label = container.querySelector('.s-button__label')!.getBoundingClientRect()
+    expect(label.height).toBeGreaterThan(30)
+    expect(button.height).toBeGreaterThan(40)
+    expect(label.top).toBeGreaterThan(button.top)
+    expect(label.bottom).toBeLessThan(button.bottom)
+  })
+
+  // A flex row stretches its items by default, and a min-height button would follow the tallest.
+  it('next to a tall field in a flex row, a button keeps its own height', () => {
+    const { container } = render({
+      components: { SButton },
+      template: `
+        <div style="display: flex; gap: 8px">
+          <textarea rows="6"></textarea>
+          <SButton>Send</SButton>
+          <SButton icon="x" aria-label="Clear" />
+        </div>`,
+    })
+    const [label, icon] = [...container.querySelectorAll('.s-button')].map((el) =>
+      el.getBoundingClientRect(),
+    )
+    expect(container.querySelector('textarea')!.getBoundingClientRect().height).toBeGreaterThan(80)
+    expect(label!.height).toBe(40)
+    expect([icon!.width, icon!.height]).toEqual([40, 40])
   })
 
   it('flat removes the shadow, a regular button keeps it', () => {

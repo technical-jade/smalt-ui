@@ -37,6 +37,8 @@ const payerOptions = [
 
 ## Sizes
 
+`size` is `sm` (32px), `md` (40px, the default) or `lg` (48px).
+
 <ClientOnly>
 <Demo>
   <SToggle size="sm">sm</SToggle>
@@ -49,6 +51,36 @@ const payerOptions = [
 <template>
   <SToggle size="sm">sm</SToggle>
   <SToggle size="lg">lg</SToggle>
+</template>
+```
+
+  </template>
+</Demo>
+</ClientOnly>
+
+The size height is the height of a single-line toggle and also its minimum. A long label in a
+narrow container wraps onto the next line, and the toggle grows in height instead of letting the
+text out of its frame. Next to a taller neighbor in a flex or grid row the toggle keeps its own
+height. `SToggleGroup` items wrap the same way, and the other items of the group take the height
+of the wrapped one.
+
+<ClientOnly>
+<Demo>
+  <div style="display: grid; gap: 8px; width: 160px">
+    <SToggle size="sm">Show delivered orders only</SToggle>
+    <SToggle size="md">Show delivered orders only</SToggle>
+    <SToggle size="lg">Show delivered orders only</SToggle>
+  </div>
+
+<template #code>
+
+```vue
+<template>
+  <div style="display: grid; gap: 8px; width: 160px">
+    <SToggle size="sm">Show delivered orders only</SToggle>
+    <SToggle size="md">Show delivered orders only</SToggle>
+    <SToggle size="lg">Show delivered orders only</SToggle>
+  </div>
 </template>
 ```
 

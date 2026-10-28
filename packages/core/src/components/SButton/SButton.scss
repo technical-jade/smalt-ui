@@ -30,7 +30,7 @@ $sizes: sm, md, lg;
 
   @each $name in $sizes {
     &--#{$name} {
-      @include tools.control-size($name);
+      @include tools.control-size($name, $grow: true);
     }
   }
 
@@ -106,6 +106,7 @@ $sizes: sm, md, lg;
   // After the sizes: drops their height and padding but keeps their font size.
   &--link {
     height: auto;
+    min-height: 0;
     padding: 0;
     color: var(--s-button-c, var(--s-color-primary-text));
     vertical-align: baseline;

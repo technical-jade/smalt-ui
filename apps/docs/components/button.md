@@ -86,6 +86,12 @@ stays the same. Next to text in a flex row, align the items on the baseline
 
 ## Sizes
 
+Height: `sm` — 32px, `md` (default) — 40px, `lg` — 48px. This is the height of a single-line
+button and also its minimum: a long label in a narrow container wraps onto the next line, and the
+button grows in height instead of letting the text out of its frame. Next to a taller neighbor in
+a flex or grid row the button keeps its own height; in an attached
+[`SButtonGroup`](/components/button-group) the whole row takes the height of the tallest button.
+
 <Demo>
   <SButton size="sm">Small</SButton>
   <SButton size="md">Medium</SButton>

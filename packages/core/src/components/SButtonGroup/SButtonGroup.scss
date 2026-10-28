@@ -32,9 +32,17 @@
     }
   }
 
+  // When a label wraps, the whole row takes its height, so the shared borders still meet; the
+  // auto height below brings back the flex stretch that control-size turns off.
+  &--attached.s-button-group--horizontal {
+    align-items: stretch;
+  }
+
   // The neighbour is pulled onto the shared border, so the two 1px lines read as one. Outer
   // corners keep the button's own radius — the pill of --round, the flat corners of --square.
   &--attached.s-button-group--horizontal > .s-button {
+    height: auto;
+
     &:not(:last-child) {
       border-start-end-radius: 0;
       border-end-end-radius: 0;

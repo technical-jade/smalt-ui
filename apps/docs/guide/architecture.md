@@ -129,6 +129,13 @@ native element behind them render a hidden one that carries the value:
   }
   ```
 
+  `tools.control-size($name)` gives a custom control the height, horizontal padding and font size
+  of the `sm`/`md`/`lg` size from the `$control-sizes` map. With `$grow: true`, as in `SButton`
+  and `SToggle`, the height becomes a minimum and the vertical padding comes from the map's
+  `pad-y` step, so a wrapping label stays inside the frame. Such a control does not stretch to a
+  taller neighbor in a flex or grid row; `height: auto` on it brings the stretch back. A custom
+  `$control-sizes` map without `pad-y` gets no vertical padding.
+
 ## Labs channel
 
 `@smalt-ui/core/labs` holds experimental components. Their public API may change without a
