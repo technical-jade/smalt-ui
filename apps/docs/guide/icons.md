@@ -101,20 +101,27 @@ registerIcons({ 'chevron-down': ChevronsUpDown })
 ```
 
 > You can also import directly from `lucide` (if it is already a dependency); the format is the
-> same. In Nuxt, put `registerIcons(...)` in a plugin (`plugins/icons.ts`) so that registration
-> runs both on the client and during SSR.
+> same. The registry is not reactive: `SIcon` does not redraw if an icon is registered after it has
+> rendered, so register before `app.mount()`. An unregistered name logs a warning in development
+> and the icon stays empty. In Nuxt, put `registerIcons(...)` in a plugin (`plugins/icons.ts`) so
+> that registration runs both on the client and during SSR.
 
 ## Icons in components
 
 Components where an icon makes sense take string props (a registry name or a raw path):
 
-- **Content**: `icon` (leading) and `icon-right` (trailing): `SButton`, `SInput`, `SBadge`,
-  `STag`. `SSelect` also has a leading `icon` inside the field.
-- **Status/state**: override the built-in icon: `SAlert` (`icon`), `SSelect` (`dropdown-icon`),
-  `SAccordion`/`SCollapsible` (`expand-icon`), `SStepper` (`done-icon`), `SPagination`
+- **Content**: `icon` (leading) and `icon-right` (trailing): `SButton`, `SInput`, `SBadge`. Only
+  the leading `icon`: `STag`, `SSelect`, `SAutocomplete`, `SFileUpload`, `SEmptyState`, `SStat`,
+  `SFab`, `SBackTop`, `SListItem`. Items of collections take an `icon` field too: menu items
+  (`SDropdownMenu`, `SContextMenu`, `SMenubar`, `SCommandPalette`), `STabs` tabs, `STree` nodes,
+  `SBreadcrumb` crumbs, `SStepper` steps, `STimeline` events, `SSelect`/`SListbox` options.
+- **Status/state**: override the built-in icon: `SAlert` and `SBanner` (`icon`; `:icon="false"`
+  removes the icon), `SSelect` (`dropdown-icon`), `SAccordionItem`/`SCollapsible` (`expand-icon`),
+  `SCheckbox` (`checked-icon`/`indeterminate-icon`), `SStepper` (`done-icon`), `SPagination`
   (`prev-icon`/`next-icon`), `SRating` (`icon`/`selected-icon`).
-- **Actions**: `SInput`/`SSelect` (`clearable` + `clear-icon`); tag removal: `remove-icon` on
-  `STag` and on `SInput`/`SSelect` in `use-tags` mode.
+- **Actions**: `SInput`/`SSelect`/`SAutocomplete` (`clearable` + `clear-icon`), password reveal in
+  `SInput` (`reveal-icon`/`hide-icon`); removal: `remove-icon` on `STag`, `SFileUpload` and on
+  `SInput` in `use-tags` mode.
 
 ```vue
 <template>

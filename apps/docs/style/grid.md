@@ -21,14 +21,19 @@ window.
 ```
 
 The maximum width and side padding are overridden with variables, no need to know about the SASS
-map:
+map. Set them on the `.s-container` element itself, not on an ancestor: the breakpoint steps are
+written on the container and would override an inherited value.
 
 ```css
-.page {
+.page.s-container {
   --s-container-max-width: 1200px;
   --s-container-padding-x: var(--s-space-6);
 }
 ```
+
+By default the maximum equals the threshold of the current breakpoint: `600px` from `sm`, `1024px`
+from `md`, `1440px` from `lg`, `1920px` from `xl`; on `xs` it is the full width. The side padding is
+`--s-space-4`.
 
 The `.s-container--fluid` modifier removes the maximum on every breakpoint and keeps the side
 padding.
@@ -67,8 +72,9 @@ padding.
 
 ## Columns
 
-Inside `.s-row`, the `.s-col-{N}` class (N = 1…12) sets a width of `N/12`. Columns wrap on
-overflow (the container has `flex-wrap: wrap`).
+Inside `.s-row`, the `.s-col-{N}` class (N = 1…12) sets a width of `N/12`, inside `.s-column` it
+sets a height of `N/12` (the container must have a height). Columns wrap on overflow (the container
+has `flex-wrap: wrap`).
 
 ::: warning Direct children only
 The width is set by the `.s-row > .s-col-{N}` selector: percentages must be relative to the row,
@@ -298,9 +304,9 @@ The example below is a typical case: a labeled button on mobile, a single icon o
   </template>
 </Demo>
 
-`.s-sr-only` removes an element from the screen but keeps it in the flow: focus, keyboard and
-screen reader output keep working. This is how a native control is hidden under custom markup, see
-[the selectable card](/components/card).
+`.s-sr-only` removes an element from the screen but keeps it in the DOM and the accessibility tree:
+focus, keyboard and screen reader output keep working. This is how a native control is hidden under
+custom markup, see [the selectable card](/components/card).
 
 ## Alignment (flex helpers)
 

@@ -41,11 +41,19 @@ global tokens and base styles are imported once in the app entry point:
 
 ```ts
 import '@smalt-ui/core/styles.css'
+import '@smalt-ui/core/fonts.css' // if the app does not load fonts itself
 ```
+
+The resolver finds all library components plus the `ToastProvider` and `ConfirmProvider`
+providers. It does not supply composables or functions (`useToast`, `useConfirm`, validation
+rules): import those from `@smalt-ui/core` as usual. Without the `SUI` plugin, global prop
+defaults, a preset and the theme are set with `installDefaults`/`installLocale`/`injectTheme` or
+`ConfigProvider` (see [Prop defaults](/guide/defaults)).
 
 ## Prefix
 
-If the project needs its own name prefix, set it for both the resolver and the templates:
+If the project needs its own name prefix, set it for both the resolver and the templates. The
+prefix is compared case-insensitively, so `prefix: 'app'` also finds `AppSButton`:
 
 ```ts
 Components({ resolvers: [SUIResolver({ prefix: 'App' })] })

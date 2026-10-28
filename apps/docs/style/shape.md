@@ -10,7 +10,7 @@ global defaults and scale tokens.
 ## The `square` prop
 
 Flip the switch: square corners apply to all groups at once, including inputs, controls, cards
-and floating panels. More than thirty components declare the prop precisely for this
+and floating panels. More than forty components declare the prop precisely for this
 consistency.
 
 <ClientOnly>
@@ -78,14 +78,14 @@ wins.
 The base component radius is **8px**. The values come from the `$radius` SASS map and are
 emitted as tokens, so they can be changed both at build time and at runtime.
 
-| Token             | Value    | Used in                                          |
-| ----------------- | -------- | ------------------------------------------------ |
-| `--s-radius-none` | `0`      | result of the `square` prop                      |
-| `--s-radius-sm`   | `8px`    | field borders (through `--s-field-radius`)       |
-| `--s-radius-md`   | `8px`    | buttons, cards, floating panels                  |
-| `--s-radius-lg`   | `16px`   | in the scale, not used by components             |
-| `--s-radius-xl`   | `28px`   | same                                             |
-| `--s-radius-full` | `9999px` | shape-driven: pill badges, radio, switch, avatar |
+| Token             | Value    | Used in                                                         |
+| ----------------- | -------- | --------------------------------------------------------------- |
+| `--s-radius-none` | `0`      | result of the `square` prop                                     |
+| `--s-radius-sm`   | `8px`    | field borders (through `--s-field-radius`), menu items, tooltip |
+| `--s-radius-md`   | `8px`    | buttons, cards, floating panels (through `--s-surface-radius`)  |
+| `--s-radius-lg`   | `16px`   | in the scale, not used by components                            |
+| `--s-radius-xl`   | `28px`   | same                                                            |
+| `--s-radius-full` | `9999px` | shape-driven: pill badges, radio, switch, avatar                |
 
 To shift the shape of the whole interface without touching props, override the tokens:
 

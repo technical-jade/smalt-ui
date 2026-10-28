@@ -121,27 +121,33 @@ subtree and do not set competing rules on it.
 convenient and expected. But when embedding a **widget into someone else's page**, the global
 `box-sizing` may be unwanted.
 
-This block is wrapped in the `settings.$reset` SASS flag (`true` by default). If you build Smalt UI
-styles from sources, turn it off:
+This block is wrapped in the `settings.$reset` SASS flag (`true` by default). To turn it off,
+build the global styles from the package's SCSS sources instead of the ready-made `styles.css`:
+configure `settings` first, then pull in the aggregator:
 
 ```scss
-@use '@smalt-ui/core/styles' with (
+@use '@smalt-ui/core/scss/settings' with (
   $reset: false
 );
+@use '@smalt-ui/core/scss/index';
 ```
+
+Outside Vite (plain Sass CLI) write the paths with the `pkg:` prefix and run the compiler with
+`--pkg-importer=node`. Components stay `border-box` without the global rule: the property is part
+of `reset-inherited` on their roots.
 
 ::: warning
 The flag applies **at SASS build time**. The prebuilt `dist/styles.css` already contains the
-normalize; to exclude it, compile the library styles from sources with `$reset: false`. The reset
-is deliberately minimal, so in most cases there is no need to turn it off.
+normalize; to exclude it, compile the global styles from sources as shown above. The reset is
+deliberately minimal, so in most cases there is no need to turn it off.
 :::
 
 ## Portals (overlays)
 
-Reka UI teleports floating layers (Dialog, Popover, Tooltip, Select, Toast, Drawer,
-DropdownMenu, ContextMenu, Menubar, HoverCard) to the end of `<body>`, **outside** the `.s-root`
-container. To keep isolation working there, `reset-inherited` is also applied directly to the
-roots of portal content (`__content`/`__overlay`/viewport). Nothing is required from you.
+Reka UI teleports floating layers (Dialog, AlertDialog, Drawer, Popover, HoverCard, Tooltip,
+Select, DropdownMenu, ContextMenu, Menubar, Toast, DatePicker panels and others) to the end of
+`<body>`, **outside** the `.s-root` container. To keep isolation working there, `reset-inherited`
+is also applied directly to the roots of portal content (`__content`/`__overlay`/viewport). Nothing is required from you.
 
 With SSR (Nuxt/VitePress), wrap demos of components with portals in `<ClientOnly>`; this avoids
 hydration mismatch warnings.

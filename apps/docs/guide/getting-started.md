@@ -8,8 +8,20 @@ Smalt UI is a component library for Vue 3 and Nuxt built on design tokens and Re
 pnpm add @smalt-ui/core
 ```
 
-`@smalt-ui/core` declares `vue` and `reka-ui` as peer dependencies; your Vue 3 app already has
-them.
+`vue` (3.5+) and `reka-ui` (2.10+) are peer dependencies: the library takes them from your app,
+so install `reka-ui` alongside if you do not have it yet:
+
+```bash
+pnpm add reka-ui
+```
+
+The date and time components (`SDateField`, `SDatePicker`, `SCalendar` and others) take
+`@internationalized/date` objects. That package is an optional peer; install it if you use those
+fields:
+
+```bash
+pnpm add @internationalized/date
+```
 
 ## Setup (Vue 3)
 
@@ -64,7 +76,27 @@ createApp(App)
   .mount('#app')
 ```
 
-See [Prop defaults](/guide/defaults) and [Presets](/guide/presets).
+The `theme` option overrides individual theme tokens (see [Theming](/theming)) and `prefix` adds
+a prefix to the names of globally registered components. See [Prop defaults](/guide/defaults) and
+[Presets](/guide/presets).
+
+### Toasts and confirmations
+
+The imperative APIs `useToast` and `useConfirm` show notifications and dialogs through providers.
+Place them once at the app root; the plugin registers them globally:
+
+```vue
+<!-- App.vue -->
+<template>
+  <div class="s-root s-root--app">
+    <RouterView />
+    <ToastProvider />
+    <ConfirmProvider />
+  </div>
+</template>
+```
+
+See the [Toast](/components/toast) and [AlertDialog](/components/alert-dialog) pages.
 
 ### Per-component imports (tree-shaking)
 
@@ -101,4 +133,5 @@ the styles, applies the isolation container and sets up SSR and the theme.
 - [Auto-import](/guide/auto-import): components without imports in a plain Vite project.
 - [Prop defaults](/guide/defaults): prop values set once for the whole app.
 - [Presets](/guide/presets): "theme + defaults" in one object, interface density.
+- [Validation](/guide/validation): field rules, `SForm` and schemas.
 - [Components](/components/button): examples and API.

@@ -62,16 +62,18 @@ they are useful rather than to the outermost element:
   `SRadioGroup`, `SSlider`, `SRating`, `SListbox`, `SEditable`, `SFileUpload`, `SPinInput`) keep
   `class`/`style` on the outer field and pass everything else to the control (the group of radios,
   checkboxes or code cells, the first slider thumb, the hidden `<input type="file">`), so
-  `aria-*`, `data-testid` and `@keydown` reach the element that uses them. They override the control's own attributes such as `inputmode` or `placeholder`, but not
-  the links `SFormField` builds (`id`, `aria-describedby`, `aria-labelledby`, `aria-invalid`):
-  those keep the control tied to its label, hint and error, and the name is set with `ariaLabel`.
+  `aria-*`, `data-testid` and `@keydown` reach the element that uses them. They override the
+  control's own attributes such as `inputmode` or `placeholder`, but not the links `SFormField`
+  builds (`id`, `aria-describedby`, `aria-labelledby`, `aria-invalid`): those keep the control tied
+  to its label, hint and error, and the name is set with `ariaLabel`.
 - **`SScrollArea`** passes `aria-*` and `role` to its focusable viewport and keeps the rest on the
   root, so a name and a role describe the tab stop that receives focus.
 - Other components keep them on their root element.
 
-Composite fields (`SSelect`, `SNumberField`, `SPinInput`, the date and time fields) emit `focus`
-and `blur` for the field as a whole: moving between segments, cells, buttons or into the open
-list does not count.
+Fields built from several focusable parts (`SSelect`, `SAutocomplete`, `SNumberField`,
+`SPinInput`, `SColorField`, `SCheckboxGroup`, `SRadioGroup`, `SRating`, the date and time fields)
+emit `focus` and `blur` for the field as a whole: moving between segments, cells, buttons or into
+the open panel does not count.
 
 ## Native forms
 
@@ -82,9 +84,10 @@ native element behind them render a hidden one that carries the value:
 | Component                   | Submitted value                                                      |
 | --------------------------- | -------------------------------------------------------------------- |
 | `SSelect` with `multiple`   | one entry per selected value (`formData.getAll(name)`)               |
+| `SCheckboxGroup`            | one entry per checked value (`formData.getAll(name)`)                |
 | `SAutocomplete`             | the suggestion's `value`, not the text in the input                  |
 | `SDateField`, `SDatePicker` | ISO date, `2026-01-02` (date-time with a time `granularity`)         |
-| `STimeField`                | ISO time, `09:30:00`                                                 |
+| `STimeField`, `STimePicker` | ISO time, `09:30:00`                                                 |
 | `SDateRangePicker`          | ISO interval, `2026-01-02/2026-01-05`; empty until both ends are set |
 | `SSlider` with a range      | `name[0]`, `name[1]`                                                 |
 | `SInput` with `use-tags`    | one entry per tag, `name[0]`, `name[1]`, …                           |
@@ -97,7 +100,9 @@ native element behind them render a hidden one that carries the value:
 - Floating layers use Reka UI **portals** (teleport to `<body>`). In some environments (static
   rendering of demos) wrap them in `<ClientOnly>`.
 - Toast notifications work through a single `ToastProvider` at the app root (imperative
-  `useToast` API).
+  `useToast` API), and confirmation dialogs through a single `ConfirmProvider` (`useConfirm`).
+  Calling `useConfirm` on the server shows no dialog and resolves to `false` right away: ask for
+  confirmation from event handlers or `onMounted`.
 
 ## Package and types
 
@@ -110,7 +115,9 @@ native element behind them render a hidden one that carries the value:
 - **Node ≥ 22.12.** A modern build environment is required.
 - **Entry points:** `@smalt-ui/core` (components, composables, providers), `@smalt-ui/core/icons`
   (lucide re-export), `@smalt-ui/core/resolver` (auto-import for `unplugin-vue-components`,
-  see [Auto-import](/guide/auto-import)), `@smalt-ui/core/labs`, `@smalt-ui/core/styles.css`,
+  see [Auto-import](/guide/auto-import)), `@smalt-ui/core/labs`, `@smalt-ui/core/color-mode-script`
+  (the theme script that runs before first paint, see
+  [Theming](/theming#theme-before-first-paint)), `@smalt-ui/core/styles.css`,
   `@smalt-ui/core/fonts.css` (+ font files `@smalt-ui/core/fonts/*`) and `@smalt-ui/core/scss/*`,
   the SCSS sources of tokens and mixins.
 - **SCSS subpath.** `@smalt-ui/core/scss/settings` exposes SASS maps (`$breakpoints`, `$spacing`,

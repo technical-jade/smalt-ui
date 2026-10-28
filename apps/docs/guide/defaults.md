@@ -47,7 +47,21 @@ import { ConfigProvider } from '@smalt-ui/core'
 </template>
 ```
 
-Nested providers override outer ones.
+A nested provider refines the outer one per prop (see [Configuration layers](#configuration-layers)):
+if the outer one sets `SButton: { variant: 'outline' }` and the nested one sets
+`global: { size: 'sm' }`, both values apply inside the subtree.
+
+Without the `SUI` plugin (for example with [auto-import](/guide/auto-import)), app-level defaults
+are installed with `installDefaults`:
+
+```ts
+import { createApp } from 'vue'
+import { installDefaults } from '@smalt-ui/core'
+
+const app = createApp(App)
+installDefaults(app, { global: { size: 'sm' } })
+app.mount('#app')
+```
 
 ## In Nuxt
 
@@ -87,6 +101,12 @@ Defaults stack in layers and **per prop**: preset → plugin `defaults` or the N
 entirely, so a `ConfigProvider` added for one locale or one default does not cancel the app
 configuration.
 A value of `undefined` in a layer counts as not set and keeps the value of the layer below.
+
+Group components add one more layer for their children. `SToggleGroup` always passes its `size` and
+`variant` down to its `SToggle` items, and `SButtonGroup` passes the props set on it to its
+`SButton` children (`size`, `variant`, `color`, `square`, `round`, `disabled`). These values shadow
+the app-level defaults of `SToggle` and `SButton`, the same way `size` does: to change them for a
+group, set the group's own props or `SToggleGroup`/`SButtonGroup` defaults.
 
 ## Styling is configured with defaults too
 

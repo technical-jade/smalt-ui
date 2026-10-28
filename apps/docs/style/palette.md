@@ -87,10 +87,15 @@ Every palette color has the classes `.s-text-<color>` (text color) and `.s-bg-<c
 ## The `color` prop on components
 
 The `color` prop of accent components (`SButton`, `SBadge`, `SCheckbox`, `SAlert`, `SProgress`,
-`SSlider`, `STabs`, `SStepper` and others) takes the same palette names: `<SButton color="teal">`,
-`color="teal-10"`, `color="primary"`. It overrides the variant color; states (`hover`/`active`) are
-derived automatically. On a light fill, set the text color with the `text-color` prop
-(`<SButton color="yellow" text-color="dark">`). Details are on the component pages.
+`SSlider`, `STabs`, `SStepper` and others) takes the same palette names: a brand color
+(`color="primary"`), a Material family or one of its shades (`color="teal"`, `color="teal-10"`), a
+neutral tone (`color="gray-500"`), `white`/`black`. It overrides the variant color; states
+(`hover`/`active`) are derived automatically: the color darkens in the light theme and lightens in
+the dark one.
+
+Text and icons on a fill are white by default. On a light fill, set the text color with the
+`text-color` prop (`<SButton color="yellow" text-color="dark">`). Details are on the component
+pages.
 
 The props also take one name that is not a palette color: `neutral`, the regular text color of
 the theme (`--s-color-text`). Unlike `gray-*`, it changes with the theme, and the content on a

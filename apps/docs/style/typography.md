@@ -17,7 +17,8 @@ text by default:
 | `--s-font-mono`    | JetBrains Mono + system | monospaced values                                            |
 
 Font files are loaded through a separate entry, `@smalt-ui/core/fonts.css`; how to replace them or
-serve them yourself is described in [Theming](/theming#fonts).
+serve them yourself is described in [Theming](/theming#fonts). JetBrains Mono is not bundled: if it
+is not installed, the system monospaced font is used.
 
 ## Scale
 
@@ -52,20 +53,20 @@ The roles follow the Material typography set (`h1…h6`, `subtitle`, `body`, `ca
   </template>
 </Demo>
 
-| Class               | Size     | Weight          |
-| ------------------- | -------- | --------------- |
-| `.s-text-h1`        | 3.75rem  | 300             |
-| `.s-text-h2`        | 3rem     | 300             |
-| `.s-text-h3`        | 2.25rem  | 400             |
-| `.s-text-h4`        | 1.875rem | 400             |
-| `.s-text-h5`        | 1.5rem   | 400             |
-| `.s-text-h6`        | 1.25rem  | 500             |
-| `.s-text-subtitle1` | 1rem     | 400             |
-| `.s-text-subtitle2` | 0.875rem | 500             |
-| `.s-text-body1`     | 1rem     | 400             |
-| `.s-text-body2`     | 0.875rem | 400             |
-| `.s-text-caption`   | 0.75rem  | 400             |
-| `.s-text-overline`  | 0.75rem  | 500 (uppercase) |
+| Class               | Size     | Weight          | Line height |
+| ------------------- | -------- | --------------- | ----------- |
+| `.s-text-h1`        | 3.75rem  | 300             | 1.25        |
+| `.s-text-h2`        | 3rem     | 300             | 1.25        |
+| `.s-text-h3`        | 2.25rem  | 400             | 1.25        |
+| `.s-text-h4`        | 1.875rem | 400             | 1.25        |
+| `.s-text-h5`        | 1.5rem   | 400             | 1.25        |
+| `.s-text-h6`        | 1.25rem  | 500             | 1.25        |
+| `.s-text-subtitle1` | 1rem     | 400             | 1.5         |
+| `.s-text-subtitle2` | 0.875rem | 500             | 1.5         |
+| `.s-text-body1`     | 1rem     | 400             | 1.5         |
+| `.s-text-body2`     | 0.875rem | 400             | 1.5         |
+| `.s-text-caption`   | 0.75rem  | 400             | 1.5         |
+| `.s-text-overline`  | 0.75rem  | 500 (uppercase) | 1.75        |
 
 ## Weight
 
@@ -204,8 +205,11 @@ lines respectively.
 Scale values are build-time SASS maps with `!default`, which can be overridden before `@use`:
 
 - `$typography`: roles (`h1…overline`), as `(size, weight, leading, tracking)` objects;
-- `$font-size`: font sizes (`xs…6xl`), `$font-weight`: weights (`thin…black`);
+- `$font-size`: font sizes (`xs…6xl`), `$font-weight`: weights (`thin…black`), `$line-height`:
+  leading (`tight`, `normal`, `relaxed`);
 - `$font-sans` / `$font-heading` / `$font-mono`: families.
 
-Sizes and weights refer to the `--s-font-size-*` / `--s-font-weight-*` CSS variables, so individual
-scale values can also be changed at runtime by overriding the relevant variable.
+The size, weight and leading of the roles refer to the `--s-font-size-*`, `--s-font-weight-*` and
+`--s-line-height-*` CSS variables, so individual scale values can also be changed at runtime by
+overriding the relevant variable. Tracking (`letter-spacing`) is built into the classes and changes
+only through `$typography`.

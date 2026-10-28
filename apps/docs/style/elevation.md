@@ -92,21 +92,26 @@ no way to bring the shadow back on a single card.
 
 ## Default levels
 
-| Level | Who                                                                   |
-| ----- | --------------------------------------------------------------------- |
-| 3     | floating panels: lists, menus, popovers, calendars, toasts            |
-| 2     | tooltip                                                               |
-| 1     | button (filled variants), `SCard variant="elevated"`, toolbar         |
-| —     | everything else: toggles, inputs and navigation have no shadow at all |
+| Level | Who                                                                                      |
+| ----- | ---------------------------------------------------------------------------------------- |
+| 3     | floating panels: lists, menus, popovers, calendars, toasts; `SCommandPalette`            |
+| 2     | tooltip; `SAppBar` with `elevate-on-scroll`, once the page is scrolled                   |
+| 1     | filled buttons (`primary`, `secondary`, `negative`), `SCard variant="elevated"`, toolbar |
+| —     | everything else: toggles, inputs and navigation have no shadow at all                    |
 
 On hover a button rises one step, also with an explicit `elevation`: level 3 becomes 4 under the
-pointer. This keeps the material physics intact.
+pointer, and 5 is the ceiling. A button with `elevation="0"` or `flat` stays flat under the pointer
+too.
+
+`SAppBar` has no shadow without props and gets level 2 only with `elevate-on-scroll` after the page
+scrolls. An explicit `elevation` makes the bar's shadow permanent.
 
 ## Modal windows have no such prop
 
 `SDialog`, `SAlertDialog` and `SDrawer` do not turn off their shadow. It is not decoration there:
 the window lies over a dimmed backdrop, and the shadow is the only thing that separates its edge
-from the backdrop.
+from the backdrop. The exception is `SCommandPalette`: it has `flat` and `elevation`, level 3 by
+default.
 
 For the same reason the shadow of the `SSlider` thumb is not configurable: it is part of its
 physical metaphor, not surface styling.
@@ -138,6 +143,12 @@ The values differ between the themes, so a change sets each one with its own sel
 :root[data-theme='dark'] {
   --s-shadow-key-opacity: 28%;
 }
+/* the dark theme from the system setting, while data-theme is not set */
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme='light']) {
+    --s-shadow-key-opacity: 28%;
+  }
+}
 ```
 
 To change the shadow of one component without touching props, use these variables:
@@ -147,6 +158,8 @@ To change the shadow of one component without touching props, use these variable
 | `--s-surface-elevation`                               | all floating panels (shared, they live in `body`) |
 | `--s-button-elevation` / `--s-button-elevation-hover` | button at rest and under the pointer              |
 | `--s-card-elevation`                                  | card                                              |
+| `--s-app-bar-elevation`                               | `SAppBar`                                         |
+| `--s-command-palette-elevation`                       | `SCommandPalette`                                 |
 | `--s-toolbar-elevation`                               | toolbar                                           |
 | `--s-tooltip-elevation`                               | tooltip                                           |
 

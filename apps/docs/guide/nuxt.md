@@ -25,13 +25,14 @@ styles and theme are set up. Everything else is optional.
 
 ## What the module does
 
-- **Auto-import** of all `@smalt-ui/core` components (with a prefix, if set).
-  Only components are auto-imported, `SForm` included. Composables, `useValidation` and the
+- **Auto-import** of all `@smalt-ui/core` components (with a prefix, if set), `SForm` and the
+  `ToastProvider` and `ConfirmProvider` providers included. `ConfigProvider` is not auto-imported:
+  import it explicitly. Composables (`useToast`, `useConfirm`, `useValidation`, …) and the
   validation rules (`required`, `email`, …) are imported explicitly from `@smalt-ui/core`:
   `import { required, email } from '@smalt-ui/core'`.
 - **Styles**: adds `@smalt-ui/core/styles.css` to `nuxt.options.css`.
 - **Fonts**: loads the Inter font, serves the files through Nitro and adds
-  `<link rel="preload">` for the base subsets (see [below](#fonts)).
+  `<link rel="preload">` for the basic Latin subset (see [below](#fonts)).
 - **Isolation container**: applies `.s-root .s-root--app` to the app root (`#__nuxt`), so there is
   no need to wrap it by hand (see [Isolation](/guide/isolation)).
 - **Color mode**: initializes the theme on the client (`useColorMode`) and adds an early inline
@@ -76,10 +77,16 @@ export default defineNuxtConfig({
 | `defaults`   | —       | Prop defaults: the `global` key and component names, see [Prop defaults](/guide/defaults).    |
 | `preset`     | —       | Name of a built-in preset (`compact`/`comfortable`), see [Presets](/guide/presets).           |
 
+Module options reach the generated plugins through JSON, so functions in `defaults` (for example
+`isDateDisabled`) are lost; the module warns about them at build time. Set such defaults and a
+custom preset in your own plugin with `installDefaults`, see [Presets](/guide/presets#in-nuxt).
+Unlike `createSUI`, the module has no `theme` option: set theme tokens with CSS variables or
+`injectTheme` in a plugin (see [Theming](/theming)).
+
 ## Fonts {#fonts}
 
 The module adds the `@font-face` rules, serves the files from the package at stable URLs
-(`/_fonts/smalt/…`) and preloads basic Latin and Cyrillic, the subsets the first screen is set in.
+(`/_fonts/smalt/…`) and preloads the basic Latin subset, the one the first screen is set in.
 
 ```ts
 sui: {
@@ -100,7 +107,7 @@ Available subsets: `latin`, `latin-ext`, `cyrillic`, `cyrillic-ext`. Only `latin
 by default: the browser downloads the others by `unicode-range` only when the page contains such
 characters, while preload would force the download every time. Add a subset to the list if the
 first screen always uses its characters, for example `latin-ext` for accented letters or
-`cyrillic` for a Russian interface.
+`cyrillic` for a Cyrillic interface.
 
 ### The app already loads Inter
 

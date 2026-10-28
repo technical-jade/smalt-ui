@@ -113,13 +113,17 @@ The same directions with the `m` type. There are also horizontal `auto` classes:
 | `x`    | left + right | `padding-left` + `padding-right` (and margin) |
 | `y`    | top + bottom | `padding-top` + `padding-bottom` (and margin) |
 
+The directions are physical: `l` is always the left side and `r` always the right, `dir="rtl"`
+included.
+
 ## Responsiveness
 
 Every class has breakpoint variants `.s-{type}{dir}-{bp}-{size}` that apply from the given
 breakpoint and up (mobile-first): `xs 0`, `sm 600px`, `md 1024px`, `lg 1440px`, `xl 1920px` (the
 same system as the [grid](/style/grid#responsiveness)). For example, `.s-pa-2 .s-pa-md-6` gives
 `0.5rem` padding on a narrow screen and `1.5rem` from `1024px`. It works for `auto` too:
-`.s-mx-md-auto`.
+`.s-mx-md-auto`. `xs` has no infix: those are the base classes without a breakpoint (`.s-pa-2`,
+not `.s-pa-xs-2`).
 
 ## Class name
 
@@ -136,4 +140,5 @@ plus the `auto` classes.
 
 The scale is the `$spacing` SASS map with `!default`: override it before `@use`, and the classes
 (as well as the `--s-space-*` tokens and all components) pick up the new values. A single spacing
-value can also be changed at runtime by overriding a specific `--s-space-*` variable.
+value can also be changed at runtime by overriding a specific `--s-space-*` variable. The spacing
+classes live in the `smalt.utilities` layer, so any app rule without a layer overrides them.

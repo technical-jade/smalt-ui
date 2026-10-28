@@ -12,8 +12,8 @@ on them.
    of colors is on the [Palette](/style/palette) page.
 2. **Semantic**: meaningful roles such as `--s-color-primary`, `--s-color-bg`, `--s-color-text`,
    `--s-color-negative`. They refer to primitives; derived states (`-hover`/`-active`/`-subtle`)
-   are computed from the base with `color-mix`. **Override these (or the base brand tokens) to
-   customize.**
+   are computed from the base brand token with `color-mix`. **To customize, override the brand
+   tokens; override a semantic role only when you need one specific state.**
 3. **Component**: component tokens refer to semantic roles. Change a semantic token and the look of
    all components changes consistently.
 
@@ -60,8 +60,12 @@ toggle() // switch light ↔ dark
 ```
 
 - `auto` follows the system theme (`prefers-color-scheme`) and reacts to its changes.
-- The state is an app-wide singleton: all `useColorMode()` calls share one state.
-- SSR-safe (does not touch `window`/`document` on the server).
+- `toggle()` starts from the applied scheme and resets `auto`: afterwards the mode is an explicit
+  `light` or `dark`.
+- The state is an app-wide singleton: all `useColorMode()` calls share one state. The options
+  (`storageKey`, `initialMode`) are read on the first call only; later ones ignore them with a
+  warning in development.
+- SSR-safe: on the server it does not touch `window`/`document` and treats the scheme as light.
 
 ## Theme before the first paint {#theme-before-first-paint}
 
@@ -79,6 +83,9 @@ import { colorModeScript } from '@smalt-ui/core'
 colorModeScript() // IIFE string; inline it in <head> before the styles
 colorModeScript({ storageKey: 'my-key', initialMode: 'light' })
 ```
+
+If you change `storageKey` or `initialMode`, pass the same values to `useColorMode()` too,
+otherwise the script and the app read different keys.
 
 The function is also available from the separate `@smalt-ui/core/color-mode-script` subpath, which
 pulls in no components or styles, so it can be imported in Node, in build configs and in SSR
@@ -173,15 +180,33 @@ container. Below, `color-outline` is overridden on a block of fields:
 
 <template #code>
 
-```ts
-import { createTheme, injectTheme } from '@smalt-ui/core'
-
-injectTheme(createTheme({ 'color-outline': '#8a6d3b' }))
+```vue
+<template>
+  <div style="--s-color-outline: #8a6d3b; display: flex; flex-wrap: wrap; gap: 16px">
+    <SInput
+      label="City"
+      floating-label="pinned"
+      placeholder="London"
+    />
+    <SNumberField
+      label="Parcels"
+      floating-label
+      :model-value="1"
+      :min="1"
+    />
+    <SButton variant="outline">Get a quote</SButton>
+  </div>
+</template>
 ```
 
   </template>
 </Demo>
 </ClientOnly>
+
+The same override can be written as a theme scoped to a container with the `selector` option of
+`createTheme`: `injectTheme(createTheme({ 'color-outline': '#8a6d3b' }, { selector: '.checkout' }),
+'checkout')` styles everything inside `.checkout`. The second argument of `injectTheme` names the
+`<style>` tag, so several themes can coexist.
 
 The derived states of the status roles (`color-positive-hover`, `color-warning-subtle` and so on)
 are not part of `SemanticTokenName`: they are computed from the brand color, so set that instead.
