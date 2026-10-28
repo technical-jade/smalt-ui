@@ -179,6 +179,7 @@ describe('STimeline', () => {
 
     const [draft, shipped] = container.querySelectorAll<HTMLElement>('.s-timeline__item')
     expect(draft!.style.cssText).toContain('--s-timeline-item-c: var(--s-color-text)')
+    expect(draft!.style.cssText).toContain('--s-timeline-item-c-on: var(--s-color-surface)')
     expect(shipped!.style.cssText).toContain('--s-timeline-item-c-on: var(--s-color-text)')
   })
 

@@ -171,36 +171,39 @@
 // the data-state that Reka sets on DialogOverlay/DialogContent: on close Reka waits for
 // animationend and only then unmounts. $from holds the window properties at the start of the
 // entry and at the end of the exit. Include it at the top level of a file: it emits @keyframes.
+// The rules sit under no-preference: a reset under reduce would lose to the [data-state] selectors.
 @mixin modal-motion($block, $from) {
-  .#{$block}__overlay,
-  .#{$block}__content {
-    &[data-state='open'] {
-      animation: var(--s-duration-slow) var(--s-ease-standard);
+  @media (prefers-reduced-motion: no-preference) {
+    .#{$block}__overlay,
+    .#{$block}__content {
+      &[data-state='open'] {
+        animation: var(--s-duration-slow) var(--s-ease-standard);
+      }
+
+      // forwards, so the window does not flash back into place before it unmounts.
+      &[data-state='closed'] {
+        animation: var(--s-duration-base) var(--s-ease-standard) forwards;
+      }
     }
 
-    // forwards, so the window does not flash back into place before it unmounts.
-    &[data-state='closed'] {
-      animation: var(--s-duration-base) var(--s-ease-standard) forwards;
-    }
-  }
+    .#{$block}__overlay {
+      &[data-state='open'] {
+        animation-name: #{$block}-overlay-in;
+      }
 
-  .#{$block}__overlay {
-    &[data-state='open'] {
-      animation-name: #{$block}-overlay-in;
-    }
-
-    &[data-state='closed'] {
-      animation-name: #{$block}-overlay-out;
-    }
-  }
-
-  .#{$block}__content {
-    &[data-state='open'] {
-      animation-name: #{$block}-content-in;
+      &[data-state='closed'] {
+        animation-name: #{$block}-overlay-out;
+      }
     }
 
-    &[data-state='closed'] {
-      animation-name: #{$block}-content-out;
+    .#{$block}__content {
+      &[data-state='open'] {
+        animation-name: #{$block}-content-in;
+      }
+
+      &[data-state='closed'] {
+        animation-name: #{$block}-content-out;
+      }
     }
   }
 
@@ -229,13 +232,6 @@
       @each $prop, $value in $from {
         #{$prop}: $value;
       }
-    }
-  }
-
-  @media (prefers-reduced-motion: reduce) {
-    .#{$block}__overlay,
-    .#{$block}__content {
-      animation: none;
     }
   }
 }

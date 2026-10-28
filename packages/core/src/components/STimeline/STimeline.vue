@@ -82,6 +82,8 @@ function itemStyle(item: STimelineItem) {
   const vars: Record<string, string> = {}
   if (item.color) vars['--s-timeline-item-c'] = colorVar(item.color)
   if (item.textColor) vars['--s-timeline-item-c-on'] = colorVar(item.textColor)
+  // As in useColorProp: a fill in the theme text color is light in the dark theme.
+  else if (item.color === 'neutral') vars['--s-timeline-item-c-on'] = 'var(--s-color-surface)'
   return Object.keys(vars).length ? vars : undefined
 }
 </script>

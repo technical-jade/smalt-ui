@@ -11,6 +11,7 @@ import { SInput } from '../components/SInput'
 import { SList } from '../components/SList'
 import { SListItem } from '../components/SListItem'
 import { SStat } from '../components/SStat'
+import { STimeline } from '../components/STimeline'
 
 /**
  * Contrast can only be measured with layout and computed styles: in happy-dom axe silently
@@ -132,6 +133,20 @@ describe.each(['light', 'dark'] as const)('text contrast · theme %s', (theme) =
       AA_NORMAL,
     )
     expect(contrastOf(container.querySelector('.s-alert__body')!)).toBeGreaterThanOrEqual(AA_NORMAL)
+  })
+
+  it('icon of a completed timeline item with the neutral color', () => {
+    const { container } = mount(
+      h(STimeline, {
+        items: [{ title: 'Draft', color: 'neutral' }, { title: 'Review' }],
+        modelValue: 1,
+      }),
+      theme,
+    )
+    const indicator = container.querySelector(
+      '.s-timeline__item--completed .s-timeline__indicator',
+    )!
+    expect(contrastOf(indicator)).toBeGreaterThanOrEqual(AA_NORMAL)
   })
 
   it('adjacent-month days in the calendar', () => {
