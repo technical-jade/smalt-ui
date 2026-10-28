@@ -211,8 +211,9 @@ By default the label stands above the field. With `floating-label` it sits on th
 frame, so the field lines up with neighboring fields that have a
 [floating label](/components/input). The step buttons take the field edges, so the label is
 always raised rather than resting inside an empty frame; `floating-label="pinned"` works the
-same. A `floatingLabel` default in [`global`](/guide/defaults) turns it on here too. The label and
-the frame (`.s-number-field__control`) sit in a shared `.s-number-field__wrap` wrapper.
+same. A label too long for the frame is cut off with an ellipsis once it does not fit at its
+reduced size. A `floatingLabel` default in [`global`](/guide/defaults) turns it on here too. The
+label and the frame (`.s-number-field__control`) sit in a shared `.s-number-field__wrap` wrapper.
 
 <ClientOnly>
 <Demo>

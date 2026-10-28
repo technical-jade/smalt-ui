@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { useTemplateRef } from 'vue'
+import { useTemplateRef, type ComponentPublicInstance } from 'vue'
 import {
   DateRangePickerField as RekaDateRangePickerField,
   DateRangePickerInput,
@@ -12,13 +12,14 @@ import SegmentedFieldBridge, {
   type SegmentedFieldBridgeExposed,
 } from '../../internal/SegmentedFieldBridge'
 import { useMessages } from '../../composables'
+import { useLeadingLabelOffset } from '../../internal/useLeadingLabelOffset'
 
 /**
  * Private part of SDateRangePicker: the segmented range field (start – end) + the open-calendar
  * button. Rendered inside the wrapper's `DateRangePickerRoot`. Styles are global BEM from
  * SDateRangePicker.scss.
  */
-defineProps<{
+const props = defineProps<{
   fieldId: string
   labelId?: string
   label?: string
@@ -44,18 +45,27 @@ const emit = defineEmits<{
 }>()
 const bridge = useTemplateRef<SegmentedFieldBridgeExposed>('bridge')
 
-defineSlots<{
+const slots = defineSlots<{
   prepend?: (props: Record<string, never>) => unknown
   append?: (props: Record<string, never>) => unknown
 }>()
+
+const frame = useTemplateRef<ComponentPublicInstance>('frame')
+const labelOffset = useLeadingLabelOffset(
+  () => frame.value,
+  '.s-date-range-picker__segment',
+  () => !!props.floating && !!slots.prepend,
+)
 </script>
 
 <template>
   <RekaDateRangePickerField
     :id="fieldId"
+    ref="frame"
     v-slot="{ segments }"
     class="s-date-range-picker__control"
     :class="{ 's-date-range-picker__control--floating': floating }"
+    :style="labelOffset"
     :data-filled="filled || undefined"
     :data-label-pinned="(floating && pinned) || undefined"
     :aria-labelledby="labelId"

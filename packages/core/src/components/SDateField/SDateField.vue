@@ -11,6 +11,7 @@ import SegmentedFieldBridge, {
 import { useDefaults, useFormatLocale, useMessages } from '../../composables'
 import { useFieldFocus } from '../../internal/useFieldFocus'
 import { focusFirstSegment, useFieldValidation } from '../../internal/useFieldValidation'
+import { useLeadingLabelOffset } from '../../internal/useLeadingLabelOffset'
 import type { SDateFieldProps } from './types'
 
 const props = withDefaults(defineProps<SDateFieldProps>(), {
@@ -65,7 +66,13 @@ const bridge = useTemplateRef<SegmentedFieldBridgeExposed>('bridge')
 const floating = computed(() => p.floatingLabel && !!p.label)
 const pinned = computed(() => floating.value && p.floatingLabel === 'pinned')
 const filled = computed(() => model.value != null)
-const hasLeading = computed(() => !!slots.prepend)
+const hasLeading = () => !!slots.prepend
+const frame = useTemplateRef<HTMLElement>('frame')
+const labelOffset = useLeadingLabelOffset(
+  () => frame.value,
+  '.s-date-field__control',
+  () => floating.value && hasLeading(),
+)
 </script>
 
 <template>
@@ -89,13 +96,15 @@ const hasLeading = computed(() => !!slots.prepend)
       #default="{ id: fieldId, labelId, describedBy, invalid: fieldInvalid, label: fieldLabel }"
     >
       <div
+        ref="frame"
         class="s-date-field__wrap"
         :class="{
           's-date-field__wrap--invalid': fieldInvalid,
           's-date-field__wrap--disabled': p.disabled,
           's-date-field__wrap--floating': floating,
-          's-date-field__wrap--has-leading': floating && hasLeading,
+          's-date-field__wrap--has-leading': floating && hasLeading(),
         }"
+        :style="labelOffset"
         :data-filled="filled || undefined"
         :data-label-pinned="pinned || undefined"
         :data-invalid="fieldInvalid || undefined"

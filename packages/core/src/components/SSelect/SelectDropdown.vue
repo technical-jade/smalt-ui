@@ -14,6 +14,7 @@ import {
 import { SIcon } from '../SIcon'
 import SelectTags from './SelectTags.vue'
 import { useMessages } from '../../composables'
+import { useLeadingLabelOffset } from '../../internal/useLeadingLabelOffset'
 import type { SSelectOption } from './types'
 
 /**
@@ -71,13 +72,18 @@ const hasValue = computed(() =>
 )
 const showClear = computed(() => props.clearable && !props.disabled && hasValue.value)
 
-const hasLeading = computed(() => !!props.icon || !!slots.prepend)
+const hasLeading = () => !!props.icon || !!slots.prepend
 
 /**
  * The popup anchor is the whole frame, not the narrow trigger: Reka takes the popup width and
  * position from PopperAnchor.reference.
  */
 const control = ref<HTMLElement>()
+const labelOffset = useLeadingLabelOffset(
+  () => control.value,
+  '.s-select__trigger',
+  () => !!props.floating && hasLeading(),
+)
 
 const trigger = ref<{ $el: HTMLElement }>()
 
@@ -106,8 +112,9 @@ const removeValue = (v: string) => {
         's-select__control--disabled': disabled,
         's-select__control--tags': useTags,
         's-select__control--floating': floating,
-        's-select__control--has-leading': floating && hasLeading,
+        's-select__control--has-leading': floating && hasLeading(),
       }"
+      :style="labelOffset"
       :data-filled="hasValue || undefined"
       :data-label-pinned="(floating && pinned) || undefined"
       :data-invalid="invalid || undefined"

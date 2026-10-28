@@ -26,6 +26,7 @@ import { useFieldAttrs } from '../../internal/useFieldAttrs'
 import { useFieldFocus } from '../../internal/useFieldFocus'
 import { useFieldValidation } from '../../internal/useFieldValidation'
 import { useKeepCaretKeys } from '../../internal/useKeepCaretKeys'
+import { useLeadingLabelOffset } from '../../internal/useLeadingLabelOffset'
 import type { SAutocompleteOption, SAutocompleteProps } from './types'
 
 // The component root is `SFormField`; `maxlength` and `autocomplete` belong on the input inside it.
@@ -214,7 +215,7 @@ const contentStyle = computed(() => {
 
 const floating = computed(() => p.floatingLabel && !!p.label)
 const pinned = computed(() => floating.value && p.floatingLabel === 'pinned')
-const hasLeading = computed(() => !!p.icon || !!slots.prepend)
+const hasLeading = () => !!p.icon || !!slots.prepend
 
 // Reka's first call comes before mount: an empty string would overwrite a preset search.
 const mounted = ref(false)
@@ -283,6 +284,11 @@ watch(showContent, (value) => {
 
 const anchor = ref<{ $el: Element }>()
 useKeepCaretKeys(anchor)
+const labelOffset = useLeadingLabelOffset(
+  () => anchor.value?.$el,
+  '.s-autocomplete__field',
+  () => floating.value && hasLeading(),
+)
 
 function clear() {
   model.value = p.freeText ? '' : undefined
@@ -340,8 +346,9 @@ function clear() {
           :class="{
             's-autocomplete__control--invalid': fieldInvalid,
             's-autocomplete__control--floating': floating,
-            's-autocomplete__control--has-leading': floating && hasLeading,
+            's-autocomplete__control--has-leading': floating && hasLeading(),
           }"
+          :style="labelOffset"
           :data-filled="!!text || undefined"
           :data-label-pinned="pinned || undefined"
           :data-invalid="fieldInvalid || undefined"

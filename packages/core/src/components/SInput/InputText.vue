@@ -5,6 +5,7 @@ import { vMaska } from 'maska/vue'
 import { SIcon } from '../SIcon'
 import { useMessages } from '../../composables'
 import { focusFromFrame } from '../../internal/focusFromFrame'
+import { useLeadingLabelOffset } from '../../internal/useLeadingLabelOffset'
 import {
   clampNumeric,
   createMaskEngine,
@@ -67,7 +68,13 @@ const model = defineModel<string>()
 const m = useMessages()
 
 const floating = computed(() => props.floatingLabel && !!props.label)
-const hasLeading = computed(() => !!props.icon || !!props.prefix || !!slots.prepend)
+const hasLeading = () => !!props.icon || !!props.prefix || !!slots.prepend
+const frame = useTemplateRef<HTMLElement>('frame')
+const labelOffset = useLeadingLabelOffset(
+  () => frame.value,
+  '.s-input__field',
+  () => floating.value && hasLeading(),
+)
 
 const field = useTemplateRef<HTMLInputElement>('field')
 
@@ -206,13 +213,15 @@ const maskedAttrs = computed(() =>
 
 <template>
   <div
+    ref="frame"
     class="s-input__wrap"
     :class="{
       's-input__wrap--invalid': invalid,
       's-input__wrap--disabled': disabled,
       's-input__wrap--floating': floating,
-      's-input__wrap--has-leading': floating && hasLeading,
+      's-input__wrap--has-leading': floating && hasLeading(),
     }"
+    :style="labelOffset"
     :data-filled="filled || undefined"
     :data-label-pinned="(floating && labelPinned) || undefined"
     :data-invalid="invalid || undefined"

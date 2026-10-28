@@ -75,8 +75,9 @@ Available on all fields.
 
 By default the label **floats**: at rest it looks like a placeholder inside the border, and on
 focus or once filled it moves up onto the top border with a notch cut into it. The label size is
-fixed and does not depend on `size`. Turn it off with `:floating-label="false"` — the label then
-renders as a regular line above the field.
+fixed and does not depend on `size`. A label that does not fit into the field is cut off with an
+ellipsis; a floated one only when it does not fit even at its reduced size. Turn it off with
+`:floating-label="false"` — the label then renders as a regular line above the field.
 
 <Demo>
   <SInput label="Floating (default)" />
@@ -294,6 +295,33 @@ a button. Unlike the decorative `icon` prop, slot content is interactive.
         icon="copy"
         aria-label="Copy"
       />
+    </template>
+  </SInput>
+</template>
+```
+
+  </template>
+</Demo>
+
+A resting floating label sits right after the leading content, however wide it is, and follows it
+when its width changes or the content appears later. On focus or once the field has a value, the
+label moves onto the border above that content and is not narrowed by it. `prefix` works the same
+way, and so do [`STextarea`](/components/textarea), [`SSelect`](/components/select),
+[`SAutocomplete`](/components/autocomplete), [`SColorField`](/components/color-field) and the date
+and time fields and pickers.
+
+<Demo>
+  <SInput label="Pickup address" style="width: 100%; max-width: 420px">
+    <template #prepend><span style="color: var(--s-color-text-muted)">London,</span></template>
+  </SInput>
+
+<template #code>
+
+```vue
+<template>
+  <SInput label="Pickup address">
+    <template #prepend>
+      <span>London,</span>
     </template>
   </SInput>
 </template>

@@ -9,6 +9,7 @@ import { focusFromFrame } from '../../internal/focusFromFrame'
 import { useFieldAttrs } from '../../internal/useFieldAttrs'
 import { useFieldFocus } from '../../internal/useFieldFocus'
 import { useFieldValidation } from '../../internal/useFieldValidation'
+import { useLeadingLabelOffset } from '../../internal/useLeadingLabelOffset'
 import type { SColorFieldProps } from './types'
 
 defineOptions({ inheritAttrs: false })
@@ -50,6 +51,12 @@ const colorModel = computed<string | undefined>({
 
 const floating = computed(() => p.floatingLabel && !!p.label)
 const pinned = computed(() => floating.value && p.floatingLabel === 'pinned')
+const frame = useTemplateRef<ComponentPublicInstance>('frame')
+const labelOffset = useLeadingLabelOffset(
+  () => frame.value,
+  '.s-color-field__input',
+  () => floating.value,
+)
 
 const editing = ref(false)
 
@@ -110,6 +117,7 @@ const onFrameMousedown = (event: MouseEvent) =>
       #default="{ id: fieldId, labelId, describedBy, invalid: fieldInvalid, label: fieldLabel }"
     >
       <ColorFieldRoot
+        ref="frame"
         v-model="colorModel"
         class="s-color-field__control"
         :class="{
@@ -117,6 +125,7 @@ const onFrameMousedown = (event: MouseEvent) =>
           // The left swatch is a permanent leading adornment: it shifts the resting label right.
           's-color-field__control--has-leading': floating,
         }"
+        :style="labelOffset"
         :data-filled="filled || undefined"
         :data-label-pinned="pinned || undefined"
         :data-invalid="fieldInvalid || undefined"

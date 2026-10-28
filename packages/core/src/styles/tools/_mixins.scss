@@ -313,17 +313,24 @@
   color: var(--s-color-text-muted);
 }
 
+// Scale of the floated label. The browser sizes the box before the transform, so the width limit
+// of the floated label is divided by this factor; otherwise it is cut with a quarter to spare.
+$floating-label-scale: 0.75;
+
 // Floating label (notched outline): a direct child of the field shell (position: relative).
 // Floats up when the shell is focused, filled ([data-filled]) or the label is pinned
 // ([data-label-pinned], floating-label="pinned"), and "cuts" the border with the surface
 // background. State is read from the parent shell, so the mixin is not tied to a field's BEM class.
 @mixin floating-label {
   position: absolute;
+  // The floated label padding counts toward the width limit even with the global reset off.
+  box-sizing: border-box;
   // Resting vertical position: centered (--s-field-label-rest-y defaults to 50%); multi-line
   // fields (textarea) override the variable to "at the first line".
   inset-block-start: var(--s-field-label-rest-y, 50%);
-  inset-inline-start: var(--s-field-label-x, var(--s-field-pad-x, 0));
-  max-inline-size: calc(100% - var(--s-field-label-x, 0) - var(--s-field-pad-x, 0));
+  // Fallbacks carry units: a unitless 0 makes calc() invalid, and the property resets to initial.
+  inset-inline-start: var(--s-field-label-x, var(--s-field-pad-x, 0px));
+  max-inline-size: calc(100% - var(--s-field-label-x, 0px) - var(--s-field-pad-x, 0px));
   overflow: hidden;
   color: var(--s-color-text-muted);
   // At rest the label matches the input text size (--s-font-size-sm) and is fixed, independent
@@ -350,10 +357,15 @@
   // empty. :where() forgives a browser without :has().
   :where(:focus-within, [data-filled], [data-label-pinned], :has(:autofill)) > & {
     inset-block-start: 0;
-    inset-inline-start: calc(var(--s-field-pad-x, 0) - 0.25rem);
+    inset-inline-start: calc(var(--s-field-pad-x, 0px) - 0.25rem);
+    // The same gap to the frame edge on the right; leading content (--s-field-label-x) is not
+    // subtracted, since the floated label sits on the border above it.
+    max-inline-size: calc(
+      (100% - 2 * (var(--s-field-pad-x, 0px) - 0.25rem)) / #{$floating-label-scale}
+    );
     padding-inline: 0.25rem;
     background-color: var(--s-color-surface);
-    transform: translateY(-50%) scale(0.75);
+    transform: translateY(-50%) scale($floating-label-scale);
   }
 
   // Color when floated: focus → primary; invalid → danger (wins by order).
@@ -367,7 +379,9 @@
   }
 }
 
-// A leading icon/prepend shifts the resting floating label past it (16px icon + --s-space-2 gap).
+// Resting label offset past a leading icon (16px + the --s-space-2 gap). It is the fallback until
+// the field measures where its text actually starts (internal/useLeadingLabelOffset) and sets
+// --s-field-label-x inline: text in prepend/prefix is often wider than an icon.
 @mixin field-label-leading {
   --s-field-label-x: calc(var(--s-field-pad-x) + 1.5rem);
 }

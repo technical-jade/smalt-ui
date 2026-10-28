@@ -10,6 +10,7 @@ import SegmentedFieldBridge, {
 import { useDefaults, useFormatLocale, useMessages } from '../../composables'
 import { useFieldFocus } from '../../internal/useFieldFocus'
 import { focusFirstSegment, useFieldValidation } from '../../internal/useFieldValidation'
+import { useLeadingLabelOffset } from '../../internal/useLeadingLabelOffset'
 import type { STimeFieldProps, STimeValue } from './types'
 
 const props = withDefaults(defineProps<STimeFieldProps>(), {
@@ -64,7 +65,13 @@ const bridge = useTemplateRef<SegmentedFieldBridgeExposed>('bridge')
 const floating = computed(() => p.floatingLabel && !!p.label)
 const pinned = computed(() => floating.value && p.floatingLabel === 'pinned')
 const filled = computed(() => model.value != null)
-const hasLeading = computed(() => !!slots.prepend)
+const hasLeading = () => !!slots.prepend
+const frame = useTemplateRef<HTMLElement>('frame')
+const labelOffset = useLeadingLabelOffset(
+  () => frame.value,
+  '.s-time-field__control',
+  () => floating.value && hasLeading(),
+)
 </script>
 
 <template>
@@ -88,13 +95,15 @@ const hasLeading = computed(() => !!slots.prepend)
       #default="{ id: fieldId, labelId, describedBy, invalid: fieldInvalid, label: fieldLabel }"
     >
       <div
+        ref="frame"
         class="s-time-field__wrap"
         :class="{
           's-time-field__wrap--invalid': fieldInvalid,
           's-time-field__wrap--disabled': p.disabled,
           's-time-field__wrap--floating': floating,
-          's-time-field__wrap--has-leading': floating && hasLeading,
+          's-time-field__wrap--has-leading': floating && hasLeading(),
         }"
+        :style="labelOffset"
         :data-filled="filled || undefined"
         :data-label-pinned="pinned || undefined"
         :data-invalid="fieldInvalid || undefined"

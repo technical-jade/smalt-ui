@@ -17,6 +17,7 @@ import { SIcon } from '../SIcon'
 import SelectTags from './SelectTags.vue'
 import { useMessages } from '../../composables'
 import { useKeepCaretKeys } from '../../internal/useKeepCaretKeys'
+import { useLeadingLabelOffset } from '../../internal/useLeadingLabelOffset'
 import type { SSelectOption } from './types'
 
 /**
@@ -78,10 +79,15 @@ const hasValue = computed(() =>
 )
 const showClear = computed(() => props.clearable && !props.disabled && hasValue.value)
 
-const hasLeading = computed(() => !!props.icon || !!slots.prepend)
+const hasLeading = () => !!props.icon || !!slots.prepend
 
 const anchor = ref<{ $el: Element }>()
 useKeepCaretKeys(anchor)
+const labelOffset = useLeadingLabelOffset(
+  () => anchor.value?.$el,
+  '.s-select__input',
+  () => !!props.floating && hasLeading(),
+)
 
 const input = ref<{ $el: HTMLInputElement }>()
 
@@ -108,8 +114,9 @@ const removeValue = (v: string) => {
         's-select__control--disabled': disabled,
         's-select__control--tags': useTags,
         's-select__control--floating': floating,
-        's-select__control--has-leading': floating && hasLeading,
+        's-select__control--has-leading': floating && hasLeading(),
       }"
+      :style="labelOffset"
       :data-filled="hasValue || undefined"
       :data-label-pinned="(floating && pinned) || undefined"
       :data-invalid="invalid || undefined"

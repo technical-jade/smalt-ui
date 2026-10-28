@@ -77,9 +77,10 @@
 .s-number-field__wrap .s-number-field__label {
   inset-block-start: 0;
   inset-inline-start: var(--s-space-2);
+  max-inline-size: calc((100% - 2 * var(--s-space-2)) / #{tools.$floating-label-scale});
   padding-inline: 0.25rem;
   background-color: var(--s-color-surface);
-  transform: translateY(-50%) scale(0.75);
+  transform: translateY(-50%) scale(tools.$floating-label-scale);
 }
 
 .s-number-field__label-required {

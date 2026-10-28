@@ -5,6 +5,7 @@ import { useDefaults } from '../../composables'
 import { useFieldAttrs } from '../../internal/useFieldAttrs'
 import { useFieldFocus } from '../../internal/useFieldFocus'
 import { useFieldValidation } from '../../internal/useFieldValidation'
+import { useLeadingLabelOffset } from '../../internal/useLeadingLabelOffset'
 import type { STextareaProps } from './types'
 
 /**
@@ -44,7 +45,13 @@ const { rootClass, rootStyle, controlAttrs: fieldAttrs } = useFieldAttrs()
 const floating = computed(() => p.floatingLabel && !!p.label)
 const pinned = computed(() => floating.value && p.floatingLabel === 'pinned')
 const filled = computed(() => !!model.value)
-const hasLeading = computed(() => !!slots.prepend)
+const hasLeading = () => !!slots.prepend
+const frame = useTemplateRef<HTMLElement>('frame')
+const labelOffset = useLeadingLabelOffset(
+  () => frame.value,
+  '.s-textarea__field',
+  () => floating.value && hasLeading(),
+)
 </script>
 
 <template>
@@ -69,14 +76,16 @@ const hasLeading = computed(() => !!slots.prepend)
       #default="{ id: fieldId, labelId, describedBy, invalid: fieldInvalid, label: fieldLabel }"
     >
       <div
+        ref="frame"
         class="s-textarea__wrap"
         :class="{
           's-textarea__wrap--invalid': fieldInvalid,
           's-textarea__wrap--disabled': p.disabled,
           's-textarea__wrap--floating': floating,
-          's-textarea__wrap--has-leading': floating && hasLeading,
+          's-textarea__wrap--has-leading': floating && hasLeading(),
           's-textarea__wrap--has-append': !!$slots.append,
         }"
+        :style="labelOffset"
         :data-filled="filled || undefined"
         :data-label-pinned="pinned || undefined"
         :data-invalid="fieldInvalid || undefined"
