@@ -24,6 +24,14 @@ describe('SAlert', () => {
     expect(container.querySelector('.s-alert')).toHaveClass('s-alert--negative')
   })
 
+  it('appearance="soft" adds the borderless modifier, absent by default', async () => {
+    const { container, rerender } = render(SAlert, { slots: { default: 'X' } })
+    const alert = container.querySelector('.s-alert')
+    expect(alert).not.toHaveClass('s-alert--soft')
+    await rerender({ appearance: 'soft' })
+    expect(alert).toHaveClass('s-alert--soft')
+  })
+
   it('announcement urgency follows variant', async () => {
     const { container, rerender } = render(SAlert, {
       props: { variant: 'info' },

@@ -1,4 +1,4 @@
-import type { SToggleSize } from '../SToggle'
+import type { SToggleSize, SToggleVariant } from '../SToggle'
 
 export type SToggleGroupType = 'single' | 'multiple'
 
@@ -19,6 +19,11 @@ export interface SToggleGroupProps {
   type?: SToggleGroupType
   /** Size of the toggles in the group. */
   size?: SToggleSize
+  /**
+   * Look of the on state of the group's toggles: `tonal` or `outline`. Also the default for
+   * `SToggle`s in the slot; their own `variant` wins. @defaultValue 'tonal'
+   */
+  variant?: SToggleVariant
   /** Group items (an alternative to the default slot with hand-written `SToggle`s). */
   options?: readonly SToggleGroupOption[]
   /** Disables the whole group and all its items. */

@@ -28,7 +28,7 @@ export interface SBackTopProps {
    * Visual variant of the button: filled `primary`/`secondary`/`negative`, outlined `outline` or
    * transparent `ghost`.
    */
-  variant?: SButtonVariant
+  variant?: Exclude<SButtonVariant, 'link'>
   /**
    * Accent color: a name from the [palette](/style/palette) (`primary`/`teal`/`teal-10`).
    * Overrides the variant color.

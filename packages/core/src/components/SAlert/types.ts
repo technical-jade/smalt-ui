@@ -2,6 +2,8 @@ import type { SColorName } from '../../composables/useColorProp'
 
 export type SAlertVariant = 'info' | 'positive' | 'warning' | 'negative'
 
+export type SAlertAppearance = 'outline' | 'soft'
+
 export interface SAlertProps {
   /**
    * Accent color: a name from the [palette](/style/palette) (`primary`/`teal`/`teal-10`).
@@ -10,6 +12,11 @@ export interface SAlertProps {
   color?: SColorName
   /** Semantic variant: `info`/`positive`/`warning`/`negative`. */
   variant?: SAlertVariant
+  /**
+   * Appearance: `outline` draws the background and border in the status color, `soft` keeps only
+   * the background. Both keep the icon in the status color. @defaultValue 'outline'
+   */
+  appearance?: SAlertAppearance
   /** Square corners: removes the border radius (rounded by default). */
   square?: boolean
   /** Title (can be replaced with the `title` slot). */

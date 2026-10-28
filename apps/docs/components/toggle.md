@@ -4,6 +4,17 @@
 `button` role with `aria-pressed` and `data-state`. It is used on its own (for example, "bold" in
 an editor) or inside `SToggleGroup` — then the group manages the state.
 
+<script setup>
+import { ref } from 'vue'
+const payer = ref('sender')
+const payerTonal = ref('sender')
+const payerOptions = [
+  { value: 'sender', label: 'Sender' },
+  { value: 'recipient', label: 'Recipient' },
+  { value: 'third', label: 'Third party' },
+]
+</script>
+
 ## Single toggle
 
 <ClientOnly>
@@ -174,6 +185,70 @@ The `color` prop sets the color of the on state from the [palette](/style/palett
     color="indigo"
   >
     Indigo
+  </SToggle>
+</template>
+```
+
+  </template>
+</Demo>
+</ClientOnly>
+
+## On state look
+
+`variant` sets how a pressed toggle looks. `tonal` (the default) is a tonal fill. `outline` is an
+accent-colored border without a fill: the chosen option stands out by its outline, like a
+selectable card. On `SToggleGroup` the `variant` prop applies to every item, including `SToggle`s
+in the slot; an item's own `variant` wins. `color` sets the color of both the fill and the border.
+
+<ClientOnly>
+<Demo>
+  <div style="display: flex; flex-wrap: wrap; gap: 24px 48px; width: 100%">
+    <div style="display: grid; gap: 12px; align-content: start">
+      <span style="font-size: var(--s-font-size-sm); color: var(--s-color-text-muted)">tonal (default)</span>
+      <SToggleGroup v-model="payerTonal" :options="payerOptions" variant="tonal" mandatory aria-label="Payer, tonal" />
+      <div style="display: flex; gap: 8px">
+        <SToggle :model-value="true" variant="tonal">primary</SToggle>
+        <SToggle :model-value="true" variant="tonal" color="teal">teal</SToggle>
+      </div>
+    </div>
+    <div style="display: grid; gap: 12px; align-content: start">
+      <span style="font-size: var(--s-font-size-sm); color: var(--s-color-text-muted)">outline</span>
+      <SToggleGroup v-model="payer" :options="payerOptions" variant="outline" mandatory aria-label="Payer, outline" />
+      <div style="display: flex; gap: 8px">
+        <SToggle :model-value="true" variant="outline">primary</SToggle>
+        <SToggle :model-value="true" variant="outline" color="teal">teal</SToggle>
+      </div>
+    </div>
+  </div>
+
+<template #code>
+
+```vue
+<script setup lang="ts">
+import { ref } from 'vue'
+
+const payer = ref('sender')
+const options = [
+  { value: 'sender', label: 'Sender' },
+  { value: 'recipient', label: 'Recipient' },
+  { value: 'third', label: 'Third party' },
+]
+</script>
+
+<template>
+  <SToggleGroup
+    v-model="payer"
+    :options="options"
+    variant="outline"
+    mandatory
+    aria-label="Payer"
+  />
+  <SToggle
+    :model-value="true"
+    variant="outline"
+    color="teal"
+  >
+    teal
   </SToggle>
 </template>
 ```

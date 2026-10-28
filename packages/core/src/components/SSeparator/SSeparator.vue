@@ -1,14 +1,17 @@
 <script setup lang="ts">
 import { computed, useId } from 'vue'
 import { Separator } from 'reka-ui'
-import { useDefaults } from '../../composables'
+import { useColorProp, useDefaults } from '../../composables'
 import type { SSeparatorProps } from './types'
 
 const props = withDefaults(defineProps<SSeparatorProps>(), {
   orientation: 'horizontal',
+  lineStyle: 'solid',
   decorative: false,
 })
 const p = useDefaults(props, 'SSeparator')
+
+const colorStyle = useColorProp(p, 's-separator')
 
 const slots = defineSlots<{
   /** Label content in the center of a horizontal separator. */
@@ -31,6 +34,8 @@ const labelId = useId()
   <div
     v-if="hasLabel"
     class="s-separator s-separator--labeled"
+    :class="`s-separator--${p.lineStyle}`"
+    :style="colorStyle"
     :role="p.decorative ? 'none' : 'separator'"
     :aria-orientation="p.decorative ? undefined : 'horizontal'"
     :aria-labelledby="p.decorative ? undefined : labelId"
@@ -52,7 +57,8 @@ const labelId = useId()
   <Separator
     v-else
     class="s-separator"
-    :class="`s-separator--${p.orientation}`"
+    :class="[`s-separator--${p.orientation}`, `s-separator--${p.lineStyle}`]"
+    :style="colorStyle"
     :orientation="p.orientation"
     :decorative="p.decorative"
   />

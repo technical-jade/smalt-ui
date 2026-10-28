@@ -1,5 +1,6 @@
 import { describe, expect, it } from 'vitest'
 import { render } from '@testing-library/vue'
+import { userEvent } from 'vitest/browser'
 import { SButton } from '../index'
 
 /** Button geometry: happy-dom has neither sizes nor computed styles. */
@@ -69,5 +70,29 @@ describe('SButton · browser', () => {
     await new Promise((resolve) => requestAnimationFrame(() => requestAnimationFrame(resolve)))
     expect(document.activeElement).toBe(btn)
     expect(btn).toHaveAttribute('aria-busy', 'true')
+  })
+
+  it('variant="link" drops the button height and padding and is underlined', () => {
+    const { container } = render(SButton, {
+      props: { variant: 'link', size: 'lg' },
+      slots: { default: 'Edit' },
+    })
+    const button = container.querySelector<HTMLElement>('.s-button')!
+    const style = getComputedStyle(button)
+    expect(button.getBoundingClientRect().height).toBeLessThan(32)
+    expect(style.paddingLeft).toBe('0px')
+    expect(style.textDecorationLine).toBe('underline')
+    expect(style.boxShadow).toBe('none')
+  })
+
+  it('variant="link": hover keeps the underline thickness', async () => {
+    const { container } = render(SButton, {
+      props: { variant: 'link' },
+      slots: { default: 'Edit' },
+    })
+    const button = container.querySelector<HTMLElement>('.s-button')!
+    const before = getComputedStyle(button).textDecorationThickness
+    await userEvent.hover(button)
+    expect(getComputedStyle(button).textDecorationThickness).toBe(before)
   })
 })

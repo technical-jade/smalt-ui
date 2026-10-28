@@ -3,7 +3,7 @@
   @include tools.reset-inherited;
   flex-shrink: 0;
   border: none;
-  background-color: var(--s-color-border);
+  background-color: var(--s-separator-c, var(--s-color-border));
 
   &--horizontal {
     width: 100%;
@@ -30,7 +30,26 @@
     flex: 1;
     height: 1px;
     border: none;
-    background-color: var(--s-color-border);
+    background-color: var(--s-separator-c, var(--s-color-border));
+  }
+
+  // Dashes and dots come from a border: a line filled with a background has no style.
+  @each $style in dashed, dotted {
+    &--#{$style} {
+      background-color: transparent;
+
+      &.s-separator--horizontal,
+      .s-separator__line {
+        height: 0;
+        background-color: transparent;
+        border-top: 1px $style var(--s-separator-c, var(--s-color-border));
+      }
+
+      &.s-separator--vertical {
+        width: 0;
+        border-left: 1px $style var(--s-separator-c, var(--s-color-border));
+      }
+    }
   }
 
   &__label {

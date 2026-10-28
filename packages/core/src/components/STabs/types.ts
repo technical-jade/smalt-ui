@@ -2,6 +2,7 @@ import type { SColorName } from '../../composables/useColorProp'
 
 export type STabsOrientation = 'horizontal' | 'vertical'
 export type STabsActivationMode = 'automatic' | 'manual'
+export type STabsVariant = 'underline' | 'enclosed'
 
 export interface STabItem {
   /** Tab value (matches the name of its content slot). */
@@ -24,6 +25,12 @@ export interface STabsProps {
   items?: readonly STabItem[]
   /** Orientation: `horizontal` (default) or `vertical`. */
   orientation?: STabsOrientation
+  /**
+   * Styling: `underline` underlines the active tab; `enclosed` draws folder tabs, where the
+   * bordered active tab merges with the panel border and inactive tabs sit on a muted background.
+   * @defaultValue 'underline'
+   */
+  variant?: STabsVariant
   /** Accessible name of the tab list. */
   ariaLabel?: string
   /**

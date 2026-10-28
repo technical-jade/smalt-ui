@@ -28,6 +28,15 @@ describe('STabs', () => {
     expect(emitted()['update:modelValue']).toContainEqual(['b'])
   })
 
+  it('variant sets the styling modifier, underline by default', async () => {
+    const { container, rerender } = render(STabs, { props: { items, modelValue: 'a' } })
+    const root = container.querySelector('.s-tabs')
+    expect(root).toHaveClass('s-tabs--underline')
+    await rerender({ items, modelValue: 'a', variant: 'enclosed' })
+    expect(root).toHaveClass('s-tabs--enclosed')
+    expect(root).not.toHaveClass('s-tabs--underline')
+  })
+
   it('renders the tab icon when set', () => {
     const { container } = render(STabs, {
       props: {

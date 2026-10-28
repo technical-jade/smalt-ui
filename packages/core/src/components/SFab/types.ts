@@ -37,7 +37,7 @@ export interface SFabProps {
    * Visual variant: filled `primary`/`secondary`/`negative`, outlined `outline` or transparent
    * `ghost`. The actions of the fan follow the same variant.
    */
-  variant?: SButtonVariant
+  variant?: Exclude<SButtonVariant, 'link'>
   /**
    * Accent color: a name from the [palette](/style/palette) (`primary`/`teal`/`teal-10`).
    * Overrides the variant color, for the fan actions as well.

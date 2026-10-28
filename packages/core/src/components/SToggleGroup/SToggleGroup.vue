@@ -8,6 +8,7 @@ import type { SToggleGroupProps } from './types'
 
 const props = withDefaults(defineProps<SToggleGroupProps>(), {
   size: 'md',
+  variant: 'tonal',
   mandatory: false,
 })
 const p = useDefaults(props, 'SToggleGroup')
@@ -15,8 +16,8 @@ const p = useDefaults(props, 'SToggleGroup')
 // Tells nested SToggle components that they are group items (see context.ts).
 provide(TOGGLE_GROUP_KEY, true)
 
-// SToggle passed through the slot takes the group size as its default; its own size still wins.
-provideDefaults(() => ({ SToggle: { size: p.size } }))
+// SToggle passed through the slot takes the group size and variant as defaults; its own props win.
+provideDefaults(() => ({ SToggle: { size: p.size, variant: p.variant } }))
 
 /**
  * Selected value (`single`) or array of values (`multiple`). Two-way bound via `v-model`.
@@ -58,6 +59,7 @@ defineSlots<{
         :key="opt.value"
         :value="opt.value"
         :size="p.size"
+        :variant="p.variant"
         :disabled="opt.disabled"
       >
         {{ opt.label ?? opt.value }}

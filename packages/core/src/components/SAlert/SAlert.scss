@@ -43,6 +43,11 @@ $variants: (
     }
   }
 
+  // After the variants: with equal specificity the later rule wins.
+  &--soft {
+    border-color: transparent;
+  }
+
   &__icon {
     display: inline-flex;
     flex-shrink: 0;

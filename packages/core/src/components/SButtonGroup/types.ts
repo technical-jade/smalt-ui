@@ -16,7 +16,7 @@ export interface SButtonGroupProps {
   /** Size of every button in the group; a `size` set on a button itself wins. */
   size?: SButtonSize
   /** Variant of every button in the group; a `variant` set on a button itself wins. */
-  variant?: SButtonVariant
+  variant?: Exclude<SButtonVariant, 'link'>
   /**
    * Accent color of every button in the group: a name from the [palette](/style/palette)
    * (`primary`/`teal`/`teal-10`). A `color` set on a button itself wins.

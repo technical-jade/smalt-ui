@@ -103,6 +103,18 @@ $sizes: sm, md, lg;
     @include tools.state-layer(var(--s-button-c, var(--s-color-primary)));
   }
 
+  // After the sizes: drops their height and padding but keeps their font size.
+  &--link {
+    height: auto;
+    padding: 0;
+    color: var(--s-button-c, var(--s-color-primary-text));
+    vertical-align: baseline;
+    background-color: transparent;
+    border: none;
+    text-decoration: underline;
+    text-underline-offset: 0.2em;
+  }
+
   &--negative {
     color: var(--s-button-c-on, var(--s-color-negative-contrast));
     background-color: var(--s-button-c, var(--s-color-negative));

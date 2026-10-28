@@ -37,4 +37,11 @@ $sizes: sm, md, lg;
     border-color: transparent;
     @include tools.state-layer(var(--s-toggle-c, var(--s-color-on-primary-container)));
   }
+
+  &--outline[data-state='on'] {
+    color: var(--s-toggle-c, var(--s-color-primary-text));
+    background-color: transparent;
+    border-color: var(--s-toggle-c, var(--s-color-primary));
+    @include tools.state-layer(var(--s-toggle-c, var(--s-color-primary)));
+  }
 }

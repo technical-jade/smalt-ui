@@ -9,6 +9,7 @@ import { devWarn } from '../../internal/dev'
 
 const props = withDefaults(defineProps<SToggleProps>(), {
   size: 'md',
+  variant: 'tonal',
   disabled: false,
 })
 const p = useDefaults(props, 'SToggle')
@@ -59,7 +60,7 @@ defineSlots<{
     v-if="isGroupItem"
     :value="p.value!"
     class="s-toggle"
-    :class="[`s-toggle--${p.size}`, { 's-toggle--square': p.square }]"
+    :class="[`s-toggle--${p.size}`, `s-toggle--${p.variant}`, { 's-toggle--square': p.square }]"
     :style="colorStyle"
     :disabled="p.disabled"
     :aria-label="p.ariaLabel"
@@ -72,7 +73,7 @@ defineSlots<{
     v-model="model"
     v-bind="toolbarItem"
     class="s-toggle"
-    :class="[`s-toggle--${p.size}`, { 's-toggle--square': p.square }]"
+    :class="[`s-toggle--${p.size}`, `s-toggle--${p.variant}`, { 's-toggle--square': p.square }]"
     :style="colorStyle"
     :disabled="p.disabled"
     :aria-label="p.ariaLabel"

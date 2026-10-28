@@ -6,11 +6,14 @@ polymorphic: `as` renders it as another element, such as a link.
 ## Variants
 
 <Demo>
-  <SButton variant="primary">Primary</SButton>
-  <SButton variant="secondary">Secondary</SButton>
-  <SButton variant="outline">Outline</SButton>
-  <SButton variant="ghost">Ghost</SButton>
-  <SButton variant="negative">Negative</SButton>
+  <div style="display: flex; flex-wrap: wrap; align-items: center; gap: 12px">
+    <SButton variant="primary">Primary</SButton>
+    <SButton variant="secondary">Secondary</SButton>
+    <SButton variant="outline">Outline</SButton>
+    <SButton variant="ghost">Ghost</SButton>
+    <SButton variant="negative">Negative</SButton>
+    <SButton variant="link">Link</SButton>
+  </div>
 
 <template #code>
 
@@ -21,6 +24,42 @@ polymorphic: `as` renders it as another element, such as a link.
   <SButton variant="outline">Outline</SButton>
   <SButton variant="ghost">Ghost</SButton>
   <SButton variant="negative">Negative</SButton>
+  <SButton variant="link">Link</SButton>
+</template>
+```
+
+  </template>
+</Demo>
+
+## Link variant
+
+`variant="link"` renders an action as underlined text. It has no button height, padding or
+background, so it fits into a line of text and sits on its baseline. It is still a `<button>`,
+meant for in-place actions such as "Edit" or "Show all"; to go to another page, add `as="a"` and
+`href`. `size` changes only the font size, and `color` the text color. `SButtonGroup`, `SFab`
+and `SBackTop` do not take `link`: they rely on the button frame.
+
+<Demo>
+  <p style="margin: 0">
+    Delivery address: 221B Baker Street, London. <SButton variant="link">Edit</SButton>
+  </p>
+  <SButton variant="link" size="sm" color="neutral">Show all plans</SButton>
+
+<template #code>
+
+```vue
+<template>
+  <p>
+    Delivery address: 221B Baker Street, London.
+    <SButton variant="link">Edit</SButton>
+  </p>
+  <SButton
+    variant="link"
+    size="sm"
+    color="neutral"
+  >
+    Show all plans
+  </SButton>
 </template>
 ```
 

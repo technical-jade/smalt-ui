@@ -8,6 +8,7 @@ const props = withDefaults(defineProps<SAlertProps>(), {
   // With `false` in the type Vue treats the prop as boolean and casts an absent one to `false`.
   icon: undefined,
   variant: 'info',
+  appearance: 'outline',
   closable: false,
 })
 const p = useDefaults(props, 'SAlert')
@@ -66,7 +67,10 @@ const statusIcon = computed(() =>
   <div
     v-if="visible"
     class="s-alert"
-    :class="[`s-alert--${p.variant}`, { 's-alert--square': p.square }]"
+    :class="[
+      `s-alert--${p.variant}`,
+      { 's-alert--soft': p.appearance === 'soft', 's-alert--square': p.square },
+    ]"
     :style="colorStyle"
     :role="role"
     :aria-live="live"

@@ -35,6 +35,45 @@ status icon is rendered with the reusable `SIcon` (composition instead of duplic
   </template>
 </Demo>
 
+## Appearance
+
+`appearance` sets the look independently of the status. `outline` (the default) draws the
+background and the border in the status color. `soft` keeps only the background: a quieter look
+for hints and summaries inside a form. Both keep the icon in the status color, and `color` works
+with both.
+
+<Demo>
+  <div style="display: flex; flex-direction: column; gap: 12px; width: 100%">
+    <SAlert variant="info" appearance="soft" title="Information">A background without a border.</SAlert>
+    <SAlert variant="positive" appearance="soft" title="Done">Your changes have been saved.</SAlert>
+    <SAlert variant="warning" appearance="soft" title="Warning">Please check the data you entered.</SAlert>
+    <SAlert variant="negative" appearance="soft" title="Error">The operation could not be completed.</SAlert>
+  </div>
+
+<template #code>
+
+```vue
+<template>
+  <SAlert
+    variant="info"
+    appearance="soft"
+    title="Information"
+  >
+    A background without a border.
+  </SAlert>
+  <SAlert
+    variant="negative"
+    appearance="soft"
+    title="Error"
+  >
+    The operation could not be completed.
+  </SAlert>
+</template>
+```
+
+  </template>
+</Demo>
+
 ## Closable
 
 The close button hides the alert and emits `close`. To show it again, bind `v-model:visible`.

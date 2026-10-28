@@ -17,6 +17,22 @@ describe('SToggleGroup', () => {
     expect(screen.getByRole('button', { name: 'Right' })).toBeInTheDocument()
   })
 
+  it('the group variant reaches items from options and from the slot', () => {
+    render({
+      components: { SToggleGroup, SToggle },
+      setup: () => ({ options }),
+      template: `
+        <SToggleGroup :options="options" variant="outline" aria-label="From options" />
+        <SToggleGroup variant="outline" aria-label="From slot">
+          <SToggle value="a">A</SToggle>
+          <SToggle value="b" variant="tonal">B</SToggle>
+        </SToggleGroup>`,
+    })
+    expect(screen.getByRole('button', { name: 'Left' })).toHaveClass('s-toggle--outline')
+    expect(screen.getByRole('button', { name: 'A' })).toHaveClass('s-toggle--outline')
+    expect(screen.getByRole('button', { name: 'B' })).toHaveClass('s-toggle--tonal')
+  })
+
   it('single: a click selects one value', async () => {
     const { emitted } = render(SToggleGroup, { props: { options } })
     await fireEvent.click(screen.getByRole('button', { name: 'Center' }))

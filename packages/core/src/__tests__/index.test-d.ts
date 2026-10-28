@@ -17,13 +17,18 @@ import type {
   ColorMode,
   ColorScheme,
   ConfigProviderProps,
+  SBackTopProps,
   SBadgeVariant,
+  SButtonGroupProps,
+  SButtonProps,
+  SButtonVariant,
   SCardProps,
   SCheckboxProps,
   SConfirmOptions,
   SDatePickerProps,
   SDateRangePickerProps,
   SElevation,
+  SFabProps,
   SFormFieldSlotProps,
   SFormValidateResult,
   SInputProps,
@@ -91,6 +96,25 @@ describe('@smalt-ui/core public types', () => {
   it('sizes/variants are the expected unions', () => {
     expectTypeOf<SInputSize>().toEqualTypeOf<'sm' | 'md' | 'lg'>()
     expectTypeOf<SSelectProps['searchable']>().toEqualTypeOf<boolean | undefined>()
+  })
+
+  it('link is a button variant, but not of the components that need the button frame', () => {
+    expectTypeOf<'link'>().toMatchTypeOf<SButtonVariant>()
+    expectTypeOf<SButtonProps['variant']>().toEqualTypeOf<SButtonVariant | undefined>()
+    type FramedVariant = Exclude<SButtonVariant, 'link'> | undefined
+    expectTypeOf<SButtonGroupProps['variant']>().toEqualTypeOf<FramedVariant>()
+    expectTypeOf<SFabProps['variant']>().toEqualTypeOf<FramedVariant>()
+    expectTypeOf<SBackTopProps['variant']>().toEqualTypeOf<FramedVariant>()
+
+    // @ts-expect-error a group of links has no shared edge to attach
+    const group: SButtonGroupProps = { variant: 'link' }
+    // @ts-expect-error a floating button needs its fill and shadow
+    const fab: SFabProps = { variant: 'link', ariaLabel: 'Add' }
+    // @ts-expect-error a floating button needs its fill and shadow
+    const backTop: SBackTopProps = { variant: 'link' }
+    void group
+    void fab
+    void backTop
   })
 
   it('tag/multiple selection modes are exported', () => {

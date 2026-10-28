@@ -20,6 +20,14 @@ describe('SToggle', () => {
     expect(container.querySelector('.s-toggle')).toHaveClass('s-toggle--lg')
   })
 
+  it('variant sets the appearance modifier, tonal by default', async () => {
+    const { container, rerender } = render(SToggle, { slots: { default: 'X' } })
+    const toggle = container.querySelector('.s-toggle')
+    expect(toggle).toHaveClass('s-toggle--tonal')
+    await rerender({ variant: 'outline' })
+    expect(toggle).toHaveClass('s-toggle--outline')
+  })
+
   it('reflects the initial state via data-state', () => {
     render(SToggle, { props: { modelValue: true }, slots: { default: 'X' } })
     expect(screen.getByRole('button')).toHaveAttribute('data-state', 'on')

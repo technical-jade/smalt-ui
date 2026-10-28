@@ -31,4 +31,23 @@ describe('STabs · browser', () => {
     expect(tab.left).toBeGreaterThanOrEqual(list.left)
     expect(tab.right).toBeLessThanOrEqual(list.right + 0.5)
   })
+
+  it('enclosed: the active tab covers the line above the panel, with no vertical scroll', async () => {
+    const { container } = render(STabs, {
+      props: { items: items.slice(0, 3), modelValue: 't1', variant: 'enclosed' },
+      slots: { t1: 'Panel' },
+      attrs: { style: 'width: 480px' },
+    })
+    await nextTick()
+    const list = container.querySelector<HTMLElement>('.s-tabs__list')!
+    expect(list.scrollHeight).toBe(list.clientHeight)
+    const active = container.querySelector<HTMLElement>('[data-state="active"]')!
+    const inactive = container.querySelector<HTMLElement>('[data-state="inactive"]')!
+    const panel = container.querySelector<HTMLElement>('.s-tabs__content[data-state="active"]')!
+    expect(getComputedStyle(active).borderBottomColor).toBe(getComputedStyle(panel).backgroundColor)
+    expect(getComputedStyle(inactive).borderBottomColor).not.toBe(
+      getComputedStyle(panel).backgroundColor,
+    )
+    expect(active.getBoundingClientRect().bottom).toBe(panel.getBoundingClientRect().top)
+  })
 })

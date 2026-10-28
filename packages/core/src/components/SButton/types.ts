@@ -1,15 +1,15 @@
 import type { SColorName } from '../../composables/useColorProp'
 import type { SElevation } from '../../composables/useElevationProp'
 
-export type SButtonVariant = 'primary' | 'secondary' | 'outline' | 'ghost' | 'negative'
+export type SButtonVariant = 'primary' | 'secondary' | 'outline' | 'ghost' | 'negative' | 'link'
 export type SButtonSize = 'sm' | 'md' | 'lg'
 
 export interface SButtonProps {
   /** Tag/component to render (polymorphism). `button` by default. */
   as?: string
   /**
-   * Visual variant: filled `primary`/`secondary`/`negative`, outlined `outline` or transparent
-   * `ghost`.
+   * Visual variant: filled `primary`/`secondary`/`negative`, outlined `outline`, transparent
+   * `ghost` or `link`, underlined text without the button height and padding.
    */
   variant?: SButtonVariant
   /**

@@ -68,3 +68,61 @@
     color: var(--s-color-text);
   }
 }
+
+// Folder tabs. A tab does not overlap the panel border: the horizontal list has overflow-x: auto,
+// which makes the vertical axis scrollable too, so any overhang would add a scrollbar. The list's
+// baseline serves as the border above the panel: the bottom border of inactive tabs lies on it,
+// and the active tab covers it with a border in the panel color.
+.s-tabs--enclosed {
+  // Half a scale step: the tabs have their own border, and a full step breaks the row of folders.
+  .s-tabs__list {
+    gap: calc(var(--s-space-1) / 2);
+  }
+
+  .s-tabs__trigger {
+    margin: 0;
+    background-color: var(--s-color-bg-subtle);
+    border: 1px solid var(--s-color-border);
+
+    &[data-state='active'] {
+      background-color: var(--s-color-surface);
+    }
+  }
+
+  .s-tabs__content {
+    padding: var(--s-space-4);
+    background-color: var(--s-color-surface);
+    border: 1px solid var(--s-color-border);
+  }
+
+  &.s-tabs--horizontal {
+    .s-tabs__trigger[data-state='active'] {
+      border-bottom-color: var(--s-color-surface);
+    }
+
+    .s-tabs__content {
+      border-top: none;
+      border-radius: 0 0 var(--s-radius-md) var(--s-radius-md);
+    }
+  }
+
+  // The vertical list does not scroll, so a tab overlaps its right border directly.
+  &.s-tabs--vertical {
+    gap: 0;
+
+    .s-tabs__trigger {
+      margin-right: -1px;
+      border-radius: var(--s-radius-sm) 0 0 var(--s-radius-sm);
+
+      &[data-state='active'] {
+        border-right-color: var(--s-color-surface);
+      }
+    }
+
+    .s-tabs__content {
+      flex: 1;
+      border-left: none;
+      border-radius: 0 var(--s-radius-md) var(--s-radius-md) 0;
+    }
+  }
+}

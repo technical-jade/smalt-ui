@@ -1,6 +1,7 @@
 import type { SColorName } from '../../composables/useColorProp'
 
 export type SToggleSize = 'sm' | 'md' | 'lg'
+export type SToggleVariant = 'tonal' | 'outline'
 
 export interface SToggleProps {
   /**
@@ -14,6 +15,11 @@ export interface SToggleProps {
   value?: string
   /** Size: `sm`, `md` or `lg`. */
   size?: SToggleSize
+  /**
+   * Look of the on state: `tonal` is a tonal fill, `outline` an accent-colored border without a
+   * fill (selectable cards). `color` sets the color of both. @defaultValue 'tonal'
+   */
+  variant?: SToggleVariant
   /** Square corners: removes the border radius (rounded by default). */
   square?: boolean
   /** Disables the toggle. */

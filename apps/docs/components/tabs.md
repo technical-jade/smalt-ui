@@ -21,6 +21,8 @@ const iconTabItems = [
 const tabBasic = ref('overview')
 const tabVertical = ref('overview')
 const tabIcons = ref('home')
+const tabEnclosed = ref('overview')
+const tabEnclosedVertical = ref('overview')
 </script>
 
 ## Basic usage
@@ -82,6 +84,58 @@ const items = [
     aria-label="Sections"
   >
     <template #overview>…</template>
+  </STabs>
+</template>
+```
+
+  </template>
+</Demo>
+</ClientOnly>
+
+## Enclosed tabs
+
+`variant="enclosed"` draws folder tabs: the bordered active tab merges with the panel border, and
+inactive tabs sit on a muted background. The default, `underline`, underlines the active tab. The
+border does not stick out of the list, so a list that overflows still scrolls only horizontally.
+It works with `orientation="vertical"` as well.
+
+<ClientOnly>
+<Demo>
+  <div style="display: grid; gap: 24px; width: 100%">
+    <STabs :items="tabItems" v-model="tabEnclosed" variant="enclosed" aria-label="Product sections">
+      <template #overview>General product information.</template>
+      <template #specs>Technical specifications and dimensions.</template>
+      <template #reviews>Customer reviews.</template>
+    </STabs>
+    <STabs :items="tabItems" v-model="tabEnclosedVertical" variant="enclosed" orientation="vertical" aria-label="Sections">
+      <template #overview>General product information.</template>
+      <template #specs>Technical specifications.</template>
+      <template #reviews>Customer reviews.</template>
+    </STabs>
+  </div>
+
+<template #code>
+
+```vue
+<template>
+  <STabs
+    v-model="tab"
+    :items="items"
+    variant="enclosed"
+    aria-label="Product sections"
+  >
+    <template #overview>General product information.</template>
+    <template #specs>Technical specifications and dimensions.</template>
+  </STabs>
+  <STabs
+    v-model="tab"
+    :items="items"
+    variant="enclosed"
+    orientation="vertical"
+    aria-label="Sections"
+  >
+    <template #overview>General product information.</template>
+    <template #specs>Technical specifications.</template>
   </STabs>
 </template>
 ```

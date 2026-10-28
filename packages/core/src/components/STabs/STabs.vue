@@ -7,6 +7,7 @@ import type { STabsProps } from './types'
 
 const props = withDefaults(defineProps<STabsProps>(), {
   orientation: 'horizontal',
+  variant: 'underline',
   activationMode: 'automatic',
   unmountOnHide: true,
 })
@@ -52,7 +53,7 @@ watch(
   <TabsRoot
     :model-value="active"
     class="s-tabs"
-    :class="`s-tabs--${p.orientation}`"
+    :class="[`s-tabs--${p.orientation}`, `s-tabs--${p.variant}`]"
     :style="colorStyle"
     :orientation="p.orientation"
     :activation-mode="p.activationMode"
