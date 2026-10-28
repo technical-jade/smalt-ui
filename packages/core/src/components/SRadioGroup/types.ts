@@ -16,7 +16,10 @@ export interface SRadioGroupProps extends SValidationProps<string | undefined> {
   label?: string
   /** Hint below the group. */
   hint?: string
-  /** Error message below the group. When set, the group is marked invalid. */
+  /**
+   * Error message below the group. When set, the group is marked invalid;
+   * the text wins over the `rules` error.
+   */
   error?: string
   /** Marks the group invalid explicitly (in addition to `error`). */
   invalid?: boolean
@@ -35,6 +38,6 @@ export interface SRadioGroupProps extends SValidationProps<string | undefined> {
   name?: string
   /** Selection is required for form submission. */
   required?: boolean
-  /** Accessible name of the group when there is no visible `label`. */
+  /** Accessible name of the group when there is no visible `label`; ignored when `label` is set. */
   ariaLabel?: string
 }

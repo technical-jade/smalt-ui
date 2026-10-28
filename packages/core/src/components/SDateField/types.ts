@@ -19,7 +19,9 @@ export interface SDateFieldProps extends SValidationProps<DateValue | undefined>
   floatingLabel?: boolean | 'pinned'
   /** Hint below the field. */
   hint?: string
-  /** Error message. When set, the field is marked invalid. */
+  /**
+   * Error message. When set, the field is marked invalid; the text wins over the `rules` error.
+   */
   error?: string
   /** Field size: `sm` (32px), `md` (40px) or `lg` (48px). @defaultValue 'md' */
   size?: SDateFieldSize
@@ -29,7 +31,9 @@ export interface SDateFieldProps extends SValidationProps<DateValue | undefined>
   readonly?: boolean
   /** Field name in native form submission: the value is sent in a hidden input. */
   name?: string
-  /** Marks the field as required: adds `*` to the label. */
+  /**
+   * Marks the field as required: `*` next to the label and native `required` on the hidden input.
+   */
   required?: boolean
   /** Explicitly marks the field invalid (in addition to `error`). */
   invalid?: boolean
@@ -45,8 +49,8 @@ export interface SDateFieldProps extends SValidationProps<DateValue | undefined>
    * Defaults to `day` for `CalendarDate` and `minute` for dates with time.
    */
   granularity?: SDateFieldGranularity
-  /** Minimum allowed date. */
+  /** Minimum allowed date. A typed date before it marks the field invalid. */
   minValue?: DateValue
-  /** Maximum allowed date. */
+  /** Maximum allowed date. A typed date after it marks the field invalid. */
   maxValue?: DateValue
 }

@@ -40,7 +40,7 @@ const props = defineProps<{
 const m = useMessages()
 
 const emit = defineEmits<{
-  /** Reka's own validity: a typed date outside minValue/maxValue. */
+  /** Reka's own validity: a typed date outside minValue/maxValue or rejected by isDateDisabled. */
   invalid: [value: boolean]
 }>()
 const bridge = useTemplateRef<SegmentedFieldBridgeExposed>('bridge')

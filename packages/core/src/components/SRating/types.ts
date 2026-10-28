@@ -13,7 +13,10 @@ export interface SRatingProps extends SValidationProps<number> {
   size?: SRatingSize
   /** Number of items (stars). */
   length?: number
-  /** Read-only: shows the rating without letting the user change it. */
+  /**
+   * Read-only: the rating is visible and reachable from the keyboard but does not change. Unlike
+   * `disabled`, it does not dim the component.
+   */
   readonly?: boolean
   /** Disables interaction. */
   disabled?: boolean
@@ -29,7 +32,10 @@ export interface SRatingProps extends SValidationProps<number> {
   ariaLabel?: string
   /** Hint below the rating. */
   hint?: string
-  /** Error message below the rating. When set, the rating is marked invalid. */
+  /**
+   * Error message below the rating. When set, the rating is marked invalid;
+   * the text wins over the `rules` error.
+   */
   error?: string
   /** Marks the rating invalid explicitly (in addition to `error`). */
   invalid?: boolean

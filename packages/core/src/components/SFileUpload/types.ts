@@ -34,7 +34,7 @@ export interface SFileUploadProps extends SValidationProps<File[]> {
   hint?: string
   /**
    * Error message below the field. When set, the field is marked invalid and the message wins
-   * over the component's own rejection text.
+   * over the component's own rejection text and the `rules` error.
    */
   error?: string
   /** Explicitly marks the field invalid (in addition to `error`). */
@@ -59,11 +59,14 @@ export interface SFileUploadProps extends SValidationProps<File[]> {
   accept?: string
   /** Maximum size of one file, in bytes. A larger file is refused. */
   maxSize?: number
-  /** Maximum number of files in the model. Files over the limit are refused. */
+  /**
+   * Maximum number of files in the model with `multiple`; files over the limit are refused.
+   * Without `multiple` the limit is always 1.
+   */
   maxFiles?: number
   /**
-   * Large drop area (on by default). `false` renders a compact button with the selected files
-   * next to it; dropping works in both modes.
+   * Large drop area (on by default). `false` renders a compact button with the file list under
+   * it; dropping works in both modes.
    */
   dropzone?: boolean
   /** Icon of the drop zone and of the compact button: a registry name or a raw SVG path. */

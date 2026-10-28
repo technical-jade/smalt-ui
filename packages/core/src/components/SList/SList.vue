@@ -9,7 +9,7 @@ const props = withDefaults(defineProps<SListProps>(), {
 const p = useDefaults(props, 'SList')
 
 defineSlots<{
-  /** Rows of the list, normally `SListItem` elements. */
+  /** Rows of the list, normally `SListItem` elements. Custom rows need `role="listitem"`. */
   default?: (props: Record<string, never>) => unknown
 }>()
 </script>

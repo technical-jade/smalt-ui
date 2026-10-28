@@ -9,7 +9,7 @@ export interface SSliderProps extends SValidationProps<number | number[]> {
   color?: SColorName
   /** Control id. Generated automatically (SSR-safe) when not set. */
   id?: string
-  /** Field label. */
+  /** Field label. It also serves as the accessible name of the thumbs. */
   label?: string
   /**
    * Accessible name of the thumb when there is no visible `label`. A range adds the edge to it
@@ -18,13 +18,18 @@ export interface SSliderProps extends SValidationProps<number | number[]> {
   ariaLabel?: string
   /** Hint below the field. */
   hint?: string
-  /** Error message. When set, the field is marked invalid. */
+  /**
+   * Error message. When set, the field is marked invalid; the text wins over the `rules` error.
+   */
   error?: string
   /** Marks the field invalid explicitly (in addition to `error`). */
   invalid?: boolean
-  /** Field name in native form submission: the value is sent in a hidden input. */
+  /**
+   * Field name in native form submission: the value is sent in a hidden input. A range sends one
+   * input per thumb, named `name[0]` and `name[1]`.
+   */
   name?: string
-  /** Marks the field as required. */
+  /** Marks the field as required: a `*` marker next to the label. */
   required?: boolean
   /** Disables the slider. */
   disabled?: boolean
@@ -36,6 +41,9 @@ export interface SSliderProps extends SValidationProps<number | number[]> {
   step?: number
   /** Shows the current value in a bubble above the thumb. */
   showValue?: boolean
-  /** Keeps the value bubble always visible. Otherwise it shows only on hover, focus, or drag. */
+  /**
+   * Keeps the value bubble always visible. Otherwise it shows only on hover, focus, or drag.
+   * Works together with `show-value`.
+   */
   valueAlways?: boolean
 }

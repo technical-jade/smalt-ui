@@ -17,7 +17,9 @@ export interface SColorFieldProps extends SValidationProps<string> {
   floatingLabel?: boolean | 'pinned'
   /** Hint below the field. */
   hint?: string
-  /** Error message. When set, the field is marked invalid. */
+  /**
+   * Error message. When set, the field is marked invalid; the text wins over the `rules` error.
+   */
   error?: string
   /** Placeholder in an empty field. */
   placeholder?: string
@@ -29,7 +31,7 @@ export interface SColorFieldProps extends SValidationProps<string> {
   readonly?: boolean
   /** Field name in native form submission: the value is sent in a hidden input. */
   name?: string
-  /** Marks the field as required: shows `*` next to the label. */
+  /** Marks the field as required: `*` next to the label and native `required` on the input. */
   required?: boolean
   /** Explicitly marks the field invalid (in addition to `error`). */
   invalid?: boolean

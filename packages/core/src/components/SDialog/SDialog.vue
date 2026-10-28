@@ -19,13 +19,15 @@ const widthStyle = computed(() =>
 const open = defineModel<boolean>('open')
 
 defineSlots<{
-  /** Trigger element that opens the dialog (wrapped in `DialogTrigger`). */
+  /**
+   * Element that opens the dialog: it becomes the trigger itself (`DialogTrigger` with `as-child`).
+   */
   trigger?: (props: Record<string, never>) => unknown
   /** Dialog title (replaces the `title` prop). */
   title?: (props: Record<string, never>) => unknown
   /** Dialog description (replaces the `description` prop). */
   description?: (props: Record<string, never>) => unknown
-  /** Main content (body) of the dialog. */
+  /** Main content (body) of the dialog; it scrolls when it does not fit the height. */
   default?: (props: Record<string, never>) => unknown
   /** Dialog footer, usually action buttons. */
   footer?: (props: Record<string, never>) => unknown

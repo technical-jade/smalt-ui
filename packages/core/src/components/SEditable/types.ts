@@ -15,7 +15,9 @@ export interface SEditableProps extends SValidationProps<string> {
   label?: string
   /** Hint below the field. */
   hint?: string
-  /** Error message. When set, the field is marked invalid. */
+  /**
+   * Error message. When set, the field is marked invalid; the text wins over the `rules` error.
+   */
   error?: string
   /** Explicitly marks the field invalid (in addition to `error`). */
   invalid?: boolean
@@ -70,7 +72,10 @@ export interface SEditableProps extends SValidationProps<string> {
   saveLabel?: string
   /** Accessible name of the cancel button (defaults to the locale dictionary). */
   cancelLabel?: string
-  /** Accessible name of the input, for a field rendered without a `label`. */
+  /**
+   * Accessible name of the input, for a field rendered without a `label`. With neither, the name
+   * comes from the locale dictionary ("Edit").
+   */
   ariaLabel?: string
   /** Name of the value in native form submission: renders a hidden input inside a `<form>`. */
   name?: string

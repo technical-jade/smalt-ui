@@ -12,7 +12,9 @@ export interface SDatePickerProps extends SValidationProps<DateValue | undefined
   label?: string
   /** Hint below the field. */
   hint?: string
-  /** Error message. When set, the field is marked invalid. */
+  /**
+   * Error message. When set, the field is marked invalid; the text wins over the `rules` error.
+   */
   error?: string
   /** Field size: `sm` (32px), `md` (40px) or `lg` (48px). @defaultValue 'md' */
   size?: SDatePickerSize
@@ -22,7 +24,9 @@ export interface SDatePickerProps extends SValidationProps<DateValue | undefined
   readonly?: boolean
   /** Field name in native form submission: the value is sent in a hidden input. */
   name?: string
-  /** Marks the field as required: draws `*` next to the label. */
+  /**
+   * Marks the field as required: `*` next to the label and native `required` on the hidden input.
+   */
   required?: boolean
   /** Explicitly marks the field invalid (in addition to `error`). */
   invalid?: boolean
@@ -41,11 +45,20 @@ export interface SDatePickerProps extends SValidationProps<DateValue | undefined
    * (`ConfigProvider`/`installLocale`, the `locale` option in Nuxt): `en` → `en-US`.
    */
   locale?: string
-  /** Minimum allowed date. */
+  /**
+   * Minimum allowed date: earlier days are disabled in the calendar, and an earlier typed date
+   * marks the field invalid.
+   */
   minValue?: DateValue
-  /** Maximum allowed date. */
+  /**
+   * Maximum allowed date: later days are disabled in the calendar, and a later typed date marks
+   * the field invalid.
+   */
   maxValue?: DateValue
-  /** First day of the week: 0 is Sunday, 1 is Monday, and so on. */
+  /**
+   * First day of the week: 0 is Sunday, 1 is Monday, and so on. Defaults to the formatting
+   * locale.
+   */
   weekStartsOn?: SDatePickerWeekStartsOn
   /** Always show 6 weeks (stable grid height). */
   fixedWeeks?: boolean

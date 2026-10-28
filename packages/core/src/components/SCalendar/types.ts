@@ -12,13 +12,16 @@ export interface SCalendarProps {
   minValue?: DateValue
   /** Maximum allowed date. */
   maxValue?: DateValue
-  /** First day of the week: 0 is Sunday, 1 is Monday, and so on. */
+  /**
+   * First day of the week: 0 is Sunday, 1 is Monday, and so on. Defaults to the formatting
+   * locale.
+   */
   weekStartsOn?: SCalendarWeekStartsOn
   /** Always shows 6 weeks (stable grid height). */
   fixedWeeks?: boolean
   /** Number of months shown at once. @defaultValue 1 */
   numberOfMonths?: number
-  /** Allows selecting multiple dates. */
+  /** Allows selecting multiple dates: `v-model` becomes an array. */
   multiple?: boolean
   /** Disables interaction with the calendar. */
   disabled?: boolean

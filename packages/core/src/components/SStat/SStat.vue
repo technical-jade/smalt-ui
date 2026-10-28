@@ -26,7 +26,10 @@ defineSlots<{
   label?: (props: Record<string, never>) => unknown
   /** Media next to the label: replaces the icon. */
   icon?: (props: Record<string, never>) => unknown
-  /** The whole trend line: the arrow, the change and its hidden direction label. */
+  /**
+   * The whole trend line: the arrow, the change and its hidden direction label. Rendered without
+   * the `trend` prop too.
+   */
   trend?: (props: Record<string, never>) => unknown
   /** Explanatory line under the value: replaces the `description` prop. */
   description?: (props: Record<string, never>) => unknown

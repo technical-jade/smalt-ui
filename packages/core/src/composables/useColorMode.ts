@@ -19,7 +19,7 @@ export interface UseColorModeReturn {
   scheme: Readonly<Ref<ColorScheme>>
   /** Set the mode. */
   setMode: (mode: ColorMode) => void
-  /** Toggle between light and dark (based on the currently applied scheme). */
+  /** Toggle between light and dark (based on the currently applied scheme); `auto` is dropped. */
   toggle: () => void
 }
 

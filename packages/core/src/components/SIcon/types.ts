@@ -24,6 +24,9 @@ export interface SIconProps {
    * from screen readers.
    */
   label?: string
-  /** SVG viewBox. */
+  /**
+   * SVG coordinate system (`viewBox`). Defaults to `0 0 24 24`, the grid of lucide and the
+   * built-in icons; change it for a raw path or a slot drawn on another grid.
+   */
   viewBox?: string
 }

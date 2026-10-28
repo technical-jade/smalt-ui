@@ -13,6 +13,9 @@ export interface SSpinnerProps {
    * Overrides the color of any variant, `neutral` and `current` included.
    */
   color?: SColorName
-  /** Accessible name for screen readers (otherwise the spinner is decorative). */
+  /**
+   * Accessible name for screen readers: with it the spinner gets `role="status"`; without it the
+   * spinner is decorative and hidden from screen readers.
+   */
   label?: string
 }

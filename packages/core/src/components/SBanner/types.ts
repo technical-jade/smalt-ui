@@ -26,7 +26,9 @@ export interface SBannerProps {
    * leaves the banner without one. The `icon` slot takes precedence.
    */
   icon?: string | false
-  /** Shows the close button: it hides the banner and emits `close`. */
+  /**
+   * Shows the close button: it hides the banner, updates `v-model:visible` and emits `close`.
+   */
   closable?: boolean
   /** Accessible name of the close button (defaults to the locale dictionary). */
   closeLabel?: string

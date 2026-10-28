@@ -20,7 +20,9 @@ export interface STextareaProps extends SValidationProps<string> {
   floatingLabel?: boolean | 'pinned'
   /** Hint below the field. */
   hint?: string
-  /** Error message. When set, the field is marked invalid. */
+  /**
+   * Error message. When set, the field is marked invalid; the text wins over the `rules` error.
+   */
   error?: string
   /** Explicitly marks the field invalid (in addition to `error`). */
   invalid?: boolean
@@ -28,7 +30,7 @@ export interface STextareaProps extends SValidationProps<string> {
   readonly?: boolean
   /** Square corners: removes the field border radius (rounded by default). */
   square?: boolean
-  /** Required field: adds a `*` marker to the label. */
+  /** Required field: a `*` marker next to the label and native `required` on the `textarea`. */
   required?: boolean
   /** Placeholder text in an empty field. */
   placeholder?: string

@@ -12,11 +12,11 @@ export interface SFormProps {
 
 /** A field that failed validation. */
 export interface SFormError {
-  /** Internal field id. */
+  /** Internal field id (not the id of the control in the DOM). */
   id: string
   /** The field `name`, when set. */
   name: string | undefined
-  /** Error texts of the field. */
+  /** Error texts of the field. A field shows one error: that of the first failing rule. */
   messages: string[]
 }
 
@@ -37,10 +37,10 @@ export interface SFormSlotProps {
   valid: boolean | null
   /** Whether an async rule is running in some field. */
   validating: boolean
-  /** Fields that currently show an error. */
+  /** Fields that currently show an error, in page order. */
   errors: SFormError[]
   /** Checks every field. */
   validate: () => Promise<SFormValidateResult>
-  /** Clears the errors of every field. */
+  /** Clears the errors of every field and drops a submission waiting for async rules. */
   resetValidation: () => void
 }

@@ -24,7 +24,7 @@ defineSlots<{
   default?: (props: Record<string, never>) => unknown
   /**
    * Custom remove control instead of the built-in button, e.g. Reka `TagsInputItemDelete`
-   * when the tag is used inside an input.
+   * when the tag is used inside an input. Rendered without `removable` too.
    */
   remove?: (props: Record<string, never>) => unknown
 }>()

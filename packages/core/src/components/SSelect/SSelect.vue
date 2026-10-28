@@ -87,11 +87,6 @@ defineSlots<{
  */
 const model = defineModel<string | string[]>()
 
-/**
- * The form gets its own hidden select rather than Reka's: Reka assigns an array to
- * `select.value`, so `multiple` submits an empty string, and the Combobox branch would name the
- * values "tags[0]", "tags[1]". `v-model` also brings browser autofill back into the value.
- */
 const isMultiple = computed(() => p.multiple || p.useTags)
 
 // Without v-model a multiple select still holds a list: the rules see [] rather than undefined.
@@ -220,6 +215,10 @@ function focusControl() {
           <slot name="append" />
         </template>
       </SelectDropdown>
+      <!-- The form gets its own hidden select rather than Reka's: Reka assigns an array to
+           select.value, so multiple submits an empty string, and the Combobox branch would name
+           the values "tags[0]", "tags[1]". v-model also brings browser autofill back into the
+           value. -->
       <select
         v-if="p.name"
         v-model="model"

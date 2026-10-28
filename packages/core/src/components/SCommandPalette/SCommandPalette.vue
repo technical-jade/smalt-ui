@@ -52,9 +52,12 @@ const emit = defineEmits<{
 }>()
 
 defineSlots<{
-  /** Row content instead of the icon, the label and the shortcut hints. */
+  /**
+   * Row content instead of the icon, the label, the description and the shortcut hints. `active`
+   * is true while the row is highlighted by the keyboard or the pointer.
+   */
   item?: (props: { item: SCommandItem; active: boolean }) => unknown
-  /** Panel content when nothing matches the query. */
+  /** Panel content when nothing matches the query (not shown while `loading`). */
   empty?: (props: Record<string, never>) => unknown
   /** Hint row under the list, for example the keys that navigate and run a command. */
   footer?: (props: Record<string, never>) => unknown

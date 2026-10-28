@@ -25,14 +25,15 @@ const elevationStyle = useElevationProp(p, 's-surface')
 const { onOpenChange, onKeydown } = useMenuTabOut(() => p.modal)
 
 const emit = defineEmits<{
-  /** A menu item was selected; receives the item's `value`. */
+  /** A menu item was selected; receives the item's `value`. Items without `value` emit nothing. */
   select: [value: string]
 }>()
 
 defineSlots<{
   /**
-   * Area that opens the menu on right-click. From the keyboard (Shift+F10, the menu key) the menu
-   * opens only when this element is focusable.
+   * Area that opens the menu on right-click. It is rendered with `as-child`, so it needs a single
+   * root element. From the keyboard (Shift+F10, the menu key) the menu opens only when this
+   * element is focusable.
    */
   default?: (props: Record<string, never>) => unknown
   /**

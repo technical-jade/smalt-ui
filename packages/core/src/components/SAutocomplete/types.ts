@@ -52,7 +52,9 @@ export interface SAutocompleteProps extends SValidationProps<string> {
   openOnFocus?: boolean
   /** Hint below the field. */
   hint?: string
-  /** Error message. When set, the field is marked invalid. */
+  /**
+   * Error message. When set, the field is marked invalid; the text wins over the `rules` error.
+   */
   error?: string
   /** Explicitly marks the field invalid (in addition to `error`). */
   invalid?: boolean
@@ -61,7 +63,7 @@ export interface SAutocompleteProps extends SValidationProps<string> {
    * `free-text` the input text is sent.
    */
   name?: string
-  /** Required field: a `*` marker next to the label. */
+  /** Required field: a `*` marker next to the label and `aria-required` on the input. */
   required?: boolean
   /** Disables the field. */
   disabled?: boolean
@@ -73,7 +75,10 @@ export interface SAutocompleteProps extends SValidationProps<string> {
   size?: SAutocompleteSize
   /** Square corners: removes the rounding of the frame and the suggestion panel. */
   square?: boolean
-  /** Shows the clear button: it resets both the selection and the query text. */
+  /**
+   * Shows the clear button while there is a selection or query text: it resets both. A disabled
+   * field has no clear button.
+   */
   clearable?: boolean
   /** Clear button icon: a registry name or a raw path. */
   clearIcon?: string

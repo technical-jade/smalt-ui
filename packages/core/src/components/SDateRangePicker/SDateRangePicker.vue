@@ -35,7 +35,7 @@ const formatLocale = useFormatLocale(() => p.locale)
 
 const elevationStyle = useElevationProp(p, 's-surface')
 
-const outOfRange = ref(false)
+const typedDateInvalid = ref(false)
 
 const floating = computed(() => p.floatingLabel && !!p.label)
 
@@ -92,7 +92,7 @@ defineExpose(expose)
     :label="p.label"
     :hint="p.hint"
     :error="errorMessage"
-    :invalid="p.invalid || outOfRange"
+    :invalid="p.invalid || typedDateInvalid"
     :required="p.required"
     :size="p.size"
     :floating-label="floating"
@@ -126,7 +126,7 @@ defineExpose(expose)
           :invalid="fieldInvalid"
           :open-calendar-label="p.openCalendarLabel"
           :is-date-disabled="p.isDateDisabled"
-          @invalid="outOfRange = $event"
+          @invalid="typedDateInvalid = $event"
         >
           <template
             v-if="$slots.prepend"

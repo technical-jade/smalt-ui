@@ -40,11 +40,11 @@ defineSlots<{
   /** Content of the drop zone (or of the compact button) instead of the default text. */
   hint?: (props: Record<string, never>) => unknown
   /**
-   * One row of the selected list. Receives `{ file, index, remove }` — this is where an app
-   * draws its own upload progress.
+   * Row content of the selected list instead of the name, the size and the remove button.
+   * Receives `{ file, index, remove }` — this is where an app draws its own upload progress.
    */
   file?: (props: SFileUploadFileSlotProps) => unknown
-  /** Shown in place of the list while nothing is selected. */
+  /** Shown in place of the list while nothing is selected (with `showList` on). */
   empty?: (props: Record<string, never>) => unknown
 }>()
 

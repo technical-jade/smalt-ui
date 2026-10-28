@@ -3,9 +3,9 @@ import type { SElevation } from '../../composables/useElevationProp'
 export interface SCommandItem {
   /** Identity of the command: the row is keyed by it and `select` reports the whole item. */
   id: string
-  /** Command name: what the row shows and what the search matches first. */
+  /** Command name: the row text; the filter searches it, `description` and `keywords`. */
   label: string
-  /** Secondary text in the row: what the command does or where it leads. */
+  /** Secondary text in the row: what the command does or where it leads. The search covers it. */
   description?: string
   /** Leading icon of the row (a registry name or a raw SVG path). */
   icon?: string
@@ -45,12 +45,15 @@ export interface SCommandPaletteProps {
   filter?: boolean
   /**
    * Key that opens the palette together with Cmd (macOS) or Ctrl. A Latin letter or digit also
-   * works on a non-Latin keyboard layout, through the same physical key. `false` binds nothing
-   * and leaves `v-model:open` as the only way in.
+   * works on a non-Latin keyboard layout, through the same physical key. It does not fire while
+   * focus is in a text field. `false` binds nothing and leaves `v-model:open` as the only way in.
    * @defaultValue 'k'
    */
   shortcutKey?: string | false
-  /** A search is in flight: a spinner appears in the input and the list reports it. */
+  /**
+   * A search is in flight: a spinner appears in the input, and an empty list shows "Loading"
+   * instead of the empty state.
+   */
   loading?: boolean
   /**
    * Height the list may grow to before it scrolls (`22rem` by default); a number means pixels.

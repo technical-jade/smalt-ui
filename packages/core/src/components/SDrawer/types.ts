@@ -19,7 +19,10 @@ export interface SDrawerProps {
    * never taller than the screen.
    */
   height?: string | number
-  /** Drawer title (can be replaced with the `title` slot). */
+  /**
+   * Drawer title (can be replaced with the `title` slot). Without a title the drawer takes its
+   * accessible name from a hidden "Panel" label in the locale dictionary.
+   */
   title?: string
   /** Description below the title (can be replaced with the `description` slot). */
   description?: string

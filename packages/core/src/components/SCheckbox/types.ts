@@ -17,15 +17,21 @@ export interface SCheckboxProps extends SValidationProps<boolean | 'indeterminat
   ariaLabel?: string
   /** Checkbox value in a group/form (the `value` attribute). */
   value?: string
-  /** Disables the checkbox. */
+  /** Disables the checkbox; a disabled checkbox is not validated. */
   disabled?: boolean
   /** Field name in native form submission: the value is sent in a hidden input. */
   name?: string
-  /** Marks the checkbox as required: adds `*` to the label and sets `required`. */
+  /**
+   * Marks the checkbox as required: adds `*` to the label and sets `required` (`aria-required`).
+   * It does not check the box by itself — use `rules` for that.
+   */
   required?: boolean
   /** Hint below the checkbox. */
   hint?: string
-  /** Error message below the checkbox. When set, the checkbox is marked invalid. */
+  /**
+   * Error message below the checkbox. When set, the checkbox is marked invalid;
+   * the text wins over the `rules` error.
+   */
   error?: string
   /** Marks the checkbox invalid explicitly (in addition to `error`). */
   invalid?: boolean

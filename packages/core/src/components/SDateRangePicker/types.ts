@@ -20,7 +20,9 @@ export interface SDateRangePickerProps extends SValidationProps<SDateRange | und
   label?: string
   /** Hint below the field. */
   hint?: string
-  /** Error message. When set, the field is marked invalid. */
+  /**
+   * Error message. When set, the field is marked invalid; the text wins over the `rules` error.
+   */
   error?: string
   /** Field size: `sm` (32px), `md` (40px) or `lg` (48px). @defaultValue 'md' */
   size?: SDateRangePickerSize
@@ -28,9 +30,14 @@ export interface SDateRangePickerProps extends SValidationProps<SDateRange | und
   disabled?: boolean
   /** Read-only: the value cannot be changed. */
   readonly?: boolean
-  /** Field name in native form submission: the value is sent in a hidden input. */
+  /**
+   * Field name in native form submission. The value is sent in a hidden input as an ISO 8601
+   * interval (`2024-03-01/2024-03-15`) and stays empty until both bounds are picked.
+   */
   name?: string
-  /** Marks the field as required: draws `*` next to the label. */
+  /**
+   * Marks the field as required: `*` next to the label and native `required` on the hidden input.
+   */
   required?: boolean
   /** Explicitly marks the field invalid (in addition to `error`). */
   invalid?: boolean
@@ -49,11 +56,20 @@ export interface SDateRangePickerProps extends SValidationProps<SDateRange | und
    * (`ConfigProvider`/`installLocale`, the `locale` option in Nuxt): `en` → `en-US`.
    */
   locale?: string
-  /** Minimum allowed date. */
+  /**
+   * Minimum allowed date: earlier days are disabled in the calendar, and an earlier typed date
+   * marks the field invalid.
+   */
   minValue?: DateValue
-  /** Maximum allowed date. */
+  /**
+   * Maximum allowed date: later days are disabled in the calendar, and a later typed date marks
+   * the field invalid.
+   */
   maxValue?: DateValue
-  /** First day of the week: 0 is Sunday, 1 is Monday, and so on. */
+  /**
+   * First day of the week: 0 is Sunday, 1 is Monday, and so on. Defaults to the formatting
+   * locale.
+   */
   weekStartsOn?: SDateRangePickerWeekStartsOn
   /** Always show 6 weeks (stable grid height). */
   fixedWeeks?: boolean

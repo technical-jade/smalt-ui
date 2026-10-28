@@ -20,7 +20,7 @@ export interface SNavigationMenuLink {
 export interface SNavigationMenuItem {
   /** Item label in the navigation bar. */
   label: string
-  /** URL, when the item is a direct link (no dropdown panel). */
+  /** URL, when the item is a direct link (no dropdown panel). Ignored with `links`. */
   href?: string
   /** Nested links, when the item opens a panel. */
   links?: SNavigationMenuLink[]

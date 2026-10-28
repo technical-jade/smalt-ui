@@ -10,8 +10,8 @@ export interface SSeparatorProps {
    */
   color?: SColorName
   /**
-   * Line orientation: `horizontal` spans the full width, `vertical` the full height of the
-   * container.
+   * Line orientation: `horizontal` spans the full width, `vertical` stretches to the height of the
+   * row of a flex or grid parent.
    */
   orientation?: SSeparatorOrientation
   /**
@@ -21,9 +21,12 @@ export interface SSeparatorProps {
   lineStyle?: SSeparatorLineStyle
   /**
    * When `true`, the separator is purely decorative and hidden from screen readers
-   * (`role="none"`).
+   * (`role="none"`); its label is then read as plain text.
    */
   decorative?: boolean
-  /** Label text in the center of a horizontal separator (alternative to the default slot). */
+  /**
+   * Label text in the center of a horizontal separator (alternative to the default slot). A
+   * vertical one does not render it.
+   */
   label?: string
 }

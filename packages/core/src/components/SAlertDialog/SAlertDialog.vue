@@ -33,7 +33,10 @@ const open = defineModel<boolean>('open')
 const emit = defineEmits<{
   /** The user confirmed the action (confirm button). */
   confirm: []
-  /** The user canceled the action (cancel button). */
+  /**
+   * The user canceled the action: with the cancel button or by closing the dialog with Escape.
+   * Closing through `v-model:open` from code does not emit it.
+   */
   cancel: []
 }>()
 

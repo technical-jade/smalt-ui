@@ -45,9 +45,10 @@ export interface SValidationProps<T> {
    */
   rules?: readonly SRule<T>[]
   /**
-   * When the field checks its rules: `blur` (after the user leaves the field, then on every
-   * change while an error is shown), `input` (on every change) or `submit` (only on form
-   * submission and `validate()`). Overrides `validate-on` of `SForm`; `blur` by default.
+   * When the field checks its rules: `blur` (after the user leaves the field), `input` (on every
+   * change) or `submit` (only on form submission and `validate()`). While an error is shown, the
+   * field re-checks on every change in any mode. Overrides `validate-on` of `SForm`; `blur` by
+   * default.
    */
   validateOn?: SValidateOn
 }
@@ -80,7 +81,10 @@ export interface UseValidationReturn {
   validating: Readonly<Ref<boolean>>
   /** Runs the rules now; resolves to `true` when the value is valid. */
   validate(): Promise<boolean>
-  /** Clears the error; the field waits for the next trigger again. */
+  /**
+   * Clears the rules error (an external `error` stays); the field waits for the next trigger
+   * again.
+   */
   resetValidation(): void
   /** Call when focus leaves the control. */
   onBlur(): void

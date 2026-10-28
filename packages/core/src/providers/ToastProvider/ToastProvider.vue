@@ -27,6 +27,11 @@ const props = withDefaults(defineProps<ToastProviderProps>(), {
  */
 const p = useDefaults(props, 'ToastProvider')
 
+defineSlots<{
+  /** Content the provider wraps; notifications render in a portal above it. */
+  default?: (props: Record<string, never>) => unknown
+}>()
+
 const m = useMessages()
 const { toasts, dismiss, clear } = useToast()
 

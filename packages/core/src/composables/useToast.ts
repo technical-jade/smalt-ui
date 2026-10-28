@@ -16,7 +16,10 @@ export interface SToastOptions {
    * the variant color.
    */
   color?: SColorName
-  /** Milliseconds before the notification hides automatically. */
+  /**
+   * Milliseconds before the notification hides automatically. Unset, the provider's `duration`
+   * applies, and without it the `SToast` default.
+   */
   duration?: number
 }
 

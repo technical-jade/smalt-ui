@@ -84,8 +84,9 @@ function selectFocused(event: KeyboardEvent) {
 }
 
 /**
- * Fill ratio of star `i` (0 | 0.5 | 1). Unlike `Math.round(model)`, it shows fractional ratings
- * correctly: a half with `allowHalf` and read-only averages (e.g. 3.7).
+ * Fill ratio of star `i` (0 | 0.5 | 1). A fractional rating (a read-only average of 3.7) is
+ * rounded down: to a whole star, or to a half with `allowHalf`. `Math.round(model)` would
+ * overstate it as 4.
  */
 function fillRatio(i: number): number {
   const value = hovered.value || (model.value ?? 0)

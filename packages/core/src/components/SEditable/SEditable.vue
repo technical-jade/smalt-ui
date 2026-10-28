@@ -38,7 +38,10 @@ const { rootClass, rootStyle, controlAttrs } = useFieldAttrs()
 const emit = defineEmits<{
   /** The value has been committed; carries the new value. */
   submit: [value: string]
-  /** Editing has been dropped (Escape or the cancel control); the value is unchanged. */
+  /**
+   * Editing has been dropped: Escape, the cancel control, or leaving the field with `submit-mode`
+   * `enter`/`none`. The value is unchanged.
+   */
   cancel: []
   /** The editor has been opened. */
   edit: []
@@ -50,12 +53,12 @@ const emit = defineEmits<{
 
 defineSlots<{
   /**
-   * The value as it is shown at rest, instead of plain text. Receives
-   * `{ value, isEditing }`; the placeholder is drawn by the field itself when the value is empty.
+   * The value as it is shown at rest, instead of plain text. Receives `{ value, isEditing }`.
+   * The slot replaces the placeholder as well: it renders an empty value itself.
    */
   preview?: (props: SEditablePreviewSlotProps) => unknown
   /**
-   * Replaces the default row of buttons (`with-controls`). Receives
+   * Replaces the default row of buttons; rendered only with `with-controls`. Receives
    * `{ isEditing, edit, submit, cancel }`.
    */
   controls?: (props: SEditableControlsSlotProps) => unknown

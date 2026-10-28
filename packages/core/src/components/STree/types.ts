@@ -23,6 +23,6 @@ export interface STreeProps {
   items: readonly STreeItem[]
   /** Allows selecting multiple nodes. */
   multiple?: boolean
-  /** Values of the nodes expanded on first render. */
+  /** Keys of the nodes expanded on first render: the node `value`, or its `label` without one. */
   defaultExpanded?: string[]
 }

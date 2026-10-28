@@ -28,7 +28,9 @@ export interface SSelectProps extends SValidationProps<string | string[]> {
   floatingLabel?: boolean | 'pinned'
   /** Hint below the field. */
   hint?: string
-  /** Error message. When set, the field is marked invalid. */
+  /**
+   * Error message. When set, the field is marked invalid; the text wins over the `rules` error.
+   */
   error?: string
   /** Marks the field invalid explicitly (in addition to `error`). */
   invalid?: boolean
@@ -36,9 +38,14 @@ export interface SSelectProps extends SValidationProps<string | string[]> {
   square?: boolean
   /** Field name in native form submission: the value is sent in a hidden input. */
   name?: string
-  /** Required field: a `*` marker next to the label. */
+  /**
+   * Required field: a `*` marker next to the label. With `name` the hidden `<select>` becomes
+   * `required` too and takes part in native form validation.
+   */
   required?: boolean
-  /** Trigger id. Generated (SSR-safe) when not set. */
+  /**
+   * Control id: the trigger, or the input with `searchable`. Generated (SSR-safe) when not set.
+   */
   id?: string
   /** Trigger placeholder text shown until a value is selected. */
   placeholder?: string

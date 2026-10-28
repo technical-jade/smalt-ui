@@ -3,7 +3,10 @@ import type { SColorName } from '../../composables/useColorProp'
 export type SEmptyStateSize = 'sm' | 'md' | 'lg'
 
 export interface SEmptyStateProps {
-  /** Title of the placeholder. Without it the text comes from the locale dictionary. */
+  /**
+   * Title of the placeholder (can be replaced with the `title` slot). Without it the text comes
+   * from the locale dictionary ("No data").
+   */
   title?: string
   /** Explanatory text under the title (can be replaced with the `description` slot). */
   description?: string

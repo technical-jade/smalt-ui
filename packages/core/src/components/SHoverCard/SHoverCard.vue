@@ -27,9 +27,12 @@ const elevationStyle = useElevationProp(p, 's-surface')
 const open = defineModel<boolean>('open', { default: false })
 
 defineSlots<{
-  /** Trigger element that shows the card on hover. */
+  /**
+   * Trigger: the card shows on hover and on focus. It needs a single element — the handlers go
+   * straight onto it (`as-child`).
+   */
   trigger?: (props: Record<string, never>) => unknown
-  /** Card content. */
+  /** Card content. The component's attributes (`class`, `data-*`) go to the card as well. */
   default?: (props: Record<string, never>) => unknown
 }>()
 </script>

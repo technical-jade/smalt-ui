@@ -19,13 +19,16 @@ export interface SCheckboxGroupProps extends SValidationProps<string[]> {
   label?: string
   /** Hint below the group. */
   hint?: string
-  /** Error message below the group. When set, the group is marked invalid. */
+  /**
+   * Error message below the group. When set, the group is marked invalid;
+   * the text wins over the `rules` error.
+   */
   error?: string
   /** Marks the group invalid explicitly (in addition to `error`). */
   invalid?: boolean
   /** Group id. Generated automatically (SSR-safe) when not set. */
   id?: string
-  /** Layout orientation: `vertical` (default) or `horizontal`. */
+  /** Layout orientation: `vertical` (default) or `horizontal`, which wraps. */
   orientation?: SCheckboxGroupOrientation
   /** Size of the group title. @defaultValue 'md' */
   size?: SCheckboxGroupSize
@@ -35,11 +38,14 @@ export interface SCheckboxGroupProps extends SValidationProps<string[]> {
    * lives here.
    */
   groupClass?: HTMLAttributes['class']
-  /** Disables the whole group. */
+  /** Disables the whole group; a disabled group is not validated. */
   disabled?: boolean
   /** Field name in native form submission: the checked values are sent in a hidden input. */
   name?: string
-  /** A choice is required for form submission. */
+  /**
+   * A choice is required: `*` next to the group label, and in native submission (with `name`) an
+   * empty group blocks the form. Inside `SForm` the check is set with `rules`.
+   */
   required?: boolean
   /** Accessible name of the group when there is no visible `label`. */
   ariaLabel?: string

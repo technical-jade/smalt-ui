@@ -1,5 +1,5 @@
-// Typography utility classes (.s-text-*) — the library's only set of global utilities besides
-// normalize/.s-root. Emitted to dist/styles.css, available without the wrapper.
+// Typography utility classes (.s-text-*). Emitted to dist/styles.css and work without the .s-root
+// wrapper.
 // Values come from tokens (var(--s-*)), scale roles from the settings.$typography map.
 @use 'sass:map';
 @use 'settings';
@@ -17,9 +17,9 @@
     }
   }
 
-  // Heading roles use the display font. A separate rule rather than a key in the $typography
-  // map: the map is public (`!default`) and the host overrides it whole per role, so a new
-  // field in its objects would be silently lost on the first override.
+  // Heading roles use the heading font (--s-font-heading). A separate rule rather than a key in
+  // the $typography map: the map is public (`!default`) and the host overrides it whole per role,
+  // so a new field in its objects would be silently lost on the first override.
   .s-text-h1,
   .s-text-h2,
   .s-text-h3,

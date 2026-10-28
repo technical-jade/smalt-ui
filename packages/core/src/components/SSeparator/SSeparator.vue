@@ -14,7 +14,7 @@ const p = useDefaults(props, 'SSeparator')
 const colorStyle = useColorProp(p, 's-separator')
 
 const slots = defineSlots<{
-  /** Label content in the center of a horizontal separator. */
+  /** Label content in the center of a horizontal separator. A vertical one does not render it. */
   default?: (props: Record<string, never>) => unknown
 }>()
 

@@ -34,7 +34,9 @@ function cellLabel(index: number): string {
 }
 
 const emit = defineEmits<{
-  /** All cells are filled; receives the characters, one per cell. */
+  /**
+   * All cells are filled; receives the characters, one per cell. The same code is reported once.
+   */
   complete: [value: string[]]
   /** Focus entered the field. Moving between cells does not count. */
   focus: [event: FocusEvent]
@@ -44,9 +46,9 @@ const emit = defineEmits<{
 const root = useTemplateRef<ComponentPublicInstance>('root')
 
 defineSlots<{
-  /** Content at the start of the field, inside the border (icon, button). */
+  /** Content before the cells (icon, button). */
   prepend?: (props: Record<string, never>) => unknown
-  /** Content at the end of the field, inside the border (icon, button). */
+  /** Content after the cells (icon, button). */
   append?: (props: Record<string, never>) => unknown
 }>()
 

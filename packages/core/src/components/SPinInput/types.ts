@@ -5,7 +5,7 @@ export type SPinInputType = 'text' | 'number'
 export type SPinInputSize = 'sm' | 'md' | 'lg'
 
 export interface SPinInputProps extends SValidationProps<string[]> {
-  /** Control id. Generated automatically when not set (SSR-safe). */
+  /** Control id (set on the first cell). Generated automatically when not set (SSR-safe). */
   id?: string
   /** Field label. */
   label?: string
@@ -13,7 +13,9 @@ export interface SPinInputProps extends SValidationProps<string[]> {
   ariaLabel?: string
   /** Hint below the field. */
   hint?: string
-  /** Error message. When set, the field is marked invalid. */
+  /**
+   * Error message. When set, the field is marked invalid; the text wins over the `rules` error.
+   */
   error?: string
   /** Explicitly marks the field invalid (in addition to `error`). */
   invalid?: boolean
@@ -38,7 +40,10 @@ export interface SPinInputProps extends SValidationProps<string[]> {
   type?: SPinInputType
   /** Hides the entered characters (for secret codes). */
   mask?: boolean
-  /** One-time code (OTP) mode: autofill from SMS or the clipboard on mobile. */
+  /**
+   * One-time code (OTP) mode: the cells get `autocomplete="one-time-code"`, so the browser can
+   * fill in a code from an SMS.
+   */
   otp?: boolean
   /** Placeholder character for empty cells. */
   placeholder?: string

@@ -1,9 +1,9 @@
 export type SAvatarSize = 'sm' | 'md' | 'lg'
 
 export interface SAvatarProps {
-  /** Image URL. If it fails to load, the fallback is shown. */
+  /** Image URL. The fallback is shown while there is none or when it fails to load. */
   src?: string
-  /** Alternative text of the image. */
+  /** Alternative text of the image. Without it the image is treated as decorative (`alt=""`). */
   alt?: string
   /** Fallback content (usually initials) shown when there is no image. */
   fallback?: string

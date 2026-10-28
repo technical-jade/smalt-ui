@@ -8,7 +8,10 @@ export interface SMenubarOption {
   type?: 'item' | 'separator' | 'label'
   /** Item or heading text. Not needed for `separator`. */
   label?: string
-  /** Value passed to the `select` event when the item is selected. */
+  /**
+   * Value passed to the `select` event when the item is selected. An item without it emits no
+   * `select`.
+   */
   value?: string
   /**
    * Leading icon of the item: a registry name (see `registerIcons`) or a raw SVG path (`d`).

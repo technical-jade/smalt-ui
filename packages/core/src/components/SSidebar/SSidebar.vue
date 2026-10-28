@@ -96,7 +96,10 @@ defineSlots<{
   default?: (props: { collapsed: boolean }) => unknown
   /** Bottom of the sidebar: a user card, secondary links. */
   footer?: (props: { collapsed: boolean }) => unknown
-  /** Replaces the collapse button; receives the rail state and the toggle handler. */
+  /**
+   * Replaces the collapse button; receives `collapsed` and the `toggle` handler. Only in the column
+   * with `collapsible`.
+   */
   toggle?: (props: { collapsed: boolean; toggle: () => void }) => unknown
 }>()
 </script>

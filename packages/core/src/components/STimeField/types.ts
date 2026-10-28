@@ -23,7 +23,9 @@ export interface STimeFieldProps extends SValidationProps<STimeValue | undefined
   floatingLabel?: boolean | 'pinned'
   /** Hint below the field. */
   hint?: string
-  /** Error message. When set, the field is marked invalid. */
+  /**
+   * Error message. When set, the field is marked invalid; the text wins over the `rules` error.
+   */
   error?: string
   /** Field size: `sm` (32px), `md` (40px) or `lg` (48px). @defaultValue 'md' */
   size?: STimeFieldSize
@@ -51,8 +53,8 @@ export interface STimeFieldProps extends SValidationProps<STimeValue | undefined
    * @defaultValue 'minute'
    */
   granularity?: STimeFieldGranularity
-  /** Minimum allowed time. */
+  /** Minimum allowed time. A typed time before it marks the field invalid. */
   minValue?: STimeValue
-  /** Maximum allowed time. */
+  /** Maximum allowed time. A typed time after it marks the field invalid. */
   maxValue?: STimeValue
 }

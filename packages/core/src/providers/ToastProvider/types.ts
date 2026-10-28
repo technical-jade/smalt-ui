@@ -13,6 +13,9 @@ export interface ToastProviderProps {
    * a notification is swiped toward its own edge.
    */
   position?: SToastPosition
-  /** Accessible label of the notification region (defaults to the locale dictionary). */
+  /**
+   * Accessible label of the notification region (defaults to the locale dictionary). The hotkey
+   * that jumps to the region is appended to it: `Notifications (F8)`.
+   */
   label?: string
 }

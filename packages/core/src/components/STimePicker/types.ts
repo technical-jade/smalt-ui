@@ -21,13 +21,18 @@ export interface STimePickerProps extends SValidationProps<STimeValue | undefine
   floatingLabel?: boolean | 'pinned'
   /** Hint below the field. */
   hint?: string
-  /** Error message. When set, the field is marked invalid. */
+  /**
+   * Error message. When set, the field is marked invalid; the text wins over the `rules` error.
+   */
   error?: string
   /** Field size: `sm` (32px), `md` (40px) or `lg` (48px). @defaultValue 'md' */
   size?: STimePickerSize
   /** Disables the field and the panel. */
   disabled?: boolean
-  /** Read-only: neither the segments nor the panel can change the value. */
+  /**
+   * Read-only: neither the segments nor the panel can change the value (the panel button is
+   * disabled).
+   */
   readonly?: boolean
   /** Field name in native form submission: the value is sent in a hidden input. */
   name?: string
@@ -56,9 +61,15 @@ export interface STimePickerProps extends SValidationProps<STimeValue | undefine
   minuteStep?: number
   /** Step between the seconds offered by the panel. @defaultValue 1 */
   secondStep?: number
-  /** Minimum allowed time; earlier entries in the panel are disabled. */
+  /**
+   * Minimum allowed time: earlier entries in the panel are disabled, and an earlier typed time
+   * marks the field invalid.
+   */
   minValue?: STimeValue
-  /** Maximum allowed time; later entries in the panel are disabled. */
+  /**
+   * Maximum allowed time: later entries in the panel are disabled, and a later typed time marks
+   * the field invalid.
+   */
   maxValue?: STimeValue
   /** Accessible name of the button that opens the panel (defaults to the locale dictionary). */
   openLabel?: string

@@ -7,7 +7,10 @@ export interface SSwitchProps extends SValidationProps<boolean> {
    * (`primary`/`teal`/`teal-10`).
    */
   color?: SColorName
-  /** Thumb color on the on-state fill: a [palette](/style/palette) name. White by default. */
+  /**
+   * Thumb color on the on-state fill: a [palette](/style/palette) name. White by default when
+   * `color` is set.
+   */
   textColor?: SColorName
   /** Label text next to the switch (can be replaced with the default slot). */
   label?: string
@@ -21,7 +24,10 @@ export interface SSwitchProps extends SValidationProps<boolean> {
   required?: boolean
   /** Hint below the switch. */
   hint?: string
-  /** Error message below the switch. When set, the switch is marked invalid. */
+  /**
+   * Error message below the switch. When set, the switch is marked invalid;
+   * the text wins over the `rules` error.
+   */
   error?: string
   /** Marks the switch invalid explicitly (in addition to `error`). */
   invalid?: boolean

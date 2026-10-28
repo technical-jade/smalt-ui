@@ -91,7 +91,10 @@ const sanitizeValue = (value: string) =>
     .trim()
 const sanitizeName = (name: string) => name.replace(/[^a-zA-Z0-9-]/g, '')
 
-/** Build a CSS string that overrides tokens. Values are not formatted on the client. */
+/**
+ * Builds a CSS string that overrides tokens. Values are not validated: only the characters that
+ * could escape the declaration are stripped.
+ */
 export function createTheme(tokens: ThemeTokens, options: CreateThemeOptions = {}): string {
   const selector = options.selector ?? ':root:root:root'
   const body = Object.entries(tokens)

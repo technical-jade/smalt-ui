@@ -28,7 +28,7 @@ export interface SInputProps extends SValidationProps<string | string[]> {
   /**
    * Type of the native input (plain mode only, not `use-tags`). `number` never reaches the DOM:
    * on intermediate invalid input the browser returns an empty string and silently loses what was
-   * typed, so numeric mode is enabled instead, see `numeric`.
+   * typed, so numeric mode with two decimal places is enabled instead, see `numeric`.
    */
   type?: string
   /** Field label (linked to the input via `for`/`id`). */
@@ -36,14 +36,17 @@ export interface SInputProps extends SValidationProps<string | string[]> {
   /**
    * Floating label: the label sits inside the border, looks like a placeholder at rest and
    * floats up to the top edge on focus or when filled. On by default; `false` renders a regular
-   * label above the field. The label size is fixed and does not depend on `size`.
+   * label above the field. Does not apply in `use-tags` mode. The label size is fixed and does not
+   * depend on `size`.
    * `'pinned'` pins the label to the frame: it never drops into the field, and the placeholder of
    * an empty field stays visible.
    */
   floatingLabel?: boolean | 'pinned'
   /** Hint below the field. */
   hint?: string
-  /** Error message. When set, the field is marked invalid. */
+  /**
+   * Error message. When set, the field is marked invalid; the text wins over the `rules` error.
+   */
   error?: string
   /** Placeholder text in an empty field. */
   placeholder?: string
@@ -67,7 +70,10 @@ export interface SInputProps extends SValidationProps<string | string[]> {
   icon?: string
   /** Registry name or raw path of the trailing icon, drawn on the right (plain mode only). */
   iconRight?: string
-  /** Shows a clear button that resets the field value (plain mode only). */
+  /**
+   * Shows a clear button that resets the field value (not in `use-tags`). It appears only in a
+   * non-empty field; a `disabled` or `readonly` field has none.
+   */
   clearable?: boolean
   /** Registry name or raw path of the clear button icon. */
   clearIcon?: string
@@ -123,7 +129,8 @@ export interface SInputProps extends SValidationProps<string | string[]> {
   numeric?: boolean | SInputNumeric
   /**
    * Tags mode: the field becomes an input for multiple tags. In this mode `modelValue` is a
-   * `string[]` rather than a `string`; the `type`/`iconRight`/`clearable` props do not apply.
+   * `string[]` rather than a `string`; the `type`, `iconRight`, `clearable`, `revealable`,
+   * `readonly`, `prefix`/`suffix`, `mask`/`numeric` and `floatingLabel` props do not apply.
    */
   useTags?: boolean
   /** Tags mode: allows duplicate tags. */

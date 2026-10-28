@@ -10,7 +10,8 @@ export interface SToggleProps {
    */
   color?: SColorName
   /**
-   * Item value inside `SToggleGroup` (unique within the group). Not set on a standalone toggle.
+   * Item value inside `SToggleGroup` (unique within the group). Not set on a standalone toggle:
+   * outside a group the prop is ignored with a dev-mode warning.
    */
   value?: string
   /** Size: `sm`, `md` or `lg`. */

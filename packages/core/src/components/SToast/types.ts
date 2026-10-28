@@ -9,7 +9,7 @@ export interface SToastProps {
   title: string
   /** Additional text below the title. */
   description?: string
-  /** Semantic variant: affects the icon and the accent color. */
+  /** Semantic variant: sets the icon, the accent color and how urgently it is announced. */
   variant?: SToastVariant
   /**
    * Accent color (of the icon): a name from the [palette](/style/palette)

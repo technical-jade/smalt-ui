@@ -27,8 +27,8 @@ export interface SFabProps {
    */
   label?: string
   /**
-   * Accessible name of the button. Required for a circular FAB, which has no visible text.
-   * An extended FAB is named by its `label`.
+   * Accessible name of the button. Required for a circular FAB, which has no visible text (with
+   * `actions`, `actionsLabel` stands in for it). An extended FAB is named by its `label`.
    */
   ariaLabel?: string
   /** Button size: `sm` (40px), `md` (56px) or `lg` (72px). */
@@ -62,8 +62,8 @@ export interface SFabProps {
    */
   openOn?: SFabOpenOn
   /**
-   * Accessible name of the button and of the fan when actions are set and the button has no
-   * visible `label`. Defaults to the locale dictionary entry (`showActions`).
+   * Accessible name of the fan of actions; a circular button without `ariaLabel` gets it too.
+   * Defaults to the locale dictionary entry (`showActions`).
    */
   actionsLabel?: string
 }

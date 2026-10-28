@@ -6,7 +6,8 @@ export type SStatVariant = 'plain' | 'card'
 export interface SStatProps {
   /**
    * What the number means (`Revenue`, `Active users`). Required: a value without a name tells a
-   * reader nothing, and it is the accessible name of the tile.
+   * reader nothing, and it is the accessible name of the tile (during `loading` the "Loading"
+   * string of the locale dictionary replaces it).
    */
   label: string
   /**

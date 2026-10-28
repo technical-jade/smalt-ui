@@ -1,7 +1,7 @@
 import type { SElevation } from '../../composables/useElevationProp'
 
 export interface SColorPickerProps {
-  /** Square field corners: removes the rounding (rounded by default). */
+  /** Square corners of the hex field in the panel: removes the rounding (rounded by default). */
   square?: boolean
   /** Label next to the color preview (in the trigger); it also names the trigger. */
   label?: string

@@ -19,7 +19,7 @@ const p = useDefaults(props, 'SMenubar')
 const elevationStyle = useElevationProp(p, 's-surface')
 
 const emit = defineEmits<{
-  /** A menu item was selected; receives its `value`. */
+  /** A menu item was selected; receives its `value`. Items without `value` emit nothing. */
   select: [value: string]
 }>()
 

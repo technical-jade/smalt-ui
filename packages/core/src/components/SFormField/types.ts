@@ -3,7 +3,7 @@ export type SFormFieldSize = 'sm' | 'md' | 'lg'
 export interface SFormFieldProps {
   /** Field label (rendered via `SLabel`). */
   label?: string
-  /** Hint below the field. */
+  /** Hint below the field. It is hidden while an error is shown. */
   hint?: string
   /** Error message. When set, the field is marked invalid. */
   error?: string
@@ -42,7 +42,8 @@ export interface SFormFieldSlotProps {
   floatingLabel: boolean
   /**
    * Label id for `aria-labelledby` of group fields (Reka `role="group"`), where a native
-   * `<label for>` does not work. `undefined` when there is no label.
+   * `<label for>` does not work. `undefined` when there is no label. With `floatingLabel`
+   * `SFormField` renders no element with this id — the field has to draw it itself.
    */
   labelId: string | undefined
   /** The `aria-describedby` value (hint/error ids) or `undefined`. */

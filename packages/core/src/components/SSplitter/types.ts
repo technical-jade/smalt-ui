@@ -5,7 +5,7 @@ export interface SSplitterPanel {
   name?: string
   /** Initial panel size in percent. */
   defaultSize?: number
-  /** Minimum panel size in percent. @defaultValue 10 */
+  /** Minimum panel size in percent. @defaultValue 0 */
   minSize?: number
   /** Maximum panel size in percent. @defaultValue 100 */
   maxSize?: number

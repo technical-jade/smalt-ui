@@ -7,9 +7,15 @@ export interface SDialogProps {
    * (`32rem` by default).
    */
   width?: string | number
-  /** Dialog title (can be replaced with the `title` slot). */
+  /**
+   * Dialog title (can be replaced with the `title` slot). Without a title the window takes its
+   * accessible name from a hidden "Dialog" label in the locale dictionary.
+   */
   title?: string
-  /** Dialog description (can be replaced with the `description` slot). */
+  /**
+   * Dialog description (can be replaced with the `description` slot), linked to the window
+   * through `aria-describedby`.
+   */
   description?: string
   /** Accessible name of the close button (defaults to the locale dictionary). */
   closeLabel?: string

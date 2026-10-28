@@ -18,18 +18,27 @@ const props = withDefaults(defineProps<SFormProps>(), { noErrorFocus: false })
 const p = useDefaults(props, 'SForm')
 
 const emit = defineEmits<{
-  /** The form passed validation. Without a listener the form is submitted natively. */
+  /**
+   * The form passed validation; the native submission is cancelled. Without a listener for this
+   * event the form is submitted natively, with the `name`/`value` of the pressed button.
+   */
   submit: [event: SubmitEvent]
-  /** A submission failed validation. */
+  /**
+   * A submission failed validation; focus moves to the first field with an error (see
+   * `noErrorFocus`).
+   */
   invalid: [errors: SFormError[]]
-  /** The form was reset; the errors are cleared on the next tick, after the app resets its data. */
+  /**
+   * The form was reset. The native reset is cancelled — the app resets the field values; the
+   * errors are cleared on the next tick, after that.
+   */
   reset: [event: Event]
 }>()
 
 /**
  * Form validity: `true` when every field with rules is checked and valid, `false` when a field
- * shows an error, `null` while some field is unchecked. Read-only for the app: a written value
- * is replaced with the actual state.
+ * shows an error, `null` while some field is unchecked or an async check is running. Read-only for
+ * the app: a written value is replaced with the actual state.
  */
 const valid = defineModel<boolean | null>({ default: null })
 

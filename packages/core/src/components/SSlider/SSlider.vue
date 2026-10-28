@@ -96,8 +96,8 @@ function onDragEnd(): void {
 
 defineSlots<{
   /**
-   * Value bubble content. Defaults to the number; to show "%" or a "20–70" range, format it
-   * here. Rendered for each thumb.
+   * Value bubble content (with `show-value`). Defaults to the number; to show "%" or a "20–70"
+   * range, format it here. Rendered for each thumb.
    */
   value: (props: { value: number; index: number }) => unknown
 }>()

@@ -30,13 +30,13 @@ export interface SSidebarProps {
    */
   breakpoint?: SSidebarBreakpoint
   /**
-   * Hairline between the column and the page.
+   * Hairline between the column and the page (not drawn in the drawer).
    * @defaultValue true
    */
   bordered?: boolean
   /**
    * Shows the button that collapses the column to a rail of icons. Turning it off leaves
-   * `v-model:collapsed` under the application's own control.
+   * `v-model:collapsed` under the application's own control. The drawer has no such button.
    * @defaultValue true
    */
   collapsible?: boolean

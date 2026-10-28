@@ -19,7 +19,8 @@ export interface STimelineItem {
   icon?: string
   /**
    * Accent color of this item: a name from the [palette](/style/palette)
-   * (`primary`/`teal`/`teal-10`). Overrides the timeline color.
+   * (`primary`/`teal`/`teal-10`). Overrides the timeline color and paints the item indicator in
+   * any state.
    */
   color?: SColorName
   /**
@@ -62,8 +63,8 @@ export interface STimelineProps {
    */
   labelPlacement?: STimelineLabelPlacement
   /**
-   * Width in pixels below which a horizontal timeline switches to vertical. It is compared with
-   * the width available to the timeline, not the window: in a narrow column or a modal the rail
+   * Width in pixels below which the timeline switches to `narrow-orientation`. It is compared
+   * with the width of the parent element, not the window: in a narrow column or a modal the rail
    * breaks even on a wide screen. Without the prop the layout never changes.
    */
   stackAt?: number

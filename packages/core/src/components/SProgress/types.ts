@@ -4,11 +4,19 @@ export type SProgressSize = 'sm' | 'md' | 'lg'
 export type SProgressVariant = 'primary' | 'positive' | 'warning' | 'negative'
 
 export interface SProgressProps {
-  /** Current value. `null` or unset means indeterminate progress (animated). */
+  /**
+   * Current value. `null` or unset means indeterminate progress (animated). A value outside
+   * `0…max` is clamped to the nearest bound.
+   */
   value?: number | null
-  /** Maximum value (100% of the scale). */
+  /**
+   * Maximum value (100% of the scale). Anything but a finite positive number is replaced with 100.
+   */
   max?: number
-  /** Bar thickness: `sm`/`md`/`lg`. */
+  /**
+   * Size `sm`/`md`/`lg`: the bar thickness; for the ring, the diameter (32/48/64px) and the
+   * default stroke width.
+   */
   size?: SProgressSize
   /** Fill color variant. */
   variant?: SProgressVariant
@@ -27,6 +35,9 @@ export interface SProgressProps {
    * Overrides the variant color.
    */
   color?: SColorName
-  /** Accessible name (`aria-label`) when there is no visible label. */
+  /**
+   * Accessible name (`aria-label`) when there is no visible label. Without it the name is the
+   * fill percentage, or the `loading` string of the locale dictionary for indeterminate progress.
+   */
   label?: string
 }

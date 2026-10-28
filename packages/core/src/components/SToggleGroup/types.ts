@@ -17,7 +17,9 @@ export interface SToggleGroupProps {
    * follows `v-model`: an array means `multiple`.
    */
   type?: SToggleGroupType
-  /** Size of the toggles in the group. */
+  /**
+   * Size of the toggles in the group (a default for `SToggle` in the slot; their own `size` wins).
+   */
   size?: SToggleSize
   /**
    * Look of the on state of the group's toggles: `tonal` or `outline`. Also the default for

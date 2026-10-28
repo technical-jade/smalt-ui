@@ -21,13 +21,15 @@ const sizeStyle = computed(() => {
 const open = defineModel<boolean>('open')
 
 defineSlots<{
-  /** Trigger element that opens the drawer (wrapped in `DialogTrigger`). */
+  /**
+   * Element that opens the drawer: it becomes the trigger itself (`DialogTrigger` with `as-child`).
+   */
   trigger?: (props: Record<string, never>) => unknown
   /** Title (replaces the `title` prop). */
   title?: (props: Record<string, never>) => unknown
   /** Description (replaces the `description` prop). */
   description?: (props: Record<string, never>) => unknown
-  /** Main content (body) of the drawer. */
+  /** Main content (body) of the drawer; it scrolls when it does not fit. */
   default?: (props: Record<string, never>) => unknown
   /** Footer, usually action buttons. */
   footer?: (props: Record<string, never>) => unknown

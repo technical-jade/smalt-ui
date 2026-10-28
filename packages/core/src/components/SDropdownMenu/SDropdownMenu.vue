@@ -38,12 +38,12 @@ const { onOpenChange, onKeydown } = useMenuTabOut(() => p.modal)
 watch(open, onOpenChange, { flush: 'sync' })
 
 const emit = defineEmits<{
-  /** A menu item was selected; receives the item's `value`. */
+  /** A menu item was selected; receives the item's `value`. Items without `value` emit nothing. */
   select: [value: string]
 }>()
 
 defineSlots<{
-  /** Trigger element that opens the menu on click. */
+  /** Element that opens the menu on click: it becomes the trigger itself (`as-child`). */
   trigger?: (props: Record<string, never>) => unknown
   /**
    * Menu content instead of the `items` prop. Only Reka primitives become menu items

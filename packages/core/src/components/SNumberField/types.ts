@@ -15,7 +15,9 @@ export interface SNumberFieldProps extends SValidationProps<number | null> {
   floatingLabel?: boolean | 'pinned'
   /** Hint below the field. */
   hint?: string
-  /** Error message. When set, the field is marked invalid. */
+  /**
+   * Error message. When set, the field is marked invalid; the text wins over the `rules` error.
+   */
   error?: string
   /** Marks the field invalid explicitly (in addition to `error`). */
   invalid?: boolean
@@ -31,7 +33,7 @@ export interface SNumberFieldProps extends SValidationProps<number | null> {
   stretch?: boolean
   /** Field name in native form submission: the value is sent in a hidden input. */
   name?: string
-  /** Marks the field as required. */
+  /** Marks the field as required: `*` next to the label and native `required`. */
   required?: boolean
   /** Disables the field and the step buttons. */
   disabled?: boolean

@@ -14,7 +14,9 @@ export interface SPopoverProps {
   sideOffset?: number
   /** Modal mode: blocks interaction with the background and enables a focus trap. */
   modal?: boolean
-  /** Accessible name of the popover panel (`aria-label`). */
+  /**
+   * Accessible name of the popover panel (`aria-label`). Without it the trigger names the panel.
+   */
   ariaLabel?: string
   /** Removes the shadow. Overridden by the `elevation` prop when it is set. */
   flat?: boolean

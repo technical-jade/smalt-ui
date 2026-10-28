@@ -21,7 +21,7 @@ export interface SMessages {
   clear: string
   /** Button that opens the list in a searchable `SSelect`. */
   showOptions: string
-  /** Placeholder shown when a searchable `SSelect` has no matches. */
+  /** Placeholder shown when nothing matches (a searchable `SSelect`, `SCommandPalette`). */
   selectEmpty: string
   /** Placeholder shown when `SListbox` has no options. */
   listboxEmpty: string
@@ -67,7 +67,7 @@ export interface SMessages {
   alertDialogLabel: string
   /** Default label of the confirm button (`SAlertDialog`). */
   confirm: string
-  /** Default label of the cancel button (`SAlertDialog`). */
+  /** Default label of the cancel button (`SAlertDialog`, `SEditable`). */
   cancel: string
   /** Accessible name of the breadcrumb navigation (`SBreadcrumb`). */
   breadcrumb: string
@@ -89,7 +89,10 @@ export interface SMessages {
   rangeEnd: string
   /** Placeholder shown when `SAutocomplete` has no suggestions. */
   autocompleteEmpty: string
-  /** Hidden label of a loading state (`SAutocomplete` suggestions, indeterminate `SProgress`). */
+  /**
+   * Label of a loading state (`SAutocomplete`, `SCommandPalette`, `SLoadingOverlay`, `SStat`,
+   * indeterminate `SProgress`).
+   */
   loading: string
   /** Accessible name of the button that scrolls back to the top (`SBackTop`). */
   backToTop: string

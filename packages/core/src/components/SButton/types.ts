@@ -19,8 +19,8 @@ export interface SButtonProps {
    */
   color?: SColorName
   /**
-   * Text/icon color on the fill: a name from the [palette](/style/palette). White by default
-   * (set it for light `color` values).
+   * Text/icon color on the fill: a name from the [palette](/style/palette). Applies to the filled
+   * variants; white by default when `color` is set (set it for light colors).
    */
   textColor?: SColorName
   /** Button size: `sm` (32px), `md` (40px) or `lg` (48px). */
@@ -31,11 +31,14 @@ export interface SButtonProps {
   square?: boolean
   /** `type` of the native button (ignored when `as` is not `button`). */
   type?: 'button' | 'submit' | 'reset'
-  /** Disables the button. */
+  /**
+   * Disables the button. A native button gets `disabled`; a polymorphic one (`as="a"` and the
+   * like) gets `aria-disabled` and its clicks are cancelled.
+   */
   disabled?: boolean
   /**
-   * Loading state: shows a spinner over the content and blocks interaction. The button keeps its
-   * width and its accessible name.
+   * Loading state: shows a spinner over the content and blocks interaction (`aria-busy`,
+   * `aria-disabled`). The button keeps its width, its accessible name and focus.
    */
   loading?: boolean
   /**

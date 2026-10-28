@@ -8,7 +8,10 @@ export interface SListItemProps {
   href?: string
   /** Row title (alternative to the `title` slot). Ignored when the default slot is filled. */
   title?: string
-  /** Secondary line under the title (alternative to the `description` slot). */
+  /**
+   * Secondary line under the title (alternative to the `description` slot). Ignored when the
+   * default slot is filled.
+   */
   description?: string
   /**
    * Leading icon: a registry name or a raw SVG path. Ignored when the `prepend` slot is set.
@@ -24,7 +27,7 @@ export interface SListItemProps {
   clickable?: boolean
   /**
    * Disables the row: dimmed, ignores the pointer and, for a link or a button row, the
-   * keyboard as well.
+   * keyboard as well. The consumer's event listeners are dropped from a disabled row.
    */
   disabled?: boolean
 }

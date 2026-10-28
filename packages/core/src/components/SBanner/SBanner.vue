@@ -21,7 +21,7 @@ const p = useDefaults(props, 'SBanner')
 const m = useMessages()
 
 const emit = defineEmits<{
-  /** The close button was clicked. */
+  /** The close button was clicked (the built-in one or the one from the `close` slot). */
   close: []
 }>()
 
