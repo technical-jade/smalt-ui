@@ -32,6 +32,16 @@ describe('SButton · browser', () => {
     expect(getComputedStyle(container.querySelector('.s-button')!).boxShadow).toBe('none')
   })
 
+  // The test app has no .s-root around it, like a portal: browser link styles apply.
+  it('a link button is not underlined outside the .s-root container', () => {
+    const { container } = render(SButton, {
+      props: { as: 'a', variant: 'ghost' },
+      attrs: { href: '#' },
+      slots: { default: 'Link' },
+    })
+    expect(getComputedStyle(container.querySelector('.s-button')!).textDecorationLine).toBe('none')
+  })
+
   it('elevation overrides flat', () => {
     const { container } = render(SButton, {
       props: { flat: true, elevation: 3, variant: 'primary' },

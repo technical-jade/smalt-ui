@@ -14,7 +14,8 @@ export interface SButtonProps {
   variant?: SButtonVariant
   /**
    * Accent color: a name from the [palette](/style/palette) (`primary`/`teal`/`teal-10`).
-   * Overrides the variant color.
+   * Overrides the variant color. `neutral` is the regular text color of the theme: on `ghost` and
+   * `outline` it suits secondary actions, and the hover and press highlights are neutral too.
    */
   color?: SColorName
   /**

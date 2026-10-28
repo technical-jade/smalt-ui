@@ -14,6 +14,12 @@ describe('SIcon', () => {
     expect(plain.container.querySelector('svg.s-icon')?.getAttribute('style')).toBeNull()
   })
 
+  it('color="neutral" takes the theme text color', () => {
+    const { container } = render(SIcon, { props: { color: 'neutral' }, slots: { default: path } })
+    const svg = container.querySelector('svg.s-icon') as SVGElement
+    expect(svg.getAttribute('style') ?? '').toContain('color: var(--s-color-text)')
+  })
+
   it('renders an svg with the slot content', () => {
     const { container } = render(SIcon, { slots: { default: path } })
     const svg = container.querySelector('svg.s-icon')

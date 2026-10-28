@@ -21,6 +21,17 @@ describe('useColorProp', () => {
     expect(s['--s-badge-c-on']).toBe('var(--s-dark)')
   })
 
+  it('neutral is the theme text color, and content on its fill takes the surface color', () => {
+    const s = useColorProp({ color: 'neutral' }, 's-button').value!
+    expect(s['--s-button-c']).toBe('var(--s-color-text)')
+    expect(s['--s-button-c-on']).toBe('var(--s-color-surface)')
+  })
+
+  it('text-color neutral resolves to the theme text color', () => {
+    const s = useColorProp({ color: 'teal', textColor: 'neutral' }, 's-badge').value!
+    expect(s['--s-badge-c-on']).toBe('var(--s-color-text)')
+  })
+
   it('text-color only — no accent variables', () => {
     const s = useColorProp({ textColor: 'black' }, 's-button').value!
     expect(s['--s-button-c-on']).toBe('var(--s-black)')

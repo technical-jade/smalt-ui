@@ -14,6 +14,8 @@ $sizes: sm, md, lg;
   @include tools.typescale('label-lg');
   border: 1px solid transparent;
   border-radius: var(--s-radius-md);
+  // A link button (as="a") in a portal lies outside .s-root, where links keep their underline.
+  text-decoration: none;
   cursor: pointer;
   user-select: none;
   @include tools.transition(background-color, box-shadow, color, border-color);

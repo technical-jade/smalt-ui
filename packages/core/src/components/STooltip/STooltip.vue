@@ -50,6 +50,22 @@ function onTriggerPointerDown(event: PointerEvent) {
 }
 
 /**
+ * Reka closes the tooltip when the trigger loses focus. A tap on a link inside a tooltip opened by
+ * a tap would take focus off the trigger, and the tooltip would vanish before the click: the link
+ * would not work. So a trigger pressed by touch does not take focus from the emulated mousedown,
+ * unless the press lands in a field, which must still get focus for typing.
+ */
+function onTriggerMouseDown(event: MouseEvent) {
+  if (p.trigger !== 'auto' || lastPointerType.value !== 'touch') return
+  const target = event.target
+  const inField =
+    target instanceof Element &&
+    (!!target.closest('input, textarea, select') ||
+      (target instanceof HTMLElement && target.isContentEditable))
+  if (!inField) event.preventDefault()
+}
+
+/**
  * In `auto` mode a mouse click closes the tooltip, as Reka itself does. It has to be repeated
  * here because Reka's built-in closing is disabled (see the markup).
  */
@@ -97,6 +113,7 @@ defineSlots<{
       <TooltipTrigger
         as-child
         @pointerdown="onTriggerPointerDown"
+        @mousedown="onTriggerMouseDown"
         @click="onTriggerClick"
       >
         <slot name="trigger" />

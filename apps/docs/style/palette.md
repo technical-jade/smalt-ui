@@ -92,6 +92,11 @@ The `color` prop of accent components (`SButton`, `SBadge`, `SCheckbox`, `SAlert
 derived automatically. On a light fill, set the text color with the `text-color` prop
 (`<SButton color="yellow" text-color="dark">`). Details are on the component pages.
 
+The props also take one name that is not a palette color: `neutral`, the regular text color of
+the theme (`--s-color-text`). Unlike `gray-*`, it changes with the theme, and the content on a
+`neutral` fill takes the surface color (`--s-color-surface`). It exists only for the props: there
+are no `.s-text-neutral`/`.s-bg-neutral` utility classes, so use the token directly in CSS.
+
 ## Customization
 
 Brand colors are set up out of the box, so there is nothing to call.

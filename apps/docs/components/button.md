@@ -100,12 +100,18 @@ its shades (`primary`, `teal`, `teal-10`). It overrides the variant color while 
 (fill/outline). The `hover`/`active` states are derived automatically. On a light fill, set
 `text-color` to keep the text readable.
 
+`color="neutral"` is the regular text color of the theme. It suits secondary actions and
+navigation: "Edit", a menu button, header items. On `ghost` and `outline` the text and the hover
+and press highlights come out neutral and follow the theme. A filled button with `neutral` takes
+the text color as its fill and the surface color for its content.
+
 <Demo>
   <SButton color="teal">teal</SButton>
   <SButton color="deep-purple">deep-purple</SButton>
   <SButton color="teal-10">teal-10</SButton>
   <SButton variant="outline" color="pink">outline pink</SButton>
   <SButton color="light-blue-3" text-color="dark">light-blue-3 + text-color</SButton>
+  <SButton variant="ghost" color="neutral">ghost neutral</SButton>
 
 <template #code>
 
@@ -125,6 +131,12 @@ its shades (`primary`, `teal`, `teal-10`). It overrides the variant color while 
     text-color="dark"
   >
     Light fill, dark text
+  </SButton>
+  <SButton
+    variant="ghost"
+    color="neutral"
+  >
+    ghost neutral
   </SButton>
 </template>
 ```
@@ -156,6 +168,9 @@ With `prefers-reduced-motion` the spinner turns slower.
 </Demo>
 
 ## As a link
+
+With `as="a"` the button renders as a link and looks the same as a `<button>`: it has no underline
+on the page or inside portals (`SDrawer`, `SDialog`), which lie outside the `.s-root` container.
 
 <Demo>
   <SButton as="a" href="#button" variant="outline">Link button</SButton>

@@ -39,16 +39,23 @@ type GrayStop = 50 | 100 | 200 | 300 | 400 | 500 | 600 | 700 | 800 | 900 | 950
 
 /**
  * Palette color name for the `color`/`text-color` props: a brand role (`primary`), a Material
- * family (`teal`), a family shade (`teal-10`), a neutral tone (`gray-500`) or `white`/`black`.
- * Resolves to the `var(--s-<name>)` token.
+ * family (`teal`), a family shade (`teal-10`), a neutral tone (`gray-500`), `white`/`black` or
+ * `neutral`, the regular text color of the theme. Resolves to the `var(--s-<name>)` token,
+ * `neutral` to `var(--s-color-text)`.
  */
 export type SColorName =
   | SBrandColor
+  | 'neutral'
   | SPaletteFamily
   | `${SPaletteFamily}-${MaterialStop}`
   | `gray-${GrayStop}`
   | 'white'
   | 'black'
+
+/** CSS value of a palette name. */
+export function colorVar(name: SColorName): string {
+  return name === 'neutral' ? 'var(--s-color-text)' : `var(--s-${name})`
+}
 
 /** Color props, implemented by accent components. */
 export interface ColorProps {
@@ -80,13 +87,14 @@ export function useColorProp(
     const style: Record<string, string> = {}
     if (color) {
       const cv = `var(--${name}-c)`
-      style[`--${name}-c`] = `var(--s-${color})`
+      style[`--${name}-c`] = colorVar(color)
       style[`--${name}-c-hover`] = `color-mix(in srgb, ${cv}, var(--s-shade) 12%)`
       style[`--${name}-c-active`] = `color-mix(in srgb, ${cv}, var(--s-shade) 22%)`
       style[`--${name}-c-subtle`] = `color-mix(in srgb, ${cv} 14%, transparent)`
-      style[`--${name}-c-on`] = '#fff'
+      // A fill in the theme text color is light in the dark theme: white content would vanish.
+      style[`--${name}-c-on`] = color === 'neutral' ? 'var(--s-color-surface)' : '#fff'
     }
-    if (textColor) style[`--${name}-c-on`] = `var(--s-${textColor})`
+    if (textColor) style[`--${name}-c-on`] = colorVar(textColor)
     return style
   })
 }

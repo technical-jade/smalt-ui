@@ -2,6 +2,7 @@
 import { computed, useSlots } from 'vue'
 import { resolveIcon, type SIconNode } from '../../composables/useIcons'
 import { useDefaults } from '../../composables'
+import { colorVar } from '../../composables/useColorProp'
 import type { SIconProps, SIconSize } from './types'
 import { devWarn } from '../../internal/dev'
 
@@ -38,7 +39,7 @@ const pixelSize = computed(() => {
 
 const iconStyle = computed(() => ({
   // The color prop sets `color` (= currentColor for stroke/fill); otherwise it is inherited.
-  color: p.color ? `var(--s-${p.color})` : undefined,
+  color: p.color ? colorVar(p.color) : undefined,
   width: cssSize.value,
   height: cssSize.value,
 }))

@@ -167,6 +167,21 @@ describe('STimeline', () => {
     expect(style).toContain('--s-timeline-item-c-on: var(--s-gray-900)')
   })
 
+  it('item colors understand neutral, the theme text color', () => {
+    const { container } = render(STimeline, {
+      props: {
+        items: [
+          { title: 'Draft', color: 'neutral' },
+          { title: 'Shipped', color: 'amber', textColor: 'neutral' },
+        ],
+      },
+    })
+
+    const [draft, shipped] = container.querySelectorAll<HTMLElement>('.s-timeline__item')
+    expect(draft!.style.cssText).toContain('--s-timeline-item-c: var(--s-color-text)')
+    expect(shipped!.style.cssText).toContain('--s-timeline-item-c-on: var(--s-color-text)')
+  })
+
   it('leaves the content color to the timeline when the item has none', () => {
     const { container } = render(STimeline, {
       props: { items: [{ title: 'Shipped', color: 'amber' }] },

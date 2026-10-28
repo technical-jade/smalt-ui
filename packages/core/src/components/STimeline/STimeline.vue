@@ -2,6 +2,7 @@
 import { computed, ref } from 'vue'
 import { SIcon } from '../SIcon'
 import { useColorProp, useDefaults } from '../../composables'
+import { colorVar } from '../../composables/useColorProp'
 import { useStackAt } from '../../internal/useStackAt'
 import type {
   STimelineItem,
@@ -79,8 +80,8 @@ const rows = computed<STimelineSlotProps[]>(() =>
  */
 function itemStyle(item: STimelineItem) {
   const vars: Record<string, string> = {}
-  if (item.color) vars['--s-timeline-item-c'] = `var(--s-${item.color})`
-  if (item.textColor) vars['--s-timeline-item-c-on'] = `var(--s-${item.textColor})`
+  if (item.color) vars['--s-timeline-item-c'] = colorVar(item.color)
+  if (item.textColor) vars['--s-timeline-item-c-on'] = colorVar(item.textColor)
   return Object.keys(vars).length ? vars : undefined
 }
 </script>
