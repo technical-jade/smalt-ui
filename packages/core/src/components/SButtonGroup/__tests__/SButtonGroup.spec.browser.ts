@@ -28,6 +28,23 @@ describe('SButtonGroup · browser', () => {
     expect(more!.width).toBe(40)
   })
 
+  it('next to a tall field in a flex row, an attached group keeps its height', () => {
+    const { container } = render({
+      components: { SButtonGroup, SButton },
+      template: `
+        <div style="display: flex; gap: 8px">
+          <textarea rows="6"></textarea>
+          <SButtonGroup>
+            <SButton>Back</SButton>
+            <SButton icon="chevron-down" aria-label="More actions" />
+          </SButtonGroup>
+        </div>`,
+    })
+    const [back, more] = boxes(container)
+    expect(container.querySelector('textarea')!.getBoundingClientRect().height).toBeGreaterThan(80)
+    expect([back!.height, more!.height, more!.width]).toEqual([40, 40, 40])
+  })
+
   it('a single-line attached row keeps the size height', () => {
     const { container } = render({
       components: { SButtonGroup, SButton },

@@ -48,7 +48,6 @@ describe('SToggle · browser', () => {
     },
   )
 
-  // A flex row stretches its items by default, and a min-height toggle would follow the tallest.
   it('next to a tall field in a flex row, a toggle keeps its own height', () => {
     const { container } = render({
       components: { SToggle },

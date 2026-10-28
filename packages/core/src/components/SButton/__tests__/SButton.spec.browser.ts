@@ -41,7 +41,7 @@ describe('SButton · browser', () => {
     expect(label.bottom).toBeLessThan(button.bottom)
   })
 
-  // A flex row stretches its items by default, and a min-height button would follow the tallest.
+  // In a default flex row an auto-height control follows the tallest item.
   it('next to a tall field in a flex row, a button keeps its own height', () => {
     const { container } = render({
       components: { SButton },

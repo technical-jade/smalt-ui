@@ -3,6 +3,8 @@
   @include tools.reset-inherited;
   display: inline-flex;
   gap: var(--s-space-1);
+  // Without it the group stretches in a flex row and its items follow it to the neighbor's height.
+  height: fit-content;
 
   // auto brings back the flex stretch that control-size turns off: when a label wraps, the other
   // items take its height.

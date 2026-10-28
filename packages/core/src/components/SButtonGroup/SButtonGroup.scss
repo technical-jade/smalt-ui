@@ -36,6 +36,8 @@
   // auto height below brings back the flex stretch that control-size turns off.
   &--attached.s-button-group--horizontal {
     align-items: stretch;
+    // The group itself would otherwise stretch to a taller neighbor and pass that height down.
+    height: fit-content;
   }
 
   // The neighbour is pulled onto the shared border, so the two 1px lines read as one. Outer

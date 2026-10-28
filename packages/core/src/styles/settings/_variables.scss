@@ -415,10 +415,9 @@ $radius: (
   full: 9999px,
 ) !default;
 
-// Control sizes — a single size map for interactive controls (height / horizontal
-// padding scale / font scale). Replaces duplicated per-component $sizes. pad-y is the vertical
-// padding step of controls whose label wraps (control-size with $grow), picked so one line of a
-// button with an icon still fits into the height.
+// Control sizes — a single size map for interactive controls (height / horizontal padding scale /
+// font scale). pad-y is the vertical padding step of controls whose label wraps (control-size with
+// $grow), picked so one line of a button with an icon still fits into the height.
 $control-sizes: (
   sm: (
     height: 2rem,
