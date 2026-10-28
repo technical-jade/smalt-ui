@@ -19,6 +19,7 @@ const props = withDefaults(defineProps<SDateRangePickerProps>(), {
   floatingLabel: true,
   fixedWeeks: true,
   numberOfMonths: 2,
+  closeOnSelect: false,
 })
 const p = useDefaults(props, 'SDateRangePicker')
 
@@ -108,6 +109,7 @@ defineExpose(expose)
         :week-starts-on="p.weekStartsOn"
         :fixed-weeks="p.fixedWeeks"
         :number-of-months="p.numberOfMonths"
+        :close-on-select="p.closeOnSelect"
         :is-date-disabled="p.isDateDisabled"
         :disabled="p.disabled"
         :readonly="p.readonly"
@@ -122,6 +124,7 @@ defineExpose(expose)
           :described-by="describedBy"
           :invalid="fieldInvalid"
           :open-calendar-label="p.openCalendarLabel"
+          :is-date-disabled="p.isDateDisabled"
           @invalid="outOfRange = $event"
         >
           <template

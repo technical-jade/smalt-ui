@@ -137,7 +137,8 @@ straight away.
 
 ## Error fallback
 
-When `src` fails, `fallback` is requested instead. Without it the frame keeps a muted surface
+When `src` fails, `fallback` is requested instead, and `srcset` and `sizes` are dropped: otherwise
+the browser would pick a candidate from `srcset` again. Without it the frame keeps a muted surface
 that carries `alt` as its accessible name, and the `error` slot replaces that surface with your
 own message. Both `load` and `error` are also emitted, so the page can react — log the miss, hide
 the block, ask for another source.

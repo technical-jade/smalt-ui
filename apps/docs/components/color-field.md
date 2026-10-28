@@ -5,6 +5,8 @@ normalized (case, `#`) and can be changed with the arrow keys and the mouse whee
 `SFormField` (label, hint, error message); the value is a hex string bound with `v-model`, and
 erasing the text (then Enter or leaving the field) clears it to an empty string. For visual color
 picking, use `SColorPicker`.
+A click on the swatch or the padding of the frame puts focus into the field, while buttons in the
+`prepend`/`append` slots keep focus to themselves.
 
 ## Basic usage
 

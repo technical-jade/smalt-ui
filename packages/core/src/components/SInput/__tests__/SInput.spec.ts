@@ -315,6 +315,22 @@ describe('SInput · mask', () => {
     expect(screen.getByLabelText('Quantity')).toHaveAttribute('inputmode', 'numeric')
   })
 
+  it('numeric mode ignores fill-mask together with the mask: no template is drawn', () => {
+    const { container } = render(SInput, {
+      props: {
+        label: 'Amount',
+        numeric: true,
+        mask: 'phone',
+        fillMask: true,
+        placeholder: '0',
+        floatingLabel: false,
+        modelValue: '',
+      },
+    })
+    expect(container.querySelector('.s-input__ghost')).toBeNull()
+    expect(screen.getByLabelText('Amount')).toHaveAttribute('placeholder', '0')
+  })
+
   it('numeric mode: bounds are clamped on change, not on every keystroke', async () => {
     const { emitted } = render(SInput, {
       props: { label: 'Quantity', numeric: { max: 99 }, modelValue: '' },

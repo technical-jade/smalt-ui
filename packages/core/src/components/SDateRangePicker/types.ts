@@ -57,7 +57,16 @@ export interface SDateRangePickerProps extends SValidationProps<SDateRange | und
   fixedWeeks?: boolean
   /** Number of months shown at once. @defaultValue 2 */
   numberOfMonths?: number
-  /** Predicate function: return `true` to disable a specific date. */
+  /**
+   * Closes the calendar once both ends of the range are picked. Off by default: after the end is
+   * picked the calendar stays open, so the range can still be adjusted.
+   * @defaultValue false
+   */
+  closeOnSelect?: boolean
+  /**
+   * Predicate function: return `true` to disable a specific date. A range cannot be stretched
+   * across such a day in the calendar, and a typed range that includes it marks the field invalid.
+   */
   isDateDisabled?: (date: DateValue) => boolean
   /** Accessible name of the open-calendar button (defaults to the locale dictionary). */
   openCalendarLabel?: string

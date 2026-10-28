@@ -89,4 +89,12 @@ describe('SIcon', () => {
     expect(svg.style.height).toBe('1em')
     expect(svg).not.toHaveAttribute('width')
   })
+
+  it('treats a numeric string as pixels, like a number', () => {
+    const { container } = render(SIcon, { props: { icon: 'x', size: '20' } })
+    const svg = container.querySelector('svg')!
+    expect(svg.getAttribute('width')).toBe('20')
+    expect(svg.getAttribute('height')).toBe('20')
+    expect(svg.style.width).toBe('')
+  })
 })

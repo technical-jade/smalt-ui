@@ -101,7 +101,9 @@ const color = ref('#3B82F6')
 
 ## Disabled
 
-`disabled` locks the trigger: the panel does not open and the color cannot be changed.
+`disabled` locks the trigger: the panel does not open and the color cannot be changed. When
+`disabled` turns on while the panel is open, the area, the sliders, the preset swatches and the hex
+field inside it are locked too.
 
 <Demo>
   <ClientOnly>
@@ -122,6 +124,15 @@ const color = ref('#3B82F6')
 
   </template>
 </Demo>
+
+## Accessibility
+
+The area and the sliders are controlled with the arrow keys, like regular sliders. The trigger is
+named by its visible `label`, or "Pick a color" without one; the panel is named "Color picker" and
+the swatch group "Color swatches" (strings of the [locale dictionary](/guide/i18n)). `aria-label`
+sets one name for the trigger and the panel, `swatches-label` for the swatch group. When the
+picker has a `label`, include its text in `aria-label`: the accessible name has to contain the
+visible label (WCAG 2.5.3).
 
 ## API
 

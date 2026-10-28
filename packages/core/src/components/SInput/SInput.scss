@@ -91,8 +91,8 @@ $sizes: sm, md, lg;
     pointer-events: none;
   }
 
-  // Text prefix/suffix (unit of measure) does not capture clicks, so a tap next to the unit
-  // focuses the field instead of doing nothing.
+  // Text prefix/suffix (unit of measure) does not capture clicks: a tap on the unit lands on the
+  // frame, whose mousedown moves focus to the field (focusFromFrame).
   &__affix {
     flex: none;
     color: var(--s-color-text-muted);

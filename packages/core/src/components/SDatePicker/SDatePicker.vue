@@ -107,6 +107,7 @@ defineExpose(expose)
           :described-by="describedBy"
           :invalid="fieldInvalid"
           :open-calendar-label="p.openCalendarLabel"
+          :is-date-disabled="p.isDateDisabled"
           @invalid="outOfRange = $event"
         >
           <template

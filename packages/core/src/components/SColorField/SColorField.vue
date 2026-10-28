@@ -5,6 +5,7 @@ import { ColorFieldRoot, ColorFieldInput } from 'reka-ui'
 import { SFormField } from '../SFormField'
 import ColorFieldEmptyText from './ColorFieldEmptyText'
 import { useDefaults } from '../../composables'
+import { focusFromFrame } from '../../internal/focusFromFrame'
 import { useFieldAttrs } from '../../internal/useFieldAttrs'
 import { useFieldFocus } from '../../internal/useFieldFocus'
 import { useFieldValidation } from '../../internal/useFieldValidation'
@@ -78,6 +79,12 @@ function focusInput() {
   el?.querySelector<HTMLElement>('.s-color-field__input')?.focus()
 }
 const filled = computed(() => !!model.value)
+
+const onFrameMousedown = (event: MouseEvent) =>
+  focusFromFrame(
+    event,
+    (event.currentTarget as HTMLElement).querySelector<HTMLElement>('.s-color-field__input'),
+  )
 </script>
 
 <template>
@@ -113,6 +120,7 @@ const filled = computed(() => !!model.value)
         :data-invalid="fieldInvalid || undefined"
         :disabled="p.disabled"
         :readonly="p.readonly"
+        @mousedown="onFrameMousedown"
       >
         <span
           v-if="$slots.prepend"

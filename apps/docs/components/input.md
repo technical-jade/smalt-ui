@@ -359,7 +359,8 @@ appear in the field, rather than being removed after typing. `true` means intege
 precision and bounds. `v-model` holds a normalized string (dot as the decimal separator, no group
 separators), so `Number(value)` always works, while the field shows the locale's usual formatting.
 
-It also sets `inputmode`, so phones open a numeric keyboard.
+It also sets `inputmode`, so phones open a numeric keyboard. With `numeric` the `mask` and
+`fill-mask` props are ignored.
 
 <Demo>
   <SInput label="Quantity" :numeric="true" placeholder="0" suffix="pcs" :floating-label="false" />
@@ -411,7 +412,9 @@ For a field with a stepper — "minus" and "plus" buttons — there is a separat
 
 The `prefix` and `suffix` props draw text inside the border, before and after the input: units of
 measure, a currency sign, a country code. Unlike the `prepend`/`append` slots, they do not
-intercept clicks — tapping next to the unit moves focus into the field.
+intercept clicks: a click on the unit, like a click on the icon or the padding of the frame, moves
+focus into the field. Buttons and other interactive content in the slots keep focus to
+themselves.
 
 <Demo>
   <SInput label="Weight" suffix="kg" :floating-label="false" placeholder="0" />

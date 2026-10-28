@@ -52,7 +52,10 @@ export interface SDatePickerProps extends SValidationProps<DateValue | undefined
    * outside.
    */
   closeOnSelect?: boolean
-  /** Predicate function: return `true` to disable a specific date. */
+  /**
+   * Predicate function: return `true` to disable a specific date. Such a day cannot be picked in
+   * the calendar, and typed into the segments it marks the field invalid.
+   */
   isDateDisabled?: (date: DateValue) => boolean
   /** Accessible name of the open-calendar button (defaults to the locale dictionary). */
   openCalendarLabel?: string

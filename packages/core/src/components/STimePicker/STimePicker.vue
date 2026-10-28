@@ -1,11 +1,12 @@
 <script setup lang="ts">
-import { computed, ref, useTemplateRef } from 'vue'
+import { computed, inject, ref, toRef, useTemplateRef } from 'vue'
 import { PopoverContent, PopoverPortal, PopoverRoot, PopoverTrigger, TimeFieldRoot } from 'reka-ui'
 import { SIcon } from '../SIcon'
 import { STimeField } from '../STimeField'
 import TimePickerBase, { type TimePickerBaseExposed, type TimePickerFields } from './TimePickerBase'
 import TimePickerPanel from './TimePickerPanel.vue'
 import { useDefaults, useElevationProp, useFormatLocale, useMessages } from '../../composables'
+import { formContextKey } from '../../internal/formContext'
 import { useOwnAccessibleName } from '../../internal/useOwnAccessibleName'
 import type { STimePickerProps } from './types'
 import type { STimeValue } from '../STimeField/types'
@@ -53,6 +54,17 @@ interface FieldExposed {
   resetValidation(): void
   focus(): void
 }
+
+/**
+ * The field treats any `validate-on` it receives as explicit and puts it above the form mode. So
+ * the configured default reaches the field only outside a form with a mode; inside one, only what
+ * was passed to the picker itself does: the raw prop, which `withDefaults` does not fill.
+ */
+const form = inject(formContextKey, null)
+const explicitValidateOn = toRef(props, 'validateOn')
+const validateOn = computed(() =>
+  form?.validateOn.value ? explicitValidateOn.value : p.validateOn,
+)
 
 const field = useTemplateRef<FieldExposed>('field')
 const base = useTemplateRef<TimePickerBaseExposed>('base')
@@ -106,7 +118,7 @@ defineExpose({
     :min-value="p.minValue"
     :max-value="p.maxValue"
     :rules="p.rules"
-    :validate-on="p.validateOn"
+    :validate-on="validateOn"
   >
     <template #append>
       <PopoverRoot v-model:open="open">

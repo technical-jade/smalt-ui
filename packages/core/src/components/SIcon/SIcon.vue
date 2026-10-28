@@ -20,15 +20,19 @@ const SIZES = { sm: 16, md: 20, lg: 24 } as const
 
 const isToken = (size: SIconSize): size is keyof typeof SIZES => size in SIZES
 
+// A numeric string from a static attribute (`size="20"`) would reach the style without a unit.
+const isNumeric = (size: SIconSize) => typeof size === 'string' && /^\d+(\.\d+)?$/.test(size)
+
 /**
  * A CSS length goes to the style: the width/height attributes of an SVG do not take `calc()` or
  * `var()`.
  */
 const cssSize = computed(() =>
-  typeof p.size === 'string' && !isToken(p.size) ? p.size : undefined,
+  typeof p.size === 'string' && !isToken(p.size) && !isNumeric(p.size) ? p.size : undefined,
 )
 const pixelSize = computed(() => {
   if (typeof p.size === 'number') return p.size
+  if (isNumeric(p.size)) return Number(p.size)
   return isToken(p.size) ? SIZES[p.size] : undefined
 })
 

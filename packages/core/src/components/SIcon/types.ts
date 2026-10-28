@@ -15,8 +15,8 @@ export interface SIconProps {
    */
   color?: SColorName
   /**
-   * Size: a token (`sm` 16px / `md` 20px / `lg` 24px), a number of pixels, or a CSS length such as
-   * `1em` to follow the surrounding font size.
+   * Size: a token (`sm` 16px / `md` 20px / `lg` 24px), a number of pixels (also as a string,
+   * `size="20"`), or a CSS length such as `1em` to follow the surrounding font size.
    */
   size?: SIconSize
   /**

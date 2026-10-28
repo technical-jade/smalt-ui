@@ -87,6 +87,14 @@ describe('SImage', () => {
     expect(emitted().error).toHaveLength(1)
   })
 
+  it('drops srcset and sizes on the fallback, or the browser would pick a srcset candidate', async () => {
+    renderImage({ fallback: FALLBACK, srcset: '/media/cover-2x.jpg 2x', sizes: '100vw' })
+    await fireEvent.error(img())
+    expect(img()).toHaveAttribute('src', FALLBACK)
+    expect(img()).not.toHaveAttribute('srcset')
+    expect(img()).not.toHaveAttribute('sizes')
+  })
+
   it('shows the error surface once the fallback fails as well', async () => {
     const { container, emitted } = renderImage({ fallback: FALLBACK })
     await fireEvent.error(img())

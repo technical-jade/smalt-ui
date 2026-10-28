@@ -56,7 +56,8 @@
 
 ## Color
 
-The `color` prop sets a color from the [palette](/style/palette) and overrides `variant`.
+The `color` prop sets a color from the [palette](/style/palette) and overrides the color of any
+`variant`, `neutral` and `current` included.
 
 <Demo>
   <SSpinner color="indigo" />

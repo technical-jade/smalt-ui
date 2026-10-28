@@ -182,8 +182,10 @@ const delivery = shallowRef()
 `rules` run when focus leaves the field; picking from the panel does not count as leaving it. The
 rules receive the `v-model` value, a time or `undefined` while the field is empty: `required()`
 fails on it, and your own rules should let it pass (`!v || …`). `SForm` collects the field,
-blocks a submission that fails and focuses the first segment of the first invalid field. See the
-[Validation](/guide/validation) guide for the details.
+blocks a submission that fails and focuses the first segment of the first invalid field. Inside an
+`SForm` with `validate-on`, the form's mode wins over a configured default (`global` or
+`STimePicker` prop defaults), while `validate-on` set on the picker itself wins over the form, as
+on the other fields. See the [Validation](/guide/validation) guide for the details.
 
 <Demo>
   <ClientOnly>

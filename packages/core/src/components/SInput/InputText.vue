@@ -4,6 +4,7 @@ import { type MaskaDetail, type MaskInputOptions } from 'maska'
 import { vMaska } from 'maska/vue'
 import { SIcon } from '../SIcon'
 import { useMessages } from '../../composables'
+import { focusFromFrame } from '../../internal/focusFromFrame'
 import {
   clampNumeric,
   createMaskEngine,
@@ -156,7 +157,8 @@ const numericInputMode = computed<'decimal' | 'numeric' | undefined>(() =>
 const fillChar = computed(() =>
   typeof props.fillMask === 'string' && props.fillMask.length ? props.fillMask[0] : '_',
 )
-const isFill = computed(() => !!props.mask && !!props.fillMask)
+// Numeric mode ignores the mask, and its template with it.
+const isFill = computed(() => !props.numeric && !!props.mask && !!props.fillMask)
 const fillTemplate = computed(() => (isFill.value ? toTemplate(props.mask!, fillChar.value) : ''))
 const ghostTail = computed(() => fillTemplate.value.slice(display.value.length))
 
@@ -212,6 +214,7 @@ const maskedAttrs = computed(() =>
     }"
     :data-filled="filled || undefined"
     :data-invalid="invalid || undefined"
+    @mousedown="focusFromFrame($event, field)"
   >
     <span
       v-if="$slots.prepend"
@@ -232,7 +235,7 @@ const maskedAttrs = computed(() =>
     >
     <!-- fill-mask: the "ghost" draws the rest of the template over a plain input, see fillChar. -->
     <div
-      v-if="mask && fillMask"
+      v-if="isFill"
       class="s-input__field-box"
     >
       <input

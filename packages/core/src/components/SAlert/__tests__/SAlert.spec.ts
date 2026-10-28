@@ -92,4 +92,12 @@ describe('SAlert', () => {
     await rerender({ visible: true })
     expect(screen.getByText('Saved')).toBeInTheDocument()
   })
+
+  it('icon: false removes the icon, an unset icon keeps the status one', () => {
+    const none = render(SAlert, { props: { icon: false }, slots: { default: 'Text' } })
+    expect(none.container.querySelector('.s-alert__icon')).toBeNull()
+    none.unmount()
+    const status = render(SAlert, { slots: { default: 'Text' } })
+    expect(status.container.querySelector('.s-alert__icon .s-icon')).not.toBeNull()
+  })
 })

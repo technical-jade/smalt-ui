@@ -77,59 +77,10 @@ puts its text there, so there is no need to keep an error variable for every fie
 
 ## Sizes
 
-The `size` prop (`sm` / `md` / `lg`) is passed to the label (`SLabel`) and changes its typography.
-The size of the control itself is managed separately, on the control's side.
-
-<Demo>
-    <SFormField label="sm" size="sm">
-      <template #default="{ id }">
-        <input :id="id" style="width: 100%; height: 2.5rem; padding: 0 12px; border: 1px solid var(--s-color-outline); border-radius: var(--s-radius-sm); background: var(--s-color-surface); color: var(--s-color-text)" />
-      </template>
-    </SFormField>
-    <SFormField label="md" size="md">
-      <template #default="{ id }">
-        <input :id="id" style="width: 100%; height: 2.5rem; padding: 0 12px; border: 1px solid var(--s-color-outline); border-radius: var(--s-radius-sm); background: var(--s-color-surface); color: var(--s-color-text)" />
-      </template>
-    </SFormField>
-    <SFormField label="lg" size="lg">
-      <template #default="{ id }">
-        <input :id="id" style="width: 100%; height: 2.5rem; padding: 0 12px; border: 1px solid var(--s-color-outline); border-radius: var(--s-radius-sm); background: var(--s-color-surface); color: var(--s-color-text)" />
-      </template>
-    </SFormField>
-
-<template #code>
-
-```vue
-<template>
-  <SFormField
-    label="sm"
-    size="sm"
-  >
-    <template #default="{ id }">
-      <input :id="id" />
-    </template>
-  </SFormField>
-  <SFormField
-    label="md"
-    size="md"
-  >
-    <template #default="{ id }">
-      <input :id="id" />
-    </template>
-  </SFormField>
-  <SFormField
-    label="lg"
-    size="lg"
-  >
-    <template #default="{ id }">
-      <input :id="id" />
-    </template>
-  </SFormField>
-</template>
-```
-
-  </template>
-</Demo>
+The label above the field always matches the hint and the error in font size
+(`--s-font-size-xs`), so the `size` prop (`sm` / `md` / `lg`) does not change it: it only sets the
+`s-label--{size}` modifier on the label, and the library fields pass their own `size` here. The
+size of the control itself is managed on the control's side.
 
 ## Label from markup
 

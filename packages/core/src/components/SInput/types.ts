@@ -112,9 +112,10 @@ export interface SInputProps extends SValidationProps<string | string[]> {
    */
   fillMask?: boolean | string
   /**
-   * Numeric mode (plain mode only, not `use-tags`; incompatible with `mask`). `true` allows
-   * integers; an object sets precision and bounds. `v-model` holds a normalized string: a dot as
-   * the decimal separator and no group separators, so `Number(value)` always works.
+   * Numeric mode (plain mode only, not `use-tags`; `mask` and `fill-mask` are ignored with it).
+   * `true` allows integers; an object sets precision and bounds. `v-model` holds a normalized
+   * string: a dot as the decimal separator and no group separators, so `Number(value)` always
+   * works.
    * Example: `:numeric="{ decimals: 2, unsigned: true, max: 1000 }"`.
    */
   numeric?: boolean | SInputNumeric

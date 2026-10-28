@@ -36,11 +36,11 @@ $sizes: (
   }
 
   &--neutral {
-    color: var(--s-color-text-muted);
+    color: var(--s-spinner-c, var(--s-color-text-muted));
   }
 
   &--current {
-    color: currentColor;
+    color: var(--s-spinner-c, currentColor);
   }
 }
 

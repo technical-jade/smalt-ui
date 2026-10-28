@@ -17,10 +17,10 @@ export interface SAlertProps {
   /** Shows the close button: it hides the alert and emits `close`. */
   closable?: boolean
   /**
-   * Icon (a registry name or a raw SVG path). Overrides the variant's status icon; the `icon`
-   * slot takes precedence.
+   * Icon (a registry name or a raw SVG path). Overrides the variant's status icon; `false` leaves
+   * the alert without an icon. The `icon` slot takes precedence.
    */
-  icon?: string
+  icon?: string | false
   /** Accessible name of the close button (defaults to the locale dictionary). */
   closeLabel?: string
 }

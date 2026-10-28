@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest'
 import { fireEvent, render, screen, waitFor } from '@testing-library/vue'
-import { CalendarDate } from '@internationalized/date'
+import { CalendarDate, type DateValue } from '@internationalized/date'
 import { SDatePicker } from '../index'
 
 describe('SDatePicker', () => {
@@ -33,6 +33,17 @@ describe('SDatePicker', () => {
     render(SDatePicker, { props: { label: 'Date', error: 'Enter a date', locale: 'en-US' } })
     expect(screen.getByText('Enter a date')).toBeInTheDocument()
     expect(screen.getByRole('group')).toHaveAttribute('aria-invalid', 'true')
+  })
+
+  it('marks an unavailable date typed into the segments as invalid', async () => {
+    render(SDatePicker, {
+      props: {
+        modelValue: new CalendarDate(2026, 7, 11),
+        isDateDisabled: (date: DateValue) => date.day === 11,
+        locale: 'en-US',
+      },
+    })
+    await waitFor(() => expect(screen.getByRole('group')).toHaveAttribute('aria-invalid', 'true'))
   })
 
   it('applies the size class', () => {

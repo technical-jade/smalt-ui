@@ -5,6 +5,8 @@ import { useColorProp, useDefaults, useMessages } from '../../composables'
 import type { SAlertProps } from './types'
 
 const props = withDefaults(defineProps<SAlertProps>(), {
+  // With `false` in the type Vue treats the prop as boolean and casts an absent one to `false`.
+  icon: undefined,
   variant: 'info',
   closable: false,
 })
@@ -47,7 +49,7 @@ const colorStyle = useColorProp(p, 's-alert')
 const live = computed(() => (p.variant === 'negative' ? 'assertive' : 'polite'))
 const role = computed(() => (p.variant === 'negative' ? 'alert' : 'status'))
 
-// Priority: `icon` slot → `icon` prop → the variant's status icon.
+// Priority: `icon` slot → `icon` prop (`false` removes the icon) → the variant's status icon.
 const STATUS_ICONS: Record<NonNullable<SAlertProps['variant']>, string> = {
   info: 'info',
   positive: 'circle-check',
@@ -55,7 +57,9 @@ const STATUS_ICONS: Record<NonNullable<SAlertProps['variant']>, string> = {
   negative: 'circle-alert',
 }
 
-const statusIcon = computed(() => p.icon ?? STATUS_ICONS[p.variant])
+const statusIcon = computed(() =>
+  p.icon === false ? undefined : (p.icon ?? STATUS_ICONS[p.variant]),
+)
 </script>
 
 <template>
@@ -67,7 +71,10 @@ const statusIcon = computed(() => p.icon ?? STATUS_ICONS[p.variant])
     :role="role"
     :aria-live="live"
   >
-    <span class="s-alert__icon">
+    <span
+      v-if="statusIcon || $slots.icon"
+      class="s-alert__icon"
+    >
       <slot name="icon">
         <SIcon :icon="statusIcon" />
       </slot>

@@ -21,3 +21,14 @@ Localization, accessibility and form fixes.
 - `SToolbar` gets working roving focus: the panel is one tab stop, and the arrow keys, Home and End move focus between its `SButton` and `SToggle` items, skipping disabled ones.
 - An indeterminate `SCheckbox` is no longer submitted as checked by a native form, and with `required` it blocks the submission.
 - `SLoadingOverlay` no longer sets `aria-busy` on itself: a screen reader held back the announcement of its own live region. Put `aria-busy` and `inert` on the covered content instead.
+- `SDatePicker` and `SDateRangePicker` mark a date disabled by `isDateDisabled` and typed into the segments as invalid, as they already did for a date outside `minValue`/`maxValue`; in a range a disabled day inside it counts too.
+- `SDateRangePicker` gets `closeOnSelect` (off by default) to close the calendar once both ends of the range are picked.
+- Inside an `SForm` with `validate-on`, `STimePicker` follows the form's mode instead of a configured prop default, like the other fields.
+- A click on the frame of `SInput` or `SColorField` outside interactive content (a prefix or suffix, the icon, the swatch, the padding) focuses the field.
+- `SInput` with `numeric` ignores `fill-mask` together with `mask`.
+- The `color` of `SSpinner` overrides every variant, `neutral` and `current` included.
+- `SIcon` treats a numeric string `size` (`size="20"`) as pixels.
+- `SImage` drops `srcset` and `sizes` while it shows the `fallback`.
+- `SAlert` accepts `:icon="false"` to remove the icon.
+- The `disabled` of `SColorPicker` also locks the preset swatches and the hex field of an open panel, and the visible `label` names the trigger when `aria-label` is not set.
+- `.s-container--fluid` removes the width cap on every breakpoint, not only below the first one.

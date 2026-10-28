@@ -3,7 +3,7 @@ import { fireEvent, render, screen } from '@testing-library/vue'
 import { flushPromises, mount } from '@vue/test-utils'
 import { defineComponent, h, shallowRef } from 'vue'
 import { Time } from '@internationalized/date'
-import { SForm, required } from '../../../index'
+import { ConfigProvider, SForm, required, type SDefaults } from '../../../index'
 import { STimePicker } from '../index'
 import type { STimeValue } from '../../STimeField/types'
 
@@ -195,5 +195,44 @@ describe('STimePicker', () => {
     await flushPromises()
     expect(onSubmit).toHaveBeenCalledOnce()
     wrapper.unmount()
+  })
+
+  describe('validation mode inside SForm', () => {
+    const failing = () => 'Rule error'
+
+    async function errorAfterInput(defaults: SDefaults, pickerProps: object = {}) {
+      const value = shallowRef<STimeValue | undefined>()
+      const { container, unmount } = render(() =>
+        h(ConfigProvider, { defaults }, () =>
+          h(SForm, { validateOn: 'submit' }, () => [
+            h(STimePicker, {
+              label: 'Appointment',
+              locale: 'en-GB',
+              rules: [failing],
+              ...pickerProps,
+              modelValue: value.value,
+              'onUpdate:modelValue': (next: STimeValue | undefined) => (value.value = next),
+            }),
+          ]),
+        ),
+      )
+      value.value = new Time(10, 0)
+      await flushPromises()
+      const text = container.querySelector('.s-field__error')?.textContent?.trim() ?? null
+      unmount()
+      return text
+    }
+
+    it('a global default yields to the validate-on of the form', async () => {
+      expect(await errorAfterInput({ global: { validateOn: 'input' } })).toBeNull()
+    })
+
+    it('an STimePicker default yields to the validate-on of the form', async () => {
+      expect(await errorAfterInput({ STimePicker: { validateOn: 'input' } })).toBeNull()
+    })
+
+    it('the validate-on of the picker itself wins over the form', async () => {
+      expect(await errorAfterInput({}, { validateOn: 'input' })).toBe('Rule error')
+    })
   })
 })

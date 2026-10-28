@@ -13,7 +13,10 @@ export interface SFormFieldProps {
   required?: boolean
   /** Id of the controlled element. Generated when omitted (SSR-safe). */
   id?: string
-  /** Size (passed to the label). */
+  /**
+   * Field size: the `s-label--{size}` modifier of the label. The font size of the label above the
+   * field does not depend on it: the label always matches the hint and the error.
+   */
   size?: SFormFieldSize
   /**
    * Floating label: the top label is NOT rendered — the field draws the label inside its border

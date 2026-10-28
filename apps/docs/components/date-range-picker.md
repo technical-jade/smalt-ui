@@ -165,7 +165,9 @@ adds `*` to the label, `invalid` marks the field as invalid without an error tex
 ## Date limits
 
 `maxValue` sets the upper bound of the range, and the `isDateDisabled` predicate disables arbitrary
-days (weekends in the example). Disabled days cannot be clicked in the calendar.
+days (weekends in the example). Disabled days cannot be clicked in the calendar, and a range cannot
+be stretched across them. The field checks typed dates the same way: a range with a disabled day at
+an end or inside is marked invalid, but still reaches `v-model`.
 
 <Demo>
   <ClientOnly>
@@ -209,13 +211,15 @@ const noWeekends = (value) => {
 
 `numberOfMonths` sets how many months are shown at once (2 by default), `weekStartsOn` changes the
 first day of the week (1 is Monday), and `fixedWeeks` set to `false` turns off the stable 6-week
-grid height. The effect is visible with the calendar open.
+grid height. `closeOnSelect` closes the calendar once both ends are picked; it is off by default,
+so the range can still be adjusted. The effect is visible with the calendar open.
 
 <Demo>
   <ClientOnly>
     <SDateRangePicker v-model="empty" label="One month" :number-of-months="1" />
     <SDateRangePicker v-model="empty" label="Three months" :number-of-months="3" />
     <SDateRangePicker v-model="empty" label="Week starts on Monday" :week-starts-on="1" :fixed-weeks="false" />
+    <SDateRangePicker v-model="empty" label="Closes after picking" close-on-select />
   </ClientOnly>
 
 <template #code>
@@ -237,6 +241,11 @@ grid height. The effect is visible with the calendar open.
     label="Week starts on Monday"
     :week-starts-on="1"
     :fixed-weeks="false"
+  />
+  <SDateRangePicker
+    v-model="empty"
+    label="Closes after picking"
+    close-on-select
   />
 </template>
 ```

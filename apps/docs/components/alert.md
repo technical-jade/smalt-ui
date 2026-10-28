@@ -71,11 +71,17 @@ const visible = ref(true)
 ## Custom icon
 
 The `icon` prop overrides the icon assigned by the status variant — pass a registry name.
+`:icon="false"` removes the icon altogether; the role for screen readers still follows `variant`.
 
 <Demo>
-  <SAlert variant="positive" icon="info" title="Note" style="width: 100%">
-    The status icon is replaced with a custom one.
-  </SAlert>
+  <div style="display: grid; gap: 12px; width: 100%">
+    <SAlert variant="positive" icon="info" title="Note">
+      The status icon is replaced with a custom one.
+    </SAlert>
+    <SAlert variant="info" :icon="false">
+      An alert without an icon.
+    </SAlert>
+  </div>
 
 <template #code>
 
@@ -87,6 +93,12 @@ The `icon` prop overrides the icon assigned by the status variant — pass a reg
     title="Note"
   >
     The status icon is replaced with a custom one.
+  </SAlert>
+  <SAlert
+    variant="info"
+    :icon="false"
+  >
+    An alert without an icon.
   </SAlert>
 </template>
 ```

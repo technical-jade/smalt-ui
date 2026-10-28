@@ -14,11 +14,6 @@
     padding-inline: var(--s-container-padding-x, var(--s-space-4));
   }
 
-  // Full-width container: side padding stays, the maximum is removed.
-  .s-container--fluid {
-    --s-container-max-width: none;
-  }
-
   @each $bp, $min in settings.$breakpoints {
     @if $min != 0 {
       @media (min-width: $min) {
@@ -27,6 +22,12 @@
         }
       }
     }
+  }
+
+  // Full-width container: side padding stays, the maximum is removed. It comes after the media
+  // queries: the specificity is the same, and earlier in the file the modifier would lose to them.
+  .s-container--fluid {
+    --s-container-max-width: none;
   }
 
   // Hides content visually but keeps it for screen readers: the element stays in the flow and

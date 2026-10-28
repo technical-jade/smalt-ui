@@ -30,7 +30,8 @@ map:
 }
 ```
 
-The `.s-container--fluid` modifier removes the maximum and keeps the side padding.
+The `.s-container--fluid` modifier removes the maximum on every breakpoint and keeps the side
+padding.
 
 <Demo>
   <div style="width: 100%; display: grid; gap: 12px">

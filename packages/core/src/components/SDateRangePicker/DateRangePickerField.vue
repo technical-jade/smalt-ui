@@ -5,6 +5,7 @@ import {
   DateRangePickerInput,
   DateRangePickerTrigger,
 } from 'reka-ui'
+import type { DateValue } from '@internationalized/date'
 import { SIcon } from '../SIcon'
 import { segmentAria, visibleSegments } from '../../internal/dateSegments'
 import SegmentedFieldBridge, {
@@ -27,6 +28,11 @@ defineProps<{
   describedBy?: string
   invalid: boolean
   openCalendarLabel?: string
+  /**
+   * Goes to the field's `isDateUnavailable`: Reka checks a typed date only against it. The root
+   * does not get it, or the calendar days would carry `data-unavailable` on top of `data-disabled`.
+   */
+  isDateDisabled?: (date: DateValue) => boolean
 }>()
 
 const m = useMessages()
@@ -53,6 +59,7 @@ defineSlots<{
     :aria-labelledby="labelId"
     :aria-invalid="invalid || undefined"
     :aria-describedby="describedBy"
+    :is-date-unavailable="isDateDisabled"
     @paste="bridge?.paste($event)"
   >
     <label

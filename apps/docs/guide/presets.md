@@ -75,4 +75,6 @@ There is deliberately no `density` prop: density is a set of defaults (`global: 
 not a property of every component. This keeps the component API from growing, and density can be
 set both globally and for a subtree through [`ConfigProvider`](/guide/defaults).
 For this, every control that density affects has `size`, including `SSelect`, `STextarea`,
-`SNumberField` and `SPinInput`.
+`SNumberField` and `SPinInput`. Choice controls without a text frame (`SCheckbox`, `SSwitch`,
+`SRadio`, `SSlider`) have a fixed geometry and take no `size`: density changes the height of a
+field frame, and they have none.

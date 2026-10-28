@@ -42,8 +42,8 @@ export interface SImageProps {
    */
   placeholder?: boolean
   /**
-   * URL loaded instead of `src` after `src` fails. Without it a failure shows the `error` slot,
-   * or a muted surface when that slot is empty.
+   * URL loaded instead of `src` after `src` fails; `srcset` and `sizes` are dropped then. Without
+   * it a failure shows the `error` slot, or a muted surface when that slot is empty.
    */
   fallback?: string
   /** Square corners: removes the border radius (rounded by default). */

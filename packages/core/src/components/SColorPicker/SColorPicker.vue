@@ -83,7 +83,7 @@ const areaStyle = computed(() => ({ backgroundColor: `hsl(${hue.value}, 100%, 50
           type="button"
           class="s-color-picker__trigger"
           :disabled="p.disabled"
-          :aria-label="p.ariaLabel ?? m.pickColor"
+          :aria-label="p.ariaLabel ?? (p.label ? undefined : m.pickColor)"
         >
           <span
             class="s-color-picker__preview"
@@ -147,6 +147,7 @@ const areaStyle = computed(() => ({ backgroundColor: `hsl(${hue.value}, 100%, 50
           v-if="p.swatches && p.swatches.length"
           v-model="model"
           class="s-color-picker__swatches"
+          :disabled="p.disabled"
           :aria-label="p.swatchesLabel ?? m.colorSwatches"
         >
           <ColorSwatchPickerItem
@@ -165,6 +166,7 @@ const areaStyle = computed(() => ({ backgroundColor: `hsl(${hue.value}, 100%, 50
           label="HEX"
           class="s-color-picker__input"
           :square="p.square"
+          :disabled="p.disabled"
         />
       </div>
     </SPopover>

@@ -53,4 +53,22 @@ describe('SColorPicker', () => {
     await fireEvent.click(screen.getByRole('button', { name: 'Pick a color' }))
     expect(document.querySelector('.s-color-picker__input')).toBeNull()
   })
+
+  it('disabled set while the panel is open blocks both the swatches and the hex field', async () => {
+    const { emitted, rerender } = render(SColorPicker, {
+      props: { modelValue: '#3B82F6', swatches: ['#ff0000'] },
+    })
+    await fireEvent.click(screen.getByRole('button', { name: 'Pick a color' }))
+    await rerender({ disabled: true })
+
+    const panel = document.querySelector('.s-color-picker__panel') as HTMLElement
+    expect(within(panel).getByRole('textbox')).toBeDisabled()
+    await fireEvent.click(panel.querySelector('.s-color-picker__swatch') as HTMLElement)
+    expect(emitted('update:modelValue')).toBeUndefined()
+  })
+
+  it('the visible label is part of the trigger name', () => {
+    render(SColorPicker, { props: { label: 'Accent' } })
+    expect(screen.getByRole('button', { name: /Accent/ })).toBeInTheDocument()
+  })
 })

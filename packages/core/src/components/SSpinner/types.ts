@@ -9,8 +9,8 @@ export interface SSpinnerProps {
   /** Color: accent (`primary`), neutral (`neutral`), or inherited (`current`). */
   variant?: SSpinnerVariant
   /**
-   * Accent color: a name from the [palette](/style/palette) (`primary`/`teal`/`teal-10`).
-   * Overrides `variant`.
+   * Spinner color: a name from the [palette](/style/palette) (`primary`/`teal`/`teal-10`).
+   * Overrides the color of any variant, `neutral` and `current` included.
    */
   color?: SColorName
   /** Accessible name for screen readers (otherwise the spinner is decorative). */

@@ -167,7 +167,10 @@ adds `*` to the label, `invalid` marks the field as invalid without an error tex
 ## Date limits
 
 `maxValue` sets the upper bound of the selection, and the `isDateDisabled` predicate disables
-arbitrary days (weekends in the example). Disabled days cannot be clicked in the calendar.
+arbitrary days (weekends in the example). Disabled days cannot be clicked in the calendar, and a
+disabled date typed into the segments marks the field invalid, as a date outside
+`minValue`/`maxValue` does. The value still reaches `v-model`: to keep the form from submitting it,
+add a rule to `rules`.
 
 <Demo>
   <ClientOnly>

@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest'
-import { render, screen } from '@testing-library/vue'
-import { CalendarDate } from '@internationalized/date'
+import { fireEvent, render, screen, waitFor } from '@testing-library/vue'
+import { CalendarDate, type DateValue } from '@internationalized/date'
 import { SDateRangePicker } from '../index'
 
 const range = {
@@ -54,9 +54,55 @@ describe('SDateRangePicker', () => {
     expect(screen.getByRole('group')).toHaveAttribute('aria-invalid', 'true')
   })
 
+  it('marks a typed range with an unavailable date as invalid', async () => {
+    render(SDateRangePicker, {
+      props: {
+        modelValue: range,
+        isDateDisabled: (date: DateValue) => date.day === 20,
+        locale: 'en-US',
+      },
+    })
+    await waitFor(() => expect(screen.getByRole('group')).toHaveAttribute('aria-invalid', 'true'))
+  })
+
+  it('marks a typed range with an unavailable date inside it as invalid', async () => {
+    render(SDateRangePicker, {
+      props: {
+        modelValue: range,
+        isDateDisabled: (date: DateValue) => date.day === 15,
+        locale: 'en-US',
+      },
+    })
+    await waitFor(() => expect(screen.getByRole('group')).toHaveAttribute('aria-invalid', 'true'))
+  })
+
   it('the calendar is closed by default', () => {
     render(SDateRangePicker, { props: { locale: 'en-US' } })
     expect(screen.queryByRole('button', { name: 'Next month' })).toBeNull()
+  })
+
+  it('the calendar stays open after a range is picked by default', async () => {
+    render(SDateRangePicker, { props: { locale: 'en-US' } })
+    await fireEvent.click(screen.getByRole('button', { name: 'Open calendar' }))
+    await fireEvent.click(
+      (await screen.findAllByText('15', { selector: '.s-date-range-picker__day' }))[0],
+    )
+    await fireEvent.click(screen.getAllByText('18', { selector: '.s-date-range-picker__day' })[0])
+    expect(screen.getByRole('button', { name: 'Next month' })).toBeInTheDocument()
+  })
+
+  it('closeOnSelect closes the calendar once both ends are picked', async () => {
+    const { emitted } = render(SDateRangePicker, {
+      props: { locale: 'en-US', closeOnSelect: true },
+    })
+    await fireEvent.click(screen.getByRole('button', { name: 'Open calendar' }))
+    await fireEvent.click(
+      (await screen.findAllByText('15', { selector: '.s-date-range-picker__day' }))[0],
+    )
+    expect(screen.getByRole('button', { name: 'Next month' })).toBeInTheDocument()
+    await fireEvent.click(screen.getAllByText('18', { selector: '.s-date-range-picker__day' })[0])
+    expect(emitted()['update:modelValue']).toBeTruthy()
+    await waitFor(() => expect(screen.queryByRole('button', { name: 'Next month' })).toBeNull())
   })
 
   it('renders the prepend/append slots inside the frame', () => {
