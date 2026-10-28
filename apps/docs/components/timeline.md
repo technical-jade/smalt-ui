@@ -127,6 +127,12 @@ timeline's.
 <template #code>
 
 ```vue
+<script setup>
+import { ref } from 'vue'
+
+const current = ref('review')
+</script>
+
 <template>
   <STimeline
     v-model="current"

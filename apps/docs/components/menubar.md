@@ -39,6 +39,12 @@ are set with the `menus` prop (a label + items); items work as in `SDropdownMenu
 <template #code>
 
 ```vue
+<script setup>
+function onSelect(value) {
+  console.log(value)
+}
+</script>
+
 <template>
   <SMenubar
     aria-label="Main menu"
@@ -91,6 +97,12 @@ The `icon` field of a menu item draws a leading icon via `SIcon` (a registry nam
 <template #code>
 
 ```vue
+<script setup>
+function onSelect(value) {
+  console.log(value)
+}
+</script>
+
 <template>
   <SMenubar
     aria-label="Main menu"

@@ -72,6 +72,17 @@ const items = [
 <template #code>
 
 ```vue
+<script setup>
+import { ref } from 'vue'
+
+const step = ref(2)
+const items = [
+  { title: 'Shipping', description: 'Address and method' },
+  { title: 'Payment', description: 'Card or invoice' },
+  { title: 'Confirmation', description: 'Review your order' },
+]
+</script>
+
 <template>
   <SStepper
     v-model="step"
@@ -108,6 +119,17 @@ side label the step becomes a row, and the connector becomes a link between step
 <template #code>
 
 ```vue
+<script setup>
+import { ref } from 'vue'
+
+const step = ref(2)
+const items = [
+  { title: 'Shipping', description: 'Address and method' },
+  { title: 'Payment', description: 'Card or invoice' },
+  { title: 'Confirmation', description: 'Review your order' },
+]
+</script>
+
 <template>
   <SStepper
     v-model="step"
@@ -166,6 +188,17 @@ move to the right edge and the labels to the left.
 <template #code>
 
 ```vue
+<script setup>
+import { ref } from 'vue'
+
+const step = ref(2)
+const items = [
+  { title: 'Shipping', description: 'Address and method' },
+  { title: 'Payment', description: 'Card or invoice' },
+  { title: 'Confirmation', description: 'Review your order' },
+]
+</script>
+
 <template>
   <SStepper
     v-model="step"
@@ -212,6 +245,17 @@ circle, and the circles and connectors stay on one axis even when labels differ 
 <template #code>
 
 ```vue
+<script setup>
+import { ref } from 'vue'
+
+const step = ref(2)
+const items = [
+  { title: 'Shipping', description: 'Address and method' },
+  { title: 'Payment', description: 'Card or invoice' },
+  { title: 'Confirmation', description: 'Review your order' },
+]
+</script>
+
 <template>
   <SStepper
     v-model="step"
@@ -250,6 +294,17 @@ frame) the declared `orientation` applies. Without the prop the layout never cha
 <template #code>
 
 ```vue
+<script setup>
+import { ref } from 'vue'
+
+const step = ref(2)
+const items = [
+  { title: 'Shipping', description: 'Address and method' },
+  { title: 'Payment', description: 'Card or invoice' },
+  { title: 'Confirmation', description: 'Review your order' },
+]
+</script>
+
 <template>
   <SStepper
     v-model="step"
@@ -276,6 +331,17 @@ this stepper turns into a row.
 <template #code>
 
 ```vue
+<script setup>
+import { ref } from 'vue'
+
+const step = ref(2)
+const items = [
+  { title: 'Shipping', description: 'Address and method' },
+  { title: 'Payment', description: 'Card or invoice' },
+  { title: 'Confirmation', description: 'Review your order' },
+]
+</script>
+
 <template>
   <SStepper
     v-model="step"
@@ -378,6 +444,17 @@ border; `active-variant="filled"` fills it with the accent, like completed steps
 <template #code>
 
 ```vue
+<script setup>
+import { ref } from 'vue'
+
+const step = ref(2)
+const items = [
+  { title: 'Shipping', description: 'Address and method' },
+  { title: 'Payment', description: 'Card or invoice' },
+  { title: 'Confirmation', description: 'Review your order' },
+]
+</script>
+
 <template>
   <SStepper
     v-model="step"

@@ -143,6 +143,14 @@ placeholder can stand in for the bare line of text. Use the `sm` size there: the
 inside the suggestion panel.
 
 ```vue
+<script setup>
+import { ref } from 'vue'
+
+const city = ref('')
+const query = ref('')
+const options = ['Berlin', 'Boston', 'Brussels']
+</script>
+
 <template>
   <SAutocomplete
     v-model="city"

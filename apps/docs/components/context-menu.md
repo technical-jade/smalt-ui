@@ -36,6 +36,12 @@ destructive action.
 <template #code>
 
 ```vue
+<script setup>
+function onSelect(value) {
+  console.log(value)
+}
+</script>
+
 <template>
   <SContextMenu
     aria-label="Actions"
@@ -88,6 +94,12 @@ The item's `icon` field renders a leading icon with `SIcon` (a registry name or 
 <template #code>
 
 ```vue
+<script setup>
+function onSelect(value) {
+  console.log(value)
+}
+</script>
+
 <template>
   <SContextMenu
     aria-label="Actions"

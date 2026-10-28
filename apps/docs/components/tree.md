@@ -186,7 +186,20 @@ removes it; no <kbd>Ctrl</kbd>/<kbd>Shift</kbd> modifier is needed.
 ```vue
 <script setup>
 import { ref } from 'vue'
+
 const selected = ref([])
+const items = [
+  {
+    label: 'src',
+    value: 'src',
+    icon: 'folder',
+    children: [
+      { label: 'Button.vue', value: 'button', icon: 'file-text' },
+      { label: 'Input.vue', value: 'input', icon: 'file-text' },
+    ],
+  },
+  { label: 'README.md', value: 'readme', icon: 'file-text' },
+]
 </script>
 
 <template>

@@ -18,6 +18,12 @@ it moves to the last page and `update:page` is emitted. With a `total` of zero o
 <template #code>
 
 ```vue
+<script setup>
+import { ref } from 'vue'
+
+const page = ref(1)
+</script>
+
 <template>
   <SPagination
     v-model:page="page"
@@ -44,6 +50,12 @@ jumps to the end.
 <template #code>
 
 ```vue
+<script setup>
+import { ref } from 'vue'
+
+const page = ref(1)
+</script>
+
 <template>
   <SPagination
     v-model:page="page"
@@ -77,6 +89,12 @@ are replaced with arrows.
 <template #code>
 
 ```vue
+<script setup>
+import { ref } from 'vue'
+
+const page = ref(1)
+</script>
+
 <template>
   <SPagination
     v-model:page="page"
@@ -104,6 +122,12 @@ default). A larger value shows more page numbers around the active page.
 <template #code>
 
 ```vue
+<script setup>
+import { ref } from 'vue'
+
+const page = ref(1)
+</script>
+
 <template>
   <SPagination
     v-model:page="page"
@@ -130,6 +154,12 @@ default). A larger value shows more page numbers around the active page.
 <template #code>
 
 ```vue
+<script setup>
+import { ref } from 'vue'
+
+const page = ref(1)
+</script>
+
 <template>
   <SPagination
     v-model:page="page"

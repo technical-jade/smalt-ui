@@ -79,6 +79,17 @@ const items = [
 <template #code>
 
 ```vue
+<script setup>
+import { ref } from 'vue'
+
+const tab = ref('overview')
+const items = [
+  { value: 'overview', label: 'Overview' },
+  { value: 'specs', label: 'Specifications' },
+  { value: 'reviews', label: 'Reviews' },
+]
+</script>
+
 <template>
   <STabs
     v-model="tab"
@@ -86,7 +97,7 @@ const items = [
     orientation="vertical"
     aria-label="Sections"
   >
-    <template #overview>…</template>
+    <template #overview>General product information.</template>
   </STabs>
 </template>
 ```
@@ -120,6 +131,17 @@ It works with `orientation="vertical"` as well.
 <template #code>
 
 ```vue
+<script setup>
+import { ref } from 'vue'
+
+const tab = ref('overview')
+const items = [
+  { value: 'overview', label: 'Overview' },
+  { value: 'specs', label: 'Specifications' },
+  { value: 'reviews', label: 'Reviews' },
+]
+</script>
+
 <template>
   <STabs
     v-model="tab"
@@ -205,6 +227,17 @@ The `color` prop sets the color of the active tab and the indicator from the
 <template #code>
 
 ```vue
+<script setup>
+import { ref } from 'vue'
+
+const tab = ref('overview')
+const items = [
+  { value: 'overview', label: 'Overview' },
+  { value: 'specs', label: 'Specifications' },
+  { value: 'reviews', label: 'Reviews' },
+]
+</script>
+
 <template>
   <STabs
     v-model="tab"

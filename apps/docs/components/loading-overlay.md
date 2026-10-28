@@ -166,6 +166,13 @@ growing percentage by itself. Give the progress a `label` so it is clear what is
 <template #code>
 
 ```vue
+<script setup>
+import { ref } from 'vue'
+
+const uploading = ref(true)
+const uploaded = ref(64)
+</script>
+
 <template>
   <div class="s-loading-overlay-host">
     <SLoadingOverlay :open="uploading">
@@ -251,6 +258,12 @@ one.
 <template #code>
 
 ```vue
+<script setup>
+import { ref } from 'vue'
+
+const loading = ref(true)
+</script>
+
 <template>
   <SLoadingOverlay
     :open="loading"
@@ -284,6 +297,12 @@ wins over both defaults. The same value can be set from CSS through the
 <template #code>
 
 ```vue
+<script setup>
+import { ref } from 'vue'
+
+const loading = ref(true)
+</script>
+
 <template>
   <SLoadingOverlay
     :open="loading"

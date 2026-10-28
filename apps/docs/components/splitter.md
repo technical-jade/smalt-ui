@@ -72,6 +72,13 @@ const panels = [
 <template #code>
 
 ```vue
+<script setup>
+const panels = [
+  { defaultSize: 30, minSize: 15 },
+  { defaultSize: 70, minSize: 30 },
+]
+</script>
+
 <template>
   <SSplitter
     :panels="panels"

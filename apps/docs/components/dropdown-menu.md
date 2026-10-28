@@ -41,6 +41,12 @@ trigger.
 <template #code>
 
 ```vue
+<script setup>
+function onSelect(value) {
+  console.log(value)
+}
+</script>
+
 <template>
   <SDropdownMenu
     aria-label="User menu"
@@ -97,6 +103,12 @@ The item's `icon` field renders a leading icon with `SIcon` (a registry name or 
 <template #code>
 
 ```vue
+<script setup>
+function onSelect(value) {
+  console.log(value)
+}
+</script>
+
 <template>
   <SDropdownMenu
     aria-label="Actions"

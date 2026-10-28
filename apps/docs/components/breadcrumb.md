@@ -58,6 +58,15 @@ The `#separator` slot is drawn between the crumbs instead of the chevron.
 <template #code>
 
 ```vue
+<script setup>
+const items = [
+  { label: 'Home', href: '/' },
+  { label: 'Catalog', href: '#' },
+  { label: 'Smartphones', href: '#' },
+  { label: 'iPhone 15' },
+]
+</script>
+
 <template>
   <SBreadcrumb :items="items">
     <template #separator>/</template>

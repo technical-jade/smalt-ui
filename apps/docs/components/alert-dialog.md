@@ -50,6 +50,20 @@ see [Async confirmation](#async-confirmation).
 <template #code>
 
 ```vue
+<script setup>
+import { ref } from 'vue'
+
+const open = ref(false)
+
+function onDelete() {
+  // delete the project
+}
+
+function onCancel() {
+  // keep the project
+}
+</script>
+
 <template>
   <SAlertDialog
     v-model:open="open"
@@ -99,6 +113,16 @@ an icon next to the title), and the `cancelLabel` prop sets the cancel button la
 <template #code>
 
 ```vue
+<script setup>
+import { ref } from 'vue'
+
+const open = ref(false)
+
+function onPublish() {
+  // publish the article
+}
+</script>
+
 <template>
   <SAlertDialog
     v-model:open="open"

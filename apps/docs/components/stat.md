@@ -234,6 +234,13 @@ the tile is "Loading" from the locale dictionary. The icon and the `actions` slo
 <template #code>
 
 ```vue
+<script setup>
+import { ref } from 'vue'
+
+const pending = ref(true)
+const revenue = ref(1234567)
+</script>
+
 <template>
   <SStat
     variant="card"

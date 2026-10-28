@@ -168,6 +168,25 @@ the combination away from the reader's browser.
 <template #code>
 
 ```vue
+<script setup>
+import { ref } from 'vue'
+
+const open = ref(false)
+const groups = [
+  {
+    label: 'Team',
+    items: [
+      { id: 'ada', label: 'Ada Lovelace', description: 'Owner' },
+      { id: 'grace', label: 'Grace Hopper', description: 'Admin' },
+    ],
+  },
+]
+
+function run(item) {
+  // perform the command
+}
+</script>
+
 <template>
   <!-- Cmd/Ctrl + K by default; `shortcut-key` picks another letter -->
   <SCommandPalette
@@ -240,6 +259,25 @@ belongs to the application's own vocabulary:
 <template #code>
 
 ```vue
+<script setup>
+import { ref } from 'vue'
+
+const open = ref(false)
+const groups = [
+  {
+    label: 'Team',
+    items: [
+      { id: 'ada', label: 'Ada Lovelace', description: 'Owner' },
+      { id: 'grace', label: 'Grace Hopper', description: 'Admin' },
+    ],
+  },
+]
+
+function run(item) {
+  // perform the command
+}
+</script>
+
 <template>
   <SCommandPalette
     v-model:open="open"
@@ -323,6 +361,15 @@ const open = ref(false)
 const search = ref('')
 const loading = ref(false)
 const groups = ref([])
+
+async function searchPeople(query) {
+  // request the matching people from the server
+  return []
+}
+
+function run(item) {
+  // open the chosen person
+}
 
 watch(search, async (query) => {
   if (!query) {

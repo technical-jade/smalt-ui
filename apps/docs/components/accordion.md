@@ -42,6 +42,12 @@ outline.
 <template #code>
 
 ```vue
+<script setup>
+import { ref } from 'vue'
+
+const open = ref('delivery')
+</script>
+
 <template>
   <SAccordion
     v-model="open"
@@ -84,6 +90,12 @@ Use the slot and `SAccordionItem` for sections with arbitrary content.
 <template #code>
 
 ```vue
+<script setup>
+import { ref } from 'vue'
+
+const open = ref(['delivery'])
+</script>
+
 <template>
   <SAccordion
     v-model="open"
@@ -262,6 +274,14 @@ In `single` mode the `collapsible` prop lets the user close the open section. Wi
 <template #code>
 
 ```vue
+<script setup>
+const items = [
+  { value: 'delivery', title: 'Shipping', content: 'We ship nationwide within 2–5 days.' },
+  { value: 'payment', title: 'Payment', content: 'Card, PayPal, or invoice for businesses.' },
+  { value: 'returns', title: 'Returns', content: 'No-questions-asked returns within 14 days.' },
+]
+</script>
+
 <template>
   <SAccordion
     type="single"

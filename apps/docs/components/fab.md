@@ -190,6 +190,14 @@ working, because a touch screen has no hover.
 <template #code>
 
 ```vue
+<script setup>
+const actions = [
+  { id: 'note', label: 'New note', icon: 'file-text' },
+  { id: 'mail', label: 'New message', icon: 'mail' },
+  { id: 'event', label: 'New event', icon: 'calendar' },
+]
+</script>
+
 <template>
   <SFab
     icon="plus"
@@ -244,6 +252,14 @@ button can be moved without overriding a single rule.
 <template #code>
 
 ```vue
+<script setup>
+const actions = [
+  { id: 'note', label: 'New note', icon: 'file-text' },
+  { id: 'mail', label: 'New message', icon: 'mail' },
+  { id: 'event', label: 'New event', icon: 'calendar' },
+]
+</script>
+
 <template>
   <SFab
     icon="plus"

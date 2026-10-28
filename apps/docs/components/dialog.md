@@ -99,6 +99,12 @@ icon to the title and replace the close cross with an `SIcon`.
 <template #code>
 
 ```vue
+<script setup>
+import { ref } from 'vue'
+
+const open = ref(false)
+</script>
+
 <template>
   <SDialog v-model:open="open">
     <template #trigger>
