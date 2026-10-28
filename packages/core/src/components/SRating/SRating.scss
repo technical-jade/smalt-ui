@@ -60,8 +60,10 @@
 
   // Only the visual grows: hit areas stay in place, otherwise a pointer on a step boundary
   // would "jump out" of the hovered element and jitter.
-  &:not(&--disabled, &--readonly) &__item:hover &__glyphs {
-    transform: scale(1.2);
+  @include tools.hover {
+    &:not(&--disabled, &--readonly) &__item:hover &__glyphs {
+      transform: scale(1.2);
+    }
   }
 
   // The star is filled with currentColor (CSS overrides fill="none" on SIcon).

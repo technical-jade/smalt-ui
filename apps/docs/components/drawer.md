@@ -120,6 +120,12 @@ icon next to the title and a custom close button with `SIcon`.
 The panel is rendered in a portal at `body`, so the class, style, and attributes passed to
 `SDrawer` land directly on `.s-drawer__content`.
 
+## Animation
+
+The panel slides in from its side while the overlay darkens, and slides back out on close. The
+entry takes `--s-duration-slow`, the exit `--s-duration-base`. With
+`prefers-reduced-motion: reduce` there is no animation.
+
 ## API
 
 <ApiTable name="SDrawer" />

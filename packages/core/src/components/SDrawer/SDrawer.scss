@@ -29,12 +29,14 @@
     }
 
     &--left {
+      --s-drawer-offset: -100% 0;
       left: 0;
       border-right: 1px solid var(--s-color-border);
       border-radius: 0 var(--s-radius-md) var(--s-radius-md) 0;
     }
 
     &--right {
+      --s-drawer-offset: 100% 0;
       right: 0;
       border-left: 1px solid var(--s-color-border);
       border-radius: var(--s-radius-md) 0 0 var(--s-radius-md);
@@ -49,12 +51,14 @@
     }
 
     &--top {
+      --s-drawer-offset: 0 -100%;
       top: 0;
       border-bottom: 1px solid var(--s-color-border);
       border-radius: 0 0 var(--s-radius-md) var(--s-radius-md);
     }
 
     &--bottom {
+      --s-drawer-offset: 0 100%;
       bottom: 0;
       border-top: 1px solid var(--s-color-border);
       border-radius: var(--s-radius-md) var(--s-radius-md) 0 0;
@@ -114,3 +118,10 @@
     @include tools.state-layer;
   }
 }
+
+@include tools.modal-motion(
+  's-drawer',
+  (
+    translate: var(--s-drawer-offset),
+  )
+);

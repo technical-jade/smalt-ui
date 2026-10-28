@@ -30,9 +30,14 @@
     background: var(--s-color-border);
     @include tools.transition(background-color);
 
-    &:hover,
     &[data-state='drag'] {
       background: var(--s-color-primary);
+    }
+
+    @include tools.hover {
+      &:hover {
+        background: var(--s-color-primary);
+      }
     }
 
     &:focus-visible {

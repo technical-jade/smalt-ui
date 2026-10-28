@@ -19,6 +19,11 @@ from your app and are not duplicated in the bundle.
 - All values go through CSS variables prefixed with `--s-` (three-tier tokens).
 - The theme is set with the `data-theme` attribute on `<html>`; isolation with the `.s-root`
   container (see [Isolation](/guide/isolation)).
+- Hover highlights (`:hover`) apply only on devices that can hover: they are wrapped in
+  `@media (hover: hover)`. Mobile browsers keep `:hover` on an element after a tap, and without
+  the query the element would look selected. Pressed (`:active`) and keyboard highlights work
+  everywhere. Wrap your own hover rules the same way, with the `tools.hover` mixin from
+  `@smalt-ui/core/scss/tools`.
 
 ## CSS delivery and tree-shaking
 
@@ -110,9 +115,9 @@ native element behind them render a hidden one that carries the value:
   the SCSS sources of tokens and mixins.
 - **SCSS subpath.** `@smalt-ui/core/scss/settings` exposes SASS maps (`$breakpoints`, `$spacing`,
   palettes), `@smalt-ui/core/scss/tools` exposes mixins (`respond-to`, `field-shell`,
-  `state-layer`), `@smalt-ui/core/scss/fonts` exposes `@font-face` rules with a configurable
-  `$font-path`. Use it where a CSS variable will not do: a media query cannot read one, so the app
-  takes its breakpoints from here instead of duplicating the numbers.
+  `state-layer`, `hover`), `@smalt-ui/core/scss/fonts` exposes `@font-face` rules with a
+  configurable `$font-path`. Use it where a CSS variable will not do: a media query cannot read
+  one, so the app takes its breakpoints from here instead of duplicating the numbers.
 
   ```scss
   @use '@smalt-ui/core/scss/tools' as tools;

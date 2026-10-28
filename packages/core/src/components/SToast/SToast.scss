@@ -70,8 +70,10 @@ $variants: (
     @include tools.transition(color);
     @include tools.state-layer;
 
-    &:hover {
-      color: var(--s-color-text);
+    @include tools.hover {
+      &:hover {
+        color: var(--s-color-text);
+      }
     }
   }
 }

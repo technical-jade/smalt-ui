@@ -200,6 +200,12 @@ legal: `confirm` is not a reserved word. The native dialog is still available as
 `const { confirm: askUser } = useConfirm()`.
 :::
 
+## Animation
+
+The dialog fades in with a slight zoom while the overlay darkens, and both leave the same way on
+close, as in [`SDialog`](/components/dialog#animation). The entry takes `--s-duration-slow`, the
+exit `--s-duration-base`. With `prefers-reduced-motion: reduce` there is no animation.
+
 ## API
 
 <ApiTable name="SAlertDialog" />

@@ -61,8 +61,10 @@ $bar-padding: 2px;
     @include tools.transition(background-color);
   }
 
-  &__scrollbar:hover &__thumb {
-    background: var(--s-color-text-subtle);
+  @include tools.hover {
+    &__scrollbar:hover &__thumb {
+      background: var(--s-color-text-subtle);
+    }
   }
 
   &__corner {

@@ -127,8 +127,10 @@ $sizes: sm, md, lg;
     border-radius: var(--s-radius-full);
     @include tools.transition(color);
 
-    &:hover {
-      color: var(--s-color-text);
+    @include tools.hover {
+      &:hover {
+        color: var(--s-color-text);
+      }
     }
 
     &:focus-visible {

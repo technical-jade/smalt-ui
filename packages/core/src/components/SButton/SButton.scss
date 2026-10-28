@@ -62,8 +62,10 @@ $sizes: sm, md, lg;
     color: var(--s-button-c-on, var(--s-color-primary-contrast));
     background-color: var(--s-button-c, var(--s-color-primary));
 
-    &:not(:disabled):not([data-disabled]):not([aria-disabled='true']):hover {
-      background-color: var(--s-button-c-hover, var(--s-color-primary-hover));
+    @include tools.hover {
+      &:not(:disabled):not([data-disabled]):not([aria-disabled='true']):hover {
+        background-color: var(--s-button-c-hover, var(--s-color-primary-hover));
+      }
     }
 
     &:not(:disabled):not([data-disabled]):not([aria-disabled='true']):active {
@@ -75,8 +77,10 @@ $sizes: sm, md, lg;
     color: var(--s-button-c-on, var(--s-color-secondary-contrast));
     background-color: var(--s-button-c, var(--s-color-secondary));
 
-    &:not(:disabled):not([data-disabled]):not([aria-disabled='true']):hover {
-      background-color: var(--s-button-c-hover, var(--s-color-secondary-hover));
+    @include tools.hover {
+      &:not(:disabled):not([data-disabled]):not([aria-disabled='true']):hover {
+        background-color: var(--s-button-c-hover, var(--s-color-secondary-hover));
+      }
     }
 
     &:not(:disabled):not([data-disabled]):not([aria-disabled='true']):active {
@@ -101,8 +105,10 @@ $sizes: sm, md, lg;
     color: var(--s-button-c-on, var(--s-color-negative-contrast));
     background-color: var(--s-button-c, var(--s-color-negative));
 
-    &:not(:disabled):not([data-disabled]):not([aria-disabled='true']):hover {
-      background-color: var(--s-button-c-hover, var(--s-color-negative-hover));
+    @include tools.hover {
+      &:not(:disabled):not([data-disabled]):not([aria-disabled='true']):hover {
+        background-color: var(--s-button-c-hover, var(--s-color-negative-hover));
+      }
     }
 
     &:not(:disabled):not([data-disabled]):not([aria-disabled='true']):active {
@@ -118,8 +124,10 @@ $sizes: sm, md, lg;
   &--negative {
     box-shadow: var(--s-button-elevation, var(--s-elevation-1));
 
-    &:not(:disabled):not([data-disabled]):not([aria-disabled='true']):hover {
-      box-shadow: var(--s-button-elevation-hover, var(--s-elevation-2));
+    @include tools.hover {
+      &:not(:disabled):not([data-disabled]):not([aria-disabled='true']):hover {
+        box-shadow: var(--s-button-elevation-hover, var(--s-elevation-2));
+      }
     }
 
     &:disabled,

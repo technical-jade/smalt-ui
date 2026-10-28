@@ -26,9 +26,11 @@
   text-decoration: none;
   border-radius: var(--s-radius-sm);
 
-  &:hover {
-    color: var(--s-color-text);
-    text-decoration: underline;
+  @include tools.hover {
+    &:hover {
+      color: var(--s-color-text);
+      text-decoration: underline;
+    }
   }
 }
 

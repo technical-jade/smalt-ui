@@ -56,8 +56,10 @@
   @include tools.state-layer;
   @include tools.disabled-state;
 
-  &:not(:disabled):hover {
-    color: var(--s-color-text);
+  @include tools.hover {
+    &:not(:disabled):hover {
+      color: var(--s-color-text);
+    }
   }
 }
 

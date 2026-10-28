@@ -165,6 +165,13 @@ selectors.
 </Demo>
 </ClientOnly>
 
+## Animation
+
+The window fades in with a slight zoom while the overlay darkens, and both leave the same way on
+close. The entry takes `--s-duration-slow`, the exit `--s-duration-base`. With
+`prefers-reduced-motion: reduce` there is no animation. [`SAlertDialog`](/components/alert-dialog)
+appears the same way, and [`SDrawer`](/components/drawer) slides in from its side.
+
 ## API
 
 <ApiTable name="SDialog" />

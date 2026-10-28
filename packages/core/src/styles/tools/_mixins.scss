@@ -108,6 +108,14 @@
   transition: $parts;
 }
 
+// Hover rules only for devices that can hover. Mobile browsers keep :hover on an element after a
+// tap until the next touch elsewhere, so the highlight would stick.
+@mixin hover {
+  @media (hover: hover) {
+    @content;
+  }
+}
+
 // MD state layer (no ripple): a translucent state layer over the surface.
 // Implemented via background-image (painted over background-color but under the content),
 // so it works for any child structure and needs no wrappers.
@@ -115,13 +123,20 @@
 // The layer switches instantly: background-image (a gradient) does not interpolate, and the
 // component's base transition handles smooth color/shadow changes.
 @mixin state-layer($color: var(--s-color-text)) {
+  $hover-layer: linear-gradient(
+    color-mix(in srgb, #{$color} 8%, transparent),
+    color-mix(in srgb, #{$color} 8%, transparent)
+  );
+
   // A polymorphic control (as="a") is disabled only through aria-disabled.
-  &:not(:disabled):not([data-disabled]):not([aria-disabled='true']):hover,
+  @include hover {
+    &:not(:disabled):not([data-disabled]):not([aria-disabled='true']):hover {
+      background-image: $hover-layer;
+    }
+  }
+
   &[data-highlighted] {
-    background-image: linear-gradient(
-      color-mix(in srgb, #{$color} 8%, transparent),
-      color-mix(in srgb, #{$color} 8%, transparent)
-    );
+    background-image: $hover-layer;
   }
 
   &:not(:disabled):not([data-disabled]):not([aria-disabled='true']):active {
@@ -150,6 +165,79 @@
   font-weight: var(--s-font-weight-#{map.get($cfg, weight)});
   line-height: var(--s-line-height-#{map.get($cfg, leading)});
   letter-spacing: map.get($cfg, tracking);
+}
+
+// Entry and exit of a modal overlay (`__overlay` and `__content` of the $block block), keyed on
+// the data-state that Reka sets on DialogOverlay/DialogContent: on close Reka waits for
+// animationend and only then unmounts. $from holds the window properties at the start of the
+// entry and at the end of the exit. Include it at the top level of a file: it emits @keyframes.
+@mixin modal-motion($block, $from) {
+  .#{$block}__overlay,
+  .#{$block}__content {
+    &[data-state='open'] {
+      animation: var(--s-duration-slow) var(--s-ease-standard);
+    }
+
+    // forwards, so the window does not flash back into place before it unmounts.
+    &[data-state='closed'] {
+      animation: var(--s-duration-base) var(--s-ease-standard) forwards;
+    }
+  }
+
+  .#{$block}__overlay {
+    &[data-state='open'] {
+      animation-name: #{$block}-overlay-in;
+    }
+
+    &[data-state='closed'] {
+      animation-name: #{$block}-overlay-out;
+    }
+  }
+
+  .#{$block}__content {
+    &[data-state='open'] {
+      animation-name: #{$block}-content-in;
+    }
+
+    &[data-state='closed'] {
+      animation-name: #{$block}-content-out;
+    }
+  }
+
+  @keyframes #{$block}-overlay-in {
+    from {
+      opacity: 0;
+    }
+  }
+
+  @keyframes #{$block}-overlay-out {
+    to {
+      opacity: 0;
+    }
+  }
+
+  @keyframes #{$block}-content-in {
+    from {
+      @each $prop, $value in $from {
+        #{$prop}: $value;
+      }
+    }
+  }
+
+  @keyframes #{$block}-content-out {
+    to {
+      @each $prop, $value in $from {
+        #{$prop}: $value;
+      }
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .#{$block}__overlay,
+    .#{$block}__content {
+      animation: none;
+    }
+  }
 }
 
 // Floating surface (overlays: dropdown/popover/hovercard/dialog/toast/…).

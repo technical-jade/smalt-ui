@@ -49,8 +49,10 @@
     text-decoration: none;
   }
 
-  .s-root :where(a:hover) {
-    text-decoration: underline;
+  @include tools.hover {
+    .s-root :where(a:hover) {
+      text-decoration: underline;
+    }
   }
 
   // Fallback focus ring for "bare" focusable elements inside the container.

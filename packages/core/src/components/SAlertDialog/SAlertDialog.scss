@@ -64,3 +64,11 @@
     margin-top: var(--s-space-6);
   }
 }
+
+@include tools.modal-motion(
+  's-alert-dialog',
+  (
+    opacity: 0,
+    scale: 0.96,
+  )
+);

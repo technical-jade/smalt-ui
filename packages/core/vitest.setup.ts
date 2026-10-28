@@ -17,6 +17,17 @@ if (!('ResizeObserver' in globalThis)) {
     disconnect() {}
   } as unknown as typeof ResizeObserver
 }
+/**
+ * Without the tag Vue treats a computed style as a plain object and wraps it in a proxy, and the
+ * happy-dom getters throw through the proxy. Reka (Presence) puts getComputedStyle into a ref
+ * when a closing overlay has an animation.
+ */
+if (typeof CSSStyleDeclaration !== 'undefined') {
+  Object.defineProperty(CSSStyleDeclaration.prototype, Symbol.toStringTag, {
+    value: 'CSSStyleDeclaration',
+    configurable: true,
+  })
+}
 if (typeof Element !== 'undefined') {
   Element.prototype.scrollIntoView ??= () => {}
   Element.prototype.hasPointerCapture ??= () => false

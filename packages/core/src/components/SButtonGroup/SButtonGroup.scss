@@ -20,10 +20,15 @@
     // stacking keeps a hovered border above its neighbour.
     position: relative;
 
-    &:hover,
     &:focus-visible,
     &:active {
       z-index: 1;
+    }
+
+    @include tools.hover {
+      &:hover {
+        z-index: 1;
+      }
     }
   }
 

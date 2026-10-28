@@ -83,3 +83,12 @@
     @include tools.state-layer;
   }
 }
+
+// The window is centered with transform, so the animation uses the separate scale property.
+@include tools.modal-motion(
+  's-dialog',
+  (
+    opacity: 0,
+    scale: 0.96,
+  )
+);

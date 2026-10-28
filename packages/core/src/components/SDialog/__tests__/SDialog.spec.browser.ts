@@ -64,6 +64,8 @@ describe('SDialog · browser', () => {
       slots: { default: '<input aria-label="Name" style="display: block; width: 100%" />' },
     })
     const dialog = await screen.findByRole('dialog')
+    // While the window fades in it is scaled down, and the field and body edges shift differently.
+    await Promise.all(dialog.getAnimations().map((animation) => animation.finished))
     const body = dialog.querySelector('.s-dialog__body')!.getBoundingClientRect()
     const field = screen.getByLabelText('Name').getBoundingClientRect()
     const ring = 4 // --s-focus-ring-width + --s-focus-ring-offset
