@@ -237,9 +237,11 @@
 }
 
 // Floating surface (overlays: dropdown/popover/hovercard/dialog/toast/…).
-@mixin floating-surface {
+// $border is the border color; a panel with an arrow passes the same color to floating-arrow.
+// A component variable (--s-popover-border) set on the panel reaches the arrow, which lies inside.
+@mixin floating-surface($border: var(--s-color-border)) {
   background-color: var(--s-color-surface);
-  border: 1px solid var(--s-color-border);
+  border: 1px solid $border;
   // Radius via a variable: a component with the square prop zeroes it on its panel
   // without rewriting the mixin rule.
   border-radius: var(--s-surface-radius, var(--s-radius-md));
@@ -252,12 +254,18 @@
 // background. Reka places the base outside the border; a 1px shift toward the panel (in svg
 // coordinates, the wrapper rotates it per side) lets the fill cover the border under the base.
 // overflow: visible because half of the stroke lies outside the viewBox.
-@mixin floating-arrow {
+@mixin floating-arrow($border: var(--s-color-border)) {
   overflow: visible;
   transform: translateY(-1px);
   fill: var(--s-color-surface);
-  stroke: var(--s-color-border);
+  stroke: $border;
   stroke-width: 1px;
+
+  // Reka draws the arrow in a 12×6 viewBox and stretches it to the component size: without this
+  // the stroke scales with it and comes out thicker than the panel border.
+  > path {
+    vector-effect: non-scaling-stroke;
+  }
 }
 
 // Interactive list/menu item: MD state layer + disabled state.

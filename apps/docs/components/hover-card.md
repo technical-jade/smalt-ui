@@ -127,6 +127,46 @@ const open = ref(false)
 </Demo>
 </ClientOnly>
 
+## Border color
+
+One CSS variable, `--s-hover-card-border` (defaults to `--s-color-border`), colors both the card
+border and the arrow stroke. Set it with a class or a `style` attribute on the component: they go
+to the card, and the arrow inside it takes the same color. The arrow stroke is as thick as the
+border at any arrow size. The card renders in a portal, so the parent's `scoped` styles do not
+reach it — declare the class in global styles.
+
+<ClientOnly>
+<Demo>
+  <SHoverCard style="--s-hover-card-border: var(--s-primary)">
+    <template #trigger>
+      <a href="#" style="color: var(--s-color-primary); font-weight: 600">@alex</a>
+    </template>
+    The border and the arrow share one color.
+  </SHoverCard>
+
+<template #code>
+
+```vue
+<template>
+  <SHoverCard class="brand-card">
+    <template #trigger>
+      <a href="#">@alex</a>
+    </template>
+    The border and the arrow share one color.
+  </SHoverCard>
+</template>
+
+<style>
+.brand-card {
+  --s-hover-card-border: var(--s-primary);
+}
+</style>
+```
+
+  </template>
+</Demo>
+</ClientOnly>
+
 ## API
 
 <ApiTable name="SHoverCard" />

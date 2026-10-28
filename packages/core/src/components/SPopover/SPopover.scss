@@ -1,8 +1,10 @@
 @use '../../styles/tools';
 
+$border: var(--s-popover-border, var(--s-color-border));
+
 .s-popover__content {
   @include tools.reset-inherited;
-  @include tools.floating-surface;
+  @include tools.floating-surface($border);
   z-index: var(--s-z-popover);
   max-width: 20rem;
   // Reka reports the space left to the window edge; long content scrolls instead of leaving the
@@ -20,5 +22,5 @@
 }
 
 .s-popover__arrow {
-  @include tools.floating-arrow;
+  @include tools.floating-arrow($border);
 }

@@ -144,6 +144,44 @@ sets a custom level; the radius is not affected — `square` controls it, see
   </template>
 </Demo>
 
+## Border color
+
+One CSS variable, `--s-popover-border` (defaults to `--s-color-border`), colors both the panel
+border and the arrow stroke. Set it with a class or a `style` attribute on the component: attributes
+go to the panel, and the arrow inside it takes the same color. The arrow stroke is as thick as
+the border at any arrow size. The panel renders in a portal, so the parent's `scoped` styles do
+not reach it — declare the class in global styles.
+
+<Demo>
+  <ClientOnly>
+    <SPopover style="--s-popover-border: var(--s-primary)">
+      <template #trigger><SButton variant="outline">Primary border</SButton></template>
+      The border and the arrow share one color.
+    </SPopover>
+  </ClientOnly>
+
+<template #code>
+
+```vue
+<template>
+  <SPopover class="brand-popover">
+    <template #trigger>
+      <SButton variant="outline">Primary border</SButton>
+    </template>
+    The border and the arrow share one color.
+  </SPopover>
+</template>
+
+<style>
+.brand-popover {
+  --s-popover-border: var(--s-primary);
+}
+</style>
+```
+
+  </template>
+</Demo>
+
 ## API
 
 <ApiTable name="SPopover" />

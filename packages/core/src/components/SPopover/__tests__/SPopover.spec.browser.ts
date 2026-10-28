@@ -9,9 +9,10 @@ import { SPopover } from '../index'
  * floating panels.
  */
 describe('SPopover · browser', () => {
-  const open = async (props: Record<string, unknown>) => {
+  const open = async (props: Record<string, unknown>, attrs: Record<string, unknown> = {}) => {
     render(SPopover, {
       props,
+      attrs,
       slots: { trigger: '<button>Open</button>', default: 'Content' },
     })
     await userEvent.click(screen.getByRole('button', { name: 'Open' }))
@@ -60,5 +61,19 @@ describe('SPopover · browser', () => {
       .poll(() => panel.getBoundingClientRect().bottom)
       .toBeLessThanOrEqual(window.innerHeight)
     expect(panel.scrollHeight).toBeGreaterThan(panel.clientHeight)
+  })
+
+  it('--s-popover-border colors both the panel border and the arrow stroke', async () => {
+    const panel = await open({}, { style: '--s-popover-border: rgb(0, 128, 0)' })
+    expect(getComputedStyle(panel).borderTopColor).toBe('rgb(0, 128, 0)')
+    expect(getComputedStyle(panel.querySelector('.s-popover__arrow')!).stroke).toBe(
+      'rgb(0, 128, 0)',
+    )
+  })
+
+  it('the arrow stroke matches the border width: it does not scale with the arrow', async () => {
+    const panel = await open({})
+    const path = panel.querySelector('.s-popover__arrow path')!
+    expect(getComputedStyle(path).vectorEffect).toBe('non-scaling-stroke')
   })
 })

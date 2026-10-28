@@ -1,8 +1,10 @@
 @use '../../styles/tools';
 
+$border: var(--s-hover-card-border, var(--s-color-border));
+
 .s-hover-card__content {
   @include tools.reset-inherited;
-  @include tools.floating-surface;
+  @include tools.floating-surface($border);
   z-index: var(--s-z-popover);
   width: 18rem;
   padding: var(--s-space-4);
@@ -15,5 +17,5 @@
 }
 
 .s-hover-card__arrow {
-  @include tools.floating-arrow;
+  @include tools.floating-arrow($border);
 }
