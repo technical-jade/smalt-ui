@@ -20,7 +20,10 @@ export interface ModuleOptions {
   components: boolean
   /** Include the global `@smalt-ui/core/styles.css` styles. Defaults to `true`. */
   css: boolean
-  /** Initialize color mode on the client (applies `data-theme`). Defaults to `true`. */
+  /**
+   * Manage the theme: an early inline script in `<head>` sets `data-theme` before the first
+   * paint, and a client plugin keeps it in sync after hydration. Defaults to `true`.
+   */
   colorMode: boolean
   /**
    * Add the `.s-root .s-root--app` container classes to the app root (`#__nuxt`) for CSS isolation
@@ -38,8 +41,10 @@ export interface ModuleOptions {
   /** Partial override of individual strings on top of the locale (`SMessages` keys). */
   messages?: Record<string, string>
   /**
-   * App-level prop defaults (keys are `global` and component names).
-   * The type is a loose `Record` to keep the module's types portable; in core it is `SDefaults`.
+   * App-level prop defaults (keys are `global` and component names), layered on top of the preset
+   * prop by prop. Functions in the values do not survive JSON serialization and are reported with
+   * a warning at build time. The type is a loose `Record` to keep the module's types portable; in
+   * core it is `SDefaults`.
    */
   defaults?: Record<string, Record<string, unknown>>
   /** Built-in preset name (`compact`/`comfortable`): "theme + defaults" in one value. */
