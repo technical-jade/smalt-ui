@@ -314,9 +314,9 @@
 }
 
 // Floating label (notched outline): a direct child of the field shell (position: relative).
-// Floats up when the shell is focused or filled ([data-filled]) and "cuts" the border with the
-// surface background. State is read from the parent shell, so the mixin is not tied to a field's
-// BEM class.
+// Floats up when the shell is focused, filled ([data-filled]) or the label is pinned
+// ([data-label-pinned], floating-label="pinned"), and "cuts" the border with the surface
+// background. State is read from the parent shell, so the mixin is not tied to a field's BEM class.
 @mixin floating-label {
   position: absolute;
   // Resting vertical position: centered (--s-field-label-rest-y defaults to 50%); multi-line
@@ -348,7 +348,7 @@
 
   // Browser autofill fills the input before any input event, so the model and data-filled stay
   // empty. :where() forgives a browser without :has().
-  :where(:focus-within, [data-filled], :has(:autofill)) > & {
+  :where(:focus-within, [data-filled], [data-label-pinned], :has(:autofill)) > & {
     inset-block-start: 0;
     inset-inline-start: calc(var(--s-field-pad-x, 0) - 0.25rem);
     padding-inline: 0.25rem;
@@ -447,7 +447,7 @@
 // stands in for them; they show on focus or once filled. Include at the block root: it relies on
 // the block's `__wrap` and `__segment` elements.
 @mixin segmented-field-resting-segments {
-  &__wrap--floating:not(:focus-within):not([data-filled]) &__segment {
+  &__wrap--floating:not(:focus-within, [data-filled], [data-label-pinned]) &__segment {
     color: transparent;
   }
 }

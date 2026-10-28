@@ -13,8 +13,10 @@ export interface SDateFieldProps extends SValidationProps<DateValue | undefined>
    * Floating label: the label sits inside the border, looks like a placeholder at rest and
    * floats up to the top edge on focus or when filled. On by default; `false` renders a regular
    * label above the field. The label size is fixed and does not depend on `size`.
+   * `'pinned'` pins the label to the frame: it never drops into the field, and the placeholder of
+   * an empty field stays visible.
    */
-  floatingLabel?: boolean
+  floatingLabel?: boolean | 'pinned'
   /** Hint below the field. */
   hint?: string
   /** Error message. When set, the field is marked invalid. */

@@ -26,6 +26,7 @@ const props = defineProps<{
   labelId?: string
   label?: string
   floating?: boolean
+  pinned?: boolean
   required?: boolean
   describedBy?: string
   invalid?: boolean
@@ -108,6 +109,7 @@ const removeValue = (v: string) => {
         's-select__control--has-leading': floating && hasLeading,
       }"
       :data-filled="hasValue || undefined"
+      :data-label-pinned="(floating && pinned) || undefined"
       :data-invalid="invalid || undefined"
     >
       <span
@@ -162,7 +164,7 @@ const removeValue = (v: string) => {
         </SelectValue>
         <SelectValue
           v-else
-          :placeholder="floating ? '' : placeholder"
+          :placeholder="floating && !pinned ? '' : placeholder"
         />
       </SelectTrigger>
       <!-- Floating label: a direct child of the frame, floats up on focus/fill.

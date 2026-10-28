@@ -102,6 +102,7 @@ defineExpose(expose)
           :label-id="labelId"
           :label="p.label"
           :floating="floating"
+          :pinned="p.floatingLabel === 'pinned'"
           :filled="filled"
           :required="p.required"
           :described-by="describedBy"

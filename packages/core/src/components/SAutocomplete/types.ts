@@ -39,8 +39,10 @@ export interface SAutocompleteProps extends SValidationProps<string> {
   /**
    * Floating label: it lies inside the frame and moves up onto its edge when the field is focused
    * or holds text. Off by default: the label stands above the field.
+   * `'pinned'` pins the label to the frame: it never drops into the field, and the placeholder of
+   * an empty field stays visible.
    */
-  floatingLabel?: boolean
+  floatingLabel?: boolean | 'pinned'
   /** A click on the field opens the panel with the current suggestions when it is closed. */
   openOnClick?: boolean
   /**

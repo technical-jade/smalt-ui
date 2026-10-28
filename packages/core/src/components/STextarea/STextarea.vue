@@ -42,6 +42,7 @@ defineExpose(expose)
 const { rootClass, rootStyle, controlAttrs: fieldAttrs } = useFieldAttrs()
 
 const floating = computed(() => p.floatingLabel && !!p.label)
+const pinned = computed(() => floating.value && p.floatingLabel === 'pinned')
 const filled = computed(() => !!model.value)
 const hasLeading = computed(() => !!slots.prepend)
 </script>
@@ -77,6 +78,7 @@ const hasLeading = computed(() => !!slots.prepend)
           's-textarea__wrap--has-append': !!$slots.append,
         }"
         :data-filled="filled || undefined"
+        :data-label-pinned="pinned || undefined"
         :data-invalid="fieldInvalid || undefined"
       >
         <span

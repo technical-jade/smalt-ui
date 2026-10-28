@@ -61,6 +61,12 @@ $tag-heights: (
     color: var(--s-color-text-subtle);
   }
 
+  // Reka SelectValue renders the single-select placeholder straight into the trigger, without
+  // our class; an empty value marks the trigger with data-placeholder.
+  &__trigger[data-placeholder] {
+    color: var(--s-color-text-subtle);
+  }
+
   &__label {
     @include tools.floating-label;
   }
@@ -75,7 +81,7 @@ $tag-heights: (
 
   // Floating label, searchable: the native placeholder is hidden at rest (the label plays its
   // role) and shows only on focus.
-  &__control--floating &__input::placeholder {
+  &__control--floating:not([data-label-pinned]) &__input::placeholder {
     color: transparent;
   }
 
@@ -85,7 +91,7 @@ $tag-heights: (
 
   // Floating label, plain select: the placeholder is a <span>, not the native ::placeholder;
   // with floating the label plays its role, so it is hidden entirely.
-  &__control--floating &__placeholder {
+  &__control--floating:not([data-label-pinned]) &__placeholder {
     visibility: hidden;
   }
 

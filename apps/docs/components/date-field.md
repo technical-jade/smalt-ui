@@ -82,6 +82,31 @@ const date = shallowRef(parseDate('2026-07-11'))
   </template>
 </Demo>
 
+## Pinned label
+
+`floating-label="pinned"` pins the label to the top edge of the frame: it never drops into the
+place of the segments in an empty field, and the placeholder segments (`mm/dd/yyyy` in `en-US`)
+stay visible.
+
+<ClientOnly>
+<Demo>
+  <SDateField label="Delivery date" floating-label="pinned" />
+
+<template #code>
+
+```vue
+<template>
+  <SDateField
+    label="Delivery date"
+    floating-label="pinned"
+  />
+</template>
+```
+
+  </template>
+</Demo>
+</ClientOnly>
+
 ## States
 
 `disabled` locks the field, `readonly` prevents changing the segments, `invalid` marks the field as

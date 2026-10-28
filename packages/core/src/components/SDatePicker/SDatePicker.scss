@@ -30,7 +30,7 @@ $sizes: sm, md, lg;
 
   // With a floating label, placeholder segments (mm/dd/yyyy) are hidden at rest, since the
   // label plays their role; they appear on focus or when filled.
-  &__control--floating:not(:focus-within):not([data-filled]) &__segment {
+  &__control--floating:not(:focus-within, [data-filled], [data-label-pinned]) &__segment {
     color: transparent;
   }
 

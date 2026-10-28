@@ -33,6 +33,29 @@ moves up onto the top border); turn it off with `:floating-label="false"`.
   </template>
 </Demo>
 
+## Pinned label
+
+`floating-label="pinned"` pins the label to the top edge of the border: it never drops into an
+empty field, and the placeholder stays visible. See [`SInput`](/components/input#pinned-label).
+
+<Demo>
+  <STextarea label="Delivery notes" floating-label="pinned" placeholder="Door code, floor" :rows="3" />
+
+<template #code>
+
+```vue
+<template>
+  <STextarea
+    label="Delivery notes"
+    floating-label="pinned"
+    placeholder="Door code, floor"
+  />
+</template>
+```
+
+  </template>
+</Demo>
+
 ## Hint and error
 
 <Demo>

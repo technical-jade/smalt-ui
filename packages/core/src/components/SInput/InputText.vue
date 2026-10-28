@@ -32,6 +32,7 @@ const props = defineProps<{
   labelId?: string
   label?: string
   floatingLabel?: boolean
+  labelPinned?: boolean
   describedBy?: string
   invalid?: boolean
   type?: string
@@ -213,6 +214,7 @@ const maskedAttrs = computed(() =>
       's-input__wrap--has-leading': floating && hasLeading,
     }"
     :data-filled="filled || undefined"
+    :data-label-pinned="(floating && labelPinned) || undefined"
     :data-invalid="invalid || undefined"
     @mousedown="focusFromFrame($event, field)"
   >

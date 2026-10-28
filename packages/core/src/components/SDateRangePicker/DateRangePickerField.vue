@@ -23,6 +23,7 @@ defineProps<{
   labelId?: string
   label?: string
   floating?: boolean
+  pinned?: boolean
   filled?: boolean
   required?: boolean
   describedBy?: string
@@ -56,6 +57,7 @@ defineSlots<{
     class="s-date-range-picker__control"
     :class="{ 's-date-range-picker__control--floating': floating }"
     :data-filled="filled || undefined"
+    :data-label-pinned="(floating && pinned) || undefined"
     :aria-labelledby="labelId"
     :aria-invalid="invalid || undefined"
     :aria-describedby="describedBy"

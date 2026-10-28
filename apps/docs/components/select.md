@@ -27,6 +27,9 @@ positioning and a portal. Options are set with the `options` array, the value is
 
 ## Basic usage
 
+Until a value is chosen, the field shows the `placeholder` in the muted color of the other fields'
+placeholders, so it does not pass for a selected value.
+
 <Demo>
   <ClientOnly>
     <SSelect
@@ -60,6 +63,40 @@ positioning and a portal. Options are set with the `options` array, the value is
 
   </template>
 </Demo>
+
+## Pinned label
+
+`floating-label="pinned"` pins the label to the top edge of the frame: it never drops into an
+empty field, and the `placeholder` stays visible, both in a plain list and with `searchable`. See
+[`SInput`](/components/input#pinned-label).
+
+<ClientOnly>
+<Demo>
+  <SSelect label="Plan" floating-label="pinned" placeholder="Choose a plan" :options="[{ value: 'std', label: 'Standard' }, { value: 'exp', label: 'Express' }]" style="max-width: 280px" />
+
+<template #code>
+
+```vue
+<script setup lang="ts">
+const plans = [
+  { value: 'std', label: 'Standard' },
+  { value: 'exp', label: 'Express' },
+]
+</script>
+
+<template>
+  <SSelect
+    label="Plan"
+    floating-label="pinned"
+    placeholder="Choose a plan"
+    :options="plans"
+  />
+</template>
+```
+
+  </template>
+</Demo>
+</ClientOnly>
 
 ## Searching the list (`searchable`)
 

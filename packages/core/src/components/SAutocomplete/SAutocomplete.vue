@@ -213,6 +213,7 @@ const contentStyle = computed(() => {
 })
 
 const floating = computed(() => p.floatingLabel && !!p.label)
+const pinned = computed(() => floating.value && p.floatingLabel === 'pinned')
 const hasLeading = computed(() => !!p.icon || !!slots.prepend)
 
 // Reka's first call comes before mount: an empty string would overwrite a preset search.
@@ -342,6 +343,7 @@ function clear() {
             's-autocomplete__control--has-leading': floating && hasLeading,
           }"
           :data-filled="!!text || undefined"
+          :data-label-pinned="pinned || undefined"
           :data-invalid="fieldInvalid || undefined"
         >
           <span

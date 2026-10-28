@@ -11,8 +11,10 @@ export interface SColorFieldProps extends SValidationProps<string> {
    * Floating label: the label sits inside the border, looks like a placeholder at rest and moves
    * up to the top border on focus/when filled. On by default; `false` gives a regular label
    * above. The label size is fixed and does not depend on `size`.
+   * `'pinned'` pins the label to the frame: it never drops into the field, and the placeholder of
+   * an empty field stays visible.
    */
-  floatingLabel?: boolean
+  floatingLabel?: boolean | 'pinned'
   /** Hint below the field. */
   hint?: string
   /** Error message. When set, the field is marked invalid. */

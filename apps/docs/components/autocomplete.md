@@ -345,6 +345,33 @@ sets its markup.
   </template>
 </Demo>
 
+## Pinned label
+
+`floating-label="pinned"` pins the label to the top edge of the frame: it never drops into an
+empty field, and the `placeholder` stays visible. The top of the frame lines up with neighboring
+fields whose label is on the frame too. See [`SInput`](/components/input#pinned-label).
+
+<ClientOnly>
+<Demo>
+  <SAutocomplete label="Address" floating-label="pinned" placeholder="Street, house number" :options="[]" style="max-width: 320px" />
+
+<template #code>
+
+```vue
+<template>
+  <SAutocomplete
+    label="Address"
+    floating-label="pinned"
+    placeholder="Street, house number"
+    :options="[]"
+  />
+</template>
+```
+
+  </template>
+</Demo>
+</ClientOnly>
+
 ## Panel width and opening
 
 The panel is as wide as the field, and long suggestions wrap onto the next line. `max-width` lets

@@ -113,7 +113,8 @@ on floating panels (dropdown lists, menus, popovers, calendars), `size` on all c
 by interface density. `floatingLabel` in `global` turns on the floating label only for fields that
 can render it (`SInput`, `STextarea`, `SSelect`, `SAutocomplete`, `SNumberField`, date and time
 fields and pickers, `SColorField`). The rest (`SPinInput`, `SSlider`, groups) keep their label on
-top.
+top. The value `'pinned'` pins the label to the border of all these fields at once (see
+[Pinned label](/components/input#pinned-label)).
 
 ## Validation mode
 

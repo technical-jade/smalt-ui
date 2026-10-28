@@ -22,8 +22,10 @@ export interface SSelectProps extends SValidationProps<string | string[]> {
    * Floating label (Material notched outline): the label sits inside the frame and floats up
    * on focus or when a value is selected. Enabled by default. Not applicable in `use-tags` mode
    * (the frame grows), where a regular label stays on top.
+   * `'pinned'` pins the label to the frame: it never drops into the field, and the placeholder of
+   * an empty field stays visible.
    */
-  floatingLabel?: boolean
+  floatingLabel?: boolean | 'pinned'
   /** Hint below the field. */
   hint?: string
   /** Error message. When set, the field is marked invalid. */

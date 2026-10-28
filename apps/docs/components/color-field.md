@@ -41,6 +41,31 @@ const color = ref('#3B82F6')
   </template>
 </Demo>
 
+## Pinned label
+
+`floating-label="pinned"` pins the label to the top edge of the frame: it never drops into an
+empty field, and the placeholder stays visible. See [`SInput`](/components/input#pinned-label).
+
+<ClientOnly>
+<Demo>
+  <SColorField label="Tag color" floating-label="pinned" placeholder="#3B82F6" />
+
+<template #code>
+
+```vue
+<template>
+  <SColorField
+    label="Tag color"
+    floating-label="pinned"
+    placeholder="#3B82F6"
+  />
+</template>
+```
+
+  </template>
+</Demo>
+</ClientOnly>
+
 ## Hint and error message
 
 <Demo>

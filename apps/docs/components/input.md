@@ -97,6 +97,65 @@ renders as a regular line above the field.
   </template>
 </Demo>
 
+## Pinned label
+
+`floating-label="pinned"` pins the label to the top edge of the border: it never drops into an
+empty field, and the `placeholder` stays visible. The top of the border lines up with
+neighboring fields whose label is on the border too, which helps in dense form rows. Every field
+with a floating label has the `pinned` mode: [`STextarea`](/components/textarea),
+[`SSelect`](/components/select), [`SAutocomplete`](/components/autocomplete),
+[`SColorField`](/components/color-field), and the date and time fields and pickers.
+[`SNumberField`](/components/number-field) always keeps its label on the border. To pin labels
+across the whole app, set `floatingLabel: 'pinned'` in [`global`](/guide/defaults).
+
+<ClientOnly>
+<Demo>
+  <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 16px; align-items: start; width: 100%">
+    <SInput label="City" floating-label="pinned" placeholder="London" />
+    <SSelect label="Plan" floating-label="pinned" placeholder="Choose a plan" :options="[{ value: 'std', label: 'Standard' }, { value: 'exp', label: 'Express' }]" />
+    <SDatePicker label="Pickup date" floating-label="pinned" />
+    <SNumberField label="Parcels" floating-label :model-value="1" :min="1" />
+  </div>
+
+<template #code>
+
+```vue
+<script setup lang="ts">
+const plans = [
+  { value: 'std', label: 'Standard' },
+  { value: 'exp', label: 'Express' },
+]
+</script>
+
+<template>
+  <SInput
+    label="City"
+    floating-label="pinned"
+    placeholder="London"
+  />
+  <SSelect
+    label="Plan"
+    floating-label="pinned"
+    placeholder="Choose a plan"
+    :options="plans"
+  />
+  <SDatePicker
+    label="Pickup date"
+    floating-label="pinned"
+  />
+  <SNumberField
+    label="Parcels"
+    floating-label
+    :model-value="1"
+    :min="1"
+  />
+</template>
+```
+
+  </template>
+</Demo>
+</ClientOnly>
+
 ## Hint and error
 
 <Demo>

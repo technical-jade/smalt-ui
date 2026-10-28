@@ -9,9 +9,10 @@ from a list. The value is a `Time` (or `CalendarDateTime`/`ZonedDateTime`) from
 [`shallowRef`](./date-field#value-and-shallowref), not a `ref`. Picking from the panel keeps the
 class the value already had: a `Time` stays a `Time`, and a date-time keeps its date.
 
-Every field prop of `STimeField` is forwarded (`label`, `hint`, `error`, `size`, `disabled`,
-`readonly`, `required`, `invalid`, `square`, `locale`, `rules`, `validate-on`), and the field
-still accepts typing into the segments.
+Every field prop of `STimeField` is forwarded (`label`, `floating-label`, `hint`, `error`, `size`,
+`disabled`, `readonly`, `required`, `invalid`, `square`, `locale`, `rules`, `validate-on`), and
+the field still accepts typing into the segments. `floating-label="pinned"` pins the label to the
+frame, as in [`STimeField`](./time-field#pinned-label).
 
 **Keyboard and accessibility.** The trigger button carries `aria-expanded` and `aria-haspopup`;
 opening it moves focus to the hour column. Each column is a `listbox` of `option`s named after

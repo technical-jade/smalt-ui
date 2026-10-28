@@ -76,7 +76,7 @@ $sizes: sm, md, lg;
 
   // With a floating label the native placeholder is hidden at rest (the label stands in for it)
   // and shows only on focus.
-  &__wrap--floating &__field::placeholder {
+  &__wrap--floating:not([data-label-pinned]) &__field::placeholder {
     color: transparent;
   }
 

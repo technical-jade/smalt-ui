@@ -62,6 +62,7 @@ const outOfRange = ref(false)
 const bridge = useTemplateRef<SegmentedFieldBridgeExposed>('bridge')
 
 const floating = computed(() => p.floatingLabel && !!p.label)
+const pinned = computed(() => floating.value && p.floatingLabel === 'pinned')
 const filled = computed(() => model.value != null)
 const hasLeading = computed(() => !!slots.prepend)
 </script>
@@ -95,6 +96,7 @@ const hasLeading = computed(() => !!slots.prepend)
           's-time-field__wrap--has-leading': floating && hasLeading,
         }"
         :data-filled="filled || undefined"
+        :data-label-pinned="pinned || undefined"
         :data-invalid="fieldInvalid || undefined"
       >
         <span

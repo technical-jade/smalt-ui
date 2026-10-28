@@ -154,6 +154,7 @@ const tags = computed<string[]>({
         :label-id="fieldLabelId"
         :label="fieldLabel"
         :floating-label="fieldFloating"
+        :label-pinned="p.floatingLabel === 'pinned'"
         :described-by="describedBy"
         :invalid="fieldInvalid"
         :type="fieldType"

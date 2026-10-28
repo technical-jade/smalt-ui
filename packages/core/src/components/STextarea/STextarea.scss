@@ -50,7 +50,7 @@ $sizes: (
     --s-field-label-x: calc(var(--s-field-pad-x) + 1.5rem);
   }
 
-  &__wrap--floating &__field::placeholder {
+  &__wrap--floating:not([data-label-pinned]) &__field::placeholder {
     color: transparent;
   }
 

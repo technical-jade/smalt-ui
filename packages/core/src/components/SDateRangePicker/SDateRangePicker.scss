@@ -39,7 +39,7 @@ $sizes: sm, md, lg;
 
   // With a floating label, placeholder segments and the separator are hidden at rest, since
   // the label plays their role; they appear on focus or when filled.
-  &__control--floating:not(:focus-within):not([data-filled]) {
+  &__control--floating:not(:focus-within, [data-filled], [data-label-pinned]) {
     :where(.s-date-range-picker__segment, .s-date-range-picker__dash) {
       color: transparent;
     }

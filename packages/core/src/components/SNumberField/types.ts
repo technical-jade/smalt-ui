@@ -10,9 +10,9 @@ export interface SNumberFieldProps extends SValidationProps<number | null> {
   /**
    * Puts the label on the top edge of the frame instead of above the field, so the field lines up
    * with neighboring fields that have a floating label. The step buttons take the field edges,
-   * so the label always stays raised. Off by default.
+   * so the label always stays raised, and `'pinned'` works the same as `true`. Off by default.
    */
-  floatingLabel?: boolean
+  floatingLabel?: boolean | 'pinned'
   /** Hint below the field. */
   hint?: string
   /** Error message. When set, the field is marked invalid. */

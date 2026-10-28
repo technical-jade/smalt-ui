@@ -162,6 +162,31 @@ adds `*` to the label, `invalid` marks the field as invalid without an error tex
   </template>
 </Demo>
 
+## Pinned label
+
+`floating-label="pinned"` pins the label to the top edge of the frame: the placeholder segments
+of both dates and the dash between them stay visible in an empty field. See
+[`SDateField`](/components/date-field#pinned-label).
+
+<ClientOnly>
+<Demo>
+  <SDateRangePicker label="Period" floating-label="pinned" />
+
+<template #code>
+
+```vue
+<template>
+  <SDateRangePicker
+    label="Period"
+    floating-label="pinned"
+  />
+</template>
+```
+
+  </template>
+</Demo>
+</ClientOnly>
+
 ## Date limits
 
 `maxValue` sets the upper bound of the range, and the `isDateDisabled` predicate disables arbitrary

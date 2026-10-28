@@ -49,6 +49,7 @@ const colorModel = computed<string | undefined>({
 })
 
 const floating = computed(() => p.floatingLabel && !!p.label)
+const pinned = computed(() => floating.value && p.floatingLabel === 'pinned')
 
 const editing = ref(false)
 
@@ -117,6 +118,7 @@ const onFrameMousedown = (event: MouseEvent) =>
           's-color-field__control--has-leading': floating,
         }"
         :data-filled="filled || undefined"
+        :data-label-pinned="pinned || undefined"
         :data-invalid="fieldInvalid || undefined"
         :disabled="p.disabled"
         :readonly="p.readonly"

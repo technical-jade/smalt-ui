@@ -35,7 +35,7 @@ $sizes: sm, md, lg;
 
   // With a floating label the native placeholder is hidden at rest (the label plays its role)
   // and shows only on focus.
-  &__control--floating &__input::placeholder {
+  &__control--floating:not([data-label-pinned]) &__input::placeholder {
     color: transparent;
   }
 

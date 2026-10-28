@@ -105,6 +105,31 @@ invalid.
   </template>
 </Demo>
 
+## Pinned label
+
+`floating-label="pinned"` pins the label to the top edge of the frame: it never drops into the
+place of the segments in an empty field, and the placeholder segments stay visible. See
+[`SDateField`](/components/date-field#pinned-label).
+
+<ClientOnly>
+<Demo>
+  <STimeField label="Pickup time" floating-label="pinned" />
+
+<template #code>
+
+```vue
+<template>
+  <STimeField
+    label="Pickup time"
+    floating-label="pinned"
+  />
+</template>
+```
+
+  </template>
+</Demo>
+</ClientOnly>
+
 ## States
 
 `disabled` blocks the field, `readonly` prevents changing the segments, `invalid` marks the field

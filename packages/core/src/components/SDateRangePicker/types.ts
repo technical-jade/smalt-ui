@@ -40,8 +40,10 @@ export interface SDateRangePickerProps extends SValidationProps<SDateRange | und
    * Floating label: the label lives inside the frame, looks like a placeholder at rest and moves
    * up to the top border on focus or when filled. On by default; `false` gives a regular label
    * above the field. The label size is fixed and does not depend on `size`.
+   * `'pinned'` pins the label to the frame: it never drops into the field, and the placeholder of
+   * an empty field stays visible.
    */
-  floatingLabel?: boolean
+  floatingLabel?: boolean | 'pinned'
   /**
    * Formatting locale (e.g. `en-GB`). By default it is derived from the library locale
    * (`ConfigProvider`/`installLocale`, the `locale` option in Nuxt): `en` → `en-US`.
