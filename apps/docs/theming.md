@@ -23,19 +23,19 @@ on them.
 
 ## Main semantic tokens
 
-| Token                                                                                | Purpose                                                                 |
-| ------------------------------------------------------------------------------------ | ----------------------------------------------------------------------- |
-| `--s-color-bg` / `--s-color-bg-subtle` / `--s-color-bg-muted`                        | page background and its variations                                      |
-| `--s-color-surface`                                                                  | "surface" background (cards, overlays, inputs)                          |
-| `--s-color-text` / `--s-color-text-muted` / `--s-color-text-subtle`                  | text and its muted variants                                             |
-| `--s-color-border` / `--s-color-outline`                                             | borders and control outlines                                            |
-| `--s-color-primary` (+ `-hover` / `-active` / `-contrast` / `-text` / `-container`)  | accent color and its derivatives                                        |
-| `--s-color-positive` / `--s-color-warning` / `--s-color-negative` / `--s-color-info` | status colors                                                           |
-| `--s-color-<role>-text`                                                              | the same role for text, see [Palette](/style/palette)                   |
-| `--s-color-focus-ring`                                                               | focus ring color                                                        |
-| `--s-shadow-color` / `--s-shadow-key-opacity` / `--s-shadow-ambient-opacity`         | shadow color and strength, see [Elevation](/style/elevation#dark-theme) |
-| `--s-radius-sm` / `-md` / `-lg` / `-xl`                                              | corner radii                                                            |
-| `--s-font-sans` / `--s-font-heading` / `--s-font-mono`                               | fonts (see [below](#fonts))                                             |
+| Token                                                                                                                 | Purpose                                                                                 |
+| --------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------- |
+| `--s-color-bg` / `--s-color-bg-subtle` / `--s-color-bg-muted`                                                         | page background and its variations                                                      |
+| `--s-color-surface` / `--s-color-surface-variant`                                                                     | "surface" background (cards, overlays, inputs) and its muted variant (tracks, steppers) |
+| `--s-color-text` / `--s-color-text-muted` / `--s-color-text-subtle`                                                   | text and its muted variants                                                             |
+| `--s-color-border` / `--s-color-outline`                                                                              | borders and control outlines                                                            |
+| `--s-color-primary` (+ `-hover` / `-active` / `-contrast` / `-text` / `-container`), `--s-color-on-primary-container` | accent color and its derivatives                                                        |
+| `--s-color-positive` / `--s-color-warning` / `--s-color-negative` / `--s-color-info`                                  | status colors                                                                           |
+| `--s-color-<role>-text`                                                                                               | the same role for text, see [Palette](/style/palette)                                   |
+| `--s-color-focus-ring`                                                                                                | focus ring color                                                                        |
+| `--s-shadow-color` / `--s-shadow-key-opacity` / `--s-shadow-ambient-opacity`                                          | shadow color and strength, see [Elevation](/style/elevation#dark-theme)                 |
+| `--s-radius-sm` / `-md` / `-lg` / `-xl`                                                                               | corner radii                                                                            |
+| `--s-font-sans` / `--s-font-heading` / `--s-font-mono`                                                                | fonts (see [below](#fonts))                                                             |
 
 The full set is in `SemanticTokenName` (a type exported from `@smalt-ui/core`).
 
@@ -157,6 +157,34 @@ and so on); it wins over the derived value:
 ```ts
 createTheme({ primary: '#7c3aed', 'color-primary-hover': '#6d28d9' })
 ```
+
+Neutral roles are theme tokens as well: the background, the surfaces (`color-surface`,
+`color-surface-variant`), text and borders. `color-outline` is the border of input fields,
+toggles, checkboxes and outline buttons; it has no derived states, so it can also be set on a
+container. Below, `color-outline` is overridden on a block of fields:
+
+<ClientOnly>
+<Demo>
+  <div style="--s-color-outline: #8a6d3b; display: flex; flex-wrap: wrap; gap: 16px; align-items: start">
+    <SInput label="City" floating-label="pinned" placeholder="London" />
+    <SNumberField label="Parcels" floating-label :model-value="1" :min="1" />
+    <SButton variant="outline">Get a quote</SButton>
+  </div>
+
+<template #code>
+
+```ts
+import { createTheme, injectTheme } from '@smalt-ui/core'
+
+injectTheme(createTheme({ 'color-outline': '#8a6d3b' }))
+```
+
+  </template>
+</Demo>
+</ClientOnly>
+
+The derived states of the status roles (`color-positive-hover`, `color-warning-subtle` and so on)
+are not part of `SemanticTokenName`: they are computed from the brand color, so set that instead.
 
 The manual option needs no JS, just CSS. The triple `:root:root:root` raises specificity to
 (0,3,0), strictly above the dark theme `:root[data-theme='dark']` (0,2,0), so the override works in

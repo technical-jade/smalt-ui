@@ -1,3 +1,5 @@
+import { readFileSync } from 'node:fs'
+import { resolve } from 'node:path'
 import { afterEach, describe, expect, it } from 'vitest'
 import { createTheme, injectTheme } from '../createTheme'
 
@@ -18,6 +20,38 @@ describe('createTheme', () => {
     const css = createTheme({ primary: 'red; } body { display: none' })
     expect(css).not.toContain('body {')
     expect(css).toContain('--s-primary: red')
+  })
+})
+
+/**
+ * Base roles of the light theme (without the -hover/-active/-subtle/-contrast states derived from
+ * the base through color-mix) must be accepted by the theme: otherwise a color the components draw
+ * with cannot be repainted without a type cast.
+ */
+describe('SemanticTokenName', () => {
+  const read = (path: string) => readFileSync(resolve(process.cwd(), path), 'utf8')
+  const variables = read('src/styles/settings/_variables.scss')
+  const light = variables.slice(
+    variables.indexOf('$semantic-light:'),
+    variables.indexOf('$semantic-dark:'),
+  )
+  const roles = [...light.matchAll(/^\s*'(color-[a-z-]+)':/gm)]
+    .map(([, name]) => name)
+    .filter((name) => !/-(hover|active|subtle|contrast)$/.test(name))
+  const typeSource = read('src/composables/createTheme.ts')
+
+  it('finds the roles', () => {
+    expect(roles).toContain('color-outline')
+  })
+
+  for (const role of roles) {
+    it(`accepts ${role}`, () => {
+      expect(typeSource).toContain(`| '${role}'`)
+    })
+  }
+
+  it('createTheme emits color-outline as a CSS variable', () => {
+    expect(createTheme({ 'color-outline': '#999' })).toContain('--s-color-outline: #999;')
   })
 })
 

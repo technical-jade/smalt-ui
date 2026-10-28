@@ -22,6 +22,7 @@ export type SemanticTokenName =
   | 'color-bg-subtle'
   | 'color-bg-muted'
   | 'color-surface'
+  | 'color-surface-variant'
   | 'color-overlay'
   | 'color-text'
   | 'color-text-muted'
@@ -29,6 +30,8 @@ export type SemanticTokenName =
   | 'color-text-inverted'
   | 'color-border'
   | 'color-border-strong'
+  // Border of fields, toggles and outline buttons.
+  | 'color-outline'
   // Semantic role colors (for overriding individual states).
   | 'color-primary'
   | 'color-primary-hover'
@@ -36,6 +39,8 @@ export type SemanticTokenName =
   | 'color-primary-subtle'
   | 'color-primary-contrast'
   | 'color-primary-text'
+  | 'color-primary-container'
+  | 'color-on-primary-container'
   | 'color-secondary'
   | 'color-accent'
   | 'color-accent-text'
