@@ -82,9 +82,12 @@ By default the label stands above the field. With `floating-label` it lies insid
 moves up onto its edge when the field is focused or holds text, as in [`SInput`](/components/input);
 a `floatingLabel` default in [`global`](/guide/defaults) turns it on here too.
 `required` adds the `*` marker to the label and `aria-required` to the input. The clear button
-returns focus to the input. Inside a `<form>` the field submits the chosen
+returns focus to the input. Without a visible label, set `aria-label`. Inside a `<form>` the field submits the chosen
 suggestion's `value` under `name`, not the typed text (in [`free-text`](#free-text) mode, the
 text).
+
+The clear button is on by default (`:clearable="false"` removes it). It is visible while there is a
+selection or text, resets both, returns focus to the field, and emits the `clear` event.
 
 ## Two v-models
 
@@ -104,8 +107,9 @@ The `select` event fires on every suggestion pick, by mouse or keyboard. Unlike
 `update:modelValue`, it also fires when the same suggestion is picked again, so the app can repeat
 a check in a "picked → server rejected → picked again" scenario.
 
-The `Home` and `End` keys stay with the input and move the caret within the text, not through the
-suggestion list. The arrow keys navigate the list.
+The arrow keys navigate the suggestion list, `Enter` picks the highlighted one, and `Esc` closes
+the panel. The `Home` and `End` keys stay with the input and move the caret within the text, not
+through the list. After a pick, focus stays in the field.
 
 ::: tip Focus inside the component is not leaving the field
 Clicking a suggestion does not fire `blur`: a "left the field without picking" handler would run
@@ -254,7 +258,10 @@ never touched, so after such a write the query and the field text can differ.
 
 ## Custom option row
 
-The `#option` slot replaces the row content, since a suggestion is rarely a single line of text.
+The `#option` slot, with the slot props `{ option, index }`, replaces the row content, since a
+suggestion is rarely a single line of text. It receives the same option object that is in
+`options`, so your own fields such as `region` are available in the markup; in TypeScript the slot
+prop is typed as `SAutocompleteOption`, and your own fields need a cast to your type.
 The `#prepend` slot places an element inside the frame on the left, usually an icon or a country
 flag.
 
@@ -283,21 +290,39 @@ flag.
 <template #code>
 
 ```vue
+<script setup>
+import { computed, ref } from 'vue'
+
+const cities = [
+  { label: 'New York', value: 'nyc', region: 'New York' },
+  { label: 'Los Angeles', value: 'la', region: 'California' },
+  { label: 'Chicago', value: 'chi', region: 'Illinois' },
+]
+
+const query = ref('')
+const city = ref()
+const options = computed(() =>
+  cities.filter((c) => c.label.toLowerCase().includes(query.value.toLowerCase())),
+)
+const selectedLabel = computed(() => cities.find((c) => c.value === city.value)?.label)
+</script>
+
 <template>
   <SAutocomplete
     v-model="city"
     v-model:search="query"
     :options="options"
+    :selected-label="selectedLabel"
     label="Delivery city"
+    placeholder="Start typing"
     icon="map-pin"
   >
-    <template #prepend>
-      <CountryFlag :code="country" />
-    </template>
     <template #option="{ option }">
       <div>
         <div>{{ option.label }}</div>
-        <div class="s-text-caption">{{ option.region }}</div>
+        <div style="font-size: var(--s-font-size-xs); color: var(--s-color-text-muted)">
+          {{ option.region }}
+        </div>
       </div>
     </template>
   </SAutocomplete>
@@ -311,7 +336,7 @@ flag.
 
 While a request is in flight, `loading` shows an indicator instead of the list. When there are no
 suggestions, the panel shows a placeholder: the `empty-text` prop sets its text, the `#empty` slot
-sets its markup.
+sets its markup. The `#loading` slot sets the markup of the loading indicator.
 
 <Demo>
   <ClientOnly>
@@ -332,6 +357,13 @@ sets its markup.
 <template #code>
 
 ```vue
+<script setup>
+import { ref } from 'vue'
+
+const options = ref([])
+const pending = ref(false)
+</script>
+
 <template>
   <SAutocomplete
     :options="options"
@@ -372,6 +404,13 @@ fields whose label is on the frame too. See [`SInput`](/components/input#pinned-
 </Demo>
 </ClientOnly>
 
+## Size, shape, and panel
+
+`size` (`sm`/`md`/`lg`) sets the field height: 32, 40, or 48 px. `square` removes the rounding of
+both the frame and the suggestion panel. The panel height is limited by the smaller of
+`max-height` (`20rem` by default; a number means pixels) and the space to the window edge. `flat`
+removes the shadow of the panel, and `elevation` (0-5) sets its level.
+
 ## Panel width and opening
 
 The panel is as wide as the field, and long suggestions wrap onto the next line. `max-width` lets
@@ -403,6 +442,23 @@ text already typed show up again without editing it. Focus moved by code (the cl
 <template #code>
 
 ```vue
+<script setup>
+import { computed, ref } from 'vue'
+
+const addresses = [
+  { label: '12 Harbor View Road, Building 4, Suite 210, Portland, Oregon 97201', value: '0' },
+  { label: '480 Lakeshore Drive, North Tower, Floor 17, Chicago, Illinois 60611', value: '1' },
+  { label: '75 Old Mill Lane, Riverside Business Park, Unit 3B, Austin, Texas 78701', value: '2' },
+]
+
+const query = ref('')
+const address = ref()
+const options = computed(() =>
+  addresses.filter((a) => a.label.toLowerCase().includes(query.value.toLowerCase())),
+)
+const selectedLabel = computed(() => addresses.find((a) => a.value === address.value)?.label)
+</script>
+
 <template>
   <SAutocomplete
     v-model="address"
@@ -515,10 +571,21 @@ right away, not after the form is submitted.
 
 ```vue
 <script setup lang="ts">
-import { ref } from 'vue'
+import { computed, ref } from 'vue'
+
+const cities = [
+  { label: 'New York', value: 'nyc' },
+  { label: 'Chicago', value: 'chi' },
+  { label: 'Houston', value: 'hou' },
+]
 
 const city = ref<string>()
+const query = ref('')
 const touched = ref(false)
+const options = computed(() =>
+  cities.filter((c) => c.label.toLowerCase().includes(query.value.toLowerCase())),
+)
+const selectedLabel = computed(() => cities.find((c) => c.value === city.value)?.label)
 </script>
 
 <template>
@@ -528,6 +595,7 @@ const touched = ref(false)
     :options="options"
     :selected-label="selectedLabel"
     label="Departure city"
+    placeholder="Start typing"
     :error="touched && !city ? 'Enter the departure city' : undefined"
     @blur="touched = true"
   />

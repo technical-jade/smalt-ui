@@ -3,7 +3,8 @@
 `SRating` is a star rating. It is built on Reka UI Rating (the `radiogroup` role, keyboard/mouse
 selection). The stars are a reused `SIcon`; filled ones are highlighted with the accent color
 (gold by default), and the item under the cursor grows slightly. The value is bound with
-`v-model`.
+`v-model`: a number, `0` by default (no rating). `length` sets the number of stars (5 by default).
+There is no visible label, so name the whole rating with `aria-label`.
 While the pointer moves over the stars, they preview the rating it would set.
 
 The rating is a single tab stop: Tab lands on the selected star (the first one without a rating),
@@ -50,6 +51,12 @@ const ratingBlueGrey = ref(5)
 <template #code>
 
 ```vue
+<script setup>
+import { ref } from 'vue'
+
+const score = ref(0)
+</script>
+
 <template>
   <SRating
     v-model="score"
@@ -89,6 +96,12 @@ to `SIcon`, so the scale is the same as for the library icons.
 <template #code>
 
 ```vue
+<script setup>
+import { ref } from 'vue'
+
+const score = ref(0)
+</script>
+
 <template>
   <SRating
     v-model="score"
@@ -134,6 +147,9 @@ name or a raw SVG path). Here the star is replaced with a red heart.
 
 ```vue
 <script setup lang="ts">
+import { ref } from 'vue'
+
+const score = ref(3)
 const heart =
   'M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.29 1.49 4.04 3 5.5l7 7Z'
 </script>
@@ -157,7 +173,8 @@ const heart =
 ## Half ratings
 
 The `allow-half` prop allows a step of 0.5 — you can select and display half a star
-(for example, an average rating of 3.5).
+(for example, an average rating of 3.5). A fractional value without `allow-half` (an average of
+3.7) is rounded down to a whole star, and with `allow-half` down to a half.
 
 <ClientOnly>
 <Demo>
@@ -166,6 +183,12 @@ The `allow-half` prop allows a step of 0.5 — you can select and display half a
 <template #code>
 
 ```vue
+<script setup>
+import { ref } from 'vue'
+
+const score = ref(0)
+</script>
+
 <template>
   <SRating
     v-model="score"
@@ -190,6 +213,12 @@ The `clearable` prop lets the user reset the rating to 0 by clicking the current
 <template #code>
 
 ```vue
+<script setup>
+import { ref } from 'vue'
+
+const score = ref(0)
+</script>
+
 <template>
   <SRating
     v-model="score"
@@ -205,8 +234,10 @@ The `clearable` prop lets the user reset the rating to 0 by clicking the current
 
 ## Read-only and disabled
 
-`readonly` shows the rating without letting the user change it, `disabled` also dims the control
-and blocks interaction.
+`readonly` shows the rating without letting the user change it but keeps the component in the tab
+order: a screen reader announces it as read-only (`aria-readonly`). `disabled` dims the control,
+removes it from the tab order, and announces it as unavailable. The hover preview does not work in
+either mode.
 
 <ClientOnly>
 <Demo>
@@ -253,6 +284,12 @@ The `color` prop sets the star color from the [palette](/style/palette). The def
 <template #code>
 
 ```vue
+<script setup>
+import { ref } from 'vue'
+
+const rate = ref(0)
+</script>
+
 <template>
   <SRating v-model="rate" />
   <SRating
@@ -359,6 +396,13 @@ const score = ref(0)
   </template>
 </Demo>
 </ClientOnly>
+
+## Keyboard and accessibility
+
+The rating is a `role="radiogroup"`, and every step is a `role="radio"` with an accessible name
+such as "Rating 3" (with `allow-half`, also "Rating 2.5"); the word comes from the
+[locale dictionary](/guide/i18n#dictionary-keys-smessages), the `rating` key. The component has no
+`name` prop, so its value does not reach a native `<form>` submission: pass it on from `v-model`.
 
 ## API
 

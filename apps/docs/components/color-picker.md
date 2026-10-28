@@ -3,8 +3,14 @@
 `SColorPicker` is a visual color picker in a popover panel: a 2D saturation/brightness area, a hue
 slider (and optionally an alpha slider), preset swatches, and a hex field
 ([`SColorField`](./color-field)). The trigger shows the current color. It is built on `SPopover`;
-the value is a hex string bound with `v-model`. The panel opens in a portal, so the demos are
-wrapped in `<ClientOnly>`.
+the value is a hex string bound with `v-model`; without a value, `#3B82F6` is selected. A color
+picked in the area or on the sliders arrives in lower case (`#8b5cf6`). The panel opens in a portal,
+so the demos are wrapped in `<ClientOnly>`.
+
+The panel is an [`SPopover`](./popover), so it closes on `Esc` and on a click outside, fits the
+space left on screen (long content scrolls inside it), and moves together with the trigger when the
+page scrolls. It also takes its border color from `--s-popover-border`; the panel renders in a
+portal, so set that variable globally (for example on `:root`) rather than on the picker.
 
 ## Basic usage
 
@@ -44,6 +50,9 @@ const color = ref('#3B82F6')
 
 ## Alpha and presets
 
+`with-alpha` adds an alpha slider; a color with transparency is written with eight hex digits
+(`#8b5cf680`). `swatches` is an array of hex strings shown in the panel for one-click selection.
+
 <Demo>
   <ClientOnly>
     <SColorPicker v-model="brand" label="Brand color" with-alpha :swatches="swatches" />
@@ -52,7 +61,9 @@ const color = ref('#3B82F6')
 <template #code>
 
 ```vue
-<script setup>
+<script setup lang="ts">
+import { ref } from 'vue'
+const color = ref('#8B5CF6')
 const swatches = ['#EF4444', '#F59E0B', '#10B981']
 </script>
 
@@ -71,7 +82,7 @@ const swatches = ['#EF4444', '#F59E0B', '#10B981']
 
 ## Without the input
 
-The `hideInput` flag hides the hex field in the panel, leaving only the saturation area, the hue
+The `hide-input` flag hides the hex field in the panel, leaving only the saturation area, the hue
 slider, and the swatches.
 
 <Demo>
@@ -113,6 +124,12 @@ field inside it are locked too.
 <template #code>
 
 ```vue
+<script setup>
+import { ref } from 'vue'
+
+const color = ref('#3B82F6')
+</script>
+
 <template>
   <SColorPicker
     v-model="color"
@@ -133,6 +150,18 @@ the swatch group "Color swatches" (strings of the [locale dictionary](/guide/i18
 sets one name for the trigger and the panel, `swatches-label` for the swatch group. When the
 picker has a `label`, include its text in `aria-label`: the accessible name has to contain the
 visible label (WCAG 2.5.3).
+
+## Shadow and shape
+
+The panel has a shadow by default. `flat` removes it, and `elevation` (0-5, see the
+[scale](/style/elevation)) sets the level and wins over `flat`. `square` removes the rounding of
+the hex field in the panel.
+
+## Limitations
+
+`SColorPicker` is not a form field: it has no `hint`, `error`, `rules`, or `name`, and `SForm`
+does not validate it. To validate the color or submit it with a form, use
+[`SColorField`](./color-field).
 
 ## API
 

@@ -35,6 +35,12 @@ The `use-tags` flag turns it into a tags input (see [below](#tags-mode-use-tags)
 <template #code>
 
 ```vue
+<script setup>
+import { ref } from 'vue'
+
+const name = ref('')
+</script>
+
 <template>
   <SInput
     v-model="name"
@@ -75,7 +81,10 @@ Available on all fields.
 
 By default the label **floats**: at rest it looks like a placeholder inside the border, and on
 focus or once filled it moves up onto the top border with a notch cut into it. The label size is
-fixed and does not depend on `size`. A label that does not fit into the field is cut off with an
+fixed and does not depend on `size`. The label also rises over a value filled in by browser
+autofill. A `placeholder` on such a field is visible only on focus, when the label is already up.
+Without a `label` there is no floating label, and in `use-tags` mode it has no effect. A label that
+does not fit into the field is cut off with an
 ellipsis; a floated one only when it does not fit even at its reduced size. Turn it off with
 `:floating-label="false"` — the label then renders as a regular line above the field.
 
@@ -216,7 +225,9 @@ The `size` prop (`sm`/`md`/`lg`) controls padding and font size.
 
 `icon` draws a leading icon (a name from the registry — here a custom `search` icon registered
 with `registerIcons`). The `clearable` flag adds a clear button, visible while the value is not
-empty.
+empty. It is hidden for `disabled` and `readonly` fields, focus returns to the input after a
+click, and its accessible name ("Clear" from the locale dictionary) is changed for one field with
+`clear-label`.
 
 <Demo>
   <SInput icon="search" placeholder="Search" aria-label="Search" />
@@ -419,6 +430,12 @@ clear button comes first and the reveal button sits after it, before anything in
 <template #code>
 
 ```vue
+<script setup>
+import { ref } from 'vue'
+
+const password = ref('')
+</script>
+
 <template>
   <SInput
     v-model="password"
@@ -457,6 +474,14 @@ It also sets `inputmode`, so phones open a numeric keyboard. With `numeric` the 
 <template #code>
 
 ```vue
+<script setup>
+import { ref } from 'vue'
+
+const count = ref('')
+const weight = ref('')
+const value = ref('')
+</script>
+
 <template>
   <SInput
     v-model="count"
@@ -532,12 +557,18 @@ themselves.
 not dimmed, stays in the tab order and is submitted with the form; the clear button is hidden.
 
 <Demo>
-  <SInput label="Order number" model-value="MYD-10446" readonly :floating-label="false" />
-  <SInput label="Order number" model-value="MYD-10446" disabled :floating-label="false" />
+  <SInput label="Order number" model-value="ORD-10446" readonly :floating-label="false" />
+  <SInput label="Order number" model-value="ORD-10446" disabled :floating-label="false" />
 
 <template #code>
 
 ```vue
+<script setup>
+import { ref } from 'vue'
+
+const orderId = ref('')
+</script>
+
 <template>
   <SInput
     v-model="orderId"
@@ -560,6 +591,13 @@ stay on the outer border. The links to the label, hint and error (`id`, `aria-de
 The clear button returns focus to the input, so keyboard users stay in the field.
 
 ```vue
+<script setup>
+import { ref } from 'vue'
+
+const zip = ref('')
+const touched = ref(false)
+</script>
+
 <template>
   <SInput
     v-model="zip"
@@ -568,7 +606,7 @@ The clear button returns focus to the input, so keyboard users stay in the field
     autocomplete="postal-code"
     maxlength="5"
     class="own-class"
-    @blur="validate"
+    @blur="touched = true"
   />
 </template>
 ```
@@ -634,6 +672,14 @@ letters as well.
 <template #code>
 
 ```vue
+<script setup>
+import { ref } from 'vue'
+
+const phone = ref('')
+const card = ref('')
+const birth = ref('')
+</script>
+
 <template>
   <SInput
     v-model="phone"
@@ -742,10 +788,16 @@ const license = ref('')
 ## Tags mode (use-tags)
 
 The `use-tags` flag enables entering multiple tags (it replaces the former standalone `STagsInput`
-component). In this mode `v-model` is a `string[]`: a new tag is added on Enter, and each tag is an
-[`STag`](/components/tag) chip with a remove button. The `duplicate`, `add-on-paste` and `max`
-props control input behavior. Inside a `<form>` the tags are submitted under `name` as
-`name[0]`, `name[1]`, …, and `required` passes once there is at least one tag.
+component). In this mode `v-model` is a `string[]`: a new tag is added on `Enter` or a comma, and
+each tag is an [`STag`](/components/tag) chip with a remove button (accessible name "Remove tag",
+changed with `remove-tag-label`). `duplicate` allows identical tags, `max` limits their number,
+and `add-on-paste` (on by default) turns pasted text into tags, splitting it at commas.
+
+From the keyboard: `Backspace` at the empty start of the field selects the last tag, and another
+`Backspace` or `Delete` removes the selected one; `←` and `→` move the selection between tags. Inside a `<form>` the tags are submitted under `name` as
+`name[0]`, `name[1]`, …, and `required` passes once there is at least one tag. The props `type`,
+`icon-right`, `clearable`, `revealable`, `readonly`, `prefix`/`suffix`, `mask`/`numeric`, and
+`floating-label` have no effect in this mode.
 
 <Demo>
   <SInput

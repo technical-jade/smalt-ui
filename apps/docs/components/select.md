@@ -16,14 +16,20 @@ const parcels = Array.from({ length: 999 }, (_, i) => ({
   value: String(i + 1),
 }))
 const parcelCount = ref('1')
-const parcelSearch = ref('12')
 </script>
 
 # Select
 
 `SSelect` is a dropdown list built on Reka UI: keyboard navigation, ARIA roles,
-positioning and a portal. Options are set with the `options` array, the value is bound with
-`v-model`.
+positioning and a portal. Options are set with the `options` array of
+`{ label, value, disabled?, icon? }`; `v-model` holds the `value` of the chosen option (a string),
+or an array of strings for a multiple choice. The list opens in a portal and matches the width of
+the field frame.
+
+The label, hint, and error message come from [`SFormField`](/components/form-field). The label
+floats by default: it sits in the frame in place of the placeholder and rises on focus or once a
+value is chosen. `:floating-label="false"` puts it above the field, and in `use-tags` mode it is
+always above. Without a visible label, set `aria-label`.
 
 ## Basic usage
 
@@ -51,6 +57,18 @@ placeholders, so it does not pass for a selected value.
 <template #code>
 
 ```vue
+<script setup>
+import { ref } from 'vue'
+
+const city = ref('')
+const options = [
+  { label: 'New York', value: 'nyc' },
+  { label: 'Los Angeles', value: 'la' },
+  { label: 'Chicago', value: 'chi' },
+  { label: 'Houston', value: 'hou', disabled: true },
+]
+</script>
+
 <template>
   <SSelect
     v-model="city"
@@ -102,8 +120,10 @@ const plans = [
 
 The `searchable` prop turns the select into an autocomplete field: an input renders instead of the
 trigger, and the list narrows down to the typed query (keyboard navigation, the
-`combobox`/`listbox`/`option` roles). The `empty-text` prop sets the message shown when no option
-matches.
+`combobox`/`listbox`/`option` roles). After a pick, the field shows the label of the option. The arrow button at the end expands the
+whole list; its accessible name is "Show options" (changed with `show-options-label`). When no
+option matches, the list shows "No results found" (from the locale dictionary); `empty-text` sets
+another text.
 
 <Demo>
   <ClientOnly>
@@ -193,7 +213,9 @@ const cities = [
 
 The `icon` prop draws a leading icon inside the field; an option has an `icon` field (an icon
 before the label); `dropdown-icon` changes the expand indicator, and `clearable` adds a clear
-button.
+button. It is visible while a value is chosen and the field is not disabled, resets a single choice
+to `undefined` and a multiple one to `[]`, and returns focus to the field. `clear-icon` changes its
+icon, and `clear-label` changes its accessible name ("Clear" by default).
 
 <Demo>
   <ClientOnly>
@@ -241,7 +263,8 @@ const framework = ref('vue')
 ## `prepend` / `append` slots
 
 The `prepend` and `append` slots put arbitrary content inside the field border (before/after the
-control), as in the other form fields.
+control), as in the other form fields: `prepend` goes first, `append` after the clear button but
+before the expand arrow.
 
 <Demo>
   <ClientOnly>
@@ -261,6 +284,17 @@ control), as in the other form fields.
 <template #code>
 
 ```vue
+<script setup>
+import { ref } from 'vue'
+
+const framework = ref('vue')
+const options = [
+  { label: 'Vue', value: 'vue' },
+  { label: 'React', value: 'react' },
+  { label: 'Svelte', value: 'svelte' },
+]
+</script>
+
 <template>
   <SSelect
     v-model="framework"
@@ -347,6 +381,16 @@ const cities = [
 ```vue
 <script setup lang="ts">
 import { ref } from 'vue'
+
+const cities = [
+  { label: 'New York', value: 'nyc' },
+  { label: 'Los Angeles', value: 'la' },
+  { label: 'Chicago', value: 'chi' },
+]
+const frameworks = [
+  { label: 'Vue', value: 'vue' },
+  { label: 'React', value: 'react' },
+]
 const framework = ref('vue')
 </script>
 
@@ -385,6 +429,17 @@ counterpart of `prepend`.
 <template #code>
 
 ```vue
+<script setup>
+import { ref } from 'vue'
+
+const framework = ref('vue')
+const frameworks = [
+  { label: 'Vue', value: 'vue' },
+  { label: 'React', value: 'react' },
+  { label: 'Svelte', value: 'svelte' },
+]
+</script>
+
 <template>
   <SSelect
     v-model="framework"
@@ -431,6 +486,16 @@ custom one.
 <template #code>
 
 ```vue
+<script setup>
+import { ref } from 'vue'
+
+const count = ref('1')
+const options = Array.from({ length: 999 }, (_, i) => ({
+  label: String(i + 1),
+  value: String(i + 1),
+}))
+</script>
+
 <template>
   <SSelect
     v-model="count"
@@ -458,7 +523,6 @@ list below and look in the inspector: there are a couple dozen nodes, not a thou
   <ClientOnly>
     <SSelect
       v-model="parcelCount"
-      v-model:search="parcelSearch"
       :options="parcels"
       searchable
       label="Number of parcels"
@@ -469,13 +533,23 @@ list below and look in the inspector: there are a couple dozen nodes, not a thou
 <template #code>
 
 ```vue
+<script setup>
+import { ref } from 'vue'
+
+const count = ref('1')
+const options = Array.from({ length: 999 }, (_, i) => ({
+  label: String(i + 1),
+  value: String(i + 1),
+}))
+</script>
+
 <template>
   <SSelect
     v-model="count"
     :options="options"
     searchable
-    :virtualize="50"
     label="Number of parcels"
+    placeholder="Enter a number"
   />
 </template>
 ```
@@ -491,6 +565,11 @@ findable.
 
 ## Keyboard and focus
 
+Without `searchable`, the list opens with `Enter`, `Space`, and the arrow keys; the arrows and
+`Home`/`End` move between options, typing letters jumps to the option with that label, `Enter` or
+`Space` picks, and `Esc` closes the list. With `searchable`, the list opens on typing or `↓`, the
+arrows move through the found options, `Enter` picks, and `Esc` closes.
+
 The clear button returns focus to the field. In `searchable` mode Home and End move the caret in
 the text, as in any input, instead of jumping to the first or last option.
 
@@ -498,6 +577,14 @@ The field emits `focus` when focus enters it or its list and `blur` once focus h
 however the list was opened: with the mouse the list takes focus right away, and `focus` still
 fires then. Moving between the field and its open list emits nothing, so validation on blur runs
 only when the user is done with the field.
+
+## Size, shadow, and form submission
+
+`size` (`sm`/`md`/`lg`) sets the field height: 32, 40, or 48 px. `flat` removes the shadow of the
+dropdown panel, and `elevation` (0-5, see the [scale](/style/elevation)) sets its level and wins
+over `flat`. With the `name` prop, the value is sent on native form submission through a hidden
+`<select>` (with a multiple choice, one value per option), and `required` takes part in the native
+form check: the browser moves focus to the visible field.
 
 ## Square corners
 
@@ -521,9 +608,20 @@ compare. The prop can also be set globally, with one key for the whole app: see
 <template #code>
 
 ```vue
+<script setup>
+const cities = [
+  { label: 'New York', value: 'nyc' },
+  { label: 'Los Angeles', value: 'la' },
+  { label: 'Chicago', value: 'chi' },
+]
+</script>
+
 <template>
   <SSelect
-    v-model="city"
+    :options="cities"
+    label="Regular"
+  />
+  <SSelect
     :options="cities"
     label="square"
     square

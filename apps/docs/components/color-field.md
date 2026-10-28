@@ -77,6 +77,12 @@ empty field, and the placeholder stays visible. See [`SInput`](/components/input
 <template #code>
 
 ```vue
+<script setup>
+import { ref } from 'vue'
+
+const color = ref('#3B82F6')
+</script>
+
 <template>
   <SColorField
     v-model="color"
@@ -96,7 +102,7 @@ empty field, and the placeholder stays visible. See [`SInput`](/components/input
 
 ## Sizes
 
-The `size` prop controls the field height: `sm` (28px), `md` (36px), or `lg` (44px).
+The `size` prop controls the field height: `sm` (32px), `md` (40px), or `lg` (48px).
 
 <Demo>
   <ClientOnly>
@@ -108,6 +114,12 @@ The `size` prop controls the field height: `sm` (28px), `md` (36px), or `lg` (44
 <template #code>
 
 ```vue
+<script setup>
+import { ref } from 'vue'
+
+const color = ref('#3B82F6')
+</script>
+
 <template>
   <SColorField
     v-model="color"
@@ -132,8 +144,10 @@ The `size` prop controls the field height: `sm` (28px), `md` (36px), or `lg` (44
 
 ## States
 
-`required` adds `*` to the label, `readonly` prevents editing, `disabled` dims the field, `invalid`
-marks it as invalid, and `hint` shows a hint under the field.
+`required` adds `*` to the label and sets the native `required`, `readonly` prevents editing,
+`disabled` dims the field and blocks input, `invalid` marks it as invalid, and `hint` shows a hint
+under the field. With the `name` prop, the color is sent on native form submission; an empty field
+submits an empty string, so `required` works in a form.
 
 <Demo>
   <ClientOnly>
@@ -146,6 +160,12 @@ marks it as invalid, and `hint` shows a hint under the field.
 <template #code>
 
 ```vue
+<script setup>
+import { ref } from 'vue'
+
+const color = ref('#3B82F6')
+</script>
+
 <template>
   <SColorField
     v-model="color"
@@ -176,8 +196,10 @@ marks it as invalid, and `hint` shows a hint under the field.
 
 ## `prepend` / `append` slots
 
-The slots insert arbitrary content inside the field frame next to the swatch: an icon, text, or a
-button.
+The slots insert arbitrary content inside the field frame: an icon, text, or a button. `prepend`
+sits before the swatch, `append` at the end of the field. Attributes that are not declared as props
+(`aria-label`, `autocomplete`, `@blur`/`@focus` handlers) go to the `<input>` itself; only `class`
+and `style` stay on the frame.
 
 <Demo>
   <ClientOnly>
@@ -194,6 +216,12 @@ button.
 <template #code>
 
 ```vue
+<script setup>
+import { ref } from 'vue'
+
+const color = ref('#3B82F6')
+</script>
+
 <template>
   <SColorField
     v-model="color"

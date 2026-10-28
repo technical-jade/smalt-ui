@@ -14,7 +14,7 @@ The label **floats** by default (at rest it sits on the first line, on focus or 
 moves up onto the top border); turn it off with `:floating-label="false"`.
 
 The height is set by `rows` (3 by default). The user can drag the field taller by the resize grip
-in the bottom right corner of the frame; the height does not follow the text on its own.
+in the end corner of the frame; the height does not follow the text on its own.
 
 ## Basic usage
 
@@ -24,6 +24,12 @@ in the bottom right corner of the frame; the height does not follow the text on 
 <template #code>
 
 ```vue
+<script setup>
+import { ref } from 'vue'
+
+const comment = ref('')
+</script>
+
 <template>
   <STextarea
     v-model="comment"
@@ -83,9 +89,14 @@ empty field, and the placeholder stays visible. See [`SInput`](/components/input
   </template>
 </Demo>
 
+## Sizes and shape
+
+`size` (`sm`/`md`/`lg`) changes the font and the inner padding; the height is still set by `rows`.
+`square` removes the rounding of the frame.
+
 ## States
 
-`required` marks the field as required (`*` next to the label), `invalid` marks the field as
+`required` adds `*` next to the label and sets the native `required`, `invalid` marks the field as
 invalid, `disabled` dims the field and blocks input.
 
 <Demo>
@@ -121,7 +132,9 @@ invalid, `disabled` dims the field and blocks input.
 
 ## `prepend` / `append` slots
 
-The slots put arbitrary content inside the field border — an icon or a button.
+The slots put arbitrary content inside the field border — an icon or a button. `prepend` sits
+before the text, `append` in the top corner at the end of the frame, and the text does not run
+under it.
 
 <Demo>
   <STextarea label="Note" placeholder="Text…" :rows="3">
@@ -136,6 +149,13 @@ The slots put arbitrary content inside the field border — an icon or a button.
 <template #code>
 
 ```vue
+<script setup>
+import { ref } from 'vue'
+
+const note = ref('')
+const message = ref('')
+</script>
+
 <template>
   <STextarea
     v-model="note"
@@ -187,6 +207,12 @@ The slots put arbitrary content inside the field border — an icon or a button.
 <template #code>
 
 ```vue
+<script setup>
+import { ref } from 'vue'
+
+const terms = ref('')
+</script>
+
 <template>
   <STextarea
     v-model="terms"
@@ -200,10 +226,19 @@ The slots put arbitrary content inside the field border — an icon or a button.
   </template>
 </Demo>
 
+## Native attributes and events
+
+Everything not declared as a prop goes to the `<textarea>` itself: `name`, `maxlength`,
+`autocomplete`, `spellcheck`, and the `@blur`, `@focus`, `@keydown` handlers. Only `class` and
+`style` stay on the outer frame. The links to the label and the messages (`id`,
+`aria-describedby`, `aria-invalid`) are the field's own and are not overridden.
+
 ## Validation
 
 `rules` checks the text when focus leaves the field, and then on every change while the error is
-shown. The rules receive the `v-model` string. `maxLength()` reports a text that is too long
+shown. The rules receive the `v-model` string. A manual `error` wins over the rules, `validate-on` changes
+when the check runs, and `validate()`, `resetValidation()` and `focus()` are available through the
+ref. `maxLength()` reports a text that is too long
 instead of cutting it, unlike the native `maxlength` attribute, so pasted text is not lost. See
 the [Validation](/guide/validation) guide for the details.
 

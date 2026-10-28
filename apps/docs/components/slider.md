@@ -3,7 +3,8 @@
 `SSlider` is a slider for picking a number or a range. It is built on Reka UI (the `slider`
 role, `aria-valuenow`/`min`/`max`, arrow-key control) and reuses `SFormField` for the label,
 hint, error message and a11y wiring. `v-model` takes a number (a single thumb) or an array
-(a range).
+(a range). Without a value the slider sits at `min`; the bounds are 0 to 100 with a step of 1 by
+default, and `min`, `max`, and `step` change them. The label always stands above the slider.
 `v-model` updates on every step of a drag; `value-commit` fires once the user releases the thumb
 or presses a key. Without a visible `label`, name the slider with `aria-label`: in a range the
 thumbs are announced as its start and end. The hint and the error are linked to every thumb
@@ -34,6 +35,12 @@ const wideRange = (v) => !Array.isArray(v) || v[1] - v[0] >= 10 || 'Range must b
 <template #code>
 
 ```vue
+<script setup>
+import { ref } from 'vue'
+
+const volume = ref(40)
+</script>
+
 <template>
   <SSlider
     v-model="volume"
@@ -58,6 +65,12 @@ const wideRange = (v) => !Array.isArray(v) || v[1] - v[0] >= 10 || 'Range must b
 <template #code>
 
 ```vue
+<script setup>
+import { ref } from 'vue'
+
+const priceRange = ref([20, 70])
+</script>
+
 <template>
   <SSlider
     v-model="priceRange"
@@ -73,10 +86,22 @@ const wideRange = (v) => !Array.isArray(v) || v[1] - v[0] >= 10 || 'Range must b
 </Demo>
 </ClientOnly>
 
+## Keyboard and mouse
+
+Every thumb is a separate tab stop with the `slider` role.
+
+| Key                                  | Action               |
+| ------------------------------------ | -------------------- |
+| `←` / `→`, `↑` / `↓`                 | move by `step`       |
+| `Shift` + arrow, `PageUp`/`PageDown` | move by `step × 10`  |
+| `Home` / `End`                       | set to `min` / `max` |
+
+A click on the track moves the nearest thumb to that point.
+
 ## States
 
 `disabled` blocks the slider; `error` (or explicit `invalid`) marks the field invalid and
-highlights the track; `required` marks the field as required.
+highlights the track; `required` only draws the `*` next to the label: a slider always has a value.
 
 <ClientOnly>
 <Demo>
@@ -90,6 +115,15 @@ highlights the track; `required` marks the field as required.
 <template #code>
 
 ```vue
+<script setup>
+import { ref } from 'vue'
+
+const a = ref(50)
+const b = ref(50)
+const c = ref(50)
+const d = ref(50)
+</script>
+
 <template>
   <SSlider
     v-model="a"
@@ -118,6 +152,13 @@ highlights the track; `required` marks the field as required.
 </Demo>
 </ClientOnly>
 
+## Accessibility and form
+
+The thumb is named by `label`; without a visible label, set `aria-label`. In a range, the edge
+from the locale dictionary is added to the name: "Price: start" and "Price: end". With the `name`
+prop the value is sent on native form submission: a single thumb under `name`, a range under
+`name[0]` and `name[1]`.
+
 ## Color
 
 The `color` prop sets the color of the fill and the thumb from the [palette](/style/palette).
@@ -132,6 +173,12 @@ The `color` prop sets the color of the fill and the thumb from the [palette](/st
 <template #code>
 
 ```vue
+<script setup>
+import { ref } from 'vue'
+
+const value = ref(50)
+</script>
+
 <template>
   <SSlider
     v-model="value"
@@ -149,7 +196,8 @@ The `color` prop sets the color of the fill and the thumb from the [palette](/st
 
 `showValue` displays the current value in a bubble above the thumb. By default the bubble
 appears on hover, focus or drag; `valueAlways` keeps it visible at all times. The format is set
-with the `value` slot (a number by default) — for a range, the slot renders for each thumb.
+with the `value` slot (a number by default) — for a range, the slot renders for each thumb, with `{ value, index }`. The bubble is hidden from screen readers, which read the
+value from `aria-valuenow`.
 
 <ClientOnly>
 <Demo>
@@ -176,6 +224,13 @@ with the `value` slot (a number by default) — for a range, the slot renders fo
 <template #code>
 
 ```vue
+<script setup>
+import { ref } from 'vue'
+
+const volume = ref(40)
+const priceRange = ref([20, 70])
+</script>
+
 <template>
   <SSlider
     v-model="volume"

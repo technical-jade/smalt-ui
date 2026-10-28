@@ -38,6 +38,12 @@ Without a visible label, name the checkbox with `aria-label`.
 <template #code>
 
 ```vue
+<script setup>
+import { ref } from 'vue'
+
+const agree = ref(false)
+</script>
+
 <template>
   <SCheckbox
     v-model="agree"
@@ -64,6 +70,12 @@ The `color` prop sets the checked state color from the [palette](/style/palette)
 <template #code>
 
 ```vue
+<script setup>
+import { ref } from 'vue'
+
+const a = ref(false)
+</script>
+
 <template>
   <SCheckbox
     v-model="a"
@@ -86,6 +98,12 @@ The `color` prop sets the checked state color from the [palette](/style/palette)
 <template #code>
 
 ```vue
+<script setup>
+import { ref } from 'vue'
+
+const state = ref(false)
+</script>
+
 <template>
   <SCheckbox
     v-model="state"
@@ -112,6 +130,13 @@ registry name or a raw path).
 <template #code>
 
 ```vue
+<script setup>
+import { ref } from 'vue'
+
+const agree = ref(false)
+const state = ref(false)
+</script>
+
 <template>
   <SCheckbox
     v-model="agree"
@@ -148,6 +173,12 @@ native `indeterminate` checkbox, does not count as checked: it is left out of `F
 <template #code>
 
 ```vue
+<script setup>
+import { ref } from 'vue'
+
+const accept = ref(false)
+</script>
+
 <template>
   <SCheckbox
     v-model="accept"
@@ -177,14 +208,12 @@ The `hint` and `error` props render text under the checkbox and link it through
 ```vue
 <template>
   <SCheckbox
-    v-model="subscribe"
     label="Subscribe to the newsletter"
     hint="At most once a week"
   />
   <SCheckbox
-    v-model="agree"
     label="I agree to the terms"
-    :error="errors.agree"
+    error="Check this box to continue"
     required
   />
 </template>
@@ -212,13 +241,18 @@ You do not need to wrap the content in a single element.
 <template #code>
 
 ```vue
+<script setup>
+import { ref } from 'vue'
+
+const safe = ref(false)
+</script>
+
 <template>
   <SCheckbox
     v-model="safe"
     required
   >
-    Contains no <a :href="links.dangerous">dangerous</a> or
-    <a :href="links.prohibited">prohibited</a> goods
+    Contains no <a href="./checkbox">dangerous</a> or <a href="./checkbox">prohibited</a> goods
   </SCheckbox>
 </template>
 ```
@@ -250,6 +284,12 @@ its height from the parent's `line-height` and may come out slightly taller than
 <template #code>
 
 ```vue
+<script setup>
+import { ref } from 'vue'
+
+const insurance = ref(false)
+</script>
+
 <template>
   <SCheckbox
     v-model="insurance"
@@ -487,6 +527,25 @@ const topics = [
   </SForm>
 </template>
 ```
+
+## Native form
+
+Hidden inputs for native submission appear only when the component sits inside a `<form>` and has
+a `name`.
+
+- `SCheckbox` submits `name=on` (or its own `value`) when checked; an unchecked one is not in
+  `FormData`. The mixed state, like the native `indeterminate`, does not count as checked: it
+  stays out of `FormData`, and with `required` it stops the browser from submitting the form.
+- `SCheckboxGroup` submits the selected values with indices: `name[0]=email`, `name[1]=phone`.
+  With `required`, an empty group stops the browser from submitting the form.
+
+## Keyboard and accessibility
+
+The checkbox is a `<button role="checkbox">` with `aria-checked` (`true`, `false`, or `mixed`).
+It gets focus with `Tab` and is toggled with `Space`; `Enter` does not toggle it, just like a
+native checkbox. The state is mirrored in `data-state` (`checked`, `unchecked`, `indeterminate`).
+A group is a container with `role="group"` and an accessible name from `label` or `aria-label`.
+Each checkbox in a group keeps its own tab stop.
 
 ## API
 

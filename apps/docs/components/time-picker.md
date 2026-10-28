@@ -10,9 +10,14 @@ from a list. The value is a `Time` (or `CalendarDateTime`/`ZonedDateTime`) from
 class the value already had: a `Time` stays a `Time`, and a date-time keeps its date.
 
 Every field prop of `STimeField` is forwarded (`label`, `floating-label`, `hint`, `error`, `size`,
-`disabled`, `readonly`, `required`, `invalid`, `square`, `locale`, `rules`, `validate-on`), and
-the field still accepts typing into the segments. `floating-label="pinned"` pins the label to the
+`disabled`, `readonly`, `name`, `required`, `invalid`, `square`, `locale`, `rules`,
+`validate-on`), and the field still accepts typing into the segments. There are no `prepend` /
+`append` slots: the end of the field is taken by the button that opens the panel. `floating-label="pinned"` pins the label to the
 frame, as in [`STimeField`](./time-field#pinned-label).
+
+A pick in a column writes the value to `v-model` at once, and the panel stays open so both the
+hours and the minutes can be picked. It is closed with `Esc`, a click outside, or another press of
+the button.
 
 **Keyboard and accessibility.** The trigger button carries `aria-expanded` and `aria-haspopup`;
 opening it moves focus to the hour column. Each column is a `listbox` of `option`s named after
@@ -20,7 +25,7 @@ its unit in the field's locale, and the current value is marked `aria-selected` 
 view. <kbd>↑</kbd>/<kbd>↓</kbd> move inside a column, <kbd>Home</kbd>/<kbd>End</kbd> jump to its
 first and last entry, <kbd>←</kbd>/<kbd>→</kbd> cross to the neighbouring column,
 <kbd>Enter</kbd> or <kbd>Space</kbd> picks, and <kbd>Esc</kbd> closes the panel and returns focus
-to the field. Entries outside `min-value`/`max-value` are disabled and skipped by the arrows. The
+to the open button. Entries outside `min-value`/`max-value` are disabled and skipped by the arrows. The
 segments of the field are named as in [`STimeField`](./time-field#accessibility), from the locale
 dictionary.
 
@@ -114,6 +119,14 @@ far the value goes and therefore which columns are drawn — `hour` leaves the h
 <template #code>
 
 ```vue
+<script setup>
+import { shallowRef } from 'vue'
+import { parseTime } from '@internationalized/date'
+
+const shift = shallowRef()
+const withSeconds = shallowRef(parseTime('12:05:30'))
+</script>
+
 <template>
   <STimePicker
     v-model="shift"
@@ -215,6 +228,11 @@ on the other fields. See the [Validation](/guide/validation) guide for the detai
 import { shallowRef } from 'vue'
 import { required } from '@smalt-ui/core'
 const booking = shallowRef()
+const submitted = shallowRef('')
+
+function onSubmit() {
+  submitted.value = String(booking.value)
+}
 </script>
 
 <template>
@@ -227,6 +245,7 @@ const booking = shallowRef()
       :rules="[required()]"
     />
     <SButton type="submit"> Book </SButton>
+    <span v-if="submitted">Submitted: {{ submitted }}</span>
   </SForm>
 </template>
 ```
@@ -251,6 +270,13 @@ control the shadow of the panel.
 <template #code>
 
 ```vue
+<script setup>
+import { shallowRef } from 'vue'
+import { parseTime } from '@internationalized/date'
+
+const appointment = shallowRef(parseTime('09:30'))
+</script>
+
 <template>
   <STimePicker
     v-model="appointment"

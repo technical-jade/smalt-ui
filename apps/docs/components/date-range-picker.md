@@ -7,10 +7,17 @@ portal. The value is a `{ start, end }` object with `DateValue` dates from
 `@internationalized/date`. Keep the value in a [`shallowRef`](./date-field#value-and-shallowref),
 not a `ref`: a regular `ref` unwraps the date class, and type checking no longer recognizes it as a
 `DateValue`.
-Pasting into a segment fills the whole value: ISO 8601 (`2024-03-15`, a `2024-03-15/2024-03-20` interval), the
-numeric date format of the locale (`03/15/2024` in en-US, `15/03/2024` in en-GB) and times like
-`9:30 PM`. A typed value outside `min-value`/`max-value` marks the field invalid (red frame and
-`aria-invalid`).
+
+In the calendar, the first click sets the start and the second sets the end. By default the
+calendar stays open after that, so the range can still be adjusted: close it with `Esc`, a click
+outside, or the icon button. With `close-on-select` it closes by itself as soon as both ends are
+picked.
+
+Pasting into a segment understands ISO 8601 (`2024-03-15`, a `2024-03-15/2024-03-20` interval) and
+the numeric date format of the locale (`03/15/2024` in en-US, `15/03/2024` in en-GB). Text with two
+dates fills both ends; with one date, only the end whose segment received the paste. The field is
+marked invalid (red frame and `aria-invalid`) when a date falls outside `min-value`/`max-value` or
+the start is later than the end.
 
 ## Basic usage
 
@@ -67,6 +74,12 @@ const range = shallowRef({ start: parseDate('2026-07-11'), end: parseDate('2026-
 <template #code>
 
 ```vue
+<script setup>
+import { today, getLocalTimeZone } from '@internationalized/date'
+
+const min = today(getLocalTimeZone())
+</script>
+
 <template>
   <SDateRangePicker
     label="Trip dates"
@@ -85,7 +98,7 @@ const range = shallowRef({ start: parseDate('2026-07-11'), end: parseDate('2026-
 
 ## Sizes
 
-The `size` prop changes the field height: `sm` (28px), `md` (36px, the default), or `lg` (44px).
+The `size` prop changes the field height: `sm` (32px), `md` (40px, the default), or `lg` (48px).
 
 <Demo>
   <ClientOnly>
@@ -97,6 +110,13 @@ The `size` prop changes the field height: `sm` (28px), `md` (36px, the default),
 <template #code>
 
 ```vue
+<script setup>
+import { shallowRef } from 'vue'
+import { parseDate } from '@internationalized/date'
+
+const range = shallowRef({ start: parseDate('2026-07-11'), end: parseDate('2026-07-20') })
+</script>
+
 <template>
   <SDateRangePicker
     v-model="range"
@@ -135,6 +155,14 @@ adds `*` to the label, `invalid` marks the field as invalid without an error tex
 <template #code>
 
 ```vue
+<script setup>
+import { shallowRef } from 'vue'
+import { parseDate } from '@internationalized/date'
+
+const range = shallowRef({ start: parseDate('2026-07-11'), end: parseDate('2026-07-20') })
+const empty = shallowRef()
+</script>
+
 <template>
   <SDateRangePicker
     v-model="range"
@@ -237,7 +265,9 @@ const noWeekends = (value) => {
 `numberOfMonths` sets how many months are shown at once (2 by default), `weekStartsOn` changes the
 first day of the week (1 is Monday), and `fixedWeeks` set to `false` turns off the stable 6-week
 grid height. `closeOnSelect` closes the calendar once both ends are picked; it is off by default,
-so the range can still be adjusted. The effect is visible with the calendar open.
+so the range can still be adjusted. `flat` and `elevation` control the calendar shadow, and
+`square` removes the rounding of both the field and the calendar. The effect is visible with the
+calendar open.
 
 <Demo>
   <ClientOnly>
@@ -250,6 +280,12 @@ so the range can still be adjusted. The effect is visible with the calendar open
 <template #code>
 
 ```vue
+<script setup>
+import { shallowRef } from 'vue'
+
+const empty = shallowRef()
+</script>
+
 <template>
   <SDateRangePicker
     v-model="empty"
@@ -296,6 +332,12 @@ next to the standard calendar trigger.
 <template #code>
 
 ```vue
+<script setup>
+import { shallowRef } from 'vue'
+
+const empty = shallowRef()
+</script>
+
 <template>
   <SDateRangePicker
     v-model="empty"

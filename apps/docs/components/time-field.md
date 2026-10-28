@@ -4,11 +4,14 @@
 AM/PM when needed). It works from the keyboard (arrow keys increment), is localized and respects
 the 12/24-hour format. The value is a `Time` (or `CalendarDateTime`/`ZonedDateTime`) from
 `@internationalized/date`; it is built on `SFormField`. The time counterpart of
-[`SDateField`](./date-field). Keep the value in a
+[`SDateField`](./date-field), with the same keyboard (see
+[Keyboard](./date-field#keyboard)) and the same floating label. Keep the value in a
 [`shallowRef`](./date-field#value-and-shallowref), not a `ref`: a regular `ref` unwraps the date
 class, and type checking no longer recognizes it as a `DateValue`.
-Pasting into a segment fills the whole value, such as `09:30` or `9:30 PM`. A typed time outside
-`min-value`/`max-value` marks the field invalid (red frame and `aria-invalid`).
+Pasting into a segment fills the whole value: `09:30`, `09:30:15`, `9:30 PM`. When the model holds
+a date with a time and the pasted text has a date as well, the date is replaced too. A time outside
+`min-value`/`max-value` marks the field invalid (red frame and `aria-invalid`). In the AM/PM
+segment, the period is switched with `↑`/`↓` or the `A` and `P` keys.
 
 ## Basic usage
 
@@ -49,6 +52,9 @@ const time = shallowRef(parseTime('14:30'))
 
 ## 12-hour format and seconds
 
+`hour-cycle` sets the clock format: `12` adds the AM/PM segment, `24` removes it. `granularity`
+sets the last segment: `hour`, `minute` (the default), or `second`.
+
 <Demo>
   <ClientOnly>
     <STimeField v-model="empty" label="12-hour format" :hour-cycle="12" locale="en-US" />
@@ -88,6 +94,13 @@ invalid.
 <template #code>
 
 ```vue
+<script setup>
+import { shallowRef } from 'vue'
+import { parseTime } from '@internationalized/date'
+
+const time = shallowRef(parseTime('14:30'))
+</script>
+
 <template>
   <STimeField
     v-model="time"
@@ -133,7 +146,8 @@ place of the segments in an empty field, and the placeholder segments stay visib
 ## States
 
 `disabled` blocks the field, `readonly` prevents changing the segments, `invalid` marks the field
-invalid (red border), `required` adds `*` to the label.
+invalid (red border), `required` adds `*` to the label. With the `name` prop, the value is sent on
+native form submission in a hidden input.
 
 <Demo>
   <ClientOnly>
@@ -146,6 +160,14 @@ invalid (red border), `required` adds `*` to the label.
 <template #code>
 
 ```vue
+<script setup>
+import { shallowRef } from 'vue'
+import { parseTime } from '@internationalized/date'
+
+const time = shallowRef(parseTime('14:30'))
+const empty = shallowRef()
+</script>
+
 <template>
   <STimeField
     v-model="time"
@@ -175,7 +197,7 @@ invalid (red border), `required` adds `*` to the label.
 
 ## Sizes
 
-The `size` prop controls the field height: `sm` (28px), `md` (36px, default) and `lg` (44px).
+The `size` prop controls the field height: `sm` (32px), `md` (40px, default) and `lg` (48px).
 
 <Demo>
   <ClientOnly>
@@ -187,6 +209,13 @@ The `size` prop controls the field height: `sm` (28px), `md` (36px, default) and
 <template #code>
 
 ```vue
+<script setup>
+import { shallowRef } from 'vue'
+import { parseTime } from '@internationalized/date'
+
+const time = shallowRef(parseTime('14:30'))
+</script>
+
 <template>
   <STimeField
     v-model="time"
@@ -209,6 +238,12 @@ The `size` prop controls the field height: `sm` (28px), `md` (36px, default) and
   </template>
 </Demo>
 
+## Allowed range
+
+`min-value` and `max-value` set the bounds. The field accepts a time outside them but paints the
+frame red and sets `aria-invalid`; there is no error text, and it does not fail the form check.
+A message comes from a rule, see [Validation](#validation).
+
 ## `prepend` / `append` slots
 
 The `prepend` and `append` slots put content inside the field border — for example, a clock icon.
@@ -226,6 +261,13 @@ The `prepend` and `append` slots put content inside the field border — for exa
 <template #code>
 
 ```vue
+<script setup>
+import { shallowRef } from 'vue'
+import { parseTime } from '@internationalized/date'
+
+const time = shallowRef(parseTime('14:30'))
+</script>
+
 <template>
   <STimeField
     v-model="time"

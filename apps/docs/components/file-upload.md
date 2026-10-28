@@ -10,6 +10,9 @@ const slotted = ref([])
 const formFiles = ref([])
 const formSent = ref(false)
 
+const underLimit = (list) =>
+  list.reduce((total, file) => total + file.size, 0) < 5_000_000 || 'Up to 5 MB in total'
+
 function onReject(files) {
   rejected.value = files.map((entry) => `${entry.file.name} — ${entry.message}`)
 }
@@ -30,13 +33,15 @@ file reaches the model, and reports what it refused through `reject`.
 
 It is built on `SFormField`, like `SInput`: label, hint, error message and the a11y wiring are
 reused, and the field takes part in `SForm` validation. The model is always an array, with
-`multiple` or without — a single-file field holds an array of one.
+`multiple` or without. With `multiple`, new files are added to the ones already chosen; without it,
+the field holds an array of one and a new choice replaces the previous file.
 
 Accessibility: the control is a real `<input type="file">`, visually hidden but **focusable**
 (never `display: none`), and the drop zone is its `<label>`. So the field is reachable with Tab,
 <kbd>Enter</kbd> and <kbd>Space</kbd> open the file dialog, and a click anywhere on the zone opens
 it too. The accessible name comes from the field label, and the hint or the error is linked
-through `aria-describedby`.
+through `aria-describedby`. The remove buttons carry the file name in their accessible name
+("Remove file: report.pdf"), and after a removal focus returns to the field.
 
 ## Drop zone
 
@@ -91,6 +96,12 @@ the list of files.
 <template #code>
 
 ```vue
+<script setup lang="ts">
+import { ref } from 'vue'
+
+const avatar = ref<File[]>([])
+</script>
+
 <template>
   <SFileUpload
     v-model="avatar"
@@ -194,6 +205,12 @@ and call `remove()` to drop the file from the model.
 <template #code>
 
 ```vue
+<script setup lang="ts">
+import { ref } from 'vue'
+
+const photos = ref<File[]>([])
+</script>
+
 <template>
   <SFileUpload
     v-model="photos"
@@ -222,7 +239,8 @@ Inside `SForm` the field behaves like any other: `rules` receive the `File[]`, t
 focus leaves the field and then on every change while an error is shown, and a failing field takes
 focus on submit. The built-in factories work on the array as is — `required()` fails on an empty
 list, `minLength(2)`/`maxLength(5)` count files. A rule of your own gets the same array, so a
-check on the total weight is two lines.
+check on the total weight is two lines. `required` only draws the asterisk and sets
+`aria-required`; the check itself is done by the `required()` rule.
 
 Submit the form with no file attached.
 
@@ -238,7 +256,7 @@ Submit the form with no file attached.
       name="contract"
       required
       accept=".pdf"
-      :rules="[required('Attach the contract')]"
+      :rules="[required('Attach the contract'), underLimit]"
     />
     <div style="display: flex; align-items: center; gap: 8px">
       <SButton type="submit">Send</SButton>
@@ -255,13 +273,22 @@ import { ref } from 'vue'
 import { required } from '@smalt-ui/core'
 
 const files = ref<File[]>([])
+const sent = ref(false)
 
 const underLimit = (list: File[]) =>
   list.reduce((total, file) => total + file.size, 0) < 5_000_000 || 'Up to 5 MB in total'
+
+function onReset() {
+  files.value = []
+  sent.value = false
+}
 </script>
 
 <template>
-  <SForm @submit="send">
+  <SForm
+    @submit="sent = true"
+    @reset="onReset"
+  >
     <SFileUpload
       v-model="files"
       label="Scan of the contract"
@@ -271,6 +298,13 @@ const underLimit = (list: File[]) =>
       :rules="[required('Attach the contract'), underLimit]"
     />
     <SButton type="submit">Send</SButton>
+    <SButton
+      type="reset"
+      variant="ghost"
+    >
+      Reset
+    </SButton>
+    <span v-if="sent">Sent</span>
   </SForm>
 </template>
 ```
@@ -280,7 +314,11 @@ const underLimit = (list: File[]) =>
 
 ## Sending the files
 
-The component stops at the selection, so the request stays in the app:
+The component stops at the selection, so the request stays in the app. A native `<form>`
+submission does not carry the files: after every choice the component empties its own
+`<input type="file">` (otherwise choosing the same file again would not fire), and dropped files
+never reach it at all. `name` is still useful: the field is listed under it in the `SForm` errors.
+Take the files from `v-model`:
 
 ```ts
 async function send(files: File[]) {

@@ -1,7 +1,7 @@
 # Calendar
 
 `SCalendar` is an interactive date grid with month navigation. It is fully keyboard accessible
-(arrows move between days, `PageUp`/`PageDown` between months), localized, and marks today, the
+(arrows move between days), localized, and marks today, the
 selected date, and unavailable dates. The value is a `DateValue` from `@internationalized/date`;
 the navigation is built on `SIcon`. The grid is named "Calendar" followed by the visible month;
 the `calendar-label` prop overrides the first part (the same prop exists on `SDatePicker` and
@@ -123,6 +123,13 @@ const dates = shallowRef([
 <template #code>
 
 ```vue
+<script setup>
+import { shallowRef } from 'vue'
+import { parseDate } from '@internationalized/date'
+
+const date = shallowRef(parseDate('2026-07-11'))
+</script>
+
 <template>
   <SCalendar
     v-model="date"
@@ -150,6 +157,13 @@ default) keeps the grid at 6 rows; with `false` the height follows the month.
 <template #code>
 
 ```vue
+<script setup>
+import { shallowRef } from 'vue'
+import { parseDate } from '@internationalized/date'
+
+const date = shallowRef(parseDate('2026-07-11'))
+</script>
+
 <template>
   <!-- The week starts on Monday -->
   <SCalendar
@@ -250,6 +264,53 @@ const max = parseDate('2026-07-20')
 
   </template>
 </Demo>
+
+## Clearing a selection
+
+Clicking an already selected day (or pressing `Enter`/`Space` on it) clears the selection: the
+`v-model` becomes `undefined`. If a value is required, check it in a handler or with a form rule.
+
+## Locale
+
+Month and weekday names, the first day of the week, and the weekday labels come from `locale`.
+Without the prop, the locale follows the library locale (`en` gives `en-US`). The labels of the
+navigation buttons and the calendar ("Previous month", "Next month", "Calendar") come from the
+dictionary of service strings; the `prev-month-label`, `next-month-label`, and `calendar-label`
+props override them one by one.
+
+```vue
+<script setup lang="ts">
+import { shallowRef } from 'vue'
+import { parseDate } from '@internationalized/date'
+const date = shallowRef(parseDate('2026-07-11'))
+</script>
+
+<template>
+  <SCalendar
+    v-model="date"
+    locale="en-GB"
+  />
+</template>
+```
+
+## Keyboard and accessibility
+
+The grid is a single tab stop: `Tab` moves focus to the selected day (to today when there is no
+value), and the arrows move between days from there.
+
+| Key              | Action                                     |
+| ---------------- | ------------------------------------------ |
+| `←` / `→`        | previous / next day                        |
+| `↑` / `↓`        | the same weekday one week earlier / later  |
+| `Enter`, `Space` | select the day (or clear the selected one) |
+
+When an arrow leaves the visible month, the calendar turns to the adjacent one by itself.
+Unavailable days are skipped by the arrows, and the focus does not go past `min-value` /
+`max-value`. There are no keys for jumping by months or years: use the buttons in the header.
+
+Every day is a button with the full date in its accessible name. The calendar itself is named
+"Calendar" followed by the visible month; the navigation buttons are named "Previous month" and
+"Next month".
 
 ## Server rendering
 

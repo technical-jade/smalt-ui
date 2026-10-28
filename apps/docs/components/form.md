@@ -50,8 +50,9 @@ form is submitted natively, so a classic form with `action` keeps working. The f
 its validity through `v-model` and its default slot.
 
 The rules themselves live on the fields (`rules`, `validate-on`, `error`): see the
-[Validation](/guide/validation) guide. `SForm` adds no styles of its own and no layout: arrange
-the fields as you like.
+[Validation](/guide/validation) guide. A field's `required` prop only marks it: because of
+`novalidate` the browser does not block the submission of an `SForm`, so the `required()` rule does
+the checking. `SForm` adds no styles of its own and no layout: arrange the fields as you like.
 
 ## Sign-up form
 

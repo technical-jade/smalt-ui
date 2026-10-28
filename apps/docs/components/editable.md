@@ -3,7 +3,9 @@
 `SEditable` shows a value as plain text and turns it into an input in place. It is built on Reka UI
 (activation, commit and cancel, the hidden input for native form submission) and reuses
 `SFormField` (label, hint, error message, a11y) and `SButton` for the optional controls. The value
-is bound with `v-model`.
+is bound with `v-model`, which updates only when an edit is committed (`Enter`, leaving the field,
+the save button). While the user types, the `v-model` value stays as it was, and canceling simply
+closes the editor.
 
 Prefer it to an always-visible field when the value is mostly read and rarely corrected — a
 document title, a name in a list row, a cell in a table — so the page reads as content instead of
@@ -31,6 +33,8 @@ const cardTitle = ref('Design system')
 const tags = ref(['Draft', 'Q3', 'Internal'])
 const projectName = ref('')
 const projectSaved = ref(false)
+const city = ref('London')
+const cityLog = ref('')
 </script>
 
 ## Basic usage
@@ -87,6 +91,12 @@ locale dictionary and can be replaced one by one (`edit-label`, `save-label`, `c
 <template #code>
 
 ```vue
+<script setup>
+import { ref } from 'vue'
+
+const nickname = ref('')
+</script>
+
 <template>
   <SEditable
     v-model="nickname"
@@ -132,6 +142,12 @@ value: `enter`, `blur`, `both` (the default) or `none`, where leaving the field 
 <template #code>
 
 ```vue
+<script setup>
+import { ref } from 'vue'
+
+const note = ref('Call back on Monday')
+</script>
+
 <template>
   <SEditable
     v-model="note"
@@ -189,6 +205,13 @@ Without a label the field is just the text, which is what a card heading or a li
 <template #code>
 
 ```vue
+<script setup>
+import { ref } from 'vue'
+
+const cardTitle = ref('Design system')
+const tags = ref(['Draft', 'Q3', 'Internal'])
+</script>
+
 <template>
   <SCard>
     <SEditable
@@ -216,6 +239,63 @@ Without a label the field is just the text, which is what a card heading or a li
 
   </template>
 </Demo>
+
+## Events and methods
+
+`edit` fires when the editor opens, `submit` when an edit is committed (it carries the value and
+fires even if the text did not change), and `cancel` when the edit is dropped. `focus` and `blur`
+fire when focus enters or leaves the field; moving between the value and the controls does not
+count.
+
+After a commit or a cancel, focus returns to the value instead of being lost on the page. If the
+user moved focus elsewhere (a commit by leaving the field), it stays there.
+
+The ref exposes `edit()`, `submit()`, and `cancel()`, plus `validate()`, `resetValidation()`, and
+`focus()`. The `controls` slot (only with `with-controls`) replaces the default buttons and
+receives `{ isEditing, edit, submit, cancel }`.
+
+<Demo>
+  <div style="display: grid; gap: 8px; max-width: 320px">
+    <SEditable
+      v-model="city"
+      label="City"
+      select-on-focus
+      :max-length="30"
+      @submit="cityLog = `Saved: ${$event}`"
+      @cancel="cityLog = 'Edit canceled'"
+    />
+    <span>{{ cityLog }}</span>
+  </div>
+
+<template #code>
+
+```vue
+<script setup lang="ts">
+import { ref } from 'vue'
+
+const city = ref('London')
+const log = ref('')
+</script>
+
+<template>
+  <SEditable
+    v-model="city"
+    label="City"
+    select-on-focus
+    :max-length="30"
+    @submit="log = `Saved: ${$event}`"
+    @cancel="log = 'Edit canceled'"
+  />
+  <span>{{ log }}</span>
+</template>
+```
+
+  </template>
+</Demo>
+
+`select-on-focus` selects the whole value when the editor opens, so typing replaces it entirely;
+`max-length` limits the number of characters. `start-with-edit-view` opens the editor right on
+mount and focuses the input.
 
 ## Validation
 

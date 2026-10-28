@@ -16,7 +16,9 @@ const TARIFFS = [
 
 `SRadioGroup` is a group of radio buttons built on Reka UI (the `radiogroup`/`radio` roles, arrow
 key navigation). The group **composes** `SRadio` — a single option that reuses `SLabel`. Options
-are set with the `options` prop or with `SRadio` in the slot.
+are set with the `options` prop or with `SRadio` in the slot. `v-model` is the `value` of the
+chosen option, or `undefined` while nothing is chosen. A choice cannot be cleared with a click, as
+with native radio buttons. `SRadio` works only inside `SRadioGroup`.
 
 An option is named by its label (`label` or the slot content); name an option without a visible
 label, such as a color swatch, with the `aria-label` prop. As on the group, `class` and `style` of
@@ -44,6 +46,17 @@ go to the `role="radio"` element itself.
 <template #code>
 
 ```vue
+<script setup>
+import { ref } from 'vue'
+
+const delivery = ref('courier')
+const options = [
+  { label: 'Courier', value: 'courier' },
+  { label: 'Pickup', value: 'pickup' },
+  { label: 'Mail (unavailable)', value: 'post', disabled: true },
+]
+</script>
+
 <template>
   <SRadioGroup
     v-model="delivery"
@@ -70,6 +83,12 @@ go to the `role="radio"` element itself.
 <template #code>
 
 ```vue
+<script setup>
+import { ref } from 'vue'
+
+const size = ref('m')
+</script>
+
 <template>
   <SRadioGroup
     v-model="size"
@@ -98,7 +117,8 @@ go to the `role="radio"` element itself.
 
 ## Disabled group
 
-The `disabled` prop on `SRadioGroup` disables all options at once.
+The `disabled` prop on `SRadioGroup` disables all options at once. A disabled group is not checked
+by rules and takes no part in [`SForm`](/components/form).
 
 <ClientOnly>
 <Demo>
@@ -111,6 +131,12 @@ The `disabled` prop on `SRadioGroup` disables all options at once.
 <template #code>
 
 ```vue
+<script setup>
+import { ref } from 'vue'
+
+const plan = ref()
+</script>
+
 <template>
   <SRadioGroup
     v-model="plan"
@@ -135,7 +161,9 @@ The `disabled` prop on `SRadioGroup` disables all options at once.
 
 ## Required choice
 
-The `required` prop makes a choice in the group required for form submission.
+The `required` prop adds an asterisk to the group title. It starts checking the choice only in a
+native form: when the group is inside a `<form>` and has a `name`, the browser will not submit the
+form without a choice. For checking in [`SForm`](/components/form), use [rules](#validation).
 
 <ClientOnly>
 <Demo>
@@ -147,6 +175,12 @@ The `required` prop makes a choice in the group required for form submission.
 <template #code>
 
 ```vue
+<script setup>
+import { ref } from 'vue'
+
+const payment = ref('')
+</script>
+
 <template>
   <SRadioGroup
     v-model="payment"
@@ -188,6 +222,12 @@ The `color` prop on `SRadio` sets the color of the checked state from the
 <template #code>
 
 ```vue
+<script setup>
+import { ref } from 'vue'
+
+const value = ref('')
+</script>
+
 <template>
   <SRadioGroup v-model="value">
     <SRadio
@@ -208,7 +248,9 @@ The `color` prop on `SRadio` sets the color of the checked state from the
 `label` renders the group title and links it with `aria-labelledby` (a native `<label for>` does
 not work with a `role="radiogroup"` container — it has no value of its own). `hint` and `error`
 go below the group. No separate `SFormField` wrapper is needed for this; `aria-label` remains for
-cases without a visible title.
+cases without a visible title (it is ignored when `label` is set). For markup in the title, use the
+`label` slot. `error` also sets `aria-invalid` and paints the circles red, and `invalid` does the
+same without a text.
 
 <ClientOnly>
 <Demo>
@@ -235,12 +277,21 @@ cases without a visible title.
 ```vue
 <template>
   <SRadioGroup
-    v-model="customerType"
     label="Tell us who you are"
-    :error="errors.customerType"
     required
     orientation="horizontal"
-    :options="options"
+    :options="[
+      { label: 'Individual', value: 'person' },
+      { label: 'Business', value: 'company' },
+    ]"
+  />
+  <SRadioGroup
+    label="Delivery method"
+    error="Choose an option"
+    :options="[
+      { label: 'To the door', value: 'door' },
+      { label: 'To a pickup point', value: 'pickup' },
+    ]"
   />
 </template>
 ```
@@ -275,6 +326,16 @@ layout of the options themselves is set with `group-class` — the class of the
 <template #code>
 
 ```vue
+<script setup>
+import { ref } from 'vue'
+
+const tariff = ref('parcel')
+const tariffs = [
+  { value: 'parcel', title: 'Standard shipping', note: '2–4 days · from $5' },
+  { value: 'express', title: 'Express shipping', note: '1–2 days · from $12' },
+]
+</script>
+
 <template>
   <SRadioGroup
     v-model="tariff"
@@ -369,6 +430,21 @@ const plans = [
   </template>
 </Demo>
 </ClientOnly>
+
+## Keyboard and accessibility
+
+The group is a single tab stop: `Tab` brings focus to the chosen option, or to the first available
+one when nothing is chosen. The arrow keys move focus to the neighboring option and choose it
+at once, wrapping from the last option to the first, in both directions whatever the
+`orientation`. `Space` chooses the focused option, `Enter` does nothing. Disabled options are
+skipped by the arrows.
+
+The container is a `role="radiogroup"`, and the options are `role="radio"` with `aria-checked`.
+
+## Native form
+
+With `name` inside a `<form>`, the group submits the chosen value: `name=courier`. Outside a
+`<form>` there is no hidden field.
 
 ## API
 

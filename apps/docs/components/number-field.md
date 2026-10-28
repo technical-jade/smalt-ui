@@ -31,6 +31,12 @@ const parcels = ref(2)
 <template #code>
 
 ```vue
+<script setup>
+import { ref } from 'vue'
+
+const qty = ref(3)
+</script>
+
 <template>
   <SNumberField
     v-model="qty"
@@ -47,6 +53,10 @@ const parcels = ref(2)
 
 ## Step
 
+`step` sets the step of the buttons and arrow keys (1 by default). A value typed by hand is also
+aligned to the step, counted from `min`, when the user leaves the field: with `step="10"` and
+`min="0"`, a typed 47 becomes 50.
+
 <ClientOnly>
 <Demo>
   <SNumberField v-model="price" label="Price" :step="10" :min="0" />
@@ -54,6 +64,12 @@ const parcels = ref(2)
 <template #code>
 
 ```vue
+<script setup>
+import { ref } from 'vue'
+
+const price = ref(50)
+</script>
+
 <template>
   <SNumberField
     v-model="price"
@@ -79,11 +95,17 @@ A screen reader announces the field as a "number field", the `numberField` strin
 
 <ClientOnly>
 <Demo>
-  <SNumberField v-model="amount" label="Betrag" locale="de-DE" :step="0.5" />
+  <SNumberField v-model="amount" label="Amount" locale="de-DE" :step="0.5" />
 
 <template #code>
 
 ```vue
+<script setup>
+import { ref } from 'vue'
+
+const amount = ref(1234.5)
+</script>
+
 <template>
   <SNumberField
     v-model="amount"
@@ -98,11 +120,29 @@ A screen reader announces the field as a "number field", the `numberField` strin
 </Demo>
 </ClientOnly>
 
+## Keyboard and mouse
+
+| Key                        | Action                                 |
+| -------------------------- | -------------------------------------- |
+| `↑` / `↓`                  | increase / decrease by `step`          |
+| `PageUp` / `PageDown`      | increase / decrease by `step × 10`     |
+| `Home` / `End`             | set `min` / `max`, when they are given |
+| `Enter`, leaving the field | apply the typed text                   |
+
+The mouse wheel changes the value too, but only while the field has focus. A typed number is
+clamped to `min`/`max` when the user leaves the field or presses `Enter`. At a bound, the matching
+button becomes inactive. The step buttons are not in the tab order, and after a click on them
+focus stays in the field. Their accessible names, "Decrease" and "Increase", come from the locale
+dictionary; `decrement-label` and `increment-label` change them for one field. The `focus` and
+`blur` events fire for the field as a whole: moving between the input and the buttons does not
+trigger them.
+
 ## States and placeholder
 
-`required` marks the field as required, `error` shows an error message and makes the field
-invalid (explicit `invalid` does the same), `disabled` blocks the field and the step buttons,
-`placeholder` is visible while the field is empty.
+`required` adds `*` to the label and sets `required` on the field, `error` shows an error message
+and makes the field invalid (explicit `invalid` does the same), `disabled` blocks the field and the
+step buttons, `placeholder` is visible while the field is empty. With the `name` prop, the value is
+sent on native form submission in a hidden input.
 
 <ClientOnly>
 <Demo>
@@ -116,6 +156,13 @@ invalid (explicit `invalid` does the same), `disabled` blocks the field and the 
 <template #code>
 
 ```vue
+<script setup>
+import { ref } from 'vue'
+
+const qty = ref(3)
+const price = ref(50)
+</script>
+
 <template>
   <SNumberField
     v-model="qty"
@@ -166,6 +213,13 @@ variable sets another fixed input width.
 <template #code>
 
 ```vue
+<script setup>
+import { ref } from 'vue'
+
+const weight = ref(1)
+const parcels = ref(2)
+</script>
+
 <template>
   <div class="row">
     <SNumberField
@@ -225,11 +279,14 @@ label and the frame (`.s-number-field__control`) sit in a shared `.s-number-fiel
 <template #code>
 
 ```vue
+<script setup>
+import { ref } from 'vue'
+
+const qty = ref(3)
+</script>
+
 <template>
-  <SInput
-    v-model="product"
-    label="Product"
-  />
+  <SInput label="Product" />
   <SNumberField
     v-model="qty"
     label="Quantity"
@@ -251,6 +308,13 @@ the right — use [`SInput`](/components/input#numeric-mode) with the `numeric` 
 the same precision and bounds constraints, plus `suffix`, slots and `size`.
 
 ```vue
+<script setup>
+import { ref } from 'vue'
+
+const quantity = ref(1)
+const weight = ref('')
+</script>
+
 <template>
   <!-- counter: stepping matters more than typing -->
   <SNumberField

@@ -8,10 +8,10 @@ wrapped in `<ClientOnly>`. Keep the value in a
 [`shallowRef`](./date-field#value-and-shallowref), not a `ref`: a regular `ref` unwraps the date
 class, and type checking no longer recognizes it as a `DateValue`.
 Pasting into a segment fills the whole value: ISO 8601 (`2024-03-15`, `2024-03-15T09:30`), the
-numeric date format of the locale (`03/15/2024` in en-US, `15/03/2024` in en-GB) and times like
-`9:30 PM`. A typed value outside `min-value`/`max-value` marks the field invalid (red frame and
-`aria-invalid`).
-The calendar closes once a day is picked; `:close-on-select="false"` keeps it open.
+numeric date format of the locale (`03/15/2024` in en-US, `15/03/2024` in en-GB). A time in the
+pasted text (`21:30`, `9:30 PM`) is applied only when the model holds a value with a time. A date
+that does not exist, such as `02/30/2024`, is not pasted. A value outside `min-value`/`max-value`
+marks the field invalid (red frame and `aria-invalid`).
 
 ## Basic usage
 
@@ -69,6 +69,12 @@ const date = shallowRef(parseDate('2026-07-11'))
 <template #code>
 
 ```vue
+<script setup>
+import { today, getLocalTimeZone } from '@internationalized/date'
+
+const min = today(getLocalTimeZone())
+</script>
+
 <template>
   <SDatePicker
     label="Visit date"
@@ -87,7 +93,7 @@ const date = shallowRef(parseDate('2026-07-11'))
 
 ## Sizes
 
-The `size` prop changes the field height: `sm` (28px), `md` (36px, the default), or `lg` (44px).
+The `size` prop changes the field height: `sm` (32px), `md` (40px, the default), or `lg` (48px).
 
 <Demo>
   <ClientOnly>
@@ -99,6 +105,13 @@ The `size` prop changes the field height: `sm` (28px), `md` (36px, the default),
 <template #code>
 
 ```vue
+<script setup>
+import { shallowRef } from 'vue'
+import { parseDate } from '@internationalized/date'
+
+const date = shallowRef(parseDate('2026-07-11'))
+</script>
+
 <template>
   <SDatePicker
     v-model="date"
@@ -137,6 +150,14 @@ adds `*` to the label, `invalid` marks the field as invalid without an error tex
 <template #code>
 
 ```vue
+<script setup>
+import { shallowRef } from 'vue'
+import { parseDate } from '@internationalized/date'
+
+const date = shallowRef(parseDate('2026-07-11'))
+const empty = shallowRef()
+</script>
+
 <template>
   <SDatePicker
     v-model="date"
@@ -235,6 +256,17 @@ const noWeekends = (value) => {
   </template>
 </Demo>
 
+## Opening and closing
+
+The calendar opens with the icon button at the end of the field (accessible name "Open calendar",
+changed with `open-calendar-label`). The calendar closes once a day is picked;
+`:close-on-select="false"` keeps it open until `Esc` or a click outside. Clicking an already
+selected day clears the selection, and `v-model` becomes `undefined`. The arrow keys move through
+the calendar as in [`SCalendar`](./calendar#keyboard-and-accessibility).
+
+`flat` removes the calendar shadow, `elevation` sets its level, and `square` removes the rounding
+of both the field and the calendar.
+
 ## Calendar settings
 
 `weekStartsOn` changes the first day of the week (1 is Monday), and `fixedWeeks` set to `false`
@@ -249,6 +281,12 @@ turns off the stable 6-week grid height. The effect is visible with the calendar
 <template #code>
 
 ```vue
+<script setup>
+import { shallowRef } from 'vue'
+
+const empty = shallowRef()
+</script>
+
 <template>
   <SDatePicker
     v-model="empty"
@@ -326,6 +364,12 @@ next to the standard calendar trigger.
 <template #code>
 
 ```vue
+<script setup>
+import { shallowRef } from 'vue'
+
+const empty = shallowRef()
+</script>
+
 <template>
   <SDatePicker
     v-model="empty"

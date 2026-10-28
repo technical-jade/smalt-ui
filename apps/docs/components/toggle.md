@@ -2,7 +2,8 @@
 
 `SToggle` is a two-state toggle button (pressed/unpressed) built on Reka UI: it carries the
 `button` role with `aria-pressed` and `data-state`. It is used on its own (for example, "bold" in
-an editor) or inside `SToggleGroup` — then the group manages the state.
+an editor) or inside `SToggleGroup` — then the group manages the state. The state is a `boolean` in
+`v-model`, `false` by default.
 
 <script setup>
 import { ref } from 'vue'
@@ -26,6 +27,12 @@ const payerOptions = [
 <template #code>
 
 ```vue
+<script setup>
+import { ref } from 'vue'
+
+const bold = ref(false)
+</script>
+
 <template>
   <SToggle v-model="bold">Bold</SToggle>
 </template>
@@ -34,6 +41,11 @@ const payerOptions = [
   </template>
 </Demo>
 </ClientOnly>
+
+## Icon only
+
+When the toggle holds a single icon, set an accessible name with `aria-label`; otherwise a screen
+reader announces an unnamed button.
 
 ## Sizes
 
@@ -93,7 +105,10 @@ of the wrapped one.
 Groups related toggles. `type="single"` keeps one item active, `type="multiple"` allows any
 subset; without `type` the mode follows `v-model`, so an array means `multiple`. Items are set
 with the `options` prop or with `SToggle`s placed in the slot (each needs a `value`); `SToggle`s in
-the slot take the group `size` unless they set their own.
+the slot take the group `size` unless they set their own. `type="single"` gives a string
+`v-model` (or `undefined` when nothing is chosen), `type="multiple"` an array. Options are
+`{ value, label?, disabled? }`; without `label` the `value` is shown. `disabled` on the group
+turns off all items, and `aria-label` names the group.
 
 <ClientOnly>
 <Demo>
@@ -109,6 +124,12 @@ the slot take the group `size` unless they set their own.
 <template #code>
 
 ```vue
+<script setup>
+import { ref } from 'vue'
+
+const align = ref('')
+</script>
+
 <template>
   <SToggleGroup
     v-model="align"
@@ -144,6 +165,12 @@ the slot take the group `size` unless they set their own.
 <template #code>
 
 ```vue
+<script setup lang="ts">
+import { ref } from 'vue'
+
+const marks = ref<string[]>([])
+</script>
+
 <template>
   <SToggleGroup
     v-model="marks"
@@ -164,7 +191,12 @@ the slot take the group `size` unless they set their own.
 ### Required selection
 
 In `single` mode a click on the active item clears the value. `mandatory` keeps it selected, so
-the group always has a value once one is picked.
+the group always has a value once one is picked. In `multiple` mode the prop has no effect.
+
+### Toggles in the slot
+
+Use the slot when the items hold icons or need props of their own: `aria-label`, `color`, `size`.
+A toggle without a `value` does not join the group and works on its own.
 
 <ClientOnly>
 <Demo>
@@ -181,6 +213,12 @@ the group always has a value once one is picked.
 <template #code>
 
 ```vue
+<script setup>
+import { ref } from 'vue'
+
+const view = ref('')
+</script>
+
 <template>
   <SToggleGroup
     v-model="view"
@@ -211,6 +249,12 @@ The `color` prop sets the color of the on state from the [palette](/style/palett
 <template #code>
 
 ```vue
+<script setup>
+import { ref } from 'vue'
+
+const on = ref(false)
+</script>
+
 <template>
   <SToggle
     v-model="on"
@@ -288,6 +332,15 @@ const options = [
   </template>
 </Demo>
 </ClientOnly>
+
+## Keyboard and accessibility
+
+A toggle is a native `<button>` with `aria-pressed` and `data-state="on" | "off"`; it is switched
+with `Space` or `Enter`. A group has `role="group"` and is a single tab stop: `Tab` brings focus
+into the group, the arrow keys move it between items (in both directions, wrapping from the last to
+the first), and `Space`/`Enter` press the focused item. Unlike [radio buttons](./radio), the arrows
+select nothing. A `value` on an `SToggle` outside a group is ignored, and the console warns about
+it in dev mode.
 
 ## API
 

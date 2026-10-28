@@ -42,13 +42,19 @@ placeholder, a floating label and validation. `SListbox` is the bare surface —
 trigger — so it also composes inside popovers, drawers and command palettes.
 
 Options come from the `options` array, the value is bound with `v-model`: a single `value` by
-default, an array of them with `multiple`.
+default, an array of them with `multiple`. `disabled` on an option turns off only that option,
+`disabled` on the list turns off all of them.
+
+`SListbox` is not a form field: it has no `hint`, `error`, `rules`, or `name`, and it takes no part
+in `SForm` validation or native `<form>` submission.
 
 Reka UI owns the interaction. Tab moves onto the list (focus lands on the active option, not on the
 whole list), the arrow keys and Home/End move between options and skip the disabled ones, typing the
 first letters of a label jumps to it, and Space or Enter picks the highlighted option. The list
 reports itself as `role="listbox"` with `role="option"` rows, so it needs an accessible name: pass
-`label`, or point your own `aria-labelledby` at a visible heading.
+`label` (it becomes the `aria-label`; the list has no visible label of its own), or point your own
+`aria-labelledby` at a visible heading. Attributes from the consumer, except `class` and `style`,
+go to the `role="listbox"` element.
 
 ## Single selection
 
@@ -116,6 +122,12 @@ announces itself as multi-selectable.
 <script setup lang="ts">
 import { ref } from 'vue'
 
+const cities = [
+  { label: 'New York', value: 'nyc' },
+  { label: 'Los Angeles', value: 'la' },
+  { label: 'Chicago', value: 'chi' },
+  { label: 'Houston', value: 'hou', disabled: true },
+]
 const visited = ref(['nyc', 'chi'])
 </script>
 
@@ -135,8 +147,8 @@ const visited = ref(['nyc', 'chi'])
 ## Option content
 
 An option takes an `icon` — a name from the icon registry or a raw path. For anything richer, the
-`option` slot replaces the whole row and receives the option itself along with its `selected` and
-`disabled` state.
+`option` slot replaces the whole row and receives `{ option, selected, disabled }`. `option` is the original object, so it can carry
+fields of your own.
 
 <Demo>
   <ClientOnly>
@@ -164,6 +176,18 @@ An option takes an `icon` — a name from the icon registry or a raw path. For a
 <template #code>
 
 ```vue
+<script setup>
+import { ref } from 'vue'
+
+const view = ref('overview')
+const members = [
+  { label: 'Ada Lovelace', value: 'ada', role: 'Owner' },
+  { label: 'Grace Hopper', value: 'grace', role: 'Admin' },
+  { label: 'Alan Turing', value: 'alan', role: 'Editor' },
+]
+const member = ref('grace')
+</script>
+
 <template>
   <SListbox
     v-model="view"
@@ -197,7 +221,8 @@ An option takes an `icon` — a name from the icon registry or a raw path. For a
 
 ## Long lists (`max-height`)
 
-`max-height` is the height the list may grow to before it starts scrolling; a number means pixels.
+`max-height` is the height the list may grow to before it starts scrolling; a number means pixels
+and a string is passed as is (`'50vh'`). Without the prop, the list grows to fit all options.
 The list scrolls inside a [scroll area](./scroll-area), and moving the highlight with the keyboard
 keeps the active option in view.
 
@@ -215,6 +240,16 @@ keeps the active option in view.
 <template #code>
 
 ```vue
+<script setup>
+import { ref } from 'vue'
+
+const releases = Array.from({ length: 24 }, (_, i) => ({
+  label: `Release 1.${i + 1}.0`,
+  value: String(i + 1),
+}))
+const release = ref('3')
+</script>
+
 <template>
   <SListbox
     v-model="release"
@@ -307,6 +342,14 @@ the rounding of the frame.
 <template #code>
 
 ```vue
+<script setup>
+const views = [
+  { label: 'Overview', value: 'overview', icon: 'home' },
+  { label: 'Documents', value: 'docs', icon: 'file-text' },
+  { label: 'Calendar', value: 'calendar', icon: 'calendar' },
+]
+</script>
+
 <template>
   <SListbox
     label="Small"

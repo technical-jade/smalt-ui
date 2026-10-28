@@ -10,7 +10,10 @@ const backups = ref(false)
 
 `SSwitch` is a toggle switch built on Reka UI (`role="switch"`, keyboard support, `data-state`).
 The label renders through the reused `SLabel`. It works with `v-model` (boolean).
-Without a visible label, name the switch with `aria-label`.
+Without a visible label (a switch in a table row or next to a heading), name the switch with
+`aria-label`, otherwise a screen reader announces an unnamed switch. The label comes from the
+`label` prop or the default slot; a click on the label toggles the control too. The value is a
+`boolean` in `v-model`, `false` by default.
 
 The switch is an inline element as wide as its content and aligned to the top of the line, not to
 the text baseline. When it stands right inside text rather than in a flex or grid container, the
@@ -28,6 +31,12 @@ switch.
 <template #code>
 
 ```vue
+<script setup>
+import { ref } from 'vue'
+
+const enabled = ref(false)
+</script>
+
 <template>
   <SSwitch
     v-model="enabled"
@@ -44,7 +53,8 @@ switch.
 
 `required` adds the `*` marker to the label and marks the switch as required for form submission
 (passed through to the control's native semantics). The marker is hidden from assistive
-technology, so the accessible name stays the plain label text.
+technology, so the accessible name stays the plain label text. `required` does not check anything
+by itself: use a rule, see [Validation](#validation).
 
 <ClientOnly>
 <Demo>
@@ -53,6 +63,12 @@ technology, so the accessible name stays the plain label text.
 <template #code>
 
 ```vue
+<script setup>
+import { ref } from 'vue'
+
+const accepted = ref(false)
+</script>
+
 <template>
   <SSwitch
     v-model="accepted"
@@ -68,7 +84,8 @@ technology, so the accessible name stays the plain label text.
 
 ## Color
 
-The `color` prop sets the color of the on state from the [palette](/style/palette).
+The `color` prop sets the color of the on state from the [palette](/style/palette), and
+`text-color` sets the color of the thumb on that fill (white by default).
 
 <ClientOnly>
 <Demo>
@@ -79,6 +96,12 @@ The `color` prop sets the color of the on state from the [palette](/style/palett
 <template #code>
 
 ```vue
+<script setup>
+import { ref } from 'vue'
+
+const on = ref(false)
+</script>
+
 <template>
   <SSwitch
     v-model="on"
@@ -180,6 +203,18 @@ const backups = ref(false)
   </template>
 </Demo>
 </ClientOnly>
+
+## Native form
+
+With the `name` prop inside a `<form>`, a hidden checkbox appears next to the switch: when on,
+`name=on` goes into `FormData`, when off the field is not sent at all, like a regular checkbox.
+Outside a `<form>` there is no hidden field.
+
+## Keyboard and accessibility
+
+The control is a `<button role="switch">` with `aria-checked`. It gets focus with `Tab` and is
+toggled with `Space` or `Enter`. The state is mirrored in `data-state="checked" | "unchecked"`,
+which is handy for styles and tests.
 
 ## API
 

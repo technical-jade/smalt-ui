@@ -5,9 +5,10 @@ text. This rules out ambiguous formats and parsing errors, works from the keyboa
 increment, typing digits fills the segment), and is localized. The value is a `DateValue` from
 `@internationalized/date`; the field is built on `SFormField` (label, hint, error message).
 Pasting into a segment fills the whole value: ISO 8601 (`2024-03-15`, `2024-03-15T09:30`), the
-numeric date format of the locale (`03/15/2024` in en-US, `15/03/2024` in en-GB) and times like
-`9:30 PM`. A typed value outside `min-value`/`max-value` marks the field invalid (red frame and
-`aria-invalid`).
+numeric date format of the locale (`03/15/2024` in en-US, `15/03/2024` in en-GB). A time in the
+pasted text (`21:30`, `9:30 PM`) is applied only when the model holds a value with a time. A date
+that does not exist, such as `02/30/2024`, is not pasted. A value outside `min-value`/`max-value`
+marks the field invalid (red frame and `aria-invalid`).
 
 ## Value and shallowRef
 
@@ -123,6 +124,14 @@ invalid (red border), `required` adds `*` to the label.
 <template #code>
 
 ```vue
+<script setup>
+import { shallowRef } from 'vue'
+import { parseDate } from '@internationalized/date'
+
+const date = shallowRef(parseDate('2026-07-11'))
+const empty = shallowRef()
+</script>
+
 <template>
   <SDateField
     v-model="date"
@@ -152,7 +161,7 @@ invalid (red border), `required` adds `*` to the label.
 
 ## Sizes
 
-The `size` prop controls the field height: `sm` (28px), `md` (36px, the default), and `lg` (44px).
+The `size` prop controls the field height: `sm` (32px), `md` (40px, the default), and `lg` (48px).
 
 <Demo>
   <ClientOnly>
@@ -164,6 +173,13 @@ The `size` prop controls the field height: `sm` (28px), `md` (36px, the default)
 <template #code>
 
 ```vue
+<script setup>
+import { shallowRef } from 'vue'
+import { parseDate } from '@internationalized/date'
+
+const date = shallowRef(parseDate('2026-07-11'))
+</script>
+
 <template>
   <SDateField
     v-model="date"
@@ -241,6 +257,13 @@ icon.
 <template #code>
 
 ```vue
+<script setup>
+import { shallowRef } from 'vue'
+import { parseDate } from '@internationalized/date'
+
+const date = shallowRef(parseDate('2026-07-11'))
+</script>
+
 <template>
   <SDateField
     v-model="date"
@@ -323,6 +346,19 @@ const notPast: SRule<DateValue | undefined> = (v) =>
 
   </template>
 </Demo>
+
+## Keyboard
+
+| Key         | Action                                                                |
+| ----------- | --------------------------------------------------------------------- |
+| digits      | type the segment value; a filled segment passes focus to the next one |
+| `↑` / `↓`   | increase / decrease the segment value                                 |
+| `←` / `→`   | previous / next segment                                               |
+| `Backspace` | clear the segment                                                     |
+| `Tab`       | next segment; from the last one, the next element on the page         |
+
+`v-model` receives a value only when all segments are filled; while any of them is empty, the
+model is `undefined`.
 
 ## Accessibility
 
