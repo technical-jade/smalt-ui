@@ -62,11 +62,12 @@ function run(item) {
 and reachable from the keyboard. It opens over the page as a modal dialog, filters the commands as
 the user types, and reports the chosen one through `select` — running it is up to the application.
 
-The component binds the global shortcut itself: Cmd + K on macOS, Ctrl + K elsewhere. Use
-`shortcut-key` to pick another letter or `:shortcut-key="false"` to bind nothing and open the
-palette only through `v-model:open`. The binding stays out of the way of text the user is writing:
-a keystroke that starts in an input, a textarea or a rich-text area is left to that field. With
-several palettes mounted, only the most recently mounted one answers the shortcut.
+The component binds the global shortcut itself: Cmd + K or Ctrl + K, on any system. The shortcut
+does not fire with Shift or Alt held. Use `shortcut-key` to pick another key or
+`:shortcut-key="false"` to bind nothing and open the palette only through `v-model:open`. The
+binding stays out of the way of text the user is writing: a keystroke that starts in an input, a
+textarea or a rich-text area is left to that field. With several palettes mounted, only the most
+recently mounted one answers the shortcut.
 
 Reka UI owns the interaction. The search field is a `combobox` over a `listbox`: the arrow keys and
 Home/End move the highlight, skipping group headings and disabled rows, Enter runs the highlighted
@@ -184,7 +185,9 @@ the combination away from the reader's browser.
 
 The keyboard layout does not get in the way. On a non-Latin layout, such as Greek, where the K key
 types "κ", the shortcut fires on that same physical key; on Latin layouts like Dvorak it is the key
-with the letter printed on it. `shortcut-key` takes a Latin letter or a digit.
+with the letter printed on it. `shortcut-key` matches whatever character the key types
+(`event.key`); only the physical-key fallback for non-Latin layouts is limited to Latin letters
+and digits.
 
 The footer slot is a good place for the keyboard hints. It is empty by default, because the wording
 belongs to the application's own vocabulary:
@@ -403,6 +406,22 @@ the prop is not set. The `empty` slot replaces the whole block.
   </template>
 </Demo>
 </ClientOnly>
+
+## Keyboard and accessibility
+
+On open, focus moves into the search field and stays there. The field is a `combobox` bound to a
+`listbox`; the highlighted row is announced through `aria-activedescendant`.
+
+- <kbd>↑</kbd>/<kbd>↓</kbd> move the highlight, skipping group headings and disabled rows;
+  <kbd>Home</kbd>/<kbd>End</kbd> jump to the first and the last command. The highlighted row
+  scrolls into view.
+- <kbd>Enter</kbd> runs the highlighted command.
+- <kbd>Escape</kbd>, a click on the backdrop or the close button in the corner close the palette,
+  and focus returns to where it was before opening.
+
+The dialog is named "Search commands" (the `searchCommands` entry of the locale dictionary). The
+list grows without scrolling up to `max-height` (`22rem` by default), but never past 60% of the
+window height.
 
 ## API
 

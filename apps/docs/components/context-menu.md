@@ -4,7 +4,11 @@
 trigger area. It is built on Reka UI (portal, keyboard navigation, `menu`/`menuitem` roles). The
 entries come from the `items` prop (items, separators, group labels), leading icons are rendered
 with `SIcon`. Picking an item emits the `select` event.
-Tab in a non-modal menu closes it and returns focus to the page after the trigger area.
+Attributes passed to the component (`class`, `data-*`) land on the menu panel. The trigger area is
+the default slot and must be a single root element: the component attaches its handlers to it
+directly, without a wrapper. Picking an item closes the menu and emits `select` with its `value`;
+an item without a `value` emits nothing. `disabled` blocks an item and `danger` marks a
+destructive action.
 
 ## Basic usage
 
@@ -159,6 +163,23 @@ function share() {}
   </SContextMenu>
 </template>
 ```
+
+## Keyboard and accessibility
+
+The panel gets `role="menu"` and the items `role="menuitem"`. <kbd>↑</kbd>/<kbd>↓</kbd> move
+between items, <kbd>Home</kbd>/<kbd>End</kbd> go to the first and the last, and typing letters
+moves to the item that starts with them. <kbd>Enter</kbd> or <kbd>Space</kbd> pick an item and
+<kbd>Escape</kbd> closes the menu. <kbd>Tab</kbd> also closes a non-modal menu and returns focus
+to where it was before opening, and the browser moves it to the next element.
+
+From the keyboard the menu opens with the context-menu key or <kbd>Shift</kbd>+<kbd>F10</kbd>,
+but only when the trigger area can take focus. A plain `div` does not, so either give it
+`tabindex="0"` or duplicate the menu actions with visible buttons. The menu has no visible title,
+so name it with the `aria-label` prop.
+
+By default the menu is non-modal: the page behind it scrolls and a click outside closes it.
+`modal` blocks interaction with the background and keeps focus inside the menu, but it removes the
+page scroll bar while open, so the layout may shift.
 
 ## API
 

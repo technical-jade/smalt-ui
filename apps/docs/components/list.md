@@ -98,13 +98,15 @@ meta text or an action.
 
 `href` renders the row as an `<a>`, `clickable` as a `<button type="button">`; both get the state
 layer, the pointer cursor and a focus ring. `active` marks the current row — on a link it also sets
-`aria-current`. `disabled` dims the row and takes it out of the tab order.
+`aria-current`. `disabled` dims the row, disables the pointer and takes a link row or a button row
+out of the tab order. Handlers passed to a disabled row (`@click` and the like) are removed, so
+there is no need to check `disabled` inside a handler.
 
 The `as` prop overrides the tag when the shorthands do not fit — `as="label"` for a row that wraps
 a checkbox, for instance. With `clickable` on a tag that has no interactivity of its own
 (`as="div"`), the row becomes a button itself: `role="button"`, a place in the tab order and
-activation by Enter and Space. Anything else you pass (`target`, `rel`, `@click`) lands on the row,
-not on the `listitem` wrapper.
+activation by Enter and Space. Anything else you pass (`target`, `rel`, `@click`) lands on the row
+itself, while `class` and `style` go to the `listitem` wrapper.
 
 <Demo>
   <SList variant="bordered" label="Account">
@@ -155,7 +157,13 @@ not on the `listitem` wrapper.
 ## Avatars and actions in the slots
 
 `prepend` and `append` take any markup, so a row can carry an avatar, a badge or a button. The
-`default` slot replaces the title and the description entirely when a row needs its own layout.
+`prepend` slot overrides the `icon` prop. The `title` and `description` slots replace the props of
+the same name when the title needs markup.
+
+## Custom row layout
+
+The default slot replaces the title and the description entirely, together with their props and
+slots. The `prepend` and `append` slots stay in place.
 
 <Demo>
   <SList variant="divided" label="Team">

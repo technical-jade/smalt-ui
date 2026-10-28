@@ -1,11 +1,17 @@
 # Progress
 
-`SProgress` is a progress indicator built on Reka UI (`role="progressbar"`, correct
-`aria-valuenow`/`aria-valuemax`). It supports variants, sizes, a linear and a circular form, and an
-indeterminate mode (without `value`). `label` names the bar for screen readers; without it the bar
-is named by its percentage, or by the `loading` message while indeterminate.
-`value` is clamped to `0…max`, so the announced value matches the bar. With
-`prefers-reduced-motion` the indeterminate stripe moves slower.
+`SProgress` shows how far an operation has got: a file upload, the steps of a wizard, a quota. It is
+a bar or a ring, with a known value or without one (indeterminate mode).
+
+## Accessibility
+
+The component is an element with `role="progressbar"`, `aria-valuenow` and `aria-valuemax`.
+`label` sets the accessible name; without it the bar is named by its percentage ("60%"), and in
+the indeterminate mode by the "Loading" message from the locale dictionary. When a visible caption
+sits nearby, repeat it in `label` so a screen reader names the bar the way the user sees it.
+
+`value` is clamped to `0…max`, so the announced value always matches the drawing. A `max` that is
+not a positive number is replaced with 100.
 
 ## Value and variants
 
@@ -34,6 +40,8 @@ is named by its percentage, or by the `loading` message while indeterminate.
 
 ## Sizes
 
+`size` is `sm`, `md` (the default) or `lg` and sets the thickness of the bar.
+
 <Demo>
   <div style="display: flex; flex-direction: column; gap: 12px; width: 100%">
     <SProgress :value="50" size="sm" label="sm" />
@@ -61,7 +69,9 @@ is named by its percentage, or by the `loading` message while indeterminate.
 
 ## Indeterminate progress
 
-Without `value` the bar is animated (for example, while the upload size is still unknown).
+Without `value` (or with `:value="null"`) the stripe runs along the track, which shows work of
+unknown size. Under `prefers-reduced-motion` the animation is slowed down rather than switched
+off, so the bar still reads as work in progress.
 
 <Demo>
   <SProgress label="Uploading" style="width: 100%" />
@@ -167,7 +177,8 @@ do the ARIA attributes (`role="progressbar"`, `aria-valuenow`/`aria-valuemax`, t
 
 ## Value in the middle
 
-`show-value` prints the rounded percentage inside the ring. For anything else — a fraction, an
+`show-value` prints the rounded percentage inside the ring. A bar has no center, so the slot and
+`show-value` do not apply to it. For anything else — a fraction, an
 icon, a caption — use the default slot: it receives `{ value, percentage }` and replaces
 `show-value` when filled. The middle of a ring stays empty by default.
 
@@ -208,8 +219,8 @@ icon, a caption — use the default slot: it receives `{ value, percentage }` an
 ## Indeterminate ring
 
 Without `value` the ring shows a spinning arc and is named by the `loading` message, just like the
-bar. With `prefers-reduced-motion` it spins slower instead of stopping, so it still reads as work
-in progress.
+bar. `show-value` prints nothing in this mode. With `prefers-reduced-motion` it spins slower instead
+of stopping, so it still reads as work in progress.
 
 <Demo>
   <div style="display: flex; align-items: center; gap: 24px; flex-wrap: wrap">

@@ -116,6 +116,19 @@ The `icon` field of a menu item draws a leading icon via `SIcon` (a registry nam
 </Demo>
 </ClientOnly>
 
+## Keyboard and accessibility
+
+The bar gets `role="menubar"` and takes one <kbd>Tab</kbd> stop. Name it with the `aria-label`
+prop.
+
+- <kbd>←</kbd>/<kbd>→</kbd> move between menu labels.
+- <kbd>Enter</kbd>, <kbd>Space</kbd> or <kbd>↓</kbd> open a menu and focus its first item.
+- In an open menu <kbd>↑</kbd>/<kbd>↓</kbd> walk the items and <kbd>←</kbd>/<kbd>→</kbd> open the
+  neighboring menu.
+- <kbd>Escape</kbd> closes the menu and returns focus to its label.
+
+While one menu is open, hovering a neighboring label opens its menu at once.
+
 ## API
 
 <ApiTable name="SMenubar" />

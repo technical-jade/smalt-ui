@@ -6,7 +6,9 @@ action buttons. Without a `title` the text comes from the locale dictionary (`no
 untranslated placeholder never shows up.
 
 The block is static content, not a live region: it carries no `role="status"` and is not announced
-on its own. The icon and the image are decorative — the meaning is carried by the title.
+on its own. The icon and the image are decorative — the meaning is carried by the title. The
+title is rendered in a `div`, not an `h` tag: if the placeholder has to take part in the heading
+structure of the page, pass the tag through the `title` slot.
 
 ## Basic usage
 
@@ -96,7 +98,8 @@ from the [palette](/style/palette).
 
 ## Illustration
 
-`image` replaces the icon with a picture; the `icon` slot replaces both with any markup.
+`image` replaces the icon with a picture (decorative, with `alt=""`); the `icon` slot replaces both
+with any markup.
 
 <Demo>
   <SEmptyState style="width: 100%" title="Inbox zero" description="Every message has been handled.">

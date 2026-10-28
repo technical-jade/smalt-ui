@@ -1,9 +1,12 @@
 # Badge
 
-`SBadge` is a compact status label (a counter, tag, or state). Plain CSS on semantic tokens, no
-dependencies.
+`SBadge` is a compact label: a status, a counter, a category. It is a plain `<span>` with no
+interactivity; if the label has to be removable by a click, use [`STag`](/components/tag).
 
 ## Variants
+
+`variant` sets the role: `primary` is a solid fill, the others are a soft background with colored
+text. The default is `neutral`.
 
 <Demo>
   <SBadge variant="neutral">Neutral</SBadge>
@@ -29,6 +32,9 @@ dependencies.
 
 ## Sizes
 
+`sm`, `md` (the default) and `lg`. Icon sizes adjust themselves. `lg` exists mainly for the
+`comfortable` preset, which sets it globally.
+
 <Demo>
   <SBadge size="sm">sm</SBadge>
   <SBadge size="md">md</SBadge>
@@ -44,6 +50,10 @@ dependencies.
 
   </template>
 </Demo>
+
+## Shape
+
+A badge is rounded into a pill by default. `square` returns plain corners.
 
 ## Color
 
@@ -94,7 +104,8 @@ variants the color applies to both the tint and the text.
 
 ## Icons
 
-`icon` renders a leading icon, `icon-right` a trailing one (registry names).
+`icon` renders a leading icon, `icon-right` a trailing one: a registry name or a raw SVG path. The
+icons are decorative (`aria-hidden`), so the text has to carry the meaning.
 
 <Demo>
   <SBadge variant="positive" icon="check">Done</SBadge>
@@ -121,6 +132,13 @@ variants the color applies to both the tint and the text.
 
   </template>
 </Demo>
+
+## Accessibility
+
+A badge has no role and no accessible name: a screen reader reads its text in the flow. Two rules
+follow. Do not convey status by color alone (use the text "Error" instead of an empty red badge),
+and give a bare counter some context, because a "3" next to an icon says nothing until the button
+text or a hidden label reads "3 unread".
 
 ## API
 

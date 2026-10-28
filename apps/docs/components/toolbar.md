@@ -1,11 +1,12 @@
 # Toolbar
 
-`SToolbar` groups related actions (buttons, toggles) into a single panel with the `toolbar` role.
-Separate groups with `SSeparator`.
+`SToolbar` groups related actions (buttons, toggles) into a single panel with the `toolbar` role
+and `aria-orientation`. The content goes into the slot; separate groups with `SSeparator`. Name
+the panel with the `aria-label` prop so a screen reader announces what its buttons belong to.
 
 The panel takes one Tab stop: focus lands on the item that had it last (the first one at the
 start), and the arrow keys move it between the `SButton` and `SToggle` items inside (roving
-focus). A horizontal toolbar uses <kbd>←</kbd>/<kbd>→</kbd> (mirrored in RTL), a vertical one
+focus). A horizontal toolbar uses <kbd>←</kbd>/<kbd>→</kbd>, a vertical one
 <kbd>↑</kbd>/<kbd>↓</kbd>; <kbd>Home</kbd> and <kbd>End</kbd> go to the first and the last item.
 `loop` (on by default) wraps focus from the last item to the first and back. The arrows skip
 disabled buttons and separators. An `SToggleGroup` inside stays a tab stop of its own with its own
@@ -62,6 +63,8 @@ arrows move the caret and the selection.
 
 ## Vertical toolbar
 
+`orientation="vertical"` stacks the items in a column.
+
 <Demo>
   <ClientOnly>
     <SToolbar orientation="vertical" aria-label="Tools">
@@ -106,8 +109,8 @@ arrows move the caret and the selection.
 
 ## Elevation
 
-The toolbar sits at the first elevation level. `flat` presses it to the page, `elevation` raises
-it higher — see [Elevation](/style/elevation).
+The toolbar sits at the first elevation level by default. `flat` removes the shadow, `elevation`
+sets the level explicitly and wins over `flat` — see [Elevation](/style/elevation).
 
 <Demo>
   <div style="display: grid; gap: 16px; width: 100%">

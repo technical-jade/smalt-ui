@@ -1,11 +1,12 @@
 # Avatar
 
-`SAvatar` is a user avatar built on Reka UI: it shows an image, and when there is none or it fails
-to load, a fallback (usually initials). It supports sizes.
-Clearing `src` after an image has loaded brings the fallback back.
+`SAvatar` is a user avatar built on Reka UI: it shows the image from `src`, and while there is none,
+while it loads or when loading fails, a fallback (usually initials). Clearing `src` after an image
+has loaded brings the fallback back. The sizes are `sm`, `md` (the default) and `lg`.
 
 ## Sizes (fallback initials)
 
+<ClientOnly>
 <Demo>
   <div style="display: flex; align-items: center; gap: 12px">
     <SAvatar fallback="AJ" size="sm" />
@@ -34,8 +35,13 @@ Clearing `src` after an image has loaded brings the fallback back.
 
   </template>
 </Demo>
+</ClientOnly>
 
 ## With an image
+
+`alt` gives the image its accessible name. Without it the picture is treated as decorative
+(`alt=""`) and screen readers skip it. The fallback text is read as ordinary text, so initials such
+as "US" are spelled out letter by letter; when the avatar carries meaning, give it an `alt`.
 
 <ClientOnly>
 <Demo>
@@ -55,6 +61,38 @@ Clearing `src` after an image has loaded brings the fallback back.
     alt="User"
     fallback="US"
   />
+</template>
+```
+
+  </template>
+</Demo>
+</ClientOnly>
+
+## Custom fallback
+
+The default slot replaces the `fallback` prop, for example with an icon. Here `src` is not set, so
+the icon shows; the same happens when the image fails to load. `delay-ms` postpones the fallback so
+it does not flash while a fast image loads.
+
+<ClientOnly>
+<Demo>
+  <SAvatar size="lg">
+    <SIcon
+      icon="user"
+      :size="24"
+    />
+  </SAvatar>
+
+<template #code>
+
+```vue
+<template>
+  <SAvatar size="lg">
+    <SIcon
+      icon="user"
+      :size="24"
+    />
+  </SAvatar>
 </template>
 ```
 

@@ -2,8 +2,13 @@
 
 `SButtonGroup` joins several `SButton` into one control: attached buttons share their edges, and
 the appearance props set on the group (`size`, `variant`, `color`, `square`, `round`, `disabled`)
-become the defaults of every button inside, so a button that sets the prop itself still wins. The
-root carries `role="group"`; give it a `label` when the set of actions needs a name of its own.
+become the defaults of every `SButton` inside, nested ones included, so a button that sets the
+prop itself still wins. `variant="link"` is not accepted on the group.
+
+The root is a `div` with `role="group"`. The `label` prop gives the group an accessible name
+(`aria-label`); without it the group stays unnamed. Every button is its own <kbd>Tab</kbd> stop,
+and the arrow keys do not move focus. If the buttons choose a value rather than run actions, use
+[`SToggleGroup`](./toggle#group-stogglegroup).
 
 ## Attached buttons
 
@@ -146,6 +151,13 @@ inner ones always collapse. `color` takes a name from the [palette](/style/palet
 
   </template>
 </Demo>
+
+## Limitations
+
+Attaching works only for buttons placed directly in the group. Wrap a button in a `div` or another
+element and it keeps its rounded inner corners and a double border. `STooltip` does not break the
+attachment, because it adds no wrapper around its trigger. The appearance defaults still reach
+the button either way: they travel through context, not through markup.
 
 ## API
 

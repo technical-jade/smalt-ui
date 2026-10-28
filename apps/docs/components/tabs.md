@@ -65,6 +65,9 @@ const items = [
 
 ## Vertical
 
+`orientation="vertical"` puts the tab list to the left of the panel, and arrow navigation moves to
+<kbd>↑</kbd>/<kbd>↓</kbd>.
+
 <ClientOnly>
 <Demo>
   <STabs :items="tabItems" v-model="tabVertical" orientation="vertical" aria-label="Sections" style="width: 100%">
@@ -215,12 +218,28 @@ The `color` prop sets the color of the active tab and the indicator from the
 </Demo>
 </ClientOnly>
 
-## Keyboard activation and hidden panels
+## Disabled tab
+
+A tab with `disabled: true` stays visible but cannot be opened by a click or from the keyboard:
+the arrow keys skip it.
+
+## Keyboard and accessibility
+
+The list gets `role="tablist"`, the tabs `role="tab"` and the panels `role="tabpanel"`, each
+linked to its tab. Name the list with the `aria-label` prop.
+
+The whole tab list is one <kbd>Tab</kbd> stop; the next <kbd>Tab</kbd> moves focus into the panel.
+The arrows (<kbd>←</kbd>/<kbd>→</kbd>, or <kbd>↑</kbd>/<kbd>↓</kbd> for vertical tabs) walk the
+tabs in a loop, and <kbd>Home</kbd> and <kbd>End</kbd> go to the first and the last.
+
+## Activation and hidden panels
 
 By default an arrow key both moves focus and opens the tab. `activation-mode="manual"` only moves
 focus; Enter or Space opens the focused tab, which suits panels that are expensive to render.
-Inactive panels are unmounted; `:unmount-on-hide="false"` keeps them mounted and hidden, so nested
-fields keep their state and the browser page search finds their text.
+Inactive panels are unmounted, so state inside them (typed text, scroll position) is lost when
+switching. `:unmount-on-hide="false"` keeps them mounted and hidden with the `hidden` attribute, so
+nested fields keep their state. The browser's find-in-page still does not find text in hidden
+panels.
 
 ## API
 

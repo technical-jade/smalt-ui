@@ -13,11 +13,12 @@ of the same rank. A longer list, entries with checkmarks, groups or destructive 
 
 Accessible naming is the part that is easy to get wrong. A circular button shows no text, so it
 needs `ariaLabel`; without one the component warns in development. An extended button is named by
-its visible `label` and takes no `ariaLabel` — a label that differs from the visible text would hide
-the words the visitor reads. A button with `actions` no longer performs the action itself, so it is
-named after what it opens: the `showActions` entry of the locale dictionary ("Show actions"),
-overridden per instance with `actionsLabel`. Each action is named by its own `label`, which is shown
-as a chip beside the button and given to the button as its accessible name.
+its visible `label`; leave `ariaLabel` off, because a name that differs from the visible text hides
+the words the visitor reads (an explicit `ariaLabel` still wins). A button with `actions` no longer
+performs the action itself, so it is named after what it opens: the `showActions` entry of the
+locale dictionary ("Show actions"), overridden per instance with `actionsLabel`. Each action is
+named by its own `label`, which is shown as a chip beside the button and given to the button as its
+accessible name.
 
 The fan is a `menu`: <kbd>Enter</kbd> or <kbd>Space</kbd> opens it and moves focus to the first
 action, the arrow keys walk along the fan, <kbd>Home</kbd> and <kbd>End</kbd> jump to its ends, and
@@ -66,8 +67,8 @@ the action and closes the fan. The open state is available as `v-model:open`.
   </template>
 </Demo>
 
-`variant` and `color` are the same knobs as on [SButton](./button), and the actions of the fan
-follow them.
+`variant` and `color` are the same knobs as on [SButton](./button), except that `variant="link"`
+is not accepted; the actions of the fan follow them.
 
 ## Sizes
 
@@ -263,6 +264,22 @@ button can be moved without overriding a single rule.
 
 A pinned button sits at `z-index: var(--s-z-sticky)`, under dialogs and toasts. Only one floating
 action button belongs on a screen: a second one competes with the first for the same "the" action.
+
+## Keyboard and accessibility
+
+A button with a fan is declared as `aria-haspopup="menu"` with `aria-expanded`, and the fan itself
+as `role="menu"`.
+
+- <kbd>Enter</kbd> or <kbd>Space</kbd> open the fan and move focus to the first action.
+- The arrow keys walk the fan in a loop and follow its direction: with `direction="up"` the next
+  action is on <kbd>↑</kbd>, with `end` on <kbd>→</kbd>. An arrow on the closed button opens the
+  fan: "forward" with focus on the first action, "back" on the last.
+- <kbd>Home</kbd> and <kbd>End</kbd> jump to the first and the last action.
+- <kbd>Escape</kbd> closes the fan and returns focus to the button.
+
+Picking an action emits `select` with the action object, closes the fan and returns focus to the
+button. The fan also closes when focus leaves the component (by <kbd>Tab</kbd>, for example) and on
+a press outside it.
 
 ## API
 

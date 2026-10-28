@@ -5,12 +5,15 @@ const dropdownOpen = ref(false)
 
 # Dropdown Menu
 
-`SDropdownMenu` is a dropdown action menu attached to a trigger. It is built on Reka UI (portal,
-keyboard navigation, `roving focus`, `menu`/`menuitem` roles). The entries come from the `items`
-prop: items, separators (`separator`), and group labels (`label`); leading icons are rendered with
-the reusable `SIcon`.
-`aria-label` names the menu; without it the menu is named by its trigger. Tab in a non-modal menu
-closes it and moves focus on from the trigger, the same as leaving any other control.
+`SDropdownMenu` is an action menu that opens on a click on its trigger. The trigger goes into the
+`#trigger` slot and becomes the menu button itself, with no extra wrapper. The menu is rendered in
+`<body>` through a portal, so a parent's `overflow` does not clip it. It is built on Reka UI.
+
+The entries come from the `items` prop: items, separators (`type: 'separator'`) and group labels
+(`type: 'label'`); leading icons are rendered with the reusable `SIcon`. Picking an item closes
+the menu and emits `select` with its `value`; an item without a `value` closes the menu but emits
+nothing. Attributes passed to the component (`class`, `data-*`) land on the menu panel, not on the
+trigger.
 
 ## Basic usage
 
@@ -67,6 +70,7 @@ closes it and moves focus on from the trigger, the same as leaving any other con
 ## Item icons
 
 The item's `icon` field renders a leading icon with `SIcon` (a registry name or a raw path).
+`danger` marks a destructive action in red and `disabled` locks an item; the keyboard skips it.
 
 <ClientOnly>
 <Demo>
@@ -123,8 +127,9 @@ The item's `icon` field renders a leading icon with `SIcon` (a registry name or 
 
 ## Positioning
 
-The `side` (where the menu appears) and `align` (alignment along that side) props control the menu
-position relative to the trigger.
+`side` sets the side of the trigger the menu appears on (`bottom` by default), `align` the
+alignment along that side (`start` by default) and `side-offset` the gap in pixels (8 by default).
+If there is not enough room the menu flips to the opposite side.
 
 <ClientOnly>
 <Demo>
@@ -196,7 +201,8 @@ position relative to the trigger.
 
 ## External control
 
-The open state is bound with `v-model:open`, so it can be controlled from an external button.
+The open state is bound with `v-model:open`, so the menu can be opened and closed from code, for
+example by an external button. It is still positioned relative to its own trigger.
 
 <ClientOnly>
 <Demo>
@@ -286,6 +292,23 @@ function signOut() {}
   </SDropdownMenu>
 </template>
 ```
+
+## Keyboard and accessibility
+
+The panel gets `role="menu"` and the items `role="menuitem"`.
+
+- <kbd>Enter</kbd>, <kbd>Space</kbd> or <kbd>↓</kbd> on the trigger open the menu and focus the
+  first item.
+- <kbd>↑</kbd>/<kbd>↓</kbd> move between items, <kbd>Home</kbd>/<kbd>End</kbd> go to the first
+  and the last. Typing letters moves focus to the item that starts with them.
+- <kbd>Enter</kbd> or <kbd>Space</kbd> pick an item.
+- <kbd>Escape</kbd> closes the menu and returns focus to the trigger.
+- <kbd>Tab</kbd> closes the menu, and focus moves on to the element after the trigger.
+
+The `aria-label` prop gives the menu its own accessible name; without it the menu is named by the
+trigger text. By default the menu is non-modal: the page behind it scrolls and a click outside
+simply closes it. `modal` blocks interaction with the background and keeps focus inside the menu,
+but it removes the page scroll bar while open, so the layout may shift.
 
 ## API
 

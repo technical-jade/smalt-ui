@@ -2,10 +2,9 @@
 
 `SAspectRatio` keeps its content (an image, video, map, or embed) at a fixed aspect ratio
 regardless of the container width, so the layout does not jump while media loads. The `ratio` prop
-is the width divided by the height.
-`class` and `style` apply to the outer box, so they size the whole component. A `ratio` that is
-not a positive finite number falls back to 1:1 with a warning in development. `square` removes
-the border radius.
+is the width divided by the height (`1` by default). The width comes from the parent. `class` and
+`style` apply to the outer box, so a `max-width` on the component itself limits all of it.
+`square` removes the rounding of the corners.
 
 ## Basic usage
 
@@ -39,8 +38,9 @@ the border radius.
 
 ## With media
 
-The content is usually an `<img>`/`<video>`/`<iframe>`: the component crops it to the frame
-(`object-fit: cover`) while keeping the proportions.
+The content is usually an `<img>`, `<video>` or `<iframe>`. When such an element is a direct
+child, it stretches to the whole frame and is cropped to it (`object-fit: cover`), keeping the
+proportions.
 
 <Demo>
   <div style="max-width: 320px">
@@ -68,6 +68,12 @@ The content is usually an `<img>`/`<video>`/`<iframe>`: the component crops it t
 
   </template>
 </Demo>
+
+## Invalid ratio
+
+Zero, a negative number or `NaN` in `ratio` is replaced with `1`, and in development a warning is
+logged. A typical case is `video.videoWidth / video.videoHeight` before the metadata has loaded:
+without this safeguard the block would collapse to zero height.
 
 ## API
 

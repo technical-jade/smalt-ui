@@ -1,11 +1,13 @@
 # Pagination
 
-`SPagination` is page navigation for large lists. It is built on Reka UI
-(page calculation from `total`/`itemsPerPage`, sibling pages, ellipsis,
-keyboard control). The buttons are reused `SButton`s, the arrows are `SIcon`s.
-The current page is bound with `v-model:page`.
-The component is a `nav` landmark named from the locale dictionary (`pagination` key) or by
-`aria-label`. When `total` shrinks, a page past the new end is moved to the last one.
+`SPagination` is page navigation for a long list. The number of pages is computed from `total`
+(the number of items) and `items-per-page` (10 by default), and the current page (counted from 1)
+is bound with `v-model:page`. A long row of numbers is shortened with an ellipsis. On the first
+page the "previous" button is disabled, on the last one "next". It is built on Reka UI; the
+buttons are reused `SButton`s and the arrows are `SIcon`s.
+
+When `total` shrinks (after filtering, say) and the current page falls past the end of the list,
+it moves to the last page and `update:page` is emitted. With a `total` of zero one page is shown.
 
 ## Basic usage
 
@@ -31,8 +33,9 @@ The component is a `nav` landmark named from the locale dictionary (`pagination`
 
 ## Edge pages
 
-`show-edges` always shows the first and last pages with an ellipsis between the
-blocks — useful for long lists.
+`show-edges` always shows the first and the last page, with an ellipsis between them and the
+numbers around the current one. From any place in a long list one click returns to the start or
+jumps to the end.
 
 <ClientOnly>
 <Demo>
@@ -58,7 +61,8 @@ blocks — useful for long lists.
 ## Custom arrows
 
 `prev-icon` and `next-icon` replace the icons of the "previous"/"next" buttons — they take a
-registry name or a raw SVG path. Here the chevrons are replaced with arrows.
+registry name or a raw SVG path (`chevron-left` and `chevron-right` by default). Here the chevrons
+are replaced with arrows.
 
 <ClientOnly>
 <Demo>
@@ -90,8 +94,8 @@ registry name or a raw SVG path. Here the chevrons are replaced with arrows.
 
 ## Sibling pages
 
-`sibling-count` sets how many pages to show to the left and right of the current one.
-A larger value shows more page numbers around the active page.
+`sibling-count` sets how many numbers to show to the left and right of the current page (1 by
+default). A larger value shows more page numbers around the active page.
 
 <ClientOnly>
 <Demo>
@@ -139,6 +143,14 @@ A larger value shows more page numbers around the active page.
   </template>
 </Demo>
 </ClientOnly>
+
+## Accessibility
+
+The root is a `<nav>`. Its accessible name comes from the locale dictionary ("Pagination") and the
+`aria-label` prop replaces it. Page buttons are announced as "Page 5" and the current one gets
+`aria-current="page"`. The arrow buttons are named "Previous page" and "Next page"; change them
+individually with the `prev-page-label` and `next-page-label` props. All buttons are ordinary
+<kbd>Tab</kbd> stops, and <kbd>Enter</kbd> or <kbd>Space</kbd> picks a page.
 
 ## API
 

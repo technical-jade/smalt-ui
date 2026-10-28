@@ -6,6 +6,10 @@ design tokens, and isolated from the host app's styles. Each page has live examp
 table generated directly from the types and JSDoc.
 
 Components are named with the `S` prefix (`SButton`, `SInput`, …) and grouped by purpose.
+Compound components are described on the page of the main one: `SCheckboxGroup` on
+[Checkbox](/components/checkbox), `SRadioGroup` on [Radio](/components/radio), `SToggleGroup` on
+[Toggle](/components/toggle), `SAccordionItem` on [Accordion](/components/accordion) and
+`SListItem` on [List](/components/list).
 
 ## Basics
 

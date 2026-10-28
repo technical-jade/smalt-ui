@@ -277,9 +277,31 @@ In `single` mode the `collapsible` prop lets the user close the open section. Wi
 
 ## Keeping collapsed content
 
-Collapsed sections are unmounted. `:unmount-on-hide="false"` on the accordion keeps them mounted
-and hidden, so nested fields keep their state and the browser page search finds collapsed text. A
-section can override it with its own `unmount-on-hide`.
+Collapsed sections are unmounted. `:unmount-on-hide="false"` on the accordion keeps them in the
+DOM, hidden, so nested fields keep their state and the browser page search finds the collapsed text
+and expands its section. A section can override it with its own `unmount-on-hide`.
+
+## Heading level
+
+The header of every section is a `role="heading"` with an `aria-level`, `3` by default. A screen
+reader lists the sections in the page outline, so choose a level that fits the surroundings: the
+`heading-level` prop sets it for the whole accordion, and the same prop on `SAccordionItem` for
+one section.
+
+## Disabling and shape
+
+`disabled` on `SAccordion` locks all sections at once. `square` removes the rounding of the
+corners.
+
+## Keyboard
+
+| Key                     | Action                                   |
+| ----------------------- | ---------------------------------------- |
+| `Enter` / `Space`       | Expands or collapses the focused section |
+| `ArrowDown` / `ArrowUp` | Moves focus to the next/previous header  |
+| `Home` / `End`          | Moves focus to the first/last header     |
+
+Disabled sections are skipped by the arrow keys.
 
 ## API
 

@@ -20,11 +20,15 @@ async function askToRemove() {
 
 `SAlertDialog` is a modal confirmation dialog for important or irreversible actions. It is built on
 Reka UI AlertDialog (`alertdialog` role, focus trap, `Esc`, portal). Unlike `SDialog`, it requires
-an explicit choice between the confirm and cancel buttons: clicking the overlay does not close it.
+an explicit choice between the confirm and cancel buttons or <kbd>Esc</kbd>: clicking the overlay
+does not close it.
 The buttons are reusable `SButton` components. Long content scrolls inside the dialog while the
 buttons stay in view. After closing, focus returns to the trigger, or, without a `#trigger` slot,
 to the element that had focus when the dialog opened.
-It is controlled with `v-model:open`; the choice emits `confirm` / `cancel`. When you need a
+It is controlled with `v-model:open`. The confirm button ("Confirm", changed with the
+`confirmLabel` prop) emits `confirm` and the cancel button ("Cancel", the `cancelLabel` prop) emits
+`cancel`; `danger` paints the confirm button with the `negative` variant. Closing through
+`v-model:open` from code fires no events. When you need a
 confirmation in the middle of an async function, you can skip the markup and handlers entirely —
 see [Async confirmation](#async-confirmation).
 
@@ -205,6 +209,14 @@ legal: `confirm` is not a reserved word. The native dialog is still available as
 The dialog fades in with a slight zoom while the overlay darkens, and both leave the same way on
 close, as in [`SDialog`](/components/dialog#animation). The entry takes `--s-duration-slow`, the
 exit `--s-duration-base`. With `prefers-reduced-motion: reduce` there is no animation.
+
+## Accessibility
+
+Without a `title` the accessible name of the dialog is the visually hidden "Confirmation" label
+(the `alertDialogLabel` entry of the locale dictionary), so set a title whenever you can. The
+description is linked to the dialog through `aria-describedby`; without a description the
+attribute is absent. Class and attributes passed to the component land on the dialog itself
+(`.s-alert-dialog__content`), because it is rendered in a portal.
 
 ## API
 

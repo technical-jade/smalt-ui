@@ -1,7 +1,8 @@
 # Collapsible
 
 `SCollapsible` is an expandable block: a trigger header controls the visibility of the content. It
-is built on Reka UI (`aria-expanded`, `aria-controls`, keyboard control). The chevron is a reusable
+is built on Reka UI: the trigger carries `aria-expanded` and `aria-controls` and toggles with
+<kbd>Enter</kbd> and <kbd>Space</kbd>. The chevron is a reusable
 `SIcon` that rotates in the open state. Two-way binding of the open state uses `v-model:open`.
 
 ## Basic usage
@@ -181,8 +182,9 @@ headers are common in mockups, so they do not need a rule with higher specificit
 
 ## Keeping collapsed content
 
-The collapsed content is unmounted. `:unmount-on-hide="false"` keeps it mounted and hidden, so
-nested fields keep their state and the browser page search finds its text.
+The collapsed content is unmounted. `:unmount-on-hide="false"` keeps it in the DOM, hidden
+(`hidden="until-found"`), so nested fields keep their state and the browser page search finds the
+text and expands the block by itself.
 
 ## API
 

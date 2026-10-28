@@ -2,9 +2,9 @@
 
 `SSeparator` is a visual divider between blocks of content or groups of elements. It is built on
 Reka UI: by default it carries the `separator` role (`aria-orientation`), and in decorative mode
-it is hidden from screen readers.
-A separator with a label (the `label` prop or the slot) is named by it; `decorative` hides a
-labeled separator too.
+it has no role and screen readers skip the line.
+A separator with a label (the `label` prop or the slot) is named by it; with `decorative` the
+role goes away and the label is read as plain text.
 
 ## Horizontal
 
@@ -28,7 +28,8 @@ labeled separator too.
 
 ## Vertical
 
-Stretches to the height of the container — handy between inline elements.
+A vertical separator stretches to the height of the row of its flex or grid parent — handy between
+inline elements. In a vertical separator `aria-orientation="vertical"` is set.
 
 <Demo>
   <div style="display: flex; align-items: center; gap: 12px; height: 24px">
@@ -56,7 +57,8 @@ Stretches to the height of the container — handy between inline elements.
 
 ## With a label
 
-Centered text (the `label` prop or the default slot) — for example, to separate sign-in options.
+Centered text (the `label` prop or the default slot) — for example, to separate sign-in options. The
+label is drawn only on a horizontal separator.
 
 <Demo>
   <div style="width: 100%">
@@ -161,6 +163,12 @@ works with any `line-style` and orientation; the label stays muted.
 
   </template>
 </Demo>
+
+## Decorative
+
+`decorative` removes the `separator` role (`role="none"`), and a screen reader skips the line. Use
+it when the separator does not divide meaningful sections and only shapes the layout. The label of
+a decorative separator is read as ordinary text.
 
 ## API
 

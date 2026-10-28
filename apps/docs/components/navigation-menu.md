@@ -11,7 +11,9 @@ const navColumns = ref('1')
 `SNavigationMenu` is horizontal site navigation with dropdown panels of links. It is built on
 Reka UI (the `navigation` role, keyboard support, an animated viewport and indicator). Items are
 set with the `items` prop: a direct link (`href`) or an expandable panel (`links` with a title and
-description). The chevron is an `SIcon`.
+description). The chevron is an `SIcon`. An item with `links` becomes a trigger button with a
+chevron that opens a panel of links; each link has a `label` and an optional `description`. If an
+item sets both `href` and `links`, `href` is ignored.
 
 The panel opens on hover (after a short delay) or on a click on the trigger and appears under the
 item that opened it. It is not portaled but rendered inside the component, so a parent with
@@ -196,7 +198,8 @@ screen.
 Every item is a plain `<a href>`; the component does not know about a router. The `target` and
 `rel` fields of an item and of a panel link go to the attributes of the same name:
 `target: '_blank'` opens the page in a new tab. On an item with `links` they are ignored, because
-such an item is a trigger rather than a link.
+such an item is a trigger rather than a link. There is no selection event, and the current page is
+not highlighted (`aria-current` is not set). In a SPA a click on such a link reloads the page.
 
 ```vue
 <template>
@@ -212,6 +215,16 @@ such an item is a trigger rather than a link.
   />
 </template>
 ```
+
+## Keyboard and accessibility
+
+The root is a `<nav>`; name it with the `aria-label` prop, especially when the page has several
+navigations. Panel triggers are buttons with `aria-expanded`.
+
+- <kbd>Tab</kbd> moves between the items of the row and, in an open panel, through its links.
+- <kbd>←</kbd>/<kbd>→</kbd> move focus between the items of the row.
+- <kbd>Enter</kbd> or <kbd>Space</kbd> on a trigger open and close the panel.
+- <kbd>Escape</kbd> closes the panel and returns focus to its trigger.
 
 ## API
 

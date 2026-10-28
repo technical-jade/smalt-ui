@@ -153,13 +153,13 @@ the documentation page.
 
 ## The collapsed rail
 
-`v-model:collapsed` narrows the column to `collapsedWidth`, and the page follows. A navigation
-built from [`SList`](/components/list) needs nothing else: in the rail a row drops its side
-padding and hides its text, so the icon is centred and keeps the whole column as its hit target.
-The text is hidden only visually: a screen reader still reads it, and an icon-only row keeps its
-accessible name. For markup of your own, `.s-sidebar__label` marks the text hidden the same way,
-and anything that needs more than a hidden label reads the `collapsed` slot prop. The column never scrolls sideways, however wide the
-content is. The toggle's accessible name comes from the locale dictionary
+`v-model:collapsed` narrows the column to `collapsedWidth`, and the page follows. A navigation built
+from [`SList`](/components/list) needs nothing else: in the rail a row drops its side padding and
+hides its text, so the icon is centred and keeps the whole column as its hit target. The text is
+hidden only visually: a screen reader still reads it, and an icon-only row keeps its accessible
+name. For markup of your own, `.s-sidebar__label` marks the text hidden the same way, and anything
+that needs more than a hidden label reads the `collapsed` slot prop. The column never scrolls
+sideways, however wide the content is. The toggle's accessible name comes from the locale dictionary
 (`expandSidebar` / `collapseSidebar`); replace it per instance with `expandLabel` and
 `collapseLabel`, or everywhere through [i18n](/guide/i18n).
 
@@ -221,10 +221,12 @@ const collapsed = ref(true)
 ## The drawer breakpoint
 
 Below `breakpoint` the column becomes a drawer opened with `v-model:open` — the same content, a
-[Drawer](./drawer) around it, focus trapped inside. The sidebar's `aria-label` names the drawer
-dialog as well. The breakpoint is a name from the grid scale:
-`sm`, `md` (the default), `lg` or `xl`. The server renders the column and swaps to the drawer once
-the media query has been read in the browser, so nothing branches on a measured window width.
+[Drawer](./drawer) around it, focus trapped inside. In the drawer the labels are always visible,
+there is no collapse button and `collapsed` has no effect. The sidebar's `aria-label` names the
+drawer dialog as well. When the window grows wider than the breakpoint, `open` resets to `false`.
+The breakpoint is a name from the grid scale: `sm`, `md` (the default), `lg` or `xl`. The server
+renders the column and swaps to the drawer once the media query has been read in the browser, so
+nothing branches on a measured window width.
 
 The example below asks for `breakpoint="xl"`, so the narrow rendering shows on a wide screen too.
 
@@ -291,6 +293,18 @@ const open = ref(false)
 </Demo>
 </ClientOnly>
 
+## Sidebar slots and sizes
+
+Besides the navigation in the default slot, the sidebar has `header` (a logo, a workspace
+switcher) and `footer` (a user card, secondary links). All three slots receive `collapsed`. The
+`toggle` slot replaces the collapse button and receives `collapsed` and a `toggle` function;
+`:collapsible="false"` removes the button altogether, leaving `v-model:collapsed` to the
+application.
+
+`width` and `collapsed-width` set the width of the column and of the rail (`16rem` and `4rem` by
+default), and `height` on the bar sets its height (`3.5rem` by default). Numbers are pixels. The
+values are published as CSS variables on the wrapper, so the page reserves exactly as much.
+
 ## A page with a container
 
 `container` wraps the content in the `.s-container` utility — centred, with the readable maximum of
@@ -299,7 +313,10 @@ without the container, and `:padded="false"` hands the padding back to the conte
 
 `position="fixed"` takes the bar out of the flow; the page then reserves its height, so a scrolling
 page passes under a bar that stays put. `elevate-on-scroll` gives that bar a shadow as soon as the
-window moves.
+window moves. `position="static"` leaves the bar in the flow so it scrolls away with the page,
+`elevation` makes the shadow constant and `flat` removes it. `color` and `text-color` repaint the
+bar surface with a color from the [palette](/style/palette), and `:bordered="false"` removes the
+line along the bottom.
 
 <Demo>
   <div class="s-root s-root--app" :style="shell + '; block-size: 260px'">

@@ -1,10 +1,17 @@
 # Stepper
 
-`SStepper` shows progress through a sequence of steps (checkout, a setup wizard). The active
-step is highlighted, completed ones are marked with a check. It is controlled with `v-model`
-(the step number, starting at 1); the indicators are clickable and support arrow-key navigation —
-Reka handles focus and ARIA. The orientation is horizontal or vertical, and the step label can sit
-on any of the four sides of the indicator (`label-placement`).
+`SStepper` shows progress through a sequence of steps (checkout, a setup wizard). The steps come
+from the required `items` prop (a `title` and optional `description`, `icon` and `disabled`) and
+are numbered from 1. The current step is bound with `v-model` (1 by default). It is highlighted,
+and the steps before it count as completed and carry a check.
+
+Each step is a button: a click or <kbd>Enter</kbd>/<kbd>Space</kbd> makes it current. The arrow keys
+move focus between steps (without wrapping) and follow the orientation: <kbd>←</kbd>/<kbd>→</kbd> in
+a horizontal stepper, <kbd>↑</kbd>/<kbd>↓</kbd> in a vertical one. The title and the description of
+a step serve as the accessible name and description of its button, and the check of a completed step
+is announced as "Completed". The component does not show the content of the steps; render it
+yourself from the `v-model` value. The orientation is horizontal or vertical, and the step label can
+sit on any of the four sides of the indicator (`label-placement`).
 
 ## Basic usage
 
@@ -231,9 +238,11 @@ beyond that the steps no longer fit. `stack-at` sets a width in pixels below whi
 switches to vertical — arrow-key navigation and `data-orientation` change together with the
 orientation, so this is a real layout change, not a CSS rotation.
 
-The threshold is compared with the width of **the stepper itself**, not the window: in a side
-column or a modal it gets cramped even on a wide screen, where a media query would notice nothing.
-Without the prop the layout never changes.
+The threshold is compared with the width of **the stepper's parent element**, not the window: in a
+side column or a modal there is little room even on a wide screen, where a media query would notice
+nothing. The stepper itself is no good for the measurement: once vertical, it shrinks to its
+content and could never expand back. Until the first measurement (on the server and in the first
+frame) the declared `orientation` applies. Without the prop the layout never changes.
 
 <Demo>
   <SStepper :model-value="2" :items="items" :stack-at="640" />
@@ -253,7 +262,8 @@ Without the prop the layout never changes.
   </template>
 </Demo>
 
-To check it, narrow the browser window: below 640px this stepper becomes vertical.
+To check it, narrow the browser window: when the example area gets narrower than 640px, this
+stepper becomes vertical.
 
 `narrow-orientation` sets the orientation below the threshold (`vertical` by default). Combined
 with `orientation="vertical"` it gives the reverse layout: a column where there is room — for
@@ -282,8 +292,10 @@ this stepper turns into a row.
 
 ## Step icons
 
-The `icon` field of a step replaces the number in the indicator, and `done-icon` sets the icon of
-a completed step (both take a registry name or a raw path).
+The `icon` field of a step replaces the number in the indicator. Such a step shows its own icon in
+every state, and the check of a completed step does not appear on it. `done-icon` replaces the
+check (`check` by default) on steps without an icon of their own. Both take a registry name or a
+raw SVG path.
 
 <Demo>
   <SStepper v-model="stepIcon" :items="iconItems" done-icon="check" />
@@ -315,10 +327,12 @@ const items = [
 
 ## Linear mode
 
-`linear` requires going through the steps strictly in order — you cannot jump ahead to an
-unfinished step (the indicators of future steps are not clickable). Unavailable steps are not
-dimmed, though: the stepper works as a table of contents, and the names of future steps must stay
-readable. Only a step explicitly disabled with the `disabled` field is dimmed.
+`linear` requires going through the steps in order: you can go back to any completed step, but
+forward only to the next one. The buttons of the other steps are disabled and leave the
+<kbd>Tab</kbd> order. Such steps are not dimmed, though: the stepper works as a table of contents,
+and the names of future steps must stay readable. Only a step disabled with the `disabled` field
+is dimmed; it cannot be reached in any mode. `v-model` itself is not restricted: code can set any
+step.
 
 <Demo>
   <SStepper v-model="stepLinear" :items="linearItems" linear style="width: 100%" />

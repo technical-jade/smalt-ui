@@ -11,9 +11,10 @@ const SIZES = [
 
 # Card
 
-`SCard` is a card container with `header` / content / `footer` slots and style variants (border or
-shadow). It uses semantic tokens; the root is polymorphic (`as`), so a card can also be a
-selectable item or a link.
+`SCard` is a card container with `header`, default and `footer` slots. The header and the footer
+are rendered only when their slots are filled. The variant is a border (`outline`, the default) or
+a shadow (`elevated`). The root tag changes with the `as` prop, so a card can also be a link, a
+button or a selectable item.
 
 ## Variants
 
@@ -97,11 +98,11 @@ The `square` prop removes the frame rounding (the radius is on by default).
 
 ## Interactivity
 
-`interactive` adds hover and focus feedback, `selected` renders the selected look, `disabled` dims
-the card and disables the pointer. The clickability itself comes from the `as` prop and the
+`interactive` adds hover and focus feedback, `selected` renders the selected look (an accent border
+and the `data-selected` attribute), `disabled` dims the card and disables the pointer. `interactive`
+alone does not make a card clickable. The clickability itself comes from the `as` prop and the
 content: a card can be a link (`as="a"`), a button (`as="button"`), or a control wrapper
-(`as="label"`).
-A disabled button or link card also leaves the tab order and ignores the keyboard.
+(`as="label"`). A disabled button or link card also leaves the tab order and ignores the keyboard.
 
 <Demo>
   <div style="display: flex; flex-wrap: wrap; gap: 12px">

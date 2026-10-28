@@ -11,6 +11,24 @@ space are announced as "Up arrow" or "Space", and these names come from the
 [locale dictionary](/guide/i18n#dictionary-keys-smessages) (`kbdArrowUp` … `kbdSpace`). Text shown
 as given is read as is.
 
+| Symbol  | Names                                                                        |
+| ------- | ---------------------------------------------------------------------------- |
+| ⌘       | `meta`, `command`                                                            |
+| ⌃       | `ctrl`, `control`                                                            |
+| ⌥       | `alt`, `option`                                                              |
+| ⇧       | `shift`                                                                      |
+| ↵       | `enter`, `return`                                                            |
+| ⌫       | `backspace`                                                                  |
+| ⌦       | `delete`                                                                     |
+| ⎋       | `escape`, `esc`                                                              |
+| ⇥       | `tab`                                                                        |
+| ⇪       | `capslock`                                                                   |
+| ↑ ↓ ← → | `arrowup`/`up`, `arrowdown`/`down`, `arrowleft`/`left`, `arrowright`/`right` |
+| ␣       | `space`                                                                      |
+
+The symbols do not depend on the platform: on Windows `meta` is drawn as `⌘` too. If you need a
+label for a specific OS, pick the `value` yourself.
+
 ## Keys
 
 <Demo>
@@ -58,6 +76,8 @@ application.
 
 ## Sizes
 
+The default is `md`.
+
 <Demo>
   <SKbd size="sm" value="ctrl" />
   <SKbd size="md" value="ctrl" />
@@ -83,6 +103,8 @@ application.
 
 ## Variants
 
+`outline` (the default) has a border, `solid` is filled and `subtle` is muted.
+
 <Demo>
   <SKbd variant="outline" value="tab" />
   <SKbd variant="solid" value="tab" />
@@ -100,6 +122,27 @@ application.
     variant="subtle"
     value="tab"
   />
+</template>
+```
+
+  </template>
+</Demo>
+
+## Custom content
+
+The default slot replaces `value` and is rendered as given: no symbol is substituted, and neither
+`role="img"` nor an accessible name is added.
+
+<Demo>
+  <SKbd>Ctrl</SKbd>
+  <SKbd>Space</SKbd>
+
+<template #code>
+
+```vue
+<template>
+  <SKbd>Ctrl</SKbd>
+  <SKbd>Space</SKbd>
 </template>
 ```
 

@@ -57,7 +57,8 @@ in a grid; `icon` marks the metric, `description` carries the period or the sour
 
 A string `value` is rendered exactly as given — use it for numbers that are already formatted
 (`12.5%`, `$1.2M`). `format-value` controls the rest: `false` prints the raw number, an object is
-passed to `Intl.NumberFormat` as its options.
+passed to `Intl.NumberFormat` as its options. The formatting locale comes from the library locale
+(`en` → `en-US`); the `locale` prop changes it for one tile.
 
 <Demo>
   <div style="display: flex; flex-wrap: wrap; gap: 32px; width: 100%">
@@ -95,6 +96,10 @@ passed to `Intl.NumberFormat` as its options.
 
 `trend` is the signed change: positive renders the upward treatment, negative the downward one,
 `0` the neutral one. `trend-label` says what the change is measured against.
+
+The trend is printed as a number in the formatting locale: signed, with at most two decimal
+places. The component adds no unit, so `:trend="12.4"` shows `+12.4`, not `+12.4%`. If you need a
+percent or another form, pass the content through the `trend` slot (see [Slots](#slots)).
 
 <Demo>
   <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 16px; width: 100%">
@@ -217,7 +222,8 @@ A plain tile keeps its own layout inside a card, so several metrics can share on
 ## Loading
 
 While the data is in flight, `loading` replaces the value and the label with skeletons, hides the
-trend and the description, and marks the tile `aria-busy`.
+trend and the description, and marks the tile `aria-busy`. For that time the accessible name of
+the tile is "Loading" from the locale dictionary. The icon and the `actions` slot stay in place.
 
 <Demo>
   <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px; width: 100%">
@@ -245,7 +251,9 @@ trend and the description, and marks the tile `aria-busy`.
 ## Slots
 
 `value`, `label`, `icon`, `trend` and `description` replace the matching parts; `actions` puts a
-control in the corner of the tile, next to the label.
+control in the corner of the tile, next to the label. The `trend` slot replaces the whole trend
+line, arrow and hidden direction label included, so the accessibility of that content is up to the
+consumer. The slot renders even without the `trend` prop.
 
 <Demo>
   <SStat variant="card" style="width: 100%" label="Revenue" :value="1234567" :trend="12.4">

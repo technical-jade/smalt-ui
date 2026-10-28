@@ -9,8 +9,14 @@ const cardOpen = ref(false)
 previewing a profile, a link, or an entity without navigating away. It is built on Reka UI (portal,
 open/close delays, positioning). The trigger is the `#trigger` slot (`as-child`), the content is
 the default slot.
-Touch screens have no hover, so by default the card does not open there; `enable-touch` opens it
-on tap.
+The card is rendered in a portal; class and attributes passed to the component land on it, not on
+the trigger. Touch screens have no hover, so by default the card does not open there and a link
+trigger simply navigates on tap; `enable-touch` opens the card on tap.
+
+The card only complements the trigger. A screen reader does not announce its content, and
+<kbd>Tab</kbd> from the trigger goes to the next element of the page, not into the card. Do not
+put anything essential in it, nor actions that must be reachable from the keyboard: use
+[`SPopover`](./popover) for those.
 
 ## Basic usage
 
@@ -47,7 +53,8 @@ on tap.
 ## Positioning
 
 The `side` (where the card appears) and `align` (alignment along that side) props set the card
-position relative to the trigger.
+position relative to the trigger. By default the card appears below, centered, 8px from the
+trigger (`side-offset`).
 
 <ClientOnly>
 <Demo>
@@ -126,6 +133,69 @@ const open = ref(false)
   </template>
 </Demo>
 </ClientOnly>
+
+## Delays and touch
+
+The card opens 300 ms after the pointer arrives (`open-delay`) and closes 200 ms after it leaves
+(`close-delay`): enough time for the pointer to travel from the trigger to the card.
+`enable-touch` opens the card on tap on touch screens.
+
+<ClientOnly>
+<Demo>
+  <div style="display: flex; flex-wrap: wrap; gap: 24px">
+    <SHoverCard
+      :open-delay="0"
+      :close-delay="500"
+    >
+      <template #trigger>
+        <a
+          href="#"
+          style="color: var(--s-color-primary); font-weight: 600"
+        >no delay</a>
+      </template>
+      <span>Opened at once, closes after half a second.</span>
+    </SHoverCard>
+    <SHoverCard enable-touch>
+      <template #trigger>
+        <a
+          href="#"
+          style="color: var(--s-color-primary); font-weight: 600"
+        >opens on tap</a>
+      </template>
+      <span>On a touch screen a tap opens the card.</span>
+    </SHoverCard>
+  </div>
+
+<template #code>
+
+```vue
+<template>
+  <SHoverCard
+    :open-delay="0"
+    :close-delay="500"
+  >
+    <template #trigger>
+      <a href="#">no delay</a>
+    </template>
+    <span>Opened at once, closes after half a second.</span>
+  </SHoverCard>
+  <SHoverCard enable-touch>
+    <template #trigger>
+      <a href="#">opens on tap</a>
+    </template>
+    <span>On a touch screen a tap opens the card.</span>
+  </SHoverCard>
+</template>
+```
+
+  </template>
+</Demo>
+</ClientOnly>
+
+## Elevation and shape
+
+As with [`SPopover`](./popover#elevation): `flat` removes the shadow, `elevation` sets its level
+from 0 to 5 and `square` removes the rounding. The arrow toward the trigger is always there.
 
 ## Border color
 

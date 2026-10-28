@@ -1,8 +1,9 @@
 # Tooltip
 
-`STooltip` is a tooltip built on Reka UI: it shows on hover/focus, renders in a portal, supports
-the keyboard and placement sides. The trigger goes into the `#trigger` slot, the content into the
-default slot or the `content` prop. On touch devices the tooltip is enabled with the `trigger`
+`STooltip` is a short hint for an element. By default it appears on hover or keyboard focus,
+renders in a portal and closes on <kbd>Esc</kbd> or when the pointer or focus leaves. The trigger
+goes into the `#trigger` slot (the element itself becomes the trigger, `as-child`), the text into
+the `content` prop or the default slot. On touch devices the tooltip is enabled with the `trigger`
 prop — see [Opening on press](#opening-on-press).
 
 ## Basic usage
@@ -32,6 +33,9 @@ prop — see [Opening on press](#opening-on-press).
 </ClientOnly>
 
 ## Sides
+
+The tooltip sits on top by default (`side="top"`). When there is no room it flips to the opposite
+side.
 
 <ClientOnly>
 <Demo>
@@ -117,6 +121,11 @@ only while it is open.
 </Demo>
 </ClientOnly>
 
+## Content and delay
+
+Pass markup in the default slot instead of `content`. `delay-duration` sets the delay before the
+tooltip shows on hover, 200 ms by default.
+
 ## Elevation
 
 The tooltip is raised to the second elevation level. `flat` removes the shadow, `elevation`
@@ -152,6 +161,14 @@ changes the level — see [Elevation](/style/elevation).
 
   </template>
 </Demo>
+
+## Accessibility
+
+While the tooltip is open the trigger refers to it through `aria-describedby`, and a screen reader
+reads it as a description. A tooltip does not replace the accessible name: an icon-only button
+still needs its own `aria-label`. Interactive elements inside a tooltip are unreachable because
+focus never enters it; use [`SPopover`](./popover) for such content. Class and attributes passed
+to `STooltip` land on the bubble itself (`.s-tooltip__content`).
 
 ## API
 

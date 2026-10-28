@@ -206,6 +206,15 @@ The `color` prop sets a color from the [palette](/style/palette) and overrides t
   </template>
 </Demo>
 
+## Accessibility
+
+An alert is a live region: a screen reader announces it when it appears on the page. The `negative`
+variant gets `role="alert"` and `aria-live="assertive"` and interrupts the current reading; the
+others get `role="status"` and `aria-live="polite"` and wait for a pause. Keep `negative` for real
+errors: interrupting users over small things teaches them to ignore it. Only content that appears
+or changes after the page loads is announced; an alert that was in the initial markup is not read
+out on its own.
+
 ## API
 
 <ApiTable name="SAlert" />

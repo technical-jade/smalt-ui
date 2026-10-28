@@ -122,8 +122,9 @@ const selected = ref()
 
 ## Node icons
 
-The `icon` field of a node takes a name from the built-in registry (e.g. `folder`,
-`file-text`), so there is no need to store raw SVG paths.
+The `icon` field of a node takes a name from the icon registry (`folder`, `file-text` and others,
+see [Icons](/guide/icons)) or a raw SVG path, as in the first example. A name is more convenient:
+the data does not have to carry paths.
 
 <Demo>
   <ClientOnly>
@@ -172,7 +173,8 @@ const selected = ref()
 ## Multiple selection
 
 `multiple` allows selecting several nodes at once — `v-model` then holds an array of the
-selected nodes (select them by clicking or with `Ctrl`/`Shift`).
+selected nodes. A click, <kbd>Enter</kbd> or <kbd>Space</kbd> adds a node to the selection or
+removes it; no <kbd>Ctrl</kbd>/<kbd>Shift</kbd> modifier is needed.
 
 <Demo>
   <ClientOnly>
@@ -199,6 +201,33 @@ const selected = ref([])
 
   </template>
 </Demo>
+
+## Selection and expansion
+
+- A click selects a node and, on a branch, also expands or collapses it. A second click on the
+  selected node clears the selection: without `multiple`, `v-model` becomes `undefined`.
+- `v-model` receives the node object, not its `value`. In single-selection mode it is a shallow
+  copy of the node from `items`, so compare the selected node by `value`, not by reference.
+- A node is keyed by `value`, or by `label` when there is none. `default-expanded` and selection
+  work by key, so give nodes with identical labels on one level a `value`; otherwise they are
+  selected and expanded together.
+- A node with `disabled` cannot be selected or expanded, and focus skips it.
+
+## Keyboard and accessibility
+
+The root gets the `tree` role and the nodes `treeitem` with `aria-expanded` on branches,
+`aria-level`, `aria-setsize` and `aria-posinset`; with `multiple` the root gets
+`aria-multiselectable`. The tree has no accessible name of its own: pass `aria-label`, which lands
+on the root element.
+
+| Key            | Action                                                        |
+| -------------- | ------------------------------------------------------------- |
+| ↑ / ↓          | Previous / next visible node                                  |
+| →              | Expands a branch; on an expanded one moves to the first child |
+| ←              | Collapses a branch; on a collapsed one moves to the parent    |
+| Home / End     | First / last visible node                                     |
+| Enter / Space  | Selects the node or clears the selection                      |
+| Printable keys | Move focus to the nearest node whose label starts with them   |
 
 ## API
 

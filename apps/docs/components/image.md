@@ -93,6 +93,12 @@ visible part of a cropped picture (`'top'`, `'50% 20%'`).
   </template>
 </Demo>
 
+## Responsive sources
+
+`srcset` and `sizes` go to the `<img>` attributes of the same name: the browser picks the file for
+the slot width and the screen density, and `src` stays as the fallback for browsers without
+`srcset` support.
+
 ## Loading placeholder
 
 A skeleton fills the frame until the picture is decoded and disappears on load as well as on
@@ -139,9 +145,13 @@ straight away.
 
 When `src` fails, `fallback` is requested instead, and `srcset` and `sizes` are dropped: otherwise
 the browser would pick a candidate from `srcset` again. Without it the frame keeps a muted surface
-that carries `alt` as its accessible name, and the `error` slot replaces that surface with your
-own message. Both `load` and `error` are also emitted, so the page can react — log the miss, hide
-the block, ask for another source.
+that carries `alt` as its accessible name, and the `error` slot replaces that surface with your own
+message. Without `alt` text (an empty `alt`) that surface is hidden from the screen reader. The same
+surface appears if `fallback` fails to load as well.
+
+Both `load` and `error` are emitted, so the page can react — log the miss, hide the block, ask for
+another source. `error` fires for every source that fails to load: with a `fallback` set the event
+arrives even if the fallback picture then loads.
 
 <Demo>
   <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; width: 100%">

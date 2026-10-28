@@ -69,6 +69,12 @@ outline it in the variant color, and `color` to take the accent from the
   </template>
 </Demo>
 
+## Icon
+
+The `icon` prop replaces the status icon: a registry name or a raw SVG path. That also gives a
+`neutral` banner an icon. `:icon="false"` removes the icon from a status variant, and the `icon`
+slot supplies your own markup and takes precedence over the prop.
+
 ## Title and actions
 
 The `title` prop (or the `title` slot) sits above the message, and the `actions` slot holds the
@@ -115,7 +121,8 @@ buttons. They stay at the end of the row on a wide screen and move under the mes
 keep the decision — an application that stores it can restore the banner on the next visit. The
 button's accessible name comes from the locale dictionary (`close`); override it on one instance
 with `closeLabel`, or replace the dictionary entry through `ConfigProvider`. The `close` slot
-replaces the button entirely and receives the `close` handler.
+replaces the button entirely and receives the `close` handler; without `closable` it is not
+rendered.
 
 <Demo>
   <SBanner variant="warning" title="Your trial ends in 3 days" closable style="width: 100%">

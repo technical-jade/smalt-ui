@@ -24,7 +24,8 @@ matches the client. It never locks page scroll: loading is not a modal state, an
 silently froze the page would be harder to predict than one that leaves scrolling alone.
 
 `open` is a plain prop, not a `v-model`. The component never closes itself — the flag belongs to
-the request being waited on.
+the request being waited on. The overlay appears and disappears with a soft fade. `class`, `style`
+and other attributes land on the overlay itself.
 
 ## Accessibility
 
@@ -150,8 +151,10 @@ one instance with the prop, or everywhere through `ConfigProvider`.
 
 ## Determinate progress in the slot
 
-The default slot replaces the spinner and the label. A circular `SProgress` names itself through
-`aria-valuetext`, so the percentage is announced as it moves.
+The default slot replaces the spinner and the label together with their live region, so the
+replacement needs an accessible name of its own. A circular `SProgress` without `label` is named
+by its percentage, but a `progressbar` is not a live region, and a screen reader does not read the
+growing percentage by itself. Give the progress a `label` so it is clear what is loading.
 
 <Demo>
   <div class="s-loading-overlay-host" style="width: 100%; height: 160px; border: 1px solid var(--s-color-border); border-radius: 8px">

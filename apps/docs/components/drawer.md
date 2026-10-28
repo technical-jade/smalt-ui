@@ -1,11 +1,12 @@
 # Drawer
 
-`SDrawer` is a panel that slides in from the side (or from the top or bottom). It is built on the
-modal Reka UI Dialog primitive (focus trap, `Esc`, overlay, portal) and attached to an edge with
-the `side` prop. It is controlled with `v-model:open`; the title and description come from props or
-slots, the body from the default slot, and the buttons from the `#footer` slot. After closing,
-focus returns to the trigger, or, without a `#trigger` slot, to the element that had focus when
-the drawer opened.
+`SDrawer` is a panel that slides in from the edge of the screen. It is a modal window like
+[`SDialog`](./dialog): while the panel is open the background is dimmed and inert, focus cannot
+leave the panel, and the content is rendered in a portal at `body`. <kbd>Esc</kbd>, a click on the
+overlay and the cross button close it. The `side` prop picks the edge (`right` by default). It is
+controlled with `v-model:open`; the title and description come from props or slots, the body from
+the default slot, and the buttons from the `#footer` slot. After closing, focus returns to the
+trigger, or, without a `#trigger` slot, to the element that had focus when the drawer opened.
 
 ## Sides
 
@@ -60,8 +61,10 @@ usually does. A drawer never grows past the screen. A drawer that fills the scre
 rounded corners and the border on the page side, both with `width="100%"` and when
 `width="30rem"` runs into the edge of a narrow phone.
 
-The `--s-drawer-size` variable sets the same size along the drawer's axis: set it once for the
-whole app instead of repeating the prop.
+The `--s-drawer-size` variable sets the size along the drawer's axis: the width of a left or right
+panel and the height of a top or bottom one, so one value drives both. The panel is portaled out of
+`.s-root`, so set the variable on `:root` or on the panel class (`.s-drawer__content`), not on the
+application container, to apply it to every drawer instead of repeating the prop.
 
 <ClientOnly>
 <Demo>
@@ -101,6 +104,9 @@ whole app instead of repeating the prop.
   </template>
 </Demo>
 </ClientOnly>
+
+Buttons in the footer do not close the panel: reset `v-model:open` in the handler, like the "Done"
+button in the example.
 
 ## Title and close slots
 
@@ -180,6 +186,14 @@ The panel is rendered in a portal at `body`, so the class, style, and attributes
 The panel slides in from its side while the overlay darkens, and slides back out on close. The
 entry takes `--s-duration-slow`, the exit `--s-duration-base`. With
 `prefers-reduced-motion: reduce` there is no animation.
+
+## Accessibility
+
+The panel has the `dialog` role. Its accessible name comes from the title; without one a screen
+reader reads the visually hidden "Panel" label (`drawerLabel` in the locale dictionary). The
+description is linked through `aria-describedby`. On open, focus moves into the panel; after
+closing it returns to the trigger, or, without a `#trigger` slot, to where it was before opening.
+The close button is named "Close"; the `closeLabel` prop changes the name.
 
 ## API
 

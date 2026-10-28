@@ -12,8 +12,9 @@ region as scrollable. `aria-*` attributes and `role` go to that focusable region
 root, so `aria-label="Change log"` with `role="region"` names the very tab stop that receives
 focus. Other attributes, `class` and `style` stay on the root.
 
-Give the area a height (`height` or `max-height`, or your own layout) — without one it is as tall
-as its content and never scrolls.
+Give the area a height (`height`, `max-height` or your own layout) — without one it is as tall
+as its content and never scrolls. A number in `height` and `max-height` means pixels; a string is
+passed to CSS as is (`'50vh'`, `'20rem'`).
 
 ## Vertical list
 
@@ -46,10 +47,16 @@ as its content and never scrolls.
   </template>
 </Demo>
 
+## Content height
+
+`max-height` instead of `height` keeps the area as tall as its content while the content fits, and
+turns scrolling on once the content grows past the limit. That suits dropdown panels and lists of
+variable length.
+
 ## Horizontal
 
-Set `orientation` to `horizontal` to scroll a row instead. Only the named axis gets a scrollbar,
-so the content has to be allowed to overflow on it.
+`orientation="horizontal"` scrolls a row. Only the named axis scrolls: whatever overflows on the
+other axis is clipped, so the content has to overflow on the chosen axis.
 
 <Demo>
   <ClientOnly>

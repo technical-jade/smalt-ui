@@ -86,6 +86,23 @@ const panels = [
   </template>
 </Demo>
 
+## Keyboard and accessibility
+
+The handle is an element with the `separator` role and an `aria-orientation` across the split
+(the handle between side-by-side panels is vertical). A screen reader reads the current size of
+the panel before the handle in percent.
+
+| Key             | Action                                                |
+| --------------- | ----------------------------------------------------- |
+| Arrows          | Resize the panel by 10% along the split               |
+| Home / End      | Shrink the panel to `minSize` / grow it to `maxSize`  |
+| Enter           | Collapses and expands a `collapsible` panel           |
+| F6 / Shift + F6 | Move focus to the next / previous handle in the group |
+
+The handle is named "Resize" by default (the `resize` entry of the locale dictionary). When there
+are several handles or another splitter nearby, set your own name with `handle-label`: one name
+serves all handles of the component.
+
 ## API
 
 <ApiTable name="SSplitter" />
