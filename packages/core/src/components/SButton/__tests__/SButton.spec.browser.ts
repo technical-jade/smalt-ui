@@ -1,4 +1,4 @@
-import { describe, expect, it } from 'vitest'
+import { describe, expect, it, vi } from 'vitest'
 import { render } from '@testing-library/vue'
 import { userEvent } from 'vitest/browser'
 import { SButton } from '../index'
@@ -85,14 +85,63 @@ describe('SButton · browser', () => {
     expect(style.boxShadow).toBe('none')
   })
 
-  it('variant="link": hover keeps the underline thickness', async () => {
+  // A computed color is rgb() or, after color-mix, color(srgb …); both are brought to 0–255.
+  const channels = (color: string) => {
+    const values = color.match(/[\d.]+/g)!.map(Number)
+    return color.startsWith('color(') ? values.slice(0, 3).map((v) => v * 255) : values.slice(0, 3)
+  }
+  const distance = (a: string, b: string) =>
+    channels(a).reduce((sum, v, i) => sum + Math.abs(v - channels(b)[i]), 0)
+
+  const hoverLink = async (props: Record<string, unknown>, expected: string) => {
     const { container } = render(SButton, {
-      props: { variant: 'link' },
+      props: { variant: 'link', ...props },
       slots: { default: 'Edit' },
     })
     const button = container.querySelector<HTMLElement>('.s-button')!
-    const before = getComputedStyle(button).textDecorationThickness
+    const probe = button.appendChild(document.createElement('span'))
+    probe.style.color = expected
+    const hoverColor = getComputedStyle(probe).color
+    probe.remove()
+    const { color, textDecorationThickness } = getComputedStyle(button)
     await userEvent.hover(button)
-    expect(getComputedStyle(button).textDecorationThickness).toBe(before)
+    await vi.waitFor(() => expect(getComputedStyle(button).color).toBe(hoverColor))
+    return { rest: color, hover: hoverColor, button, textDecorationThickness }
+  }
+
+  it('variant="link": hover visibly changes the color but not the underline thickness', async () => {
+    const { rest, hover, button, textDecorationThickness } = await hoverLink(
+      {},
+      'color-mix(in srgb, var(--s-color-primary-text), var(--s-shade) 30%)',
+    )
+    expect(distance(rest, hover)).toBeGreaterThan(60)
+    expect(getComputedStyle(button).textDecorationThickness).toBe(textDecorationThickness)
+  })
+
+  it('variant="link" lightens on hover in the dark theme', async () => {
+    document.documentElement.dataset.theme = 'dark'
+    try {
+      const { rest, hover } = await hoverLink(
+        {},
+        'color-mix(in srgb, var(--s-color-primary-text), var(--s-shade) 30%)',
+      )
+      const lightness = (color: string) => channels(color).reduce((sum, v) => sum + v, 0)
+      expect(lightness(hover) - lightness(rest)).toBeGreaterThan(60)
+    } finally {
+      delete document.documentElement.dataset.theme
+    }
+  })
+
+  it('variant="link" with color shifts that color toward --s-shade', async () => {
+    const { rest, hover } = await hoverLink(
+      { color: 'teal' },
+      'color-mix(in srgb, var(--s-button-c), var(--s-shade) 30%)',
+    )
+    expect(distance(rest, hover)).toBeGreaterThan(60)
+  })
+
+  it('variant="link" with color="neutral" takes the accent color on hover', async () => {
+    const { rest, hover } = await hoverLink({ color: 'neutral' }, 'var(--s-color-primary-text)')
+    expect(distance(rest, hover)).toBeGreaterThan(60)
   })
 })

@@ -39,28 +39,46 @@ meant for in-place actions such as "Edit" or "Show all"; to go to another page, 
 `href`. `size` changes only the font size, and `color` the text color. `SButtonGroup`, `SFab`
 and `SBackTop` do not take `link`: they rely on the button frame.
 
+On hover a link button changes only its color, like a regular link: the text gets darker (lighter
+in the dark theme), and a neutral link (`color="neutral"`) takes the accent color. The underline
+stays the same. Next to text in a flex row, align the items on the baseline
+(`align-items: baseline`), or the link shifts because of the different line heights.
+
 <Demo>
-  <p style="margin: 0">
-    Delivery address: 221B Baker Street, London. <SButton variant="link">Edit</SButton>
-  </p>
-  <SButton variant="link" size="sm" color="neutral">Show all plans</SButton>
+  <div style="display: flex; flex-wrap: wrap; align-items: baseline; gap: 8px 16px">
+    <p style="margin: 0">
+      Delivery address: 221B Baker Street, London. <SButton variant="link">Edit</SButton>
+    </p>
+    <SButton variant="link" size="sm" color="neutral">Show all plans</SButton>
+  </div>
 
 <template #code>
 
 ```vue
 <template>
-  <p>
-    Delivery address: 221B Baker Street, London.
-    <SButton variant="link">Edit</SButton>
-  </p>
-  <SButton
-    variant="link"
-    size="sm"
-    color="neutral"
-  >
-    Show all plans
-  </SButton>
+  <div class="row">
+    <p>
+      Delivery address: 221B Baker Street, London.
+      <SButton variant="link">Edit</SButton>
+    </p>
+    <SButton
+      variant="link"
+      size="sm"
+      color="neutral"
+    >
+      Show all plans
+    </SButton>
+  </div>
 </template>
+
+<style scoped>
+.row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 8px 16px;
+}
+</style>
 ```
 
   </template>
@@ -142,7 +160,8 @@ its shades (`primary`, `teal`, `teal-10`). It overrides the variant color while 
 `color="neutral"` is the regular text color of the theme. It suits secondary actions and
 navigation: "Edit", a menu button, header items. On `ghost` and `outline` the text and the hover
 and press highlights come out neutral and follow the theme. A filled button with `neutral` takes
-the text color as its fill and the surface color for its content.
+the text color as its fill and the surface color for its content. A neutral button carries the
+`.s-button--neutral` modifier class.
 
 <Demo>
   <SButton color="teal">teal</SButton>

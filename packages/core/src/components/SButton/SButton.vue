@@ -94,6 +94,7 @@ watchEffect(() => {
         's-button--square': p.square,
         's-button--icon-only': isIconOnly,
         's-button--flat': p.flat,
+        's-button--neutral': p.color === 'neutral',
       },
     ]"
     :style="[colorStyle, elevationStyle]"
