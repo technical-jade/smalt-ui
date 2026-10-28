@@ -77,4 +77,5 @@ set both globally and for a subtree through [`ConfigProvider`](/guide/defaults).
 For this, every control that density affects has `size`, including `SSelect`, `STextarea`,
 `SNumberField` and `SPinInput`. Choice controls without a text frame (`SCheckbox`, `SSwitch`,
 `SRadio`, `SSlider`) have a fixed geometry and take no `size`: density changes the height of a
-field frame, and they have none.
+field frame, and they have none. Navigation follows density too: `SNavigationMenu` takes `size`,
+so `compact` tightens its items and panel links.

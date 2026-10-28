@@ -8,19 +8,29 @@ import {
   NavigationMenuTrigger,
   NavigationMenuViewport,
 } from 'reka-ui'
+import { computed } from 'vue'
 import { SIcon } from '../SIcon'
 import { useDefaults, useElevationProp } from '../../composables'
 import type { SNavigationMenuProps } from './types'
 
-const props = defineProps<SNavigationMenuProps>()
+const props = withDefaults(defineProps<SNavigationMenuProps>(), {
+  size: 'md',
+  align: 'start',
+})
 const p = useDefaults(props, 'SNavigationMenu')
 
 const elevationStyle = useElevationProp(p, 's-surface')
+
+const columnsStyle = computed(() =>
+  p.columns == null ? undefined : { '--s-navigation-menu-columns': String(p.columns) },
+)
 </script>
 
 <template>
   <NavigationMenuRoot
     class="s-navigation-menu"
+    :class="`s-navigation-menu--${p.size}`"
+    :style="columnsStyle"
     :aria-label="p.ariaLabel"
   >
     <NavigationMenuList class="s-navigation-menu__list">
@@ -49,6 +59,8 @@ const elevationStyle = useElevationProp(p, 's-surface')
               >
                 <NavigationMenuLink
                   :href="link.href"
+                  :target="link.target"
+                  :rel="link.rel"
                   class="s-navigation-menu__link"
                 >
                   <span class="s-navigation-menu__link-title">{{ link.label }}</span>
@@ -66,6 +78,8 @@ const elevationStyle = useElevationProp(p, 's-surface')
         <NavigationMenuLink
           v-else
           :href="item.href"
+          :target="item.target"
+          :rel="item.rel"
           class="s-navigation-menu__top-link"
         >
           {{ item.label }}
@@ -77,6 +91,7 @@ const elevationStyle = useElevationProp(p, 's-surface')
       <NavigationMenuViewport
         class="s-navigation-menu__viewport"
         :class="{ 's-navigation-menu__viewport--square': p.square }"
+        :align="p.align"
         :style="elevationStyle"
       />
     </div>

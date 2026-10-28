@@ -5,6 +5,37 @@
   position: relative;
   display: flex;
   justify-content: flex-start;
+  // The panel hangs below the root (top: 100%), and a flex parent with stretch would take it down
+  // together with the stretched root. A content height turns the stretch off but not centering.
+  block-size: fit-content;
+
+  // The size is a set of variables, so a single value can be overridden without the selectors.
+  &--sm {
+    --s-navigation-menu-item-padding: var(--s-space-1) var(--s-space-2);
+    --s-navigation-menu-item-font-size: var(--s-font-size-sm);
+    --s-navigation-menu-link-padding: var(--s-space-2);
+    --s-navigation-menu-link-gap: 0;
+    --s-navigation-menu-title-font-size: var(--s-font-size-sm);
+    --s-navigation-menu-desc-font-size: var(--s-font-size-xs);
+  }
+
+  &--md {
+    --s-navigation-menu-item-padding: var(--s-space-2) var(--s-space-3);
+    --s-navigation-menu-item-font-size: var(--s-font-size-sm);
+    --s-navigation-menu-link-padding: var(--s-space-3);
+    --s-navigation-menu-link-gap: var(--s-space-1);
+    --s-navigation-menu-title-font-size: var(--s-font-size-base);
+    --s-navigation-menu-desc-font-size: var(--s-font-size-sm);
+  }
+
+  &--lg {
+    --s-navigation-menu-item-padding: var(--s-space-3) var(--s-space-4);
+    --s-navigation-menu-item-font-size: var(--s-font-size-base);
+    --s-navigation-menu-link-padding: var(--s-space-4);
+    --s-navigation-menu-link-gap: var(--s-space-1);
+    --s-navigation-menu-title-font-size: var(--s-font-size-lg);
+    --s-navigation-menu-desc-font-size: var(--s-font-size-base);
+  }
 
   // The doubled selector `& &__el` = (0,2,0) overrides host typography
   // (e.g. VitePress `.vp-doc ul`/`a` = (0,1,1)) without !important.
@@ -21,7 +52,7 @@
     display: inline-flex;
     align-items: center;
     gap: var(--s-space-1);
-    padding: var(--s-space-2) var(--s-space-3);
+    padding: var(--s-navigation-menu-item-padding);
     font-family: var(--s-font-sans);
     color: var(--s-color-text);
     text-decoration: none;
@@ -30,6 +61,7 @@
     border: none;
     border-radius: var(--s-radius-sm);
     @include tools.typescale('label-lg');
+    font-size: var(--s-navigation-menu-item-font-size);
     @include tools.transition(color);
     @include tools.state-layer;
   }
@@ -54,7 +86,7 @@
 
   & &__panel {
     display: grid;
-    grid-template-columns: repeat(2, minmax(12rem, 1fr));
+    grid-template-columns: repeat(var(--s-navigation-menu-columns, 2), minmax(12rem, 1fr));
     gap: var(--s-space-1);
     padding: var(--s-space-2);
     margin: 0;
@@ -64,8 +96,8 @@
   & &__link {
     display: flex;
     flex-direction: column;
-    gap: var(--s-space-1);
-    padding: var(--s-space-3);
+    gap: var(--s-navigation-menu-link-gap);
+    padding: var(--s-navigation-menu-link-padding);
     color: var(--s-color-text);
     text-decoration: none;
     border-radius: var(--s-radius-sm);
@@ -73,27 +105,31 @@
   }
 
   &__link-title {
+    font-size: var(--s-navigation-menu-title-font-size);
     font-weight: var(--s-font-weight-medium);
   }
 
   &__link-desc {
-    font-size: var(--s-font-size-sm);
+    font-size: var(--s-navigation-menu-desc-font-size);
     color: var(--s-color-text-muted);
   }
 
+  // The panel is not portaled, so only its own z-index keeps it above positioned blocks of the
+  // page.
   &__viewport-wrap {
     position: absolute;
     top: 100%;
     left: 0;
+    z-index: var(--s-z-dropdown);
     display: flex;
-    // The panel is wider than the narrow nav, so it is pulled to the start of the row: with
-    // center it goes past the left edge.
-    justify-content: flex-start;
     width: 100%;
   }
 
+  // Reka computes the offset from the start of the menu by the align prop, kept off the window
+  // edges.
   &__viewport {
     position: relative;
+    left: var(--reka-navigation-menu-viewport-left, 0);
     // Height/width come from Reka (it measures the active panel). Without height the viewport
     // collapses (the `__content` panel is position:absolute), and overflow:hidden clips it to
     // zero. flex:none, otherwise as a flex child of __viewport-wrap it shrinks to the nav row
