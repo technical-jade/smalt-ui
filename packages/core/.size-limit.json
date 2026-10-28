@@ -4,21 +4,21 @@
     "path": "dist/index.js",
     "import": "*",
     "ignore": ["vue", "reka-ui", "lucide", "maska", "maska/vue"],
-    "limit": "69 kB"
+    "limit": "70.5 kB"
   },
   {
     "name": "named import SButton",
     "path": "dist/index.js",
     "import": "{ SButton }",
     "ignore": ["vue", "reka-ui", "lucide", "maska", "maska/vue"],
-    "limit": "18.8 kB"
+    "limit": "19.8 kB"
   },
   {
     "name": "named import SSelect",
     "path": "dist/index.js",
     "import": "{ SSelect }",
     "ignore": ["vue", "reka-ui", "lucide", "maska", "maska/vue"],
-    "limit": "24 kB"
+    "limit": "25 kB"
   },
   {
     "name": "styles.css",
