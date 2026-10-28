@@ -3,6 +3,7 @@ import { useTemplateRef } from 'vue'
 import { PopoverArrow, PopoverContent, PopoverPortal, PopoverRoot, PopoverTrigger } from 'reka-ui'
 import { useDefaults, useElevationProp } from '../../composables'
 import { useOwnAccessibleName } from '../../internal/useOwnAccessibleName'
+import { usePopperStrategy } from '../../internal/usePopperStrategy'
 import type { SPopoverProps } from './types'
 
 defineOptions({ inheritAttrs: false })
@@ -23,6 +24,12 @@ const open = defineModel<boolean>('open', { default: false })
 const content = useTemplateRef<{ $el: Element | null }>('content')
 useOwnAccessibleName(content, '.s-popover__content', () => p.ariaLabel)
 
+const trigger = useTemplateRef<{ $el: Element | null }>('trigger')
+const positionStrategy = usePopperStrategy(
+  () => trigger.value?.$el,
+  () => open.value,
+)
+
 defineSlots<{
   /** Trigger element that opens the panel on click. */
   trigger?: (props: Record<string, never>) => unknown
@@ -36,7 +43,10 @@ defineSlots<{
     v-model:open="open"
     :modal="p.modal"
   >
-    <PopoverTrigger as-child>
+    <PopoverTrigger
+      ref="trigger"
+      as-child
+    >
       <slot name="trigger" />
     </PopoverTrigger>
 
@@ -50,6 +60,7 @@ defineSlots<{
         :side="p.side"
         :align="p.align"
         :side-offset="p.sideOffset"
+        :position-strategy="positionStrategy"
         :aria-label="p.ariaLabel"
       >
         <slot />

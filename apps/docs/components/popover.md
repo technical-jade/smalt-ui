@@ -43,6 +43,11 @@ edge. `aria-label` names the panel; without it the panel is named by its trigger
 
 ## Side and alignment
 
+`side` and `align` set where the panel opens relative to the trigger. When the page scrolls, an
+open panel moves together with its trigger, without lagging behind. If the trigger lies in a pinned
+block (`position: fixed` or `sticky`, for example in the [`SAppBar`](/components/app-shell)
+header), the panel stays in place along with it.
+
 <ClientOnly>
 <Demo>
   <SPopover side="right" align="start" aria-label="Help">
