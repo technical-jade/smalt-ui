@@ -4,8 +4,12 @@
 `escape`, `arrowup`, … — case insensitive) is drawn as its symbol, any other text is shown as
 given. The symbols are the same everywhere: the shortcut has to match the one the application
 documents, and platform sniffing would make the server render something else than the browser.
-Since a symbol read on its own is an unknown glyph, a key rendered as one is announced by its
-name (`⌘` as "meta").
+Since a symbol read on its own is an unknown glyph, a key rendered as one gets `role="img"` and
+the key name as its accessible name. Modifiers and service keys are named as printed on a
+keyboard: `⌘` is "Command" (a Mac symbol, so the Mac name), `⌃` is "Ctrl", `⎋` is "Esc". Arrows and
+space are announced as "Up arrow" or "Space", and these names come from the
+[locale dictionary](/guide/i18n#dictionary-keys-smessages) (`kbdArrowUp` … `kbdSpace`). Text shown
+as given is read as is.
 
 ## Keys
 

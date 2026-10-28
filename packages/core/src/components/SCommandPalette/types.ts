@@ -39,13 +39,14 @@ export interface SCommandPaletteProps {
   emptyText?: string
   /**
    * Filters `groups` by the query. Turn it off when the application searches server-side: what
-   * it puts into `groups` is then listed as it arrives.
+   * it puts into `groups` is then listed as it arrives. Empty groups are hidden in both modes.
    * @defaultValue true
    */
   filter?: boolean
   /**
-   * Key that opens the palette together with Cmd (macOS) or Ctrl. `false` binds nothing and
-   * leaves `v-model:open` as the only way in.
+   * Key that opens the palette together with Cmd (macOS) or Ctrl. A Latin letter or digit also
+   * works on a non-Latin keyboard layout, through the same physical key. `false` binds nothing
+   * and leaves `v-model:open` as the only way in.
    * @defaultValue 'k'
    */
   shortcutKey?: string | false

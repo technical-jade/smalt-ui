@@ -2,7 +2,7 @@
 import { useTemplateRef } from 'vue'
 import { DatePickerField as RekaDatePickerField, DatePickerInput, DatePickerTrigger } from 'reka-ui'
 import { SIcon } from '../SIcon'
-import { visibleSegments } from '../../internal/dateSegments'
+import { segmentAria, visibleSegments } from '../../internal/dateSegments'
 import SegmentedFieldBridge, {
   type SegmentedFieldBridgeExposed,
 } from '../../internal/SegmentedFieldBridge'
@@ -74,6 +74,7 @@ defineSlots<{
       v-for="item in visibleSegments(segments)"
       :key="item.part"
       :part="item.part"
+      v-bind="segmentAria(item, m)"
       class="s-date-picker__segment"
       :class="{ 's-date-picker__segment--literal': item.part === 'literal' }"
     >

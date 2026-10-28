@@ -375,6 +375,11 @@ const notPast: SRule<DateValue | undefined> = (v) =>
   </template>
 </Demo>
 
+## Accessibility
+
+The segments are named as in [`SDateField`](./date-field#accessibility): "day", "month" and
+"year" from the locale dictionary, and "Empty" for an empty segment.
+
 ## API
 
 <ApiTable name="SDatePicker" />

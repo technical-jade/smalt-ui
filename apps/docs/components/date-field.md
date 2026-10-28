@@ -299,6 +299,16 @@ const notPast: SRule<DateValue | undefined> = (v) =>
   </template>
 </Demo>
 
+## Accessibility
+
+Each segment is a separate tab stop with the `spinbutton` role, and the field label names the
+group of segments. The segment itself is named by a word from the
+[locale dictionary](/guide/i18n#dictionary-keys-smessages): "day", "month" and "year" (the
+`segmentDay`, `segmentMonth` and `segmentYear` keys), and an empty segment is announced as "Empty"
+(`segmentEmpty`). A filled segment announces its value, the month together with its name. The same
+applies to [`STimeField`](./time-field), [`SDatePicker`](./date-picker) and
+[`SDateRangePicker`](./date-range-picker).
+
 ## API
 
 <ApiTable name="SDateField" />

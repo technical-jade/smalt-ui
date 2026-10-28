@@ -22,6 +22,13 @@ describe('SDatePicker', () => {
     expect(screen.getAllByRole('spinbutton')).toHaveLength(3)
   })
 
+  it('names the segments from the dictionary', () => {
+    render(SDatePicker, { props: { locale: 'en-GB' } })
+    const [day] = screen.getAllByRole('spinbutton')
+    expect(day).toHaveAttribute('aria-label', 'day')
+    expect(day).toHaveAttribute('aria-valuetext', 'Empty')
+  })
+
   it('links the error and marks the field invalid', () => {
     render(SDatePicker, { props: { label: 'Date', error: 'Enter a date', locale: 'en-US' } })
     expect(screen.getByText('Enter a date')).toBeInTheDocument()

@@ -1,3 +1,5 @@
+import type { SMessages } from '../composables/useLocale'
+
 /**
  * Date/time segment separators come from ICU, and server and browser ICU versions differ, so
  * hydration mismatches for no real reason. Hence two adjustments: a trailing separator is not
@@ -22,4 +24,35 @@ export function visibleSegments<T extends DateSegment>(segments: readonly T[]): 
         ? { ...segment, value: segment.value.replace(SPACES, ' ') }
         : segment,
     )
+}
+
+const SEGMENT_LABELS: Partial<Record<string, keyof SMessages>> = {
+  day: 'segmentDay',
+  month: 'segmentMonth',
+  year: 'segmentYear',
+  hour: 'segmentHour',
+  minute: 'segmentMinute',
+  second: 'segmentSecond',
+  dayPeriod: 'segmentDayPeriod',
+  timeZoneName: 'segmentTimeZone',
+}
+
+// An empty numeric segment shows Reka's placeholder ("mm", "––"), a filled one shows digits.
+const DIGIT = /\p{Nd}/u
+const NUMERIC_PARTS = new Set(['day', 'month', 'year', 'hour', 'minute', 'second'])
+
+/**
+ * Reka hardcodes English `aria-label`s on the segments ("day,", "hour,") and the `aria-valuetext`
+ * "Empty" on an empty one. Attributes passed to `*Input` land on its root over Reka's own, so the
+ * names come from the dictionary here. The value text of a filled segment stays with Reka: it is
+ * already localized (the month one includes the month name).
+ */
+export function segmentAria(segment: DateSegment, m: SMessages): Record<string, string> {
+  const label = SEGMENT_LABELS[segment.part]
+  if (!label) return {}
+  const attrs: Record<string, string> = { 'aria-label': m[label] }
+  if (NUMERIC_PARTS.has(segment.part) && !DIGIT.test(segment.value)) {
+    attrs['aria-valuetext'] = m.segmentEmpty
+  }
+  return attrs
 }

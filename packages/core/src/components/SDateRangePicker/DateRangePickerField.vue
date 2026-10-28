@@ -6,7 +6,7 @@ import {
   DateRangePickerTrigger,
 } from 'reka-ui'
 import { SIcon } from '../SIcon'
-import { visibleSegments } from '../../internal/dateSegments'
+import { segmentAria, visibleSegments } from '../../internal/dateSegments'
 import SegmentedFieldBridge, {
   type SegmentedFieldBridgeExposed,
 } from '../../internal/SegmentedFieldBridge'
@@ -82,6 +82,7 @@ defineSlots<{
         v-for="item in visibleSegments(part)"
         :key="`${key}-${item.part}`"
         :part="item.part"
+        v-bind="segmentAria(item, m)"
         :type="key"
         class="s-date-range-picker__segment"
         :class="{ 's-date-range-picker__segment--literal': item.part === 'literal' }"

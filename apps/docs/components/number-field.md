@@ -16,6 +16,7 @@ const age = ref(null)
 const qty = ref(3)
 const price = ref(50)
 const nfInvalid = ref(5)
+const amount = ref(1234.5)
 </script>
 
 ## Basic usage
@@ -56,6 +57,36 @@ const nfInvalid = ref(5)
     label="Price"
     :step="10"
     :min="0"
+  />
+</template>
+```
+
+  </template>
+</Demo>
+</ClientOnly>
+
+## Number format
+
+The number is formatted and parsed by the library locale, `1,234.5` by default, the same way date
+fields follow it. The `locale` prop takes a BCP 47 tag and sets the format of one field: with
+`de-DE` the field shows `1.234,5` and reads a comma as the decimal separator. To use one format
+across the app, set `locale` as a [`global` prop default](/guide/i18n#date-time-and-number-format).
+A screen reader announces the field as a "number field", the `numberField` string of the
+[locale dictionary](/guide/i18n#dictionary-keys-smessages).
+
+<ClientOnly>
+<Demo>
+  <SNumberField v-model="amount" label="Betrag" locale="de-DE" :step="0.5" />
+
+<template #code>
+
+```vue
+<template>
+  <SNumberField
+    v-model="amount"
+    label="Betrag"
+    locale="de-DE"
+    :step="0.5"
   />
 </template>
 ```

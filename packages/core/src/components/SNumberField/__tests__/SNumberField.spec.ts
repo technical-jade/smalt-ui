@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest'
 import { fireEvent, render, screen } from '@testing-library/vue'
 import { SNumberField } from '../index'
-import { installDefaults } from '../../../composables'
+import { installDefaults, installLocale } from '../../../composables'
 
 describe('SNumberField', () => {
   it('renders the field with a label and the current value', () => {
@@ -71,5 +71,35 @@ describe('SNumberField', () => {
       global: { plugins: [(app) => installDefaults(app, { global: { size: 'sm' } })] },
     })
     expect(preset.container.querySelector('.s-number-field')).toHaveClass('s-number-field--sm')
+  })
+
+  it('formats the number by the library locale (en-US by default)', () => {
+    render(SNumberField, { props: { modelValue: 1234.5, label: 'Amount' } })
+    expect(screen.getByRole('spinbutton')).toHaveValue('1,234.5')
+  })
+
+  it('the locale prop and a global locale default set the format', () => {
+    render(SNumberField, { props: { modelValue: 1234.5, label: 'Amount', locale: 'de-DE' } })
+    expect(screen.getByRole('spinbutton', { name: 'Amount' })).toHaveValue('1.234,5')
+    const global = render(SNumberField, {
+      props: { modelValue: 1234.5 },
+      global: { plugins: [(app) => installDefaults(app, { global: { locale: 'de-DE' } })] },
+    })
+    expect(global.container.querySelector('input[role="spinbutton"]')).toHaveValue('1.234,5')
+  })
+
+  it('takes aria-roledescription from the dictionary', () => {
+    render(SNumberField, { props: { modelValue: 1, label: 'Quantity' } })
+    expect(screen.getByRole('spinbutton')).toHaveAttribute('aria-roledescription', 'number field')
+    const translated = render(SNumberField, {
+      props: { modelValue: 1 },
+      global: {
+        plugins: [(app) => installLocale(app, { messages: { numberField: 'Zahlenfeld' } })],
+      },
+    })
+    expect(translated.container.querySelector('input[role="spinbutton"]')).toHaveAttribute(
+      'aria-roledescription',
+      'Zahlenfeld',
+    )
   })
 })

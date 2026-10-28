@@ -526,7 +526,9 @@ const query = ref('Draft report')
 
 The `mask` prop formats input by a template of tokens; the `fill-mask` flag shows the template in
 the field and keeps it visible while typing (`__/__/____`). Tokens, named masks and options are
-listed in the [API table](#api) below.
+listed in the [API table](#api) below. The letter tokens (`S`, `N`, `A`/`a`, `X`/`x`) accept a
+letter of any script, not only Latin: a license plate mask `A###AA` takes Greek or Cyrillic
+letters as well.
 
 <Demo>
   <SInput v-model="fillPhone" label="Phone" mask="(###) ### - ####" fill-mask>

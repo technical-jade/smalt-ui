@@ -13,7 +13,7 @@ export function matchesCommand(item: SCommandItem, query: string): boolean {
 }
 
 export function filterCommandGroups(groups: SCommandGroup[], query: string): SCommandGroup[] {
-  if (!query.trim()) return groups
+  if (!query.trim()) return groups.filter((group) => group.items.length > 0)
   return groups
     .map((group) => ({
       ...group,

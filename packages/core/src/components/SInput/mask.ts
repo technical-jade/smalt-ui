@@ -19,16 +19,17 @@ export const NAMED_MASKS: Record<string, string> = {
 /**
  * Token alphabet: `#` digit, `S` letter, `N` alphanumeric, `A`/`a` upper/lowercase letter,
  * `X`/`x` upper/lowercase alphanumeric. Replaces the default Maska tokens (`@`/`*`) via
- * `tokensReplace: true`.
+ * `tokensReplace: true`. A letter is `\p{L}`, any script: a mask such as a license plate is typed
+ * in the user's own alphabet.
  */
 export const MASK_TOKENS: MaskTokens = {
   '#': { pattern: /[0-9]/ },
-  S: { pattern: /[a-zA-Z]/ },
-  N: { pattern: /[0-9a-zA-Z]/ },
-  A: { pattern: /[a-zA-Z]/, transform: (c) => c.toUpperCase() },
-  a: { pattern: /[a-zA-Z]/, transform: (c) => c.toLowerCase() },
-  X: { pattern: /[0-9a-zA-Z]/, transform: (c) => c.toUpperCase() },
-  x: { pattern: /[0-9a-zA-Z]/, transform: (c) => c.toLowerCase() },
+  S: { pattern: /\p{L}/u },
+  N: { pattern: /[0-9\p{L}]/u },
+  A: { pattern: /\p{L}/u, transform: (c) => c.toUpperCase() },
+  a: { pattern: /\p{L}/u, transform: (c) => c.toLowerCase() },
+  X: { pattern: /[0-9\p{L}]/u, transform: (c) => c.toUpperCase() },
+  x: { pattern: /[0-9\p{L}]/u, transform: (c) => c.toLowerCase() },
 }
 
 /**

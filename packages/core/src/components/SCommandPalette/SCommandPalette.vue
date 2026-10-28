@@ -60,8 +60,11 @@ defineSlots<{
   footer?: (props: Record<string, never>) => unknown
 }>()
 
-// Empty groups are dropped either way: a heading with nothing under it is noise, and with
-// server-side search the application usually sends the group before its commands arrive.
+/**
+ * Empty groups are dropped in both modes (`filterCommandGroups` drops them itself): a heading
+ * with nothing under it is noise, and with server-side search the application usually sends the
+ * group before its commands arrive.
+ */
 const groups = computed(() =>
   p.filter
     ? filterCommandGroups(p.groups, search.value)

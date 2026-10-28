@@ -9,7 +9,7 @@ import {
 } from 'reka-ui'
 import { SFormField } from '../SFormField'
 import { SIcon } from '../SIcon'
-import { useDefaults, useMessages } from '../../composables'
+import { useDefaults, useFormatLocale, useMessages } from '../../composables'
 import { useFieldAttrs } from '../../internal/useFieldAttrs'
 import { useFieldFocus } from '../../internal/useFieldFocus'
 import { useFieldValidation } from '../../internal/useFieldValidation'
@@ -27,6 +27,7 @@ const props = withDefaults(defineProps<SNumberFieldProps>(), {
 const p = useDefaults(props, 'SNumberField')
 
 const m = useMessages()
+const formatLocale = useFormatLocale(() => p.locale)
 
 const { rootClass, rootStyle, controlAttrs } = useFieldAttrs()
 
@@ -75,6 +76,7 @@ defineExpose(expose)
         :disabled="p.disabled"
         :name="p.name"
         :required="p.required"
+        :locale="formatLocale"
       >
         <NumberFieldDecrement
           class="s-number-field__button"
@@ -94,6 +96,7 @@ defineExpose(expose)
           :required="p.required"
           :aria-invalid="fieldInvalid || undefined"
           :aria-describedby="describedBy"
+          :aria-roledescription="m.numberField"
         />
 
         <NumberFieldIncrement

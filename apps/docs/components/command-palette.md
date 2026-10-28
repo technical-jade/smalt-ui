@@ -182,6 +182,10 @@ the combination away from the reader's browser.
 </Demo>
 </ClientOnly>
 
+The keyboard layout does not get in the way. On a non-Latin layout, such as Greek, where the K key
+types "κ", the shortcut fires on that same physical key; on Latin layouts like Dvorak it is the key
+with the letter printed on it. `shortcut-key` takes a Latin letter or a digit.
+
 The footer slot is a good place for the keyboard hints. It is empty by default, because the wording
 belongs to the application's own vocabulary:
 
@@ -282,7 +286,8 @@ The `item` slot receives `{ item, active }`, where `active` is true for the high
 ## Server-side search
 
 With `:filter="false"` the palette lists `groups` exactly as they arrive: bind `v-model:search` to
-run the query on the server, and raise `loading` while the request is in flight.
+run the query on the server, and raise `loading` while the request is in flight. A group without
+commands is hidden in both modes, so the server may send a group before its commands.
 
 <ClientOnly>
 <Demo>

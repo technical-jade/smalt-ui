@@ -20,6 +20,20 @@ describe('SDateRangePicker', () => {
     expect(screen.getAllByRole('spinbutton')).toHaveLength(6)
   })
 
+  it('names the segments of both dates from the dictionary', () => {
+    render(SDateRangePicker, { props: { locale: 'en-GB' } })
+    const segments = screen.getAllByRole('spinbutton')
+    expect(segments.map((segment) => segment.getAttribute('aria-label'))).toEqual([
+      'day',
+      'month',
+      'year',
+      'day',
+      'month',
+      'year',
+    ])
+    expect(segments[3]).toHaveAttribute('aria-valuetext', 'Empty')
+  })
+
   it('renders a separator between start and end', () => {
     const { container } = render(SDateRangePicker, {
       props: { modelValue: range, locale: 'en-US' },

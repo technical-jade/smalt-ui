@@ -29,6 +29,12 @@ export interface SNumberFieldProps extends SValidationProps<number | null> {
   max?: number
   /** Step for the plus/minus buttons and arrow keys. */
   step?: number
+  /**
+   * Number formatting locale, a BCP 47 tag (`de-DE` shows `1.234,5`). Derived from the library
+   * locale by default (`ConfigProvider`/`installLocale`, the `locale` option in Nuxt): `en` →
+   * `en-US` (`1,234.5`). Typed input is parsed with the same locale.
+   */
+  locale?: string
   /** Placeholder in an empty field. */
   placeholder?: string
   /** Accessible name of the decrement button (taken from the locale dictionary by default). */

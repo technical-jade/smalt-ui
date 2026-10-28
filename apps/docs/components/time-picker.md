@@ -19,7 +19,9 @@ its unit in the field's locale, and the current value is marked `aria-selected` 
 view. <kbd>↑</kbd>/<kbd>↓</kbd> move inside a column, <kbd>Home</kbd>/<kbd>End</kbd> jump to its
 first and last entry, <kbd>←</kbd>/<kbd>→</kbd> cross to the neighbouring column,
 <kbd>Enter</kbd> or <kbd>Space</kbd> picks, and <kbd>Esc</kbd> closes the panel and returns focus
-to the field. Entries outside `min-value`/`max-value` are disabled and skipped by the arrows.
+to the field. Entries outside `min-value`/`max-value` are disabled and skipped by the arrows. The
+segments of the field are named as in [`STimeField`](./time-field#accessibility), from the locale
+dictionary.
 
 ## Basic usage
 

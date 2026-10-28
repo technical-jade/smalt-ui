@@ -4,8 +4,9 @@ export type SKbdSize = 'sm' | 'md' | 'lg'
 export interface SKbdProps {
   /**
    * Key to show. A known name (`meta`, `ctrl`, `shift`, `enter`, `escape`, `arrowup`, …, case
-   * insensitive) is rendered as its symbol and announced by its name; any other text is shown
-   * as given. Ignored when the default slot is filled.
+   * insensitive) is rendered as its symbol, and a screen reader announces the key name (`meta` is
+   * "Command", `ctrl` is "Ctrl", arrows and space come from the locale dictionary); any other text
+   * is shown as given. Ignored when the default slot is filled.
    */
   value?: string
   /** Size: `sm`, `md` or `lg`. */

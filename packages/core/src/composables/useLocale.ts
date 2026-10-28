@@ -29,6 +29,8 @@ export interface SMessages {
   decrement: string
   /** Increment button in `SNumberField`. */
   increment: string
+  /** Control type of `SNumberField` for screen readers (`aria-roledescription`). */
+  numberField: string
   /** Button that opens the calendar (`SDatePicker`/`SDateRangePicker`). */
   openCalendar: string
   /** Moves the calendar to the previous month. */
@@ -127,6 +129,16 @@ export interface SMessages {
   collapseSidebar: string
   /** Button that opens the fan of actions of an `SFab`. */
   showActions: string
+  /** Screen reader name of the "↑" key in `SKbd`. */
+  kbdArrowUp: string
+  /** Screen reader name of the "↓" key in `SKbd`. */
+  kbdArrowDown: string
+  /** Screen reader name of the "←" key in `SKbd`. */
+  kbdArrowLeft: string
+  /** Screen reader name of the "→" key in `SKbd`. */
+  kbdArrowRight: string
+  /** Screen reader name of the space key in `SKbd`. */
+  kbdSpace: string
   /** Error of the `required()` rule. */
   ruleRequired: string
   /** Error of `minLength()` for text; `{min}` is the limit. */
@@ -147,6 +159,24 @@ export interface SMessages {
   ruleEmail: string
   /** Error shown when a rule throws or its Promise rejects. */
   ruleFailed: string
+  /** Accessible name of the day segment in date fields (`SDateField` and the date pickers). */
+  segmentDay: string
+  /** Accessible name of the month segment in date fields. */
+  segmentMonth: string
+  /** Accessible name of the year segment in date fields. */
+  segmentYear: string
+  /** Accessible name of the hour segment in date and time fields (`STimeField`, `STimePicker`). */
+  segmentHour: string
+  /** Accessible name of the minute segment in date and time fields. */
+  segmentMinute: string
+  /** Accessible name of the second segment in date and time fields. */
+  segmentSecond: string
+  /** Accessible name of the AM/PM segment in the 12-hour format. */
+  segmentDayPeriod: string
+  /** Accessible name of the time zone segment (a `ZonedDateTime` value). */
+  segmentTimeZone: string
+  /** Value text (`aria-valuetext`) of an empty date or time segment. */
+  segmentEmpty: string
 }
 
 /** Built-in English dictionary (the default). */
@@ -158,6 +188,7 @@ export const enMessages: SMessages = {
   listboxEmpty: 'No options',
   decrement: 'Decrease',
   increment: 'Increase',
+  numberField: 'number field',
   openCalendar: 'Open calendar',
   prevMonth: 'Previous month',
   nextMonth: 'Next month',
@@ -205,6 +236,11 @@ export const enMessages: SMessages = {
   expandSidebar: 'Expand sidebar',
   collapseSidebar: 'Collapse sidebar',
   showActions: 'Show actions',
+  kbdArrowUp: 'Up arrow',
+  kbdArrowDown: 'Down arrow',
+  kbdArrowLeft: 'Left arrow',
+  kbdArrowRight: 'Right arrow',
+  kbdSpace: 'Space',
   ruleRequired: 'This field is required',
   ruleMinLength: 'Enter at least {min} characters',
   ruleMaxLength: 'Enter no more than {max} characters',
@@ -215,6 +251,15 @@ export const enMessages: SMessages = {
   rulePattern: 'Invalid format',
   ruleEmail: 'Enter a valid email address',
   ruleFailed: 'The value could not be checked',
+  segmentDay: 'day',
+  segmentMonth: 'month',
+  segmentYear: 'year',
+  segmentHour: 'hour',
+  segmentMinute: 'minute',
+  segmentSecond: 'second',
+  segmentDayPeriod: 'AM/PM',
+  segmentTimeZone: 'time zone',
+  segmentEmpty: 'Empty',
 }
 
 /** Identifier of a built-in locale. Other languages are supplied through `messages`. */

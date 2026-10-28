@@ -3,11 +3,11 @@ import { computed, ref, useTemplateRef } from 'vue'
 import type { ComponentPublicInstance } from 'vue'
 import { TimeFieldRoot, TimeFieldInput } from 'reka-ui'
 import { SFormField } from '../SFormField'
-import { visibleSegments } from '../../internal/dateSegments'
+import { segmentAria, visibleSegments } from '../../internal/dateSegments'
 import SegmentedFieldBridge, {
   type SegmentedFieldBridgeExposed,
 } from '../../internal/SegmentedFieldBridge'
-import { useDefaults, useFormatLocale } from '../../composables'
+import { useDefaults, useFormatLocale, useMessages } from '../../composables'
 import { useFieldFocus } from '../../internal/useFieldFocus'
 import { focusFirstSegment, useFieldValidation } from '../../internal/useFieldValidation'
 import type { STimeFieldProps, STimeValue } from './types'
@@ -31,6 +31,7 @@ const emit = defineEmits<{
 const root = useTemplateRef<ComponentPublicInstance>('root')
 
 const formatLocale = useFormatLocale(() => p.locale)
+const m = useMessages()
 
 const slots = defineSlots<{
   /** Content at the start of the field, inside the border (icon, button). */
@@ -125,6 +126,7 @@ const hasLeading = computed(() => !!slots.prepend)
             v-for="item in visibleSegments(segments)"
             :key="item.part"
             :part="item.part"
+            v-bind="segmentAria(item, m)"
             class="s-time-field__segment"
             :class="{ 's-time-field__segment--literal': item.part === 'literal' }"
           >

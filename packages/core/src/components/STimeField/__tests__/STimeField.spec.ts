@@ -15,6 +15,16 @@ describe('STimeField', () => {
     expect(screen.getAllByRole('spinbutton').length).toBeGreaterThanOrEqual(2)
   })
 
+  it('names the time segments from the dictionary', () => {
+    render(STimeField, { props: { locale: 'en-US', granularity: 'second' } })
+    const [hour, minute, second, dayPeriod] = screen.getAllByRole('spinbutton')
+    expect(hour).toHaveAttribute('aria-label', 'hour')
+    expect(minute).toHaveAttribute('aria-label', 'minute')
+    expect(second).toHaveAttribute('aria-label', 'second')
+    expect(dayPeriod).toHaveAttribute('aria-label', 'AM/PM')
+    expect(hour).toHaveAttribute('aria-valuetext', 'Empty')
+  })
+
   it('links the error and marks the field invalid', () => {
     render(STimeField, { props: { label: 'Time', error: 'Enter a time', locale: 'en-US' } })
     expect(screen.getByText('Enter a time')).toBeInTheDocument()

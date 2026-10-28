@@ -22,10 +22,24 @@ export function bindShortcut(handler: ShortcutHandler): () => void {
   }
 }
 
-/** Cmd or Ctrl plus the key. Shift and Alt make it a different shortcut, so they must be off. */
+/** Physical key of a Latin letter or digit: `k` → `KeyK`, `1` → `Digit1`. */
+function keyCode(key: string): string | undefined {
+  if (/^[a-z]$/i.test(key)) return `Key${key.toUpperCase()}`
+  if (/^\d$/.test(key)) return `Digit${key}`
+  return undefined
+}
+
+/**
+ * Cmd or Ctrl plus the key, without Shift and Alt: they make it a different shortcut. On a
+ * non-Latin layout (Ctrl+K on a Greek one arrives as "κ") the physical key `event.code` is
+ * compared; on a Latin layout only `event.key` is, because Dvorak or AZERTY put the letter
+ * somewhere other than QWERTY does.
+ */
 export function matchesShortcut(event: KeyboardEvent, key: string): boolean {
   if (!(event.metaKey || event.ctrlKey) || event.altKey || event.shiftKey) return false
-  return event.key.toLowerCase() === key.toLowerCase()
+  if (event.key.toLowerCase() === key.toLowerCase()) return true
+  const isLatin = /^[\x20-\x7e]$/.test(event.key)
+  return !isLatin && event.key.length === 1 && event.code === keyCode(key)
 }
 
 /**

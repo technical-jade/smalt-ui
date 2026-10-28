@@ -282,6 +282,14 @@ const workingHours: SRule<Time | undefined> = (v) =>
   </template>
 </Demo>
 
+## Accessibility
+
+Each segment is a separate tab stop with the `spinbutton` role, and the field label names the
+group. The segments are named by words from the
+[locale dictionary](/guide/i18n#dictionary-keys-smessages): "hour", "minute", "second" and
+"AM/PM", and an empty segment is announced as "Empty", as in
+[`SDateField`](./date-field#accessibility).
+
 ## API
 
 <ApiTable name="STimeField" />

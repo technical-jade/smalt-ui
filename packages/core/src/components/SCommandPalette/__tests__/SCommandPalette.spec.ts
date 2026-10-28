@@ -23,8 +23,8 @@ const groups: SCommandGroup[] = [
 const renderPalette = (props: Record<string, unknown> = {}) =>
   render(SCommandPalette, { props: { open: true, groups, ...props } })
 
-const pressShortcut = (target: EventTarget = document.body, key = 'k') => {
-  target.dispatchEvent(new KeyboardEvent('keydown', { key, metaKey: true, bubbles: true }))
+const pressShortcut = (target: EventTarget = document.body, key = 'k', code?: string) => {
+  target.dispatchEvent(new KeyboardEvent('keydown', { key, code, metaKey: true, bubbles: true }))
 }
 
 describe('SCommandPalette', () => {
@@ -158,6 +158,28 @@ describe('SCommandPalette', () => {
     pressShortcut(document.body, 'j')
     expect(other.emitted('update:open')?.at(-1)).toEqual([true])
   })
+
+  it('opens by the shortcut on a non-Latin layout too', async () => {
+    const { emitted } = render(SCommandPalette, { props: { groups } })
+    await nextTick()
+
+    // Greek layout: the physical K key types "κ", and the physical L key types "λ".
+    pressShortcut(document.body, 'λ', 'KeyL')
+    expect(emitted('update:open')).toBeUndefined()
+    pressShortcut(document.body, 'κ', 'KeyK')
+    expect(emitted('update:open')?.at(-1)).toEqual([true])
+  })
+
+  it('listens to the letter, not the physical key, on a Latin layout', async () => {
+    const { emitted } = render(SCommandPalette, { props: { groups } })
+    await nextTick()
+
+    // Dvorak: the physical K key types T, and K sits on the physical V key.
+    pressShortcut(document.body, 't', 'KeyK')
+    expect(emitted('update:open')).toBeUndefined()
+    pressShortcut(document.body, 'k', 'KeyV')
+    expect(emitted('update:open')?.at(-1)).toEqual([true])
+  })
 })
 
 describe('filterCommandGroups', () => {
@@ -171,7 +193,12 @@ describe('filterCommandGroups', () => {
   })
 
   it('keeps every command for a blank query', () => {
-    expect(filterCommandGroups(groups, '   ')).toBe(groups)
+    expect(filterCommandGroups(groups, '   ')).toEqual(groups)
+  })
+
+  it('drops empty groups for a blank query as well, as without the filter', () => {
+    const withEmpty = [...groups, { label: 'Empty', items: [] }]
+    expect(filterCommandGroups(withEmpty, '')).toEqual(groups)
   })
 
   it('drops the groups left without commands', () => {

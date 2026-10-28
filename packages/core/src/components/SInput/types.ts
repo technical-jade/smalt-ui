@@ -92,8 +92,9 @@ export interface SInputProps extends SValidationProps<string | string[]> {
   hidePasswordLabel?: string
   /**
    * Input mask (plain mode only, not `use-tags`). A pattern of tokens: `#` is a digit, `S` a
-   * letter, `N` alphanumeric, `A`/`a` an upper/lowercase letter, `X`/`x` upper/lowercase
-   * alphanumeric; any other character is a literal separator. Escape a literal with `\`
+   * letter of any script (Latin, Greek, Cyrillic, …), `N` a letter or digit, `A`/`a` a letter
+   * converted to upper/lowercase, `X`/`x` a letter or digit converted to upper/lowercase; any
+   * other character is a literal separator. Escape a literal with `\`
    * (e.g. `\#`). Named masks are supported: `phone`, `date`, `datetime`, `time`, `fulltime`,
    * `card`. Example: `mask="(###) ### - ####"`.
    */

@@ -38,6 +38,19 @@ describe('SInput · mask engine', () => {
     expect(createMaskEngine('NNN').masked('a1!b')).toBe('a1b')
   })
 
+  it('letter tokens accept letters of any script', () => {
+    expect(createMaskEngine('A###AA').masked('α123βγ')).toBe('Α123ΒΓ')
+    expect(createMaskEngine('aaa').masked('ΔΕΖ')).toBe('δεζ')
+    expect(createMaskEngine('SSS').masked('λ1μ2')).toBe('λμ')
+    expect(createMaskEngine('NNN').masked('κ1!π')).toBe('κ1π')
+    expect(createMaskEngine('XX').masked('ω9')).toBe('Ω9')
+    expect(createMaskEngine('xx').masked('Ω9')).toBe('ω9')
+  })
+
+  it('named masks still accept only digits', () => {
+    expect(createMaskEngine('phone').masked('αβγ9991234567')).toBe('(999) 123 - 4567')
+  })
+
   it('escaping a literal with \\', () => {
     expect(resolveMask('\\#')).toBe('!#')
     expect(createMaskEngine('\\###').masked('5')).toBe('#5')
