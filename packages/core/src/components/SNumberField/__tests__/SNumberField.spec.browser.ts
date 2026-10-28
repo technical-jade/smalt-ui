@@ -21,6 +21,16 @@ describe('SNumberField · browser', () => {
     expect(label.left).toBeLessThan(decrement.right)
   })
 
+  it('a disabled field dims the floating label like the frame', () => {
+    render(SNumberField, {
+      props: { modelValue: 5, label: 'Quantity', floatingLabel: true, disabled: true },
+    })
+    const control = document.querySelector('.s-number-field__control')!
+    const label = document.querySelector('.s-number-field__label')!
+    expect(getComputedStyle(label).opacity).toBe(getComputedStyle(control).opacity)
+    expect(getComputedStyle(label).opacity).not.toBe('1')
+  })
+
   it('without stretch the field is as wide as its content', () => {
     const { container } = renderIn({})
     const control = container.querySelector('.s-number-field__control')!

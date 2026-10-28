@@ -70,6 +70,8 @@
 
 .s-number-field__label {
   @include tools.floating-label;
+  // A sibling of the frame, so the frame's own dimming does not reach it.
+  @include tools.disabled-state;
 }
 
 // The field edges are taken by the step buttons, so the label has nowhere to rest: it always

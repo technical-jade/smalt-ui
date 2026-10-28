@@ -109,7 +109,7 @@ const amount = ref(1234.5)
 <template>
   <SNumberField
     v-model="amount"
-    label="Betrag"
+    label="Amount"
     locale="de-DE"
     :step="0.5"
   />
@@ -140,7 +140,7 @@ trigger them.
 ## States and placeholder
 
 `required` adds `*` to the label and sets `required` on the field, `error` shows an error message
-and makes the field invalid (explicit `invalid` does the same), `disabled` blocks the field and the
+and makes the field invalid (explicit `invalid` does the same), `disabled` blocks the field, dims its floating label and the
 step buttons, `placeholder` is visible while the field is empty. With the `name` prop, the value is
 sent on native form submission in a hidden input.
 

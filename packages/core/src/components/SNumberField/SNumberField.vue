@@ -124,6 +124,7 @@ const floating = computed(() => p.floatingLabel && !!p.label)
           :id="labelId"
           class="s-number-field__label"
           :for="fieldId"
+          :data-disabled="p.disabled || undefined"
         >
           {{ p.label }}
           <span
