@@ -108,4 +108,25 @@ describe('resting floating label and leading content · browser', () => {
       })
     })
   }
+
+  // A dialog opens from scale 0.96: client rects shrink with the transform, CSS pixels do not.
+  it('SInput: the offset inside a scaled container equals the unscaled one', async () => {
+    const field = () =>
+      h(SInput, { label: 'Pickup address' }, { prepend: () => h('span', 'London, Baker Street,') })
+    const { container } = render({
+      setup: () => () =>
+        h('div', [
+          h('div', { class: 'plain' }, [field()]),
+          h('div', { class: 'scaled', style: 'transform: scale(0.5)' }, [field()]),
+        ]),
+    })
+    const offsetIn = (selector: string) =>
+      container
+        .querySelector<HTMLElement>(`${selector} .s-input__wrap`)!
+        .style.getPropertyValue('--s-field-label-x')
+    await vi.waitFor(() => {
+      expect(offsetIn('.plain')).not.toBe('')
+      expect(offsetIn('.scaled')).toBe(offsetIn('.plain'))
+    })
+  })
 })

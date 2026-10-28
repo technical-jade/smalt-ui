@@ -1,4 +1,4 @@
-import { describe, expect, it } from 'vitest'
+import { describe, expect, it, vi } from 'vitest'
 import { render } from '@testing-library/vue'
 import { h, type Component } from 'vue'
 import { SDateField, SInput, SNumberField, SSelect } from '../components'
@@ -48,7 +48,7 @@ describe('floated label: truncation by the scaled width · browser', () => {
     })
   }
 
-  it('SInput: the width of #prepend does not narrow the floated label', () => {
+  it('SInput: the width of #prepend does not narrow the floated label', async () => {
     const { container } = render({
       render: () =>
         h('div', { style: 'width: 150px' }, [
@@ -62,6 +62,10 @@ describe('floated label: truncation by the scaled width · browser', () => {
     const label = [...container.querySelectorAll('label')].find((el) =>
       el.textContent?.includes('Pickup address'),
     )!
+    // The measured offset, not only the CSS fallback, must leave the floated label alone.
+    await vi.waitFor(() =>
+      expect(label.parentElement!.style.getPropertyValue('--s-field-label-x')).not.toBe(''),
+    )
     expect(truncated(label)).toBe(false)
   })
 })

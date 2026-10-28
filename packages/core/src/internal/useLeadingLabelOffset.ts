@@ -34,11 +34,17 @@ export function useLeadingLabelOffset(
     if (!startEl || !box.width) return
     const target = startEl.getBoundingClientRect()
     const style = getComputedStyle(frameEl)
+    /**
+     * Client rects include transforms (a dialog opens from `scale: 0.96`), the CSS offset does
+     * not. `offsetWidth` is rounded, so a difference under a pixel is rounding, not a transform.
+     */
+    const width = frameEl instanceof HTMLElement ? frameEl.offsetWidth : box.width
+    const k = Math.abs(width - box.width) < 1 ? 1 : width / box.width
     // An absolutely positioned label is placed from the padding box, i.e. inside the border.
     offset.value =
       style.direction === 'rtl'
-        ? box.right - target.right - parseFloat(style.borderRightWidth)
-        : target.left - box.left - parseFloat(style.borderLeftWidth)
+        ? (box.right - target.right) * k - parseFloat(style.borderRightWidth)
+        : (target.left - box.left) * k - parseFloat(style.borderLeftWidth)
   }
 
   function observe() {

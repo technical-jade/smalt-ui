@@ -101,6 +101,7 @@ describe('SPopover · browser', () => {
     // Measured in the same task as the scroll: the scroll handler has not repositioned it yet.
     window.scrollBy(0, 120)
     try {
+      expect(window.scrollY).toBeGreaterThan(0)
       expect(gap()).toBeCloseTo(before, 0)
     } finally {
       window.scrollTo(0, 0)

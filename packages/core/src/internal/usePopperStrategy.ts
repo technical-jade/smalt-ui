@@ -18,6 +18,7 @@ function insidePinnedBlock(el: Element) {
  */
 export function usePopperStrategy(trigger: () => ElementSource, open: () => boolean) {
   return computed<'absolute' | 'fixed'>(() => {
+    // Layout reads are not reactive: the open() read re-runs the ancestor check on each opening.
     if (!open() || typeof window === 'undefined') return 'fixed'
     const source = trigger()
     const el = source instanceof Element ? source : (source?.$el as unknown)
