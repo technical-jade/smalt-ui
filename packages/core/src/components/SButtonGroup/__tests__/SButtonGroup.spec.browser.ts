@@ -74,6 +74,8 @@ describe('SButtonGroup · browser', () => {
     expect(getComputedStyle(copy!).boxShadow).toBe('none')
     expect(getComputedStyle(cut!).boxShadow).toBe('none')
     expect(getComputedStyle(cut!).borderLeftColor).not.toBe('rgba(0, 0, 0, 0)')
+    // A raised (hovered, pressed) button would cover a line it overlapped.
+    expect(cut!.getBoundingClientRect().left).toBe(copy!.getBoundingClientRect().right)
   })
 
   it('an attached group mixing filled and outlined buttons stays flat', () => {
