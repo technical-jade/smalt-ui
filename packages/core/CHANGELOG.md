@@ -1,5 +1,93 @@
 # @smalt-ui/core
 
+## 2.1.0
+
+### Minor Changes
+
+- d1d61ad: `SButtonGroup`: an attached group of filled buttons casts one shadow that follows the group shape instead of a shadow per button, which fell onto the previous button and stuck out below each shared edge. Filled buttons are split by a thin line in their text color. A group that mixes filled and other variants has no shadow, and a button's own `elevation` still draws its own. The new `flat` and `elevation` props remove the group shadow or set its level; in a detached group they reach every button.
+- 2de6f26: Overlay animation, touch-friendly hover and new component options.
+
+  - Hover highlights (`:hover`) of all components apply only on devices that can hover (`@media (hover: hover)`), so they no longer stick after a tap on a touch screen. Pressed and keyboard highlights are unchanged. The new SCSS mixin `tools.hover` wraps your own hover rules the same way.
+  - `SDialog`, `SAlertDialog` and `SDrawer` animate opening and closing: the window fades in with a slight zoom, the drawer slides in from its side, and the overlay fades. With `prefers-reduced-motion: reduce` there is no animation.
+  - `SDrawer` gets a `width` prop for `left`/`right` drawers and a `height` prop for `top`/`bottom` ones, plus the `--s-drawer-size` variable; a number means pixels, and the prop for the other axis is ignored. `100%` opens the drawer across the whole screen. A drawer never grows past the screen, and one that fills it loses its rounded corners and the border on the page side.
+  - `SAutocomplete`: the suggestion panel is as wide as the field, long suggestions wrap, and the panel never goes past the window edge. The new `max-width` prop lets the panel grow wider than the field up to a limit. The new `open-on-click` and `open-on-focus` props open the panel with a click on the field and when focus enters it; focus moved by code (the clear button, `SForm` moving to the first error) leaves it closed. The new `floating-label` prop (off by default) turns on a floating label, and a `floatingLabel` default in `global` now reaches it.
+  - `SNumberField`: the new `floating-label` prop (off by default) puts the label on the top edge of the frame, so the field lines up with neighboring fields that have a floating label; a `floatingLabel` default in `global` now reaches it. The label and the frame share a new `.s-number-field__wrap` wrapper around `.s-number-field__control`.
+  - `SNavigationMenu`: the panel opens under the item that opened it, and the new `align` prop (`start`/`center`/`end`, `start` by default) picks the alignment. The panel keeps the dropdown `z-index`, so blocks further down the page no longer cover it, and a flex parent that stretches the menu no longer moves it down. New `size` (`sm`/`md`/`lg`) and `columns` props and `--s-navigation-menu-*` variables; density presets reach `size`. Items and panel links take `target` and `rel`.
+  - The `color`/`text-color` props take `neutral`, the regular text color of the theme (`--s-color-text`): unlike `gray-*`, it follows the theme, and on `SButton` the hover and press highlights come out neutral too. Content on a `neutral` fill takes the surface color. `SIcon` and `STimeline` items understand it as well; there are no `neutral` utility classes.
+  - `SButton` rendered as a link (`as="a"`) has no underline inside portals either: they lie outside the `.s-root` container, where browser link styles apply.
+  - `STooltip`: a link inside a tooltip opened by a tap in `trigger="auto"` mode works, because the trigger pressed by touch no longer takes focus and the tooltip stays open. A field inside the trigger still takes focus from a tap.
+
+- e980942: SCSS: the `tools.control-size` mixin takes `$grow: true` (the size height as `min-height` plus vertical padding, without stretching in a flex or grid row), and the `$control-sizes` map has a new optional `pad-y` key.
+- 9eb8e8a: `SPopover` and `SHoverCard` take a border color.
+
+  - The new CSS variables `--s-popover-border` and `--s-hover-card-border` color the panel border and the arrow stroke together.
+  - The arrow stroke is as thick as the panel border. It used to scale with the arrow and came out thicker, which showed on a colored border.
+
+- b29d183: Steadier inline fields and a stretchable number field.
+
+  - `SCheckbox`, `SSwitch` and `SRating` align to the top of the line instead of the text baseline, so checking a checkbox no longer changes the line height and moves the content below.
+  - `SNumberField`: the new `stretch` prop spreads the field across its container, with the step buttons at the edges and the input taking the free space. The new `--s-number-field-input-width` CSS variable sets the input width (`4rem` by default).
+
+- 3ff6e92: `SButton` with `variant="link"` answers hover with color: the text shifts 30% toward `--s-shade`, so it gets darker in the light theme and lighter in the dark one, and a link with `color="neutral"` takes the accent color. The underline does not change. A button with `color="neutral"` gets the new `.s-button--neutral` modifier class.
+- dd49075: Localization, accessibility and form fixes.
+
+  - `SNumberField` formats and parses the number by the library locale (`1,234.5` by default) and gets a `locale` prop for a single field; a `global` `locale` default reaches it as well. A screen reader announces it as a "number field" from the new `numberField` dictionary key instead of Reka's built-in string.
+  - The segments of `SDateField`, `STimeField`, `STimePicker`, `SDatePicker` and `SDateRangePicker` take their accessible names ("day", "month", "hour", …) and the "Empty" value text from the dictionary, so a translated dictionary translates them too.
+  - `SKbd` announces keys by readable names: `meta` is "Command", `ctrl` is "Ctrl", and the arrows and space come from the dictionary.
+  - The letter tokens of `SInput` masks (`S`, `N`, `A`/`a`, `X`/`x`) accept letters of any script, not only Latin.
+  - `SCommandPalette` opens by Cmd/Ctrl plus its key on non-Latin keyboard layouts through the same physical key, and hides empty groups for an empty query as well.
+  - 15 new `SMessages` keys: `numberField`, `kbdArrowUp`, `kbdArrowDown`, `kbdArrowLeft`, `kbdArrowRight`, `kbdSpace`, `segmentDay`, `segmentMonth`, `segmentYear`, `segmentHour`, `segmentMinute`, `segmentSecond`, `segmentDayPeriod`, `segmentTimeZone` and `segmentEmpty`.
+  - `SPinInput` cells form a group (`role="group"`) named by the field label, and the new `ariaLabel` prop names it without a visible label. Attributes other than `class`/`style` now go to that group instead of the field wrapper.
+  - `SRadio` gets an `ariaLabel` prop for an option without a visible label. Its attributes other than `class`/`style` now go to the `role="radio"` element instead of the wrapper.
+  - `SScrollArea` passes `aria-*` attributes and `role` to its focusable viewport instead of the root.
+  - `SSlider` links the hint and the error to every thumb of a range, not only the first one.
+  - The arrow keys of `SRating` set the rating as they move focus, as in `SRadioGroup`.
+  - In the `SSidebar` rail the text of the rows is hidden only visually, so icon-only rows keep their accessible names; below the breakpoint the drawer takes the sidebar's `aria-label` as its name.
+  - `STimeline` marks the current item with `aria-current="step"` and a disabled one with `aria-disabled`.
+  - `SListItem` with `clickable` on a non-interactive tag (`as="div"`) becomes a keyboard button: `role="button"`, a tab stop, activation by Enter and Space.
+  - `SToolbar` gets working roving focus: the panel is one tab stop, and the arrow keys, Home and End move focus between its `SButton` and `SToggle` items, skipping disabled ones.
+  - An indeterminate `SCheckbox` is no longer submitted as checked by a native form, and with `required` it blocks the submission.
+  - `SLoadingOverlay` no longer sets `aria-busy` on itself: a screen reader held back the announcement of its own live region. Put `aria-busy` and `inert` on the covered content instead.
+  - `SDatePicker` and `SDateRangePicker` mark a date disabled by `isDateDisabled` and typed into the segments as invalid, as they already did for a date outside `minValue`/`maxValue`; in a range a disabled day inside it counts too.
+  - `SDateRangePicker` gets `closeOnSelect` (off by default) to close the calendar once both ends of the range are picked.
+  - Inside an `SForm` with `validate-on`, `STimePicker` follows the form's mode instead of a configured prop default, like the other fields.
+  - A click on the frame of `SInput` or `SColorField` outside interactive content (a prefix or suffix, the icon, the swatch, the padding) focuses the field.
+  - `SInput` with `numeric` ignores `fill-mask` together with `mask`.
+  - The `color` of `SSpinner` overrides every variant, `neutral` and `current` included.
+  - `SIcon` treats a numeric string `size` (`size="20"`) as pixels.
+  - `SImage` drops `srcset` and `sizes` while it shows the `fallback`.
+  - `SAlert` accepts `:icon="false"` to remove the icon.
+  - The `disabled` of `SColorPicker` also locks the preset swatches and the hex field of an open panel, and the visible `label` names the trigger when `aria-label` is not set.
+  - `.s-container--fluid` removes the width cap on every breakpoint, not only below the first one.
+
+- efab498: Pinned floating label and a dimmed select placeholder.
+
+  - `floating-label="pinned"` on the fields with a floating label (`SInput`, `STextarea`, `SSelect`, `SAutocomplete`, `SColorField`, `SDateField`, `STimeField`, `SDatePicker`, `SDateRangePicker`, `STimePicker`, `SNumberField`): the label always sits on the frame, and the placeholder of an empty field stays visible. `SNumberField` keeps its label on the frame anyway, so `'pinned'` works there like `true`. `floatingLabel: 'pinned'` in `global` defaults pins the label on all these fields.
+  - `SSelect`: the placeholder of a single select is dimmed like the placeholders of other fields instead of taking the value color.
+
+- ca8c8cc: `createTheme`: `SemanticTokenName` accepts `color-outline`, `color-surface-variant`, `color-primary-container` and `color-on-primary-container`, so these roles can be themed without a type cast.
+- 4e09a0b: New looks for alerts, tabs, toggles, buttons and separators.
+
+  - `SAlert`: the new `appearance` prop, `outline` (default) or `soft`. `soft` draws the background without a border; the icon keeps the status color.
+  - `STabs`: the new `variant` prop, `underline` (default) or `enclosed`. Enclosed tabs look like folders: the bordered active tab merges with the panel border. The list still scrolls only horizontally.
+  - `SToggle` and `SToggleGroup`: the new `variant` prop, `tonal` (default) or `outline`. `outline` shows the on state with an accent-colored border and no fill. The group passes its `variant` to every item, including `SToggle`s in the slot; an item's own `variant` wins.
+  - `SButton`: `variant="link"` renders underlined text without the button height, padding and background, so it fits into a line of text. `size` changes only the font size. `SButtonGroup`, `SFab` and `SBackTop` do not accept `link`.
+  - `SSeparator`: the new `line-style` prop, `solid` (default), `dashed` or `dotted`, and the new `color` prop for the line color from the palette. The label stays muted.
+
+### Patch Changes
+
+- e980942: - `SButton`: a long label in a narrow container wraps, and the button grows in height instead of letting the second line out of its frame onto the neighboring content. The size height (`sm` 32px, `md` 40px, `lg` 48px) is now a minimum; a single-line button looks as before and keeps its own height next to a taller neighbor in a flex or grid row.
+  - `SButtonGroup`: when a label of an attached horizontal group wraps, the other buttons take its height, so the shared edges still meet.
+- bd9bcf8: Floating labels no longer overlap leading content or get cut off too early.
+
+  - A resting floating label sits after the text in `#prepend` or `prefix`, however wide it is, and follows it when that width changes, including a `#prepend` that appears after mount. This covers `SInput`, `STextarea`, `SSelect`, `SAutocomplete`, `SColorField`, `SDateField`, `STimeField`, `SDatePicker` and `SDateRangePicker`. The offset used to fit only an icon, and `SDatePicker` and `SDateRangePicker` had none.
+  - A floated label is cut off with an ellipsis only when it does not fit into the frame at its reduced size. The width limit used to count the unscaled label, so in a narrow field it was cut with a quarter of the width to spare, and leading content narrowed it although the floated label sits on the border above it. `SNumberField` had no limit at all, and a long label ran past the frame.
+
+- 8a60945: - `SNumberField`: the floating label of a disabled field is dimmed together with the frame instead of staying at full opacity over the dimmed border.
+- b93a07f: `SPopover`: an open panel moves with its trigger when the page scrolls instead of lagging behind it. For a trigger inside a `fixed` or `sticky` block, such as the `SAppBar` header, the panel stays fixed in place along with it.
+- bf32548: `STextarea`: the resize grip sits in the bottom right corner of the frame instead of inset inside it. The text paddings, the field height and the room for `append` stay the same.
+- e980942: `SToggle` and `SToggleGroup` items: a long label in a narrow container wraps, and the toggle grows in height instead of letting the second line out of its frame. The size height (`sm` 32px, `md` 40px, `lg` 48px) is now a minimum; a single-line toggle and an icon toggle look as before. In `SToggleGroup` the other items take the height of the wrapped one.
+
 ## 2.0.0
 
 ### Major Changes
