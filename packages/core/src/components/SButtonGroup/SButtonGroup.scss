@@ -1,5 +1,8 @@
 @use '../../styles/tools';
 
+$filled: '.s-button--primary, .s-button--secondary, .s-button--negative';
+$raised: ':not(.s-button--flat):not(:disabled):not([data-disabled]):not([aria-disabled="true"])';
+
 .s-button-group {
   @include tools.reset-inherited;
   display: inline-flex;
@@ -15,7 +18,35 @@
     gap: var(--s-space-2);
   }
 
+  // A button's own shadow would fall onto the previous button and below the shared edge, so an
+  // attached group casts one shadow of its own instead. A group mixing filled and outlined
+  // buttons stays flat: the shadow would run under the outlined ones too.
+  &--attached {
+    border-radius: var(--s-radius-md);
+    @include tools.transition(box-shadow);
+
+    &:has(> :is(#{$filled})#{$raised}):not(:has(> :not(#{$filled}))) {
+      box-shadow: var(--s-button-group-elevation, var(--s-elevation-1));
+    }
+
+    @include tools.hover {
+      &:has(> :is(#{$filled})#{$raised}:hover):not(:has(> :not(#{$filled}))) {
+        box-shadow: var(--s-button-group-elevation-hover, var(--s-elevation-2));
+      }
+    }
+  }
+
+  &--attached.s-button-group--round {
+    border-radius: var(--s-radius-full);
+  }
+
+  &--attached.s-button-group--square {
+    border-radius: 0;
+  }
+
   &--attached > .s-button {
+    --s-button-elevation: none;
+    --s-button-elevation-hover: none;
     // The focus ring is drawn outside the button and the next one would paint over it. The same
     // stacking keeps a hovered border above its neighbour.
     position: relative;
@@ -55,6 +86,15 @@
       border-end-start-radius: 0;
       margin-inline-start: -1px;
     }
+  }
+
+  // Filled buttons have a transparent border, so without a line they would merge into one bar.
+  &--attached.s-button-group--horizontal > :is(#{$filled}):not(:first-child) {
+    border-inline-start-color: color-mix(in srgb, currentColor 35%, transparent);
+  }
+
+  &--attached.s-button-group--vertical > :is(#{$filled}):not(:first-child) {
+    border-block-start-color: color-mix(in srgb, currentColor 35%, transparent);
   }
 
   &--attached.s-button-group--vertical > .s-button {

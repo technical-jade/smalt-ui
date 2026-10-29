@@ -58,4 +58,58 @@ describe('SButtonGroup · browser', () => {
     const [back, next, more] = boxes(container)
     expect([back!.height, next!.height, more!.height, more!.width]).toEqual([32, 32, 32, 32])
   })
+
+  it('an attached group of filled buttons casts one shadow and splits them with a line', () => {
+    const { container } = render({
+      components: { SButtonGroup, SButton },
+      template: `
+        <SButtonGroup>
+          <SButton>Copy</SButton>
+          <SButton>Cut</SButton>
+        </SButtonGroup>`,
+    })
+    const group = container.querySelector('.s-button-group')!
+    const [copy, cut] = container.querySelectorAll('.s-button')
+    expect(getComputedStyle(group).boxShadow).not.toBe('none')
+    expect(getComputedStyle(copy!).boxShadow).toBe('none')
+    expect(getComputedStyle(cut!).boxShadow).toBe('none')
+    expect(getComputedStyle(cut!).borderLeftColor).not.toBe('rgba(0, 0, 0, 0)')
+  })
+
+  it('an attached group mixing filled and outlined buttons stays flat', () => {
+    const { container } = render({
+      components: { SButtonGroup, SButton },
+      template: `
+        <SButtonGroup variant="outline">
+          <SButton>Draft</SButton>
+          <SButton variant="primary">Publish</SButton>
+        </SButtonGroup>`,
+    })
+    const group = container.querySelector('.s-button-group')!
+    expect(getComputedStyle(group).boxShadow).toBe('none')
+  })
+
+  it('flat removes the group shadow and elevation sets its level', () => {
+    const { container } = render({
+      components: { SButtonGroup, SButton },
+      template: `
+        <SButtonGroup flat>
+          <SButton>Copy</SButton>
+          <SButton>Cut</SButton>
+        </SButtonGroup>
+        <SButtonGroup :elevation="3">
+          <SButton>Copy</SButton>
+          <SButton>Cut</SButton>
+        </SButtonGroup>`,
+    })
+    const [flat, raised] = container.querySelectorAll<HTMLElement>('.s-button-group')
+    expect(getComputedStyle(flat!).boxShadow).toBe('none')
+    expect(raised!.style.getPropertyValue('--s-button-group-elevation')).toBe(
+      'var(--s-elevation-3)',
+    )
+    expect(getComputedStyle(raised!).boxShadow).not.toBe('none')
+    for (const button of raised!.querySelectorAll('.s-button')) {
+      expect(getComputedStyle(button).boxShadow).toBe('none')
+    }
+  })
 })

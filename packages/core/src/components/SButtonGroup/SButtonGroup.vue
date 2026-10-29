@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { computed } from 'vue'
-import { provideDefaults, useDefaults } from '../../composables'
+import { provideDefaults, useDefaults, useElevationProp } from '../../composables'
 import type { SButtonGroupProps } from './types'
 
 const props = withDefaults(defineProps<SButtonGroupProps>(), {
@@ -23,11 +23,19 @@ const buttonDefaults = computed(() =>
       square: p.square,
       round: p.round,
       disabled: p.disabled,
+      /**
+       * An absent Boolean prop reads as false and would override `SButton: { flat: true }` in the
+       * app defaults. Elevation overrides flat, and an attached group draws the shadow itself.
+       */
+      flat: p.elevation === undefined && p.flat ? true : undefined,
+      elevation: p.attached ? undefined : p.elevation,
     }).filter(([, value]) => value !== undefined),
   ),
 )
 
 provideDefaults(() => ({ SButton: buttonDefaults.value }))
+
+const elevationStyle = useElevationProp(p, 's-button-group', { hover: true })
 
 defineSlots<{
   /** Buttons of the group (`SButton`). */
@@ -41,7 +49,12 @@ defineSlots<{
     :class="[
       `s-button-group--${p.orientation}`,
       p.attached ? 's-button-group--attached' : 's-button-group--detached',
+      {
+        's-button-group--round': p.round,
+        's-button-group--square': p.square,
+      },
     ]"
+    :style="p.attached ? elevationStyle : undefined"
     role="group"
     :aria-label="p.label"
   >

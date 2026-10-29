@@ -30,9 +30,11 @@ run('pnpm --filter docs build')
 
 /**
  * 3) Update the baselines of this component only. The " —" anchor (before the light/dark theme)
- * rules out partial matches (e.g. 'date' does not touch 'date-field').
+ * rules out partial matches (e.g. 'date' does not touch 'date-field'). Plain --update-snapshots
+ * skips a screenshot that differs within the comparison threshold, and a thin line or a shadow
+ * change fits into it.
  */
-run(`npx playwright test -g "${name} —" --update-snapshots`)
+run(`npx playwright test -g "${name} —" --update-snapshots=all`)
 
 console.log(
   `\n✓ Visual regression baselines for "${name}" regenerated (light + dark). Check git diff.`,

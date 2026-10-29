@@ -1,4 +1,5 @@
 import type { SColorName } from '../../composables/useColorProp'
+import type { SElevation } from '../../composables/useElevationProp'
 import type { SButtonSize, SButtonVariant } from '../SButton'
 
 export type SButtonGroupOrientation = 'horizontal' | 'vertical'
@@ -28,4 +29,14 @@ export interface SButtonGroupProps {
   round?: boolean
   /** Disables every button in the group; a `disabled` set on a button itself wins. */
   disabled?: boolean
+  /**
+   * No shadow. An attached group of filled buttons casts one shadow for the whole group; in a
+   * detached group `flat` reaches every button, and a `flat` set on a button itself wins.
+   */
+  flat?: boolean
+  /**
+   * Shadow level 0–5 ([scale](/style/elevation)); `0` means no shadow. Overrides `flat`. An
+   * attached group applies it to its own shadow, a detached one passes it to every button.
+   */
+  elevation?: SElevation
 }

@@ -16,6 +16,12 @@ A long label wraps in a narrow container, and its button grows in height (see
 [Button sizes](/components/button#sizes)). In an attached row the other buttons take the same
 height, so the shared edges still meet.
 
+Filled buttons (`primary`, `secondary`, `negative`) are split by a thin line in their text color,
+and the attached group casts one shadow instead of a shadow per button. A group that mixes filled
+and other variants has no shadow. `flat` removes the shadow and `elevation` sets its level on the
+[scale](/style/elevation); in a detached group both reach every button instead. A button's own
+`elevation` still draws its own shadow.
+
 <Demo>
   <SButtonGroup label="Text actions">
     <SButton>Copy</SButton>
